@@ -93,7 +93,7 @@ export default function CrawlingPage() {
                     <div className="flex items-center gap-2.5 text-sm text-amber-600 font-medium">
                       <Spinner size={16} /> 2단계: 본문 + 메타데이터 크롤링
                     </div>
-                    <ProgressBar value={bodyProgress} />
+                    <ProgressBar percent={bodyProgress} />
                     <div className="flex gap-4 text-xs text-stone-500">
                       <span className="text-emerald-600">성공 {bodyCrawled.toLocaleString()}건</span>
                       <span className="text-red-500">실패 {bodyFailed.toLocaleString()}건</span>
