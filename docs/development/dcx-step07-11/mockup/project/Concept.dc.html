@@ -2,40 +2,52 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <title>STEP 11 — 인사이트 도출</title>
+  <title>인사이트 도출</title>
   <script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
   <style>
-/* Person A Design System — handoff 번들의 토큰을 그대로 구현한다.
-   출처: project/styles.css → tokens/{fonts,colors,typography,spacing,base}.css
-   폰트·로고는 아티팩트 에셋으로 업로드해 /_blob/ 주소로 참조한다.
-   기존 화면 마크업이 쓰는 레거시 변수명은 맨 아래에서 이 토큰들에 별칭으로 연결한다. */
+/* Person A Design System — 대시보드·BI 기준은 '디자인규칙 수정본'이다.
+   우선순위(스킬 CLAUDE.md): ① uploads/rules-revised.html(수정본) ② seed-design.html
+   ③ tokens/*.css 는 seed 산물 — 수정본과 어긋나는 값은 수정본이 이긴다.
+   두 블루는 경쟁이 아니라 역할이 다르다:
+     persona-blue  #38B6F9 = 신호(사람·맥락·변화). 채움·선택 배경·차트 series. 위 글자는 ink.
+     action        #0a73b5 = 조작(링크·버튼·포커스). 흰 배경 위 텍스트로 쓸 수 있는 유일한 블루.
+   폰트·로고는 아티팩트 블롭을 먼저, 로컬 미리보기용 상대경로를 뒤에 둔다.
+   기존 화면 마크업이 쓰는 레거시 변수명은 아래에서 이 토큰들에 별칭으로 연결한다. */
 
-/* ── tokens/fonts.css ── UI가 쓰는 400/500/600/700만 싣는다 (§3.1) */
+/* ── fonts ── UI 400/600/700 + 수정본이 요구하는 insight 800 */
 @font-face{font-family:Pretendard;font-weight:400;font-style:normal;font-display:swap;
-  src:url("/_blob/b61d00bb36beee27cff0927bae844311") format("woff2")}
+  src:url("/_blob/b61d00bb36beee27cff0927bae844311") format("woff2"),
+      url("./assets/Pretendard-Regular.woff2") format("woff2")}
 @font-face{font-family:Pretendard;font-weight:500;font-style:normal;font-display:swap;
-  src:url("/_blob/d7c65e026fbb548b5fa5045e0d4607aa") format("woff2")}
+  src:url("/_blob/d7c65e026fbb548b5fa5045e0d4607aa") format("woff2"),
+      url("./assets/Pretendard-Medium.woff2") format("woff2")}
 @font-face{font-family:Pretendard;font-weight:600;font-style:normal;font-display:swap;
-  src:url("/_blob/cea76f29df8261db72490b8144c866a7") format("woff2")}
+  src:url("/_blob/cea76f29df8261db72490b8144c866a7") format("woff2"),
+      url("./assets/Pretendard-SemiBold.woff2") format("woff2")}
 @font-face{font-family:Pretendard;font-weight:700;font-style:normal;font-display:swap;
-  src:url("/_blob/6a3823c062967e5b736dd887f949c066") format("woff2")}
+  src:url("/_blob/6a3823c062967e5b736dd887f949c066") format("woff2"),
+      url("./assets/Pretendard-Bold.woff2") format("woff2")}
+@font-face{font-family:Pretendard;font-weight:800;font-style:normal;font-display:swap;
+  src:url("./assets/Pretendard-ExtraBold.woff2") format("woff2")}
 
-/* ── tokens/colors.css ── */
+/* ── colors ── 수정본 3색 예산: Empathy 70 · Shadow 20 · Person 7 · Status 3 */
 :root{
-/* brand */
---persona-blue-100:#37b7f8;--persona-blue-soft:#e4f5fe;--persona-graphite-100:#68696e;
-/* action */
+/* brand — 수정본 값 */
+--persona-blue-100:#38b6f9;--persona-blue-soft:#e4f5fe;--persona-graphite-100:#676668;
+/* action — 조작 블루. 수정본이 규정하지 않으므로 seed 를 승계한다(흰 배경 대비 5.1:1) */
 --action:#0a73b5;--action-hover:#085d93;--action-soft:#e8f4fc;--on-action:#ffffff;
-/* surface & line */
---surface:#f6f7f9;--surface-raised:#ffffff;--surface-sunken:#eceef1;--line:#e1e4e8;--line-strong:#7f838b;
-/* ink */
+/* surface & line — surface 는 Empathy White */
+--surface:#f8fcff;--surface-raised:#ffffff;--surface-sunken:#eceef1;--line:#e1e4e8;--line-strong:#7f838b;
+/* ink — 수정본에 램프가 없어 seed 3단계를 유지한다(모두 AA 이상) */
 --ink:#1c1e22;--ink-secondary:#55585f;--ink-subtle:#6a6e76;
-/* status */
+/* status — 3% */
 --success:#1b7446;--success-soft:#e6f6ec;--warning:#9a5b00;--warning-soft:#fff3dc;--danger:#c62828;--danger-soft:#fdeaea;
+/* 신호(signal) — Person Blue 의 제품 내 역할 */
+--signal:var(--persona-blue-100);--signal-soft:var(--persona-blue-soft);--on-signal:var(--ink);
 /* semantic aliases */
 --text-secondary:var(--ink-secondary);--text-subtle:var(--ink-subtle);--text-link:var(--action);
 --surface-page:var(--surface);--surface-card:var(--surface-raised);--surface-header:var(--surface-sunken);
@@ -43,35 +55,47 @@
 --selected-bg:var(--persona-blue-soft);--info:var(--action);--info-soft:var(--action-soft);
 }
 
-/* ── tokens/typography.css ── */
+/* ── typography ── 수정본 시맨틱 스케일. 크기를 고르지 않고 역할 이름을 고른다. */
 :root{
 --font-sans:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",system-ui,sans-serif;
 --font-mono:"SF Mono",Menlo,Consolas,"D2Coding",monospace;
---text-display-lg:700 32px/40px var(--font-sans);--tracking-display-lg:-0.02em;
---text-display:700 24px/32px var(--font-sans);--tracking-display:-0.01em;
---text-heading-lg:600 20px/28px var(--font-sans);
---text-heading:600 16px/24px var(--font-sans);
---text-body-lg:400 16px/24px var(--font-sans);
---text-body:400 14px/20px var(--font-sans);
---text-body-strong:600 14px/20px var(--font-sans);
---text-label:500 13px/18px var(--font-sans);
---text-caption:400 12px/16px var(--font-sans);
+--text-insight:800 40px/52px var(--font-sans);--tracking-insight:-0.04em;
+--text-screen-title:800 30px/40px var(--font-sans);--tracking-screen-title:-0.035em;
+--text-section-title:700 24px/34px var(--font-sans);--tracking-section-title:-0.03em;
+--text-card-title:700 18px/27px var(--font-sans);--tracking-card-title:-0.02em;
+--text-body:400 15px/24px var(--font-sans);--tracking-body:-0.01em;
+--text-body-strong:600 15px/24px var(--font-sans);
+--text-label:600 13px/19px var(--font-sans);--tracking-label:-0.005em;
+--text-caption:400 12px/18px var(--font-sans);
 --text-code:400 13px/20px var(--font-mono);
---weight-regular:400;--weight-medium:500;--weight-semibold:600;--weight-bold:700;
+--weight-regular:400;--weight-medium:500;--weight-semibold:600;--weight-bold:700;--weight-insight:800;
+/* 레거시 별칭 — 기존 마크업이 부르는 이름을 역할 스케일로 끌어온다 */
+--text-display-lg:var(--text-screen-title);--tracking-display-lg:var(--tracking-screen-title);
+--text-display:var(--text-section-title);--tracking-display:var(--tracking-section-title);
+--text-heading-lg:var(--text-card-title);--text-heading:var(--text-card-title);
+--text-body-lg:400 16px/26px var(--font-sans);
 }
 
-/* ── tokens/spacing.css ── */
+/* ── spacing · radius · elevation ── */
 :root{
---space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-12:48px;
---radius-sm:6px;--radius-md:10px;--radius-full:999px;
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;--space-12:48px;
+/* 수정본 관계 간격 — 같은 정보 관계에는 같은 값 */
+--gap-eyebrow-head:var(--space-2);--gap-head-sub:var(--space-3);--gap-sub-body:var(--space-2);
+--gap-body-evidence:var(--space-4);--gap-evidence-action:var(--space-5);
+--gap-sectionhead-content:var(--space-6);--gap-section-section:var(--space-12);
+/* 수정본 radius — Input 6 · Button 10 · Card 14 · Overlay 18 */
+--radius-sm:6px;--radius-md:10px;--radius-lg:14px;--radius-xl:18px;--radius-full:999px;
+/* 그림자는 떠 있는 것에만 — drawer·popover·modal */
 --shadow-sm:0 1px 2px rgba(28,30,34,0.06);
 --shadow-md:0 8px 24px rgba(28,30,34,0.12),0 1px 2px rgba(28,30,34,0.06);
 --motion:150ms ease-out;
 --control-md:36px;--control-sm:28px;--badge-h:22px;
---sidebar-w:240px;--content-max:1200px;--card-min:280px;
+/* 수정본 레이아웃 — 12col · gutter 24 · margin 32 · sidebar 224 */
+--sidebar-w:224px;--grid-gutter:var(--space-6);--grid-margin:var(--space-8);
+--card-pad:var(--space-6);--content-max:1200px;--card-min:280px;
 }
 
-/* ── 레거시 별칭 ── 14개 화면 마크업이 참조하는 이름들 */
+/* ── 레거시 별칭 ── 15개 화면 마크업이 참조하는 이름들 */
 :root{
 --canvas:var(--surface);--panel:var(--surface-raised);--raise:var(--surface-raised);--sunk:var(--surface-sunken);
 --fg:var(--ink);--sec:var(--ink-secondary);--mut:var(--ink-secondary);--qui:var(--ink-subtle);
@@ -83,13 +107,58 @@
 --obs-ln:var(--success);--inf-ln:var(--warning);--spe-ln:var(--danger);
 }
 
-/* ── tokens/base.css ── */
+/* ── base ── */
 *{box-sizing:border-box}
-body{margin:0;font:var(--text-body);color:var(--ink);background:var(--surface);
-  -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+body{margin:0;font:var(--text-body);letter-spacing:var(--tracking-body);color:var(--ink);
+  background:var(--surface);-webkit-font-smoothing:antialiased;
+  word-break:keep-all;overflow-wrap:break-word}
 a{color:var(--action);text-decoration:none}a:hover{color:var(--action-hover);text-decoration:underline}
 :focus-visible{outline:2px solid var(--action);outline-offset:2px}
-.mono{font:var(--text-code);font-variant-numeric:tabular-nums;word-break:normal;white-space:nowrap}
+.mono{font:var(--text-code);font-variant-numeric:tabular-nums;letter-spacing:0;
+  word-break:normal;white-space:nowrap}
+
+/* ---------- 수정본 정보 구조 ----------
+   사람의 변화 → 행동 근거 → 해석 → 다른 가능성 → 다음 행동.
+   .insight 는 한 화면에 하나만 둔다 (800 dominant insight). */
+.signal{display:flex;flex-direction:column}
+.signal .eyebrow{font:var(--text-label);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-subtle);margin-bottom:var(--gap-eyebrow-head)}
+.insight{margin:0;font:var(--text-insight);letter-spacing:var(--tracking-insight);color:var(--ink)}
+.insight .up{color:var(--action)}
+.signal .interp{margin:var(--gap-head-sub) 0 0;font:var(--text-body-lg);color:var(--ink-secondary)}
+.signal .alt{margin:var(--gap-sub-body) 0 0;font:var(--text-body);color:var(--ink-subtle)}
+
+/* 근거 — 해석 가까이에 표본·기간·source·confidence·원문 */
+.evid{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-3);
+  margin-top:var(--gap-body-evidence);padding-top:var(--space-3);border-top:1px solid var(--line)}
+.evid>span{font:var(--text-label);color:var(--ink-secondary);white-space:nowrap}
+.evid .src{color:var(--action)}
+.conf{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--badge-h);
+  padding:0 var(--space-2);border-radius:var(--radius-sm);background:var(--surface-sunken);
+  font:var(--text-label);color:var(--ink-secondary);white-space:nowrap;flex:none}
+.conf i{display:inline-flex;gap:2px;font-style:normal}
+.conf i b{width:5px;height:5px;border-radius:var(--radius-full);background:var(--line-strong)}
+.conf i b.on{background:var(--signal)}
+.conf.hi{background:var(--signal-soft);color:var(--ink)}
+.conf.lo{background:var(--warning-soft);color:var(--warning)}
+.conf.lo i b.on{background:var(--warning)}
+
+/* 다음 행동 — 모든 핵심 insight 는 여기서 끝난다 */
+.nextact{display:flex;align-items:center;gap:var(--space-3);margin-top:var(--gap-evidence-action);
+  padding:var(--space-3) var(--space-4);border:1px solid var(--line);
+  border-left:3px solid var(--signal);border-radius:var(--radius-md);background:var(--surface-raised)}
+.nextact .lb{font:var(--text-label);color:var(--ink-subtle);white-space:nowrap;flex:none}
+.nextact .tx{font:var(--text-body-strong);color:var(--ink);min-width:0}
+.nextact .go{margin-left:auto;font:var(--text-label);color:var(--action);white-space:nowrap;flex:none}
+
+/* 신호 강조 — Person Blue 는 채움으로만. 위 글자는 ink. */
+.sig{background:var(--signal-soft);color:var(--on-signal)}
+.sig-edge{border-color:var(--signal)}
+
+/* 12-column grid — gutter 24 */
+.g12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gutter);align-items:start}
+.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}
+.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
 
 /* ---------- artboard ---------- */
 .art{width:1440px;background:var(--surface);display:flex;flex-direction:column}
@@ -101,7 +170,8 @@ a{color:var(--action);text-decoration:none}a:hover{color:var(--action-hover);tex
 .brand{display:flex;align-items:center;gap:var(--space-2);font:var(--text-body-strong);
   color:var(--ink);white-space:nowrap}
 .brand .dot{width:32px;height:32px;flex:none;border-radius:var(--radius-sm);
-  background:url("/_blob/3f933f71922cb48295ada36d5be25263") center/contain no-repeat}
+  background:url("/_blob/3f933f71922cb48295ada36d5be25263") center/contain no-repeat,
+             url("./assets/person-a-logo.png") center/contain no-repeat}
 .top .sep{width:1px;height:18px;background:var(--line)}
 .pill{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--control-sm);
   padding:0 var(--space-3);border-radius:var(--radius-sm);font:var(--text-label);
@@ -148,11 +218,13 @@ a{color:var(--action);text-decoration:none}a:hover{color:var(--action-hover);tex
   border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface-raised)}
 
 .main{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;background:var(--surface)}
-.mhead{flex:none;padding:var(--space-6) var(--space-8) var(--space-4);border-bottom:1px solid var(--line)}
-.mhead h1{margin:0;font:var(--text-display);letter-spacing:var(--tracking-display)}
-.mhead .sub{margin-top:var(--space-2);font:var(--text-body);color:var(--ink-secondary)}
-.mbody{flex:1;min-height:0;padding:var(--space-6) var(--space-8);
-  display:flex;flex-direction:column;gap:var(--space-4)}
+.mhead{flex:none;padding:var(--space-6) var(--grid-margin) var(--space-4);border-bottom:1px solid var(--line)}
+.mhead .eyebrow{font:var(--text-label);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-subtle);margin-bottom:var(--gap-eyebrow-head)}
+.mhead h1{margin:0;font:var(--text-screen-title);letter-spacing:var(--tracking-screen-title)}
+.mhead .sub{margin-top:var(--gap-head-sub);font:var(--text-body);color:var(--ink-secondary);max-width:96ch}
+.mbody{flex:1;min-height:0;padding:var(--space-6) var(--grid-margin);
+  display:flex;flex-direction:column;gap:var(--gap-sectionhead-content)}
 
 /* ---------- context panel ---------- */
 .chat{width:320px;flex:none;border-left:1px solid var(--line);background:var(--surface-raised);
@@ -172,17 +244,17 @@ a{color:var(--action);text-decoration:none}a:hover{color:var(--action-hover);tex
   font:var(--text-body);color:var(--ink-subtle)}
 
 /* ---------- Card (§7.3) — 보더로 구분, 정적 카드에 그림자 없음 ---------- */
-.card{border:1px solid var(--line);border-radius:var(--radius-md);
+.card{border:1px solid var(--line);border-radius:var(--radius-lg);
   background:var(--surface-raised);overflow:hidden}
 .card.sunk{background:var(--surface-sunken)}
 .card>.ch{display:flex;align-items:center;gap:var(--space-2);
-  padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--line)}
-.card>.ch h3{margin:0;font:var(--text-heading);white-space:nowrap}
-.card>.cc{padding:var(--space-4)}
-.lab{font:var(--text-label);color:var(--ink-secondary);white-space:nowrap}
-.row{display:flex;gap:var(--space-4)}
+  padding:var(--space-4) var(--card-pad);border-bottom:1px solid var(--line)}
+.card>.ch h3{margin:0;font:var(--text-card-title);letter-spacing:var(--tracking-card-title);white-space:nowrap}
+.card>.cc{padding:var(--card-pad)}
+.lab{font:var(--text-label);letter-spacing:var(--tracking-label);color:var(--ink-secondary);white-space:nowrap}
+.row{display:flex;gap:var(--grid-gutter)}
 .row>*{min-width:0}
-.col{display:flex;flex-direction:column;gap:var(--space-4);min-width:0}
+.col{display:flex;flex-direction:column;gap:var(--grid-gutter);min-width:0}
 .sm{font:var(--text-body);color:var(--ink-secondary)}
 .xs{font:var(--text-caption);color:var(--ink-secondary)}
 .mu,.qu{color:var(--ink-subtle)} .fg{color:var(--ink)}
@@ -220,7 +292,7 @@ tr:last-child td{border-bottom:none}
 .kv b{font:var(--text-display);letter-spacing:var(--tracking-display);
   font-variant-numeric:tabular-nums;white-space:nowrap;flex:none}
 .kpi{display:flex;flex-direction:column;gap:var(--space-1);padding:var(--space-4);
-  border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface-raised)}
+  border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface-raised)}
 .kpi .v{font:var(--text-display);letter-spacing:var(--tracking-display);
   font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
 .chip{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--control-sm);
@@ -279,7 +351,7 @@ tr:last-child td{border-bottom:none}
 .kw .sc.hi{background:var(--success-soft);color:var(--success)}
 .kw .sc.mid{background:var(--warning-soft);color:var(--warning)}
 .kw .sc.lo{background:var(--danger-soft);color:var(--danger)}
-.axis{border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface-raised);overflow:hidden}
+.axis{border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface-raised);overflow:hidden}
 .axis>.ah{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-4);
   background:var(--surface-sunken);border-bottom:1px solid var(--line);
   font:var(--text-label);font-weight:var(--weight-semibold);white-space:nowrap}
@@ -291,10 +363,12 @@ tr:last-child td{border-bottom:none}
 .sub>.sh .car{color:var(--ink-subtle);width:10px}
 .sub>.sh .cnt{color:var(--ink-subtle);font-variant-numeric:tabular-nums}
 .drop{border:1px dashed var(--action);background:var(--action-soft);border-radius:var(--radius-md)}
+.overlay{border:1px solid var(--line);border-radius:var(--radius-xl);
+  background:var(--surface-raised);box-shadow:var(--shadow-md)}
 
   </style>
 </helmet>
-<div class="art" style="width: 1440px; height: 1300px;">
+<div class="art" style="width: 1440px; height: 1890px;">
   <div class="app">
     <header class="top">
   <div class="brand"><span class="dot"></span>DCX Agent</div>
@@ -312,8 +386,42 @@ tr:last-child td{border-bottom:none}
     <p class="xs" style="margin:6px 0 0;color:var(--sec)">무선 이어폰을 운동·건강 맥락에서 재정의할 미충족 니즈를 찾는다</p>
     <p class="xs" style="margin:6px 0 0">STEP 01 한줄 정의 · 전 단계 프롬프트 헤더로 상주</p></div></nav>
       <main class="main">
-        <div class="mhead"><h1>STEP 11 — 인사이트 도출</h1><div class="sub">앱 Stage 8-E · 여러 페르소나를 가로지르는 종합이라 insight-chat 대화형 캔버스에서 수행한다</div></div>
+        <div class="mhead"><div class="eyebrow">STEP 11-A · Data Shaping</div><h1>인사이트 도출</h1><div class="sub">앱 Stage 8-E · 여러 페르소나를 가로지르는 종합이라 insight-chat 대화형 캔버스에서 수행한다</div></div>
         <div class="mbody">
+<div class="g12" style="flex:none">
+  <section class="c8 card"><div class="cc">
+    <div class="signal">
+      <div class="eyebrow">Insight 2 · 페르소나 교차</div>
+      <h2 class="insight">서로 다른 두 사람이<br>같은 것을 원하고 있습니다.</h2>
+      <p class="interp">러닝하는 사람과 잠자는 사람이 각자 다른 맥락에서 <span class="fg">귀에 이미 있는 것으로 몸을 재고 싶다</span>는 하나의 요구로 수렴합니다.</p>
+      <p class="alt">다른 가능성 · 나머지 인사이트 3개는 단일 페르소나에서만 나왔습니다. 종합이 아니라 아직 개별 신호일 수 있습니다.</p>
+      <div class="evid">
+        <span>기여 페르소나 <span class="mono fg">2</span>명</span>
+        <span>인사이트 5개 중 2번</span>
+        <span>#심박 #워치병용 #수면</span>
+        <span class="conf hi">신뢰도 <i><b class="on"></b><b class="on"></b><b></b></i> 2/3 · 보통</span>
+        <span class="src">기여 근거 보기 →</span>
+      </div>
+      <div class="nextact">
+        <span class="lb">다음 행동</span>
+        <span class="tx">Insight 2를 STEP 11-B 경험 디자인 컨셉의 입력으로 확정한다</span>
+        <span class="go">컨셉 초안 보기 →</span>
+      </div>
+    </div>
+  </div></section>
+
+  <aside class="c4 col" style="gap:var(--space-3)">
+    <div class="row" style="gap:var(--space-3)">
+      <div class="kpi" style="flex:1"><span class="lab">인사이트</span><span class="v">5</span><span class="xs">대화형 캔버스에서 종합</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">교차 페르소나</span><span class="v">2<span class="xs" style="font-weight:400"> / 14</span></span><span class="xs">러너 · 베개 대신 이어팟</span></div>
+    </div>
+    <div class="card sunk"><div class="cc" style="padding:var(--space-4)">
+      <div class="lab">여기만 대화형인 이유</div>
+      <div class="xs" style="margin-top:6px">여러 페르소나를 가로지르는 종합이라 단일 페르소나 파이프라인으로는 나오지 않는다. 앱 Stage 8-E의 insight-chat 캔버스에서 수행한다.</div>
+    </div></div>
+  </aside>
+</div>
+
 <div class="card rel" style="flex:none">
   <span class="pin fl" style="top:12px;left:-9px">1</span>
   <div class="ch">
@@ -478,7 +586,7 @@ tr:last-child td{border-bottom:none}
   </section>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1890}}'>
 class Component extends DCLogic {
   renderVals() { return {}; }
 }

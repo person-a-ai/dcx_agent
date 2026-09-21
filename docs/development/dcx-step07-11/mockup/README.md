@@ -5,8 +5,24 @@
 목업 소스는 제품 소스와 분리해 `docs/development/dcx-step07-11/mockup/`에 있다. Design 캔버스 아티팩트의 게시 루트가 그곳이라 이동하지 않았다.
 
 - **아티팩트** https://claude.ai/artifact/8mb7VfY8ZyX2s7w8xpbJTK — 페이지 `Person A` (15 아트보드)
-- **소스** `docs/development/dcx-step07-11/mockup/parts/*.body.html` (내용) + `docs/development/dcx-step07-11/mockup/_shell.css` (Person A 토큰)
+- **소스** `docs/development/dcx-step07-11/mockup/parts/*.body.html` (내용) + `docs/development/dcx-step07-11/mockup/_shell.css` (Person A 토큰 — **수정본** 기준)
 - **빌드** `cd docs/development/dcx-step07-11/mockup && node build.mjs && node preview.mjs`
+
+## 디자인 기준 — 수정본 적용 (2026-09-21)
+
+`_shell.css`는 handoff 번들의 `tokens/*.css`(seed 산물)가 아니라 **`펄슨에이_디자인규칙_수정본`** 을 따른다.
+충돌하는 값은 수정본이 이긴다 — 근거는 번들의 `CLAUDE.md` 우선순위 항. 자세한 대조표는 루트 `DESIGN.persona.md` §0.
+
+- 토큰: Person Blue `#38B6F9` · Empathy White `#F8FCFF` · sidebar 224 · Card radius 14 / padding 24 · 역할 스케일 7단계(insight 800)
+- 블루 2색 역할 분리: `persona-blue` = 신호(채움·선택·차트, 위 글자는 ink) / `action` = 조작(링크·버튼·포커스)
+- 폰트: Pretendard 400/500/600/700 + **800(ExtraBold)** — 수정본의 dominant insight용. `assets/`는 gitignore 대상이라 새 클론에서는 다시 만들어야 한다 (번들 OTF → woff2 변환)
+- 스킬: `/person-a-design` (`~/.claude/skills/person-a-design/`)
+
+**수정본 구조가 들어간 화면은 STEP 07~11 일곱 개다.** 앞단(00~06)은 토큰 정합만 되어 있고,
+"사람의 변화" 문장·근거 블록·다음 행동 종결은 넣지 않았다 — 개발 범위가 07~11이고 앞단은 원본을 임시로 쓰기 때문이다.
+
+각 07~11 화면의 상단은 다음 순서를 지킨다:
+eyebrow → `insight.display`(화면당 **하나**, 800) → 해석 → 다른 가능성 → 근거(표본·기간·source·`신뢰도 n/3`·원문) → **다음 행동**
 
 ## 화면 15개
 

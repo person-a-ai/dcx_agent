@@ -1,21 +1,54 @@
-<!--h:2300-->
-<!--title:STEP 07 — 군집-->
+<!--h:2620-->
+<!--step:STEP 07 · Data Sensing-->
+<!--title:군집 → Touch Point-->
 <!--sub:기존 방법을 지우지 않고, 수정 방법을 나란히 놓는다 · ID는 한쪽에서만 발급한다 · 1.0 Touch Point 장표는 구조를 그대로 승계한다-->
 <!--chat:rail-->
 
 [[MAIN]]
-<div class="row rel" style="flex:none;gap:12px;align-items:stretch">
-  <span class="pin fl" style="top:-8px;left:-9px">1</span>
-  <div class="card" style="flex:1.45;border-color:var(--ind-ln);background:color-mix(in srgb, var(--persona-blue-100) 4%, transparent)"><div class="cc" style="padding:12px 15px;display:flex;align-items:center;gap:14px">
-    <div><div class="lab" style="color:var(--action-hover)">ID 발급 갈래 <span class="mono qu" style="text-transform:none;letter-spacing:0;font-weight:400">primary_method</span></div>
-      <div class="xs" style="margin-top:4px">나머지 갈래는 비교 화면에만 나온다 · 세션 단위로 되돌릴 수 있다</div></div>
-    <span class="grow"></span>
-    <span class="seg"><span class="on">수정 방법</span><span>기존 방법</span></span>
-  </div></div>
-  <div class="kpi" style="flex:.44"><span class="lab">L1 Cluster</span><span class="v">6</span><span class="xs">실루엣 최대 k · 3~14 탐색</span></div>
-  <div class="kpi" style="flex:.44"><span class="lab">L2 Persona</span><span class="v">14</span><span class="xs">클러스터당 2~3</span></div>
-  <div class="kpi" style="flex:.44"><span class="lab">L3 Context</span><span class="v">38</span><span class="xs">페르소나당 2~4</span></div>
-  <div class="kpi" style="flex:.66"><span class="lab">1.0 재현성</span><span class="v">.58<span class="xs" style="font-weight:400"> ARI · .66 NMI</span></span><span class="xs">두 갈래 최대겹침 매칭</span></div>
+<div class="g12" style="flex:none">
+
+  <!-- 사람의 변화 → 해석 → 다른 가능성 → 근거 → 다음 행동 (수정본 정보 순서) -->
+  <section class="c8 card"><div class="cc">
+    <div class="signal">
+      <div class="eyebrow">Touch Point · 가장 큰 군집 CL0</div>
+      <h2 class="insight">운동 중 몸 상태를 확인하려다<br>기기를 두 개 차게 되는 사람이 가장 많습니다.</h2>
+      <p class="interp">하나를 고르면 다른 하나를 포기해야 하는 구조여서, 기기를 <span class="fg">줄이고 싶다</span>는 요구가 반복해서 올라옵니다.</p>
+      <p class="alt">다른 가능성 · 광학 센서 정확도를 의심하는 반례가 1,180건 남아 있습니다. 삭제하지 않고 CL4로 보존했습니다.</p>
+      <div class="evid">
+        <span>표본 <span class="mono fg">14,820</span>건</span>
+        <span>최근 90일</span>
+        <span>커뮤니티 · 리뷰 통합</span>
+        <span class="conf hi">신뢰도 <i><b class="on"></b><b class="on"></b><b class="on"></b></i> 3/3 · 높음</span>
+        <span class="src">원문 보기 →</span>
+      </div>
+      <div class="nextact">
+        <span class="lb">다음 행동</span>
+        <span class="tx">CL4 정확도 불신 반례를 STEP 09 근거 수집 대상에 포함</span>
+        <span class="go">반례 원문 1,180건 확인하기 →</span>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- 근거 요약 4col -->
+  <aside class="c4 col" style="gap:var(--space-3)">
+    <div class="card rel"><div class="cc" style="padding:var(--space-4);display:flex;align-items:center;gap:var(--space-3)">
+      <span class="pin fl" style="top:-8px;left:-9px">1</span>
+      <div style="min-width:0">
+        <div class="lab">ID 발급 갈래 <span class="mono qu" style="text-transform:none;letter-spacing:0;font-weight:400">primary_method</span></div>
+        <div class="xs" style="margin-top:4px">나머지 갈래는 비교 화면에만 나온다 · 세션 단위로 되돌릴 수 있다</div>
+      </div>
+      <span class="grow"></span>
+      <span class="seg" style="flex:none"><span class="on">수정 방법</span><span>기존 방법</span></span>
+    </div></div>
+    <div class="row" style="gap:var(--space-3)">
+      <div class="kpi" style="flex:1"><span class="lab">L1 Cluster</span><span class="v">6</span><span class="xs">실루엣 최대 k · 3~14 탐색</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">L2 Persona</span><span class="v">14</span><span class="xs">클러스터당 2~3</span></div>
+    </div>
+    <div class="row" style="gap:var(--space-3)">
+      <div class="kpi" style="flex:1"><span class="lab">L3 Context</span><span class="v">38</span><span class="xs">페르소나당 2~4</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">1.0 재현성</span><span class="v">.58<span class="xs" style="font-weight:400"> ARI</span></span><span class="xs">.66 NMI · 두 갈래 최대겹침</span></div>
+    </div>
+  </aside>
 </div>
 
 <div class="row" style="flex:none;min-height:0">

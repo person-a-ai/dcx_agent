@@ -84,6 +84,7 @@ for (const f of files) {
   const h = meta(src, 'h', '1180');
   const title = meta(src, 'title', name);
   const sub = meta(src, 'sub', '');
+  const eyebrow = meta(src, 'step', '');
   const chatMode = meta(src, 'chat', 'full');
 
   const sections = src.split(/\[\[(MAIN|CHAT|ANN)\]\]/);
@@ -124,7 +125,7 @@ ${sheet}
     <div class="body">
       ${sidebar(name)}
       <main class="main">
-        <div class="mhead"><h1>${title}</h1>${sub ? `<div class="sub">${sub}</div>` : ''}</div>
+        <div class="mhead">${eyebrow ? `<div class="eyebrow">${eyebrow}</div>` : ''}<h1>${title}</h1>${sub ? `<div class="sub">${sub}</div>` : ''}</div>
         <div class="mbody">
 ${part.MAIN || ''}
         </div>

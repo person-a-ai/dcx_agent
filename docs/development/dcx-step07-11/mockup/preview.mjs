@@ -33,7 +33,7 @@ for (const f of files) {
   const s = fs.readFileSync(path.join(dir, 'project', f), 'utf8');
   const m = s.match(/<div class="art[\s\S]*<\/div>\s*<\/x-dc>/);
   const body = m ? m[0].replace(/<\/x-dc>/, '') : '(parse fail)';
-  const hm = body.match(/height:(\d+)px/);
+  const hm = body.match(/height:\s*(\d+)px/);
   const h = hm ? Number(hm[1]) : 600;
   out += `<div><div class="cap">${f}</div><div class="slot" style="width:1440px;height:${h}px">${body}</div></div>`;
 }

@@ -1,19 +1,45 @@
-<!--h:2260-->
-<!--title:STEP 09 — 근거 수집-->
+<!--h:2580-->
+<!--step:STEP 09 · Data Sensing-->
+<!--title:LDA → 근거 수집-->
 <!--sub:1.0 LDA 토픽맵을 승계해 Action을 뽑고, 근거는 관련성 단독이 아니라 감점·가점 두 항을 곱해 추천한다-->
 <!--chat:rail-->
 
 [[MAIN]]
-<div class="row" style="flex:none;gap:12px;align-items:stretch">
-  <div class="card sunk" style="flex:1.4"><div class="cc" style="padding:12px 15px;display:flex;align-items:center;gap:12px">
-    <span class="mono b ind">CL0-P1-C2</span>
-    <div><div class="sm fg" style="font-weight:510">이어팟 심박 측정에 대한 기대</div>
-      <div class="xs">주된 제약: 현재 생체 신호 측정 기능이 없다 · 키워드 #심박 #측정 #생체 #기대</div></div>
-    <span class="grow"></span><span class="seg"><span>C1</span><span class="on">C2</span><span>C3</span><span>C4</span></span>
-  </div></div>
-  <div class="kpi" style="flex:.62"><span class="lab">경험차원 커버리지</span><span class="v">4<span class="xs" style="font-weight:400"> / 6</span></span><span class="xs" style="color:var(--inf)">Think · Relate 비어 있음</span></div>
-  <div class="kpi" style="flex:.62"><span class="lab">후보</span><span class="v">50</span><span class="xs">3키 filter 필수 적용</span></div>
-  <div class="kpi" style="flex:.62"><span class="lab">노출</span><span class="v">10<span class="xs" style="font-weight:400"> + 직접 2</span></span><span class="xs">support 7 · counter 1 · rare 2</span></div>
+<div class="g12" style="flex:none">
+  <section class="c8 card"><div class="cc">
+    <div class="signal">
+      <div class="eyebrow">Action · 최대 토픽 A1</div>
+      <h2 class="insight">워치와 이어폰을 함께 챙겨 나가는 행동이<br>이 페르소나 원문의 38%입니다.</h2>
+      <p class="interp">토픽 비중이 가장 큰 행동이지만, 아직은 <span class="fg">토픽 가중치가 만든 라벨</span>입니다 — 실제 원문이 이 문장을 뒷받침하는지는 근거 수집이 끝나야 확인됩니다.</p>
+      <p class="alt">다른 가능성 · 경험차원 6개 중 Think · Relate가 비어 있습니다. 이 사람의 판단 과정과 관계 맥락은 아직 근거가 없습니다.</p>
+      <div class="evid">
+        <span>표본 <span class="mono fg">1,566</span>건</span>
+        <span><span class="mono">CL0-P1-C2</span></span>
+        <span>λ <span class="mono fg">0.60</span></span>
+        <span class="conf hi">신뢰도 <i><b class="on"></b><b class="on"></b><b></b></i> 2/3 · 보통</span>
+        <span class="src">원문 보기 →</span>
+      </div>
+      <div class="nextact">
+        <span class="lb">다음 행동</span>
+        <span class="tx">A3 정확도 근거 수집을 대기에서 풀어 반례를 먼저 확보한다</span>
+        <span class="go">A3 후보 865건 확인하기 →</span>
+      </div>
+    </div>
+  </div></section>
+
+  <aside class="c4 col" style="gap:var(--space-3)">
+    <div class="card sunk"><div class="cc" style="padding:var(--space-4);display:flex;align-items:center;gap:var(--space-3)">
+      <span class="mono b ind" style="flex:none">CL0-P1-C2</span>
+      <div style="min-width:0"><div class="sm fg" style="font-weight:510">이어팟 심박 측정에 대한 기대</div>
+        <div class="xs" style="margin-top:2px">주된 제약: 생체 신호 측정 기능 없음 · #심박 #측정 #생체 #기대</div></div>
+      <span class="grow"></span><span class="seg" style="flex:none"><span>C1</span><span class="on">C2</span><span>C3</span><span>C4</span></span>
+    </div></div>
+    <div class="row" style="gap:var(--space-3)">
+      <div class="kpi" style="flex:1"><span class="lab">경험차원</span><span class="v">4<span class="xs" style="font-weight:400"> / 6</span></span><span class="xs" style="color:var(--inf)">Think · Relate 비어 있음</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">후보</span><span class="v">50</span><span class="xs">3키 filter 필수 적용</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">노출</span><span class="v">10<span class="xs" style="font-weight:400"> +2</span></span><span class="xs">support 7 · counter 1 · rare 2</span></div>
+    </div>
+  </aside>
 </div>
 
 <div class="card rel" style="flex:none">

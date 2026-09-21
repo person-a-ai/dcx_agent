@@ -9,6 +9,51 @@ Person A 제품(SaaS 웹 앱)과 그 주변 화면을 만들 때 따르는 규�
 
 ---
 
+## 0. 이 문서의 효력 범위 — 먼저 읽을 것
+
+**이 문서는 seed 기준이다.** 대시보드·BI 화면의 현행 규칙은 `펄슨에이_디자인규칙_수정본`이고,
+handoff 번들의 `CLAUDE.md`가 그 우선순위를 못박는다. 충돌하면 **수정본이 이긴다.**
+
+- 수정본 원문: `~/.claude/skills/person-a-design/uploads/rules-revised.html`
+  (원본 파일명이 한글 NFD라 파일 도구로 안 열려서 ASCII 이름으로 설치했다)
+- 스킬 호출: `/person-a-design`
+
+### 이 문서와 수정본이 어긋나는 값
+
+| 항목 | 이 문서 (seed) | 수정본 (적용됨) |
+| --- | --- | --- |
+| 브랜드 블루 | `#37b7f8` · 장식 전용 | `#38B6F9` · **신호**(7% 예산) |
+| 그래파이트 | `#68696e` | `#676668` |
+| 페이지 배경 | `#f6f7f9` | Empathy White `#F8FCFF` (70%) |
+| 사이드바 | 240px | **224px** |
+| Card | radius 10 | **radius 14 · padding 24** |
+| Overlay | 미정의 | **radius 18** |
+| 타입 | 32/24/20/16/14 · max 700 | **역할 스케일 7단계 · insight 800** |
+| 그리드 | 미정의 | 12-col · gutter 24 · margin 32 |
+
+### 수정본이 요구하는, CSS로는 못 지키는 것
+
+1. **정보 순서** — 사람의 변화 → 행동 근거 → 해석 → 다른 가능성 → 다음 행동
+2. **한 화면에 dominant insight 하나** (`insight.display` 40/52/800)
+3. **모든 핵심 insight는 '다음 행동'으로 종료** (행동 문구 + 확인 링크)
+4. **근거 표기 필수** — 표본 수 · 기간 · source/channel · confidence · 원문 링크
+5. **Confidence 표기** — `신뢰도 3/3 · 높음`
+6. **분류 라벨은 Neutral 통일** — Person Blue는 핵심 신호·선택 상태·주요 행동에만
+7. **Gradient는 데이터 표현 전용** — hero·카드·버튼·내비 배경 금지
+8. 대시보드 골격 — Insight 8 + Evidence 4 → Supporting 6+6 → Trend/Table 12
+
+### 두 블루의 역할 분리 (이 저장소의 결정)
+
+수정본은 "Blue Means Signal"이라 하고, seed는 `#37b7f8`이 흰 배경 위 텍스트로 대비 2.3:1이라
+못 쓴다고 한다. 둘 다 지키는 해석은 하나뿐이다:
+
+- `persona-blue` `#38B6F9` = **신호**. 채움 · 선택 배경 · 차트 series · 인디케이터. **위 글자는 항상 `ink`.**
+- `action` `#0a73b5` = **조작**. 링크 · 버튼 · 포커스 링. 흰 배경 위 텍스트로 쓸 수 있는 유일한 블루(5.1:1).
+
+구현: `docs/development/dcx-step07-11/mockup/_shell.css`
+
+---
+
 ## 1. 원칙
 
 1. **데이터가 주인공** — 브랜드 색은 로고·선택 상태·히어로에만. UI의 액션은 별도의 액션 블루.
