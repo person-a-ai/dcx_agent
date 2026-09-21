@@ -1,0 +1,3 @@
+# 개발·테스트 전용. 프로덕션 이미지에는 넣지 않는다.
+pytest
+pytest-asyncio

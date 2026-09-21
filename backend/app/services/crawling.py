@@ -8,6 +8,7 @@ from collections import Counter
 from app.services.naver import search_naver_cafe
 from app.services.s3 import save_jsonl, load_data, list_objects, delete_object
 from app.utils.text import clean_text
+from app.utils.identity import make_doc_id, make_author_hash, to_iso_date
 from app.config import settings
 from app.jobs.manager import job_manager
 
@@ -104,8 +105,11 @@ def crawl_keywords(config: dict) -> int:
                     continue
 
                 results.append({
+                    "doc_id": make_doc_id(link),
                     "kw": kw, "title": title, "desc": desc,
-                    "link": link, "cafe": cafe, "date": postdate,
+                    "link": link, "cafe": cafe, "date": to_iso_date(postdate),
+                    # 작성자는 Phase 2(crawl4ai)에서만 알 수 있다. 지어내지 않는다.
+                    "author_hash": None,
                 })
                 total += 1
                 job_manager.update("crawl", sid, total=total)
@@ -178,7 +182,9 @@ def crawl_keywords(config: dict) -> int:
                 if cr_url in link_index:
                     rec = link_index[cr_url]
                     rec["body"] = cr.get("body") or ""
-                    rec["meta"] = cr_meta
+                    # author 는 레코드에 남기지 않는다 — 몇 명인지만 세면 된다.
+                    rec["author_hash"] = make_author_hash(cr_meta.get("author"))
+                    rec["meta"] = {k: v for k, v in cr_meta.items() if k != "author"}
                     if cr_status == "success":
                         body_crawled += 1
                         body_lengths.append(cr_meta.get("body_length", 0))
@@ -190,8 +196,9 @@ def crawl_keywords(config: dict) -> int:
                             like_counts.append(cr_meta["like_count"])
                         if cr_meta.get("board_name"):
                             board_counter[cr_meta["board_name"]] += 1
-                        if cr_meta.get("author"):
-                            authors.add(cr_meta["author"])
+                        _ah = make_author_hash(cr_meta.get("author"))
+                        if _ah:
+                            authors.add(_ah)
                     else:
                         body_failed += 1
 
