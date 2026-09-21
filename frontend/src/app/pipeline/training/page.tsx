@@ -38,11 +38,11 @@ export default function TrainingPage() {
     return (
       <div>
         <button onClick={() => router.push("/pipeline/labeling")} className="inline-flex items-center gap-1.5 text-stone-500 hover:text-stone-700 text-sm font-medium mb-4 transition-colors">← 라벨링으로</button>
-        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+        <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
           <h3 className="text-lg font-semibold text-stone-800 tracking-tight">학습</h3>
         </div>
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
-          <div className="bg-indigo-50/70 backdrop-blur-sm text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">3중 준지도 + LLM 앙상블</div>
+        <div className="bg-surface-raised rounded-2xl p-6 border border-line">
+          <div className="bg-action-soft text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">3중 준지도 + LLM 앙상블</div>
           <div className="grid grid-cols-4 gap-3 mb-5">
             {["LSTM", "CNN", "GRU", "Claude"].map((m) => (
               <div key={m} className="bg-stone-50 rounded-xl p-4 text-center border border-stone-100 hover:border-indigo-200 transition-colors">
@@ -51,7 +51,7 @@ export default function TrainingPage() {
               </div>
             ))}
           </div>
-          <button onClick={handleStart} className="w-full bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-indigo-600 active:scale-[0.99] shadow-sm transition-all">학습 시작</button>
+          <button onClick={handleStart} className="w-full bg-indigo-500 text-white py-3 rounded-lg text-sm font-semibold hover:bg-indigo-600 active:scale-[0.99] shadow-sm transition-all">학습 시작</button>
         </div>
       </div>
     );
@@ -59,17 +59,17 @@ export default function TrainingPage() {
 
   return (
     <div>
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+      <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
         <h3 className="text-lg font-semibold text-stone-800 tracking-tight">학습 진행중</h3>
       </div>
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+      <div className="bg-surface-raised rounded-2xl p-6 border border-line">
         {status === "done" ? (
           <>
-            <div className="bg-indigo-50/70 backdrop-blur-sm text-indigo-700 text-sm px-4 py-3 rounded-xl font-medium border border-indigo-100">
+            <div className="bg-action-soft text-indigo-700 text-sm px-4 py-3 rounded-xl font-medium border border-indigo-100">
               완료! 전체:{((data?.total as number) || 0).toLocaleString()} 관련:{((data?.relevant as number) || 0).toLocaleString()} 무관:{((data?.irrelevant as number) || 0).toLocaleString()}
             </div>
             <ProgressBar percent={100} />
-            <button onClick={handleNext} className="w-full bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-emerald-600 active:scale-[0.99] shadow-sm transition-all mt-5">클러스터링 →</button>
+            <button onClick={handleNext} className="w-full bg-action text-on-action py-3 rounded-lg text-sm font-semibold hover:bg-action-hover active:scale-[0.99] shadow-sm transition-all mt-5">클러스터링 →</button>
           </>
         ) : status === "error" ? (
           <div className="bg-rose-50 text-rose-700 text-sm px-4 py-3 rounded-xl border border-rose-100">{(data?.error as string) || "에러"}</div>

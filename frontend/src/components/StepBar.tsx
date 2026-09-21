@@ -29,14 +29,14 @@ export default function StepBar({ currentStep }: { currentStep: string }) {
   const idx = STEP_MAP[currentStep] ?? 0;
 
   return (
-    <div className="w-56 shrink-0 bg-white/50 backdrop-blur-xl border-r border-white/30 flex flex-col py-3 overflow-y-auto">
+    <div className="w-56 shrink-0 bg-surface-raised border-r border-line flex flex-col py-3 overflow-y-auto">
       {/* Progress summary */}
-      <div className="px-4 pb-3 mb-1 border-b border-stone-100/60">
+      <div className="px-4 pb-3 mb-1 border-b border-line">
         <div className="text-[11px] font-medium text-stone-400 uppercase tracking-wider mb-1.5">파이프라인</div>
         <div className="flex items-center gap-2">
           <div className="flex-1 h-1.5 bg-stone-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-500"
+              className="h-full bg-action rounded-full transition-all duration-500"
               style={{ width: `${((idx + 1) / STEPS.length) * 100}%` }}
             />
           </div>
@@ -58,8 +58,8 @@ export default function StepBar({ currentStep }: { currentStep: string }) {
               className={`
                 relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-200 group
                 ${isCurrent
-                  ? "bg-indigo-50/80 backdrop-blur-sm shadow-sm"
-                  : "hover:bg-white/60"
+                  ? "bg-action-soft shadow-sm"
+                  : "hover:bg-surface-raised"
                 }
               `}
             >
@@ -70,7 +70,7 @@ export default function StepBar({ currentStep }: { currentStep: string }) {
                   ${isCompleted
                     ? "bg-emerald-500 text-white shadow-sm"
                     : isCurrent
-                    ? "bg-indigo-500 text-white shadow-md shadow-indigo-200"
+                    ? "bg-indigo-500 text-white"
                     : "bg-stone-100 text-stone-400 group-hover:bg-stone-200"
                   }
                 `}

@@ -65,18 +65,18 @@ export default function CrawlingPage() {
 
     return (
       <div>
-        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+        <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
           <h3 className="text-lg font-semibold text-stone-800 tracking-tight">크롤링 진행중</h3>
         </div>
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+        <div className="bg-surface-raised rounded-2xl p-6 border border-line">
           {data?.status === "error" ? (
-            <div className="bg-red-50/70 backdrop-blur-sm text-red-700 text-sm px-4 py-3 rounded-xl font-medium border border-red-100">
+            <div className="bg-danger-soft text-red-700 text-sm px-4 py-3 rounded-xl font-medium border border-red-100">
               크롤링 오류: {data?.error || "알 수 없는 오류가 발생했습니다."}
             </div>
           ) : isStopped ? (
-            <div className="bg-amber-50/70 backdrop-blur-sm text-amber-700 text-sm px-4 py-3 rounded-xl font-medium border border-amber-100">중지됨 — {(data?.total || 0).toLocaleString()}건 수집 완료</div>
+            <div className="bg-warning-soft text-amber-700 text-sm px-4 py-3 rounded-xl font-medium border border-amber-100">중지됨 — {(data?.total || 0).toLocaleString()}건 수집 완료</div>
           ) : isDone ? (
-            <div className="bg-indigo-50/70 backdrop-blur-sm text-indigo-700 text-sm px-4 py-3 rounded-xl font-medium border border-indigo-100">완료! {(data?.total || 0).toLocaleString()}건</div>
+            <div className="bg-action-soft text-indigo-700 text-sm px-4 py-3 rounded-xl font-medium border border-indigo-100">완료! {(data?.total || 0).toLocaleString()}건</div>
           ) : (
             <div className="space-y-3">
               {/* Phase 1: API Collecting */}
@@ -116,7 +116,7 @@ export default function CrawlingPage() {
             <button
               onClick={handleStop}
               disabled={stopping}
-              className="w-full bg-red-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-red-600 active:scale-[0.99] shadow-sm transition-all mt-4 disabled:opacity-50"
+              className="w-full bg-red-500 text-white py-3 rounded-lg text-sm font-semibold hover:bg-red-600 active:scale-[0.99] shadow-sm transition-all mt-4 disabled:opacity-50"
             >
               {stopping ? "중지 요청중..." : "크롤링 중지"}
             </button>
@@ -124,7 +124,7 @@ export default function CrawlingPage() {
 
           {/* --- Done: Collection Stats Comparison (Crawl4AI mode) --- */}
           {isDone && data?.body_crawled != null && (
-            <div className="mt-5 bg-stone-50/70 rounded-xl p-4 border border-stone-100">
+            <div className="mt-5 bg-surface rounded-xl p-4 border border-stone-100">
               <b className="text-xs font-semibold text-stone-600">수집 통계</b>
               <div className="grid grid-cols-3 gap-3 mt-3">
                 <div className="text-center p-3 bg-white rounded-lg border border-stone-100">
@@ -153,7 +153,7 @@ export default function CrawlingPage() {
 
           {/* --- Done: Metadata Summary (Crawl4AI mode) --- */}
           {isDone && metaSummary && (
-            <div className="mt-4 bg-stone-50/70 rounded-xl p-4 border border-stone-100">
+            <div className="mt-4 bg-surface rounded-xl p-4 border border-stone-100">
               <b className="text-xs font-semibold text-stone-600">메타데이터 요약</b>
               <div className="grid grid-cols-3 gap-3 mt-3">
                 <div className="text-center p-3 bg-white rounded-lg border border-stone-100">
@@ -194,7 +194,7 @@ export default function CrawlingPage() {
               </div>
             </div>
           )}
-          {isDone && <button onClick={handleNext} className="w-full bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-emerald-600 active:scale-[0.99] shadow-sm transition-all mt-5">전처리 →</button>}
+          {isDone && <button onClick={handleNext} className="w-full bg-action text-on-action py-3 rounded-lg text-sm font-semibold hover:bg-action-hover active:scale-[0.99] shadow-sm transition-all mt-5">전처리 →</button>}
         </div>
       </div>
     );
@@ -207,11 +207,11 @@ export default function CrawlingPage() {
   return (
     <div>
       <button onClick={() => router.push("/pipeline/keywords")} className="inline-flex items-center gap-1.5 text-stone-500 hover:text-stone-700 text-sm font-medium mb-4 transition-colors">← 키워드 검토로</button>
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+      <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
         <h3 className="text-lg font-semibold text-stone-800 tracking-tight">크롤링 설정</h3>
       </div>
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
-        <div className="bg-indigo-50/70 backdrop-blur-sm text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100"><b>{kw.length}</b> 키워드</div>
+      <div className="bg-surface-raised rounded-2xl p-6 border border-line mb-5">
+        <div className="bg-action-soft text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100"><b>{kw.length}</b> 키워드</div>
         <div className="space-y-4">
 
           {/* Mode Selection */}
@@ -221,7 +221,7 @@ export default function CrawlingPage() {
               <button
                 type="button"
                 onClick={() => setMode("api_only")}
-                className={`p-3 rounded-xl border text-left transition-all ${mode === "api_only" ? "border-indigo-300 bg-indigo-50/70 ring-1 ring-indigo-200" : "border-stone-200 bg-white/70 hover:border-stone-300"}`}
+                className={`p-3 rounded-xl border text-left transition-all ${mode === "api_only" ? "border-indigo-300 bg-action-soft ring-1 ring-indigo-200" : "border-stone-200 bg-surface-raised hover:border-stone-300"}`}
               >
                 <div className="text-sm font-semibold text-stone-800">API-Only</div>
                 <div className="text-[11px] text-stone-500 mt-0.5">빠름 · 제목+요약</div>
@@ -229,7 +229,7 @@ export default function CrawlingPage() {
               <button
                 type="button"
                 onClick={() => setMode("api_crawl4ai")}
-                className={`p-3 rounded-xl border text-left transition-all ${mode === "api_crawl4ai" ? "border-indigo-300 bg-indigo-50/70 ring-1 ring-indigo-200" : "border-stone-200 bg-white/70 hover:border-stone-300"}`}
+                className={`p-3 rounded-xl border text-left transition-all ${mode === "api_crawl4ai" ? "border-indigo-300 bg-action-soft ring-1 ring-indigo-200" : "border-stone-200 bg-surface-raised hover:border-stone-300"}`}
               >
                 <div className="text-sm font-semibold text-stone-800">API + 본문 크롤링</div>
                 <div className="text-[11px] text-stone-500 mt-0.5">정밀 · 본문+메타데이터</div>
@@ -239,10 +239,10 @@ export default function CrawlingPage() {
 
           {/* Cookie Input (Crawl4AI mode only) */}
           {mode === "api_crawl4ai" && (
-            <div className="bg-amber-50/50 rounded-xl p-4 border border-amber-100">
+            <div className="bg-warning-soft rounded-xl p-4 border border-amber-100">
               <label className="block text-sm font-medium text-stone-700 mb-1.5">네이버 로그인 쿠키 (선택)</label>
               <textarea
-                className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-white/70 placeholder:text-stone-400 font-mono"
+                className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-surface-raised placeholder:text-stone-400 font-mono"
                 rows={2}
                 placeholder="NID_AUT=xxx; NID_SES=yyy"
                 value={cookies}
@@ -259,15 +259,15 @@ export default function CrawlingPage() {
 
           <div>
             <label className="block text-sm font-medium text-stone-700 mb-1.5">목표 건수</label>
-            <input type="number" className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-white/70 placeholder:text-stone-400" value={target} onChange={(e) => setTarget(Number(e.target.value))} />
+            <input type="number" className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-surface-raised placeholder:text-stone-400" value={target} onChange={(e) => setTarget(Number(e.target.value))} />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div><label className="block text-sm font-medium text-stone-700 mb-1.5">시작일</label><input type="date" className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-white/70" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} /></div>
-            <div><label className="block text-sm font-medium text-stone-700 mb-1.5">종료일</label><input type="date" className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-white/70" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
+            <div><label className="block text-sm font-medium text-stone-700 mb-1.5">시작일</label><input type="date" className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-surface-raised" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} /></div>
+            <div><label className="block text-sm font-medium text-stone-700 mb-1.5">종료일</label><input type="date" className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-surface-raised" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
           </div>
-          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">포함 카페</label><input className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-white/70 placeholder:text-stone-400" placeholder="비우면 전체" value={cafes} onChange={(e) => setCafes(e.target.value)} /></div>
-          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">제외 카페</label><input className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-white/70 placeholder:text-stone-400" placeholder="중고나라, 번개장터" value={excludeCafes} onChange={(e) => setExcludeCafes(e.target.value)} /></div>
-          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">광고 필터</label><textarea className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-white/70 placeholder:text-stone-400" rows={2} value={adFilter} onChange={(e) => setAdFilter(e.target.value)} /></div>
+          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">포함 카페</label><input className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-surface-raised placeholder:text-stone-400" placeholder="비우면 전체" value={cafes} onChange={(e) => setCafes(e.target.value)} /></div>
+          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">제외 카페</label><input className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-surface-raised placeholder:text-stone-400" placeholder="중고나라, 번개장터" value={excludeCafes} onChange={(e) => setExcludeCafes(e.target.value)} /></div>
+          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">광고 필터</label><textarea className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-surface-raised placeholder:text-stone-400" rows={2} value={adFilter} onChange={(e) => setAdFilter(e.target.value)} /></div>
         </div>
         <div className="mt-4">
           <b className="text-xs font-semibold text-stone-600">키워드 빈도 (카테고리별)</b>
@@ -278,7 +278,7 @@ export default function CrawlingPage() {
             <span className="px-3 py-1 bg-emerald-50 rounded-full text-xs font-semibold text-emerald-600">총 {kw.length}개</span>
           </div>
         </div>
-        <button onClick={handleStart} className="w-full bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-indigo-600 active:scale-[0.99] shadow-sm transition-all mt-5">크롤링 시작</button>
+        <button onClick={handleStart} className="w-full bg-indigo-500 text-white py-3 rounded-lg text-sm font-semibold hover:bg-indigo-600 active:scale-[0.99] shadow-sm transition-all mt-5">크롤링 시작</button>
       </div>
     </div>
   );

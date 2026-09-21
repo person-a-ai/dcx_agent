@@ -282,7 +282,7 @@ export default function KeywordsPage() {
       <div
         key={cat}
         className={`mb-4 p-3 rounded-xl transition-all ${
-          dragOverCat === cat ? "border-2 border-dashed border-indigo-300 bg-indigo-50/30" : "border-2 border-transparent"
+          dragOverCat === cat ? "border-2 border-dashed border-indigo-300 bg-action-soft" : "border-2 border-transparent"
         }`}
         onDragOver={(e) => handleDragOver(e, cat)}
         onDragLeave={handleDragLeave}
@@ -377,16 +377,16 @@ export default function KeywordsPage() {
 
     return (
       <div>
-        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+        <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
           <h3 className="text-lg font-semibold text-stone-800 tracking-tight">최종 키워드 검토</h3>
           <p className="text-stone-500 text-sm mt-1">클릭하여 승인/거절. 거절한 키워드는 크롤링에서 제외됩니다</p>
         </div>
-        <div className="bg-gradient-to-r from-indigo-50/70 to-violet-50/70 backdrop-blur-sm text-indigo-700 text-sm px-5 py-3 rounded-xl mb-5 font-medium border border-indigo-100">총 {kw.length}개</div>
+        <div className="bg-action-soft text-indigo-700 text-sm px-5 py-3 rounded-xl mb-5 font-medium border border-indigo-100">총 {kw.length}개</div>
         <div className="flex gap-3 mb-5">
           <button onClick={() => setRejected(new Set())} className="flex-1 py-2.5 rounded-xl text-sm font-medium border transition-colors bg-indigo-50 text-indigo-600 border-indigo-200 hover:bg-indigo-100">전체 승인</button>
           <button onClick={() => setRejected(new Set(kw.map((k) => k.id)))} className="flex-1 py-2.5 rounded-xl text-sm font-medium border transition-colors bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100">전체 거절</button>
         </div>
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+        <div className="bg-surface-raised rounded-2xl p-6 border border-line mb-5">
           <div className="flex justify-end mb-3">
             <button
               onClick={() => toggleAllCollapse(categories)}
@@ -408,7 +408,7 @@ export default function KeywordsPage() {
           </div>
         </div>
         <button onClick={() => { setIsFinal(false); doGenerate("r3-expand"); }} className="w-full bg-amber-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-amber-600 active:scale-[0.99] shadow-sm transition-all mb-3">키워드 더 생성</button>
-        <button onClick={finalize} className="w-full bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-emerald-600 active:scale-[0.99] shadow-sm transition-all">확정 → 크롤링</button>
+        <button onClick={finalize} className="w-full bg-action text-on-action py-3 rounded-lg text-sm font-semibold hover:bg-action-hover active:scale-[0.99] shadow-sm transition-all">확정 → 크롤링</button>
       </div>
     );
   }
@@ -417,7 +417,7 @@ export default function KeywordsPage() {
   if (loading) {
     return (
       <div>
-        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+        <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
           <h3 className="text-lg font-semibold text-stone-800 tracking-tight">{ROUND_NAMES[currentRound] || currentRound}</h3>
           <p className="text-stone-500 text-sm mt-1">{bk}</p>
         </div>
@@ -437,14 +437,14 @@ export default function KeywordsPage() {
 
   return (
     <div>
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+      <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
         <h3 className="text-lg font-semibold text-stone-800 tracking-tight">{ROUND_NAMES[currentRound] || currentRound}</h3>
         <p className="text-stone-500 text-sm mt-1">{bk}</p>
       </div>
-      <div className="bg-gradient-to-r from-indigo-50/70 to-violet-50/70 backdrop-blur-sm text-indigo-700 text-sm px-5 py-3 rounded-xl mb-5 font-medium border border-indigo-100">
+      <div className="bg-action-soft text-indigo-700 text-sm px-5 py-3 rounded-xl mb-5 font-medium border border-indigo-100">
         누적: {kw.length}개 | 신규: {newKw.length}개
       </div>
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+      <div className="bg-surface-raised rounded-2xl p-6 border border-line mb-5">
         <div className="flex justify-end mb-3">
           <button
             onClick={() => toggleAllCollapse(reviewCategories)}
@@ -459,7 +459,7 @@ export default function KeywordsPage() {
             <div
               key={cat}
               className={`mb-4 p-3 rounded-xl transition-all ${
-                dragOverCat === cat ? "border-2 border-dashed border-indigo-300 bg-indigo-50/30" : "border-2 border-transparent"
+                dragOverCat === cat ? "border-2 border-dashed border-indigo-300 bg-action-soft" : "border-2 border-transparent"
               }`}
               onDragOver={(e) => handleDragOver(e, cat)}
               onDragLeave={handleDragLeave}
@@ -525,7 +525,7 @@ export default function KeywordsPage() {
           <NewCategoryInput existingCategories={reviewCategories} onAdd={handleNewCategory} />
         </div>
       </div>
-      <button onClick={approve} className="w-full bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-emerald-600 active:scale-[0.99] shadow-sm transition-all">승인 → 다음</button>
+      <button onClick={approve} className="w-full bg-action text-on-action py-3 rounded-lg text-sm font-semibold hover:bg-action-hover active:scale-[0.99] shadow-sm transition-all">승인 → 다음</button>
     </div>
   );
 }

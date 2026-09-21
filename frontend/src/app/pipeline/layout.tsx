@@ -72,8 +72,8 @@ export default function PipelineLayout({ children }: { children: React.ReactNode
         </div>
         {/* Right panel - chatbot */}
         {chatOpen && (
-          <div className="w-[400px] shrink-0 bg-white/60 backdrop-blur-xl flex flex-col shadow-[-4px_0_20px_rgba(0,0,0,0.06)] border-l border-white/30">
-            <div className="px-5 py-3.5 border-b border-white/30 bg-white/40 backdrop-blur-sm font-semibold text-sm text-stone-700 flex items-center justify-between">
+          <div className="w-[400px] shrink-0 bg-surface-raised flex flex-col border-l border-line">
+            <div className="px-5 py-3.5 border-b border-line bg-surface-sunken text-label text-ink flex items-center justify-between">
               <span>💬 파이프라인 챗봇</span>
               <button onClick={() => setChatOpen(false)} className="text-stone-400 hover:text-stone-600 transition-colors text-lg leading-none">✕</button>
             </div>

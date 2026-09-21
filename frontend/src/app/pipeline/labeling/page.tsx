@@ -73,11 +73,11 @@ export default function LabelingPage() {
   return (
     <div>
       <button onClick={() => router.push("/pipeline/preprocess")} className="inline-flex items-center gap-1.5 text-stone-500 hover:text-stone-700 text-sm font-medium mb-4 transition-colors">← 전처리로</button>
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+      <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
         <h3 className="text-lg font-semibold text-stone-800 tracking-tight">라벨링</h3>
       </div>
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
-        <div className="bg-indigo-50/70 backdrop-blur-sm text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">
+      <div className="bg-surface-raised rounded-2xl p-6 border border-line">
+        <div className="bg-action-soft text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">
           목표:{targetCount}건 | 완료:{labeledCount}건
           <ProgressBar percent={pct} />
         </div>
@@ -105,8 +105,8 @@ export default function LabelingPage() {
           </div>
         )}
         <div className="flex gap-3 mt-5">
-          <button onClick={handleSave} className="flex-1 bg-amber-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-amber-600 active:scale-[0.99] shadow-sm transition-all">저장 후 다음</button>
-          <button onClick={handleDone} className="flex-1 bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-emerald-600 active:scale-[0.99] shadow-sm transition-all">완료 → 학습</button>
+          <button onClick={handleSave} className="flex-1 bg-amber-500 text-white py-3 rounded-lg text-sm font-semibold hover:bg-amber-600 active:scale-[0.99] shadow-sm transition-all">저장 후 다음</button>
+          <button onClick={handleDone} className="flex-1 bg-action text-on-action py-3 rounded-lg text-sm font-semibold hover:bg-action-hover active:scale-[0.99] shadow-sm transition-all">완료 → 학습</button>
         </div>
       </div>
     </div>

@@ -61,7 +61,7 @@ export default function CategoryInputPanel({
   };
 
   return (
-    <div className="bg-stone-50/80 backdrop-blur-sm rounded-xl border border-stone-200/60 px-4 py-3 mt-2">
+    <div className="bg-surface rounded-xl border border-line px-4 py-3 mt-2">
       {/* Manual input */}
       <div className="flex gap-2">
         <input
@@ -70,7 +70,7 @@ export default function CategoryInputPanel({
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="키워드 입력 (쉼표로 구분)"
-          className="flex-1 px-3 py-1.5 rounded-lg text-xs border border-stone-200 bg-white/70 backdrop-blur-sm focus:outline-none focus:border-indigo-300 focus:ring-1 focus:ring-indigo-200"
+          className="flex-1 px-3 py-1.5 rounded-lg text-xs border border-stone-200 bg-surface-raised focus:outline-none focus:border-indigo-300 focus:ring-1 focus:ring-indigo-200"
           autoFocus
         />
         <button
@@ -93,7 +93,7 @@ export default function CategoryInputPanel({
       )}
 
       {/* Divider */}
-      <div className="border-t border-stone-200/60 my-3" />
+      <div className="border-t border-line my-3" />
 
       {/* Suggested words */}
       <SuggestedWordsPanel

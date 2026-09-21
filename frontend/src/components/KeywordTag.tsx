@@ -19,12 +19,12 @@ function scoreClass(score: number) {
 export default function KeywordTag({ kw, score, variant, onClick, draggable, kwId, cat }: KeywordTagProps) {
   const base = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-all select-none hover:scale-[1.03]";
   const styles: Record<string, string> = {
-    old: "bg-stone-100/70 backdrop-blur-sm text-stone-500",
-    new: "bg-indigo-50/70 backdrop-blur-sm text-indigo-700 border border-indigo-200/60 shadow-sm",
-    approved: "bg-indigo-50/70 backdrop-blur-sm text-indigo-700 border border-indigo-200/60 shadow-sm",
-    rejected: "bg-stone-50/50 text-stone-400 line-through opacity-50",
-    manual: "bg-emerald-50/70 backdrop-blur-sm text-emerald-700 border border-emerald-200/60 shadow-sm",
-    suggested: "bg-violet-50/70 backdrop-blur-sm text-violet-700 border border-violet-200/60 shadow-sm",
+    old: "bg-surface-sunken text-stone-500",
+    new: "bg-action-soft text-indigo-700 border border-line shadow-sm",
+    approved: "bg-action-soft text-indigo-700 border border-line shadow-sm",
+    rejected: "bg-surface text-stone-400 line-through opacity-50",
+    manual: "bg-success-soft text-emerald-700 border border-success-soft shadow-sm",
+    suggested: "bg-surface-sunken text-violet-700 border border-line shadow-sm",
   };
 
   const handleDragStart = (e: React.DragEvent<HTMLSpanElement>) => {

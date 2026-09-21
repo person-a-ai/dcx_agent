@@ -48,7 +48,7 @@ export default function ChatPanel({ initialMessage, onSend }: ChatPanelProps) {
               className={`max-w-[80%] px-4 py-2.5 text-sm whitespace-pre-wrap shadow-sm ${
                 m.role === "user"
                   ? "bg-indigo-500 text-white rounded-2xl rounded-br-sm"
-                  : "bg-white/60 backdrop-blur-sm border border-white/40 text-stone-700 rounded-2xl rounded-bl-sm"
+                  : "bg-surface-raised border border-line text-stone-700 rounded-2xl rounded-bl-sm"
               }`}
             >
               {m.text}
@@ -57,16 +57,16 @@ export default function ChatPanel({ initialMessage, onSend }: ChatPanelProps) {
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-white/60 backdrop-blur-sm border border-white/40 px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-sm">
+            <div className="bg-surface-raised border border-line px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-sm">
               <div className="w-4 h-4 border-2 border-stone-300 border-t-indigo-400 rounded-full animate-spin" />
             </div>
           </div>
         )}
         <div ref={bottomRef} />
       </div>
-      <div className="border-t border-white/30 p-3 flex gap-2 bg-white/40 backdrop-blur-md">
+      <div className="border-t border-line p-3 flex gap-2 bg-surface-raised">
         <input
-          className="flex-1 border border-white/40 rounded-xl px-4 py-2.5 text-sm bg-white/70 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 placeholder:text-stone-400"
+          className="flex-1 border border-line rounded-xl px-4 py-2.5 text-sm bg-surface-raised focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 placeholder:text-stone-400"
           placeholder="메시지를 입력하세요..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -75,7 +75,7 @@ export default function ChatPanel({ initialMessage, onSend }: ChatPanelProps) {
         <button
           onClick={send}
           disabled={loading}
-          className="bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-600 active:scale-[0.98] disabled:opacity-40 shadow-sm"
+          className="bg-indigo-500 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-600 active:scale-[0.98] disabled:opacity-40 shadow-sm"
         >
           전송
         </button>

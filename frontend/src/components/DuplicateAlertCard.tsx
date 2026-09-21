@@ -9,7 +9,7 @@ interface DuplicateAlertCardProps {
 
 export default function DuplicateAlertCard({ keyword, existingCategory, onMove, onIgnore }: DuplicateAlertCardProps) {
   return (
-    <div className="bg-amber-50/70 backdrop-blur-sm rounded-xl border border-amber-200/60 px-4 py-3 mt-2">
+    <div className="bg-warning-soft rounded-xl border border-warning-soft px-4 py-3 mt-2">
       <p className="text-amber-800 text-xs mb-2">
         &apos;{keyword}&apos;는 &apos;{existingCategory}&apos; 카테고리에 이미 있습니다. 이동하시겠습니까?
       </p>
@@ -22,7 +22,7 @@ export default function DuplicateAlertCard({ keyword, existingCategory, onMove, 
         </button>
         <button
           onClick={onIgnore}
-          className="px-3 py-1 rounded-lg text-xs font-medium bg-stone-200 text-stone-600 hover:bg-stone-300 transition-colors"
+          className="px-3 py-1 rounded-lg text-xs font-medium bg-stone-100 text-stone-600 hover:bg-stone-200 transition-colors"
         >
           무시
         </button>

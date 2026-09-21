@@ -46,7 +46,7 @@ export default function SuggestedWordsPanel({
   const remaining = words.filter((w) => !addedWords.has(w.word));
 
   return (
-    <div className={embedded ? "" : "bg-violet-50/70 backdrop-blur-sm rounded-xl border border-violet-200/60 px-4 py-3 mt-2"}>
+    <div className={embedded ? "" : "bg-surface-sunken rounded-xl border border-line px-4 py-3 mt-2"}>
       {!fetched && !loading && (
         <button
           onClick={fetchSuggestions}

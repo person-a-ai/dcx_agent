@@ -108,11 +108,11 @@ export default function InsightsPage() {
   return (
     <div className="space-y-5">
       {/* Header + Session selector */}
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+      <div className="bg-surface-raised rounded-2xl p-5 border border-line">
         <b className="text-base font-semibold text-stone-800">인사이트 분석</b>
         <div className="mt-3">
           <select
-            className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-white/70 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition-colors"
+            className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-surface-raised focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition-colors"
             value={sid || ""}
             onChange={handleSelectSession}
           >
@@ -143,14 +143,14 @@ export default function InsightsPage() {
 
       {/* Empty state */}
       {!sid && !loading && (
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+        <div className="bg-surface-raised rounded-2xl p-6 border border-line">
           <p className="text-stone-500 text-sm">세션을 선택하면 분석 결과가 표시됩니다.</p>
         </div>
       )}
 
       {/* SNA Graph */}
       {showSNA && snaNodes.length > 0 && (
-        <div className="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-white/40">
+        <div className="bg-white rounded-2xl p-5 border border-line">
           <b className="text-base font-semibold text-stone-800">페르소나 네트워크</b>
           <div className="flex gap-4 text-xs text-stone-500 mt-2 mb-3">
             <span className="flex items-center gap-1.5">
@@ -170,7 +170,7 @@ export default function InsightsPage() {
       {/* Persona Results (pipeline done) */}
       {pipelineStatus === "done" && personas.length > 0 && (
         <div className="space-y-5">
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+          <div className="bg-surface-raised rounded-2xl p-5 border border-line">
             <b className="text-base font-semibold text-stone-800">페르소나 분석 결과</b>
             <span className="text-stone-400 text-sm ml-2">{bk}</span>
           </div>
@@ -180,7 +180,7 @@ export default function InsightsPage() {
             const topKw = (cInfo.keywords || []).slice(0, 6);
 
             return (
-              <div key={cl.cluster_id} className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+              <div key={cl.cluster_id} className="bg-surface-raised rounded-2xl p-6 border border-line">
                 {/* Cluster header */}
                 <div className="flex items-center gap-2 mb-3">
                   <b className="text-indigo-600 font-semibold">{cl.cluster_name || `클러스터 ${cl.cluster_id}`}</b>
@@ -191,7 +191,7 @@ export default function InsightsPage() {
                 {topKw.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-4">
                     {topKw.map((k) => (
-                      <span key={k} className="px-2.5 py-1 bg-indigo-50/80 backdrop-blur-sm rounded-full text-xs text-indigo-600 font-medium border border-indigo-100/50">
+                      <span key={k} className="px-2.5 py-1 bg-action-soft rounded-full text-xs text-indigo-600 font-medium border border-line">
                         {k}
                       </span>
                     ))}
@@ -205,11 +205,11 @@ export default function InsightsPage() {
 
                 {/* Full keywords */}
                 {cInfo.keywords && cInfo.keywords.length > 0 && (
-                  <div className="mt-5 pt-4 border-t border-stone-100/60">
+                  <div className="mt-5 pt-4 border-t border-line">
                     <b className="text-xs font-semibold text-stone-500">주요 키워드</b>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {cInfo.keywords.map((k) => (
-                        <span key={k} className="px-2.5 py-1 bg-indigo-50/80 backdrop-blur-sm rounded-full text-xs text-indigo-600 font-medium border border-indigo-100/50">
+                        <span key={k} className="px-2.5 py-1 bg-action-soft rounded-full text-xs text-indigo-600 font-medium border border-line">
                           {k}
                         </span>
                       ))}
@@ -225,7 +225,7 @@ export default function InsightsPage() {
                     </summary>
                     <div className="mt-3 space-y-2">
                       {cInfo.samples.map((s, i) => (
-                        <div key={i} className="bg-stone-50/80 backdrop-blur-sm rounded-xl p-3.5 text-sm leading-relaxed border border-stone-100/50">
+                        <div key={i} className="bg-surface rounded-xl p-3.5 text-sm leading-relaxed border border-line">
                           <b className="text-stone-700">[{s.kw}]</b>{" "}
                           <span className="font-medium text-stone-700">{s.title}</span>
                           <p className="text-stone-500 mt-1 text-[13px] line-clamp-3">{s.desc}</p>
@@ -239,7 +239,7 @@ export default function InsightsPage() {
             );
           })}
 
-          <div className="bg-gradient-to-r from-indigo-50/70 to-violet-50/70 backdrop-blur-sm text-indigo-700 text-sm px-5 py-3 rounded-xl font-medium border border-indigo-100/50">
+          <div className="bg-action-soft text-indigo-700 text-sm px-5 py-3 rounded-xl font-medium border border-line">
             인사이트 챗봇으로 더 깊이 분석하세요!
           </div>
         </div>
@@ -248,13 +248,13 @@ export default function InsightsPage() {
       {/* Cluster-only fallback (persona not done yet) */}
       {pipelineStatus === "cluster-only" && Object.keys(clusterData).length > 0 && (
         <div className="space-y-5">
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+          <div className="bg-surface-raised rounded-2xl p-5 border border-line">
             <b className="text-base font-semibold text-stone-800">클러스터 결과</b>
             <span className="text-stone-400 text-sm ml-2">{bk}</span>
           </div>
 
           {Object.entries(clusterData).map(([cid, cInfo]) => (
-            <div key={cid} className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+            <div key={cid} className="bg-surface-raised rounded-2xl p-6 border border-line">
               <div className="flex items-center gap-2 mb-3">
                 <b className="text-indigo-600 font-semibold">클러스터 {Number(cid) + 1}</b>
                 <span className="text-stone-400 text-xs">{cInfo.size || 0}건</span>
@@ -263,7 +263,7 @@ export default function InsightsPage() {
               {cInfo.keywords && cInfo.keywords.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-3">
                   {cInfo.keywords.map((k) => (
-                    <span key={k} className="px-2.5 py-1 bg-indigo-50/80 backdrop-blur-sm rounded-full text-xs text-indigo-600 font-medium border border-indigo-100/50">
+                    <span key={k} className="px-2.5 py-1 bg-action-soft rounded-full text-xs text-indigo-600 font-medium border border-line">
                       {k}
                     </span>
                   ))}
@@ -277,7 +277,7 @@ export default function InsightsPage() {
                   </summary>
                   <div className="mt-2 space-y-2">
                     {cInfo.samples.map((s, i) => (
-                      <div key={i} className="bg-stone-50/80 backdrop-blur-sm rounded-xl p-3 text-sm leading-relaxed border border-stone-100/50">
+                      <div key={i} className="bg-surface rounded-xl p-3 text-sm leading-relaxed border border-line">
                         <b className="text-stone-700">[{s.kw}]</b> {s.title}
                         <p className="text-stone-500 mt-1 text-xs line-clamp-2">{s.desc}</p>
                       </div>
@@ -288,7 +288,7 @@ export default function InsightsPage() {
             </div>
           ))}
 
-          <div className="bg-amber-50/70 backdrop-blur-sm text-amber-700 text-sm px-5 py-3 rounded-xl font-medium border border-amber-100/50">
+          <div className="bg-warning-soft text-amber-700 text-sm px-5 py-3 rounded-xl font-medium border border-amber-100/50">
             페르소나 도출을 완료하면 더 자세한 인사이트를 볼 수 있습니다.
           </div>
         </div>
@@ -296,7 +296,7 @@ export default function InsightsPage() {
 
       {/* In-progress state */}
       {pipelineStatus === "in-progress" && !loading && (
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+        <div className="bg-surface-raised rounded-2xl p-6 border border-line">
           <p className="text-stone-500 text-sm">파이프라인 진행중입니다. 완료 후 결과가 여기 표시됩니다.</p>
         </div>
       )}

@@ -58,16 +58,16 @@ export default function StartPage() {
   return (
     <div>
       <SessionList onSelect={handleLoad} />
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+      <div className="bg-surface-raised rounded-2xl p-6 border border-line">
         <h3 className="text-lg font-semibold text-stone-800 tracking-tight">새로 시작</h3>
         <div className="mt-5 space-y-4">
           <div>
             <label className="block text-sm font-medium text-stone-700 mb-1.5">메인 키워드</label>
-            <input className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-white/70 placeholder:text-stone-400" placeholder="예: 에어컨" value={bk} onChange={(e) => setBk(e.target.value)} />
+            <input className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-surface-raised placeholder:text-stone-400" placeholder="예: 에어컨" value={bk} onChange={(e) => setBk(e.target.value)} />
           </div>
           <div>
             <label className="block text-sm font-medium text-stone-700 mb-1.5">문제정의</label>
-            <textarea className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-white/70 placeholder:text-stone-400" rows={3} placeholder="예: 에어컨 구매 시 소비자 고민 파악" value={pd} onChange={(e) => setPd(e.target.value)} />
+            <textarea className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-surface-raised placeholder:text-stone-400" rows={3} placeholder="예: 에어컨 구매 시 소비자 고민 파악" value={pd} onChange={(e) => setPd(e.target.value)} />
           </div>
           <div>
             <label className="block text-sm font-medium text-stone-700 mb-1.5">타겟</label>
@@ -93,7 +93,7 @@ export default function StartPage() {
               ))}
             </div>
           </div>
-          <button onClick={handleNew} className="w-full bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-indigo-600 active:scale-[0.99] shadow-sm transition-all mt-2">시작</button>
+          <button onClick={handleNew} className="w-full bg-indigo-500 text-white py-3 rounded-lg text-sm font-semibold hover:bg-indigo-600 active:scale-[0.99] shadow-sm transition-all mt-2">시작</button>
         </div>
       </div>
     </div>

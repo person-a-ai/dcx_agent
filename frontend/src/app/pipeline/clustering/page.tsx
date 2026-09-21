@@ -57,12 +57,12 @@ export default function ClusteringPage() {
     return (
       <div>
         <button onClick={() => router.push("/pipeline/training")} className="inline-flex items-center gap-1.5 text-stone-500 hover:text-stone-700 text-sm font-medium mb-4 transition-colors">← 학습으로</button>
-        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+        <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
           <h3 className="text-lg font-semibold text-stone-800 tracking-tight">클러스터링</h3>
         </div>
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
-          <div className="bg-indigo-50/70 backdrop-blur-sm text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">TF-IDF + K-means + Ward</div>
-          <button onClick={handleStart} className="w-full bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-indigo-600 active:scale-[0.99] shadow-sm transition-all">시작</button>
+        <div className="bg-surface-raised rounded-2xl p-6 border border-line">
+          <div className="bg-action-soft text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">TF-IDF + K-means + Ward</div>
+          <button onClick={handleStart} className="w-full bg-indigo-500 text-white py-3 rounded-lg text-sm font-semibold hover:bg-indigo-600 active:scale-[0.99] shadow-sm transition-all">시작</button>
         </div>
       </div>
     );
@@ -70,13 +70,13 @@ export default function ClusteringPage() {
 
   return (
     <div>
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+      <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
         <h3 className="text-lg font-semibold text-stone-800 tracking-tight">클러스터링 {status === "done" ? "" : "진행중"}</h3>
       </div>
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+      <div className="bg-surface-raised rounded-2xl p-6 border border-line">
         {status === "done" ? (
           <>
-            <div className="bg-indigo-50/70 backdrop-blur-sm text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">완료! {numClusters}개</div>
+            <div className="bg-action-soft text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">완료! {numClusters}개</div>
             <ProgressBar percent={100} />
             <div className="grid grid-cols-2 gap-3 mt-4">
               {Array.from({ length: numClusters }, (_, i) => {
@@ -97,9 +97,9 @@ export default function ClusteringPage() {
             </div>
             <div className="mt-4">
               <label className="block text-sm font-medium text-stone-700 mb-1.5">병합 (예: 1,3,5)</label>
-              <input className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-white/70 placeholder:text-stone-400" placeholder="같은 주제 묶기" value={mergeInput} onChange={(e) => setMergeInput(e.target.value)} />
+              <input className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-surface-raised placeholder:text-stone-400" placeholder="같은 주제 묶기" value={mergeInput} onChange={(e) => setMergeInput(e.target.value)} />
             </div>
-            <button onClick={handleRefine} className="w-full bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-emerald-600 active:scale-[0.99] shadow-sm transition-all mt-5">정제 → 페르소나</button>
+            <button onClick={handleRefine} className="w-full bg-action text-on-action py-3 rounded-lg text-sm font-semibold hover:bg-action-hover active:scale-[0.99] shadow-sm transition-all mt-5">정제 → 페르소나</button>
           </>
         ) : status === "error" ? (
           <div className="bg-rose-50 text-rose-700 text-sm px-4 py-3 rounded-xl border border-rose-100">{(data?.error as string) || "에러"}</div>

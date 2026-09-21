@@ -41,12 +41,12 @@ export default function PersonasPage() {
     return (
       <div>
         <button onClick={() => router.push("/pipeline/clustering")} className="inline-flex items-center gap-1.5 text-stone-500 hover:text-stone-700 text-sm font-medium mb-4 transition-colors">← 클러스터링으로</button>
-        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+        <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
           <h3 className="text-lg font-semibold text-stone-800 tracking-tight">페르소나 도출</h3>
         </div>
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
-          <div className="bg-indigo-50/70 backdrop-blur-sm text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">Claude가 클러스터별 페르소나를 도출합니다.</div>
-          <button onClick={handleStart} className="w-full bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-indigo-600 active:scale-[0.99] shadow-sm transition-all mb-3">페르소나 도출 시작</button>
+        <div className="bg-surface-raised rounded-2xl p-6 border border-line">
+          <div className="bg-action-soft text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">Claude가 클러스터별 페르소나를 도출합니다.</div>
+          <button onClick={handleStart} className="w-full bg-indigo-500 text-white py-3 rounded-lg text-sm font-semibold hover:bg-indigo-600 active:scale-[0.99] shadow-sm transition-all mb-3">페르소나 도출 시작</button>
           <p className="text-stone-400 text-xs">임베딩 + 페르소나 도출이 자동 진행됩니다</p>
         </div>
       </div>
@@ -55,18 +55,18 @@ export default function PersonasPage() {
 
   return (
     <div>
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40 mb-5">
+      <div className="bg-surface-raised rounded-2xl p-5 border border-line mb-5">
         <h3 className="text-lg font-semibold text-stone-800 tracking-tight">페르소나 도출{status === "done" ? " 완료" : "중"}</h3>
       </div>
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-white/40">
+      <div className="bg-surface-raised rounded-2xl p-6 border border-line">
         {status === "done" ? (
           <>
-            <div className="bg-indigo-50/70 backdrop-blur-sm text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">완료! {personas.length}개 클러스터</div>
+            <div className="bg-action-soft text-indigo-700 text-sm px-4 py-3 rounded-xl mb-4 font-medium border border-indigo-100">완료! {personas.length}개 클러스터</div>
             <ProgressBar percent={100} />
             <div className="space-y-6 mt-5">
               {personas.map((cl) => (
                 <div key={cl.cluster_id}>
-                  <div className="text-base font-bold text-indigo-600 mb-3 px-5 py-3 bg-gradient-to-r from-indigo-50/70 to-violet-50/70 backdrop-blur-sm rounded-xl border border-indigo-100">
+                  <div className="text-base font-bold text-indigo-600 mb-3 px-5 py-3 bg-action-soft rounded-xl border border-indigo-100">
                     {cl.cluster_name || `클러스터 ${cl.cluster_id}`}
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -77,7 +77,7 @@ export default function PersonasPage() {
                 </div>
               ))}
             </div>
-            <button onClick={() => router.push("/pipeline/start")} className="w-full bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-emerald-600 active:scale-[0.99] shadow-sm transition-all mt-6">처음으로</button>
+            <button onClick={() => router.push("/pipeline/start")} className="w-full bg-action text-on-action py-3 rounded-lg text-sm font-semibold hover:bg-action-hover active:scale-[0.99] shadow-sm transition-all mt-6">처음으로</button>
           </>
         ) : status === "error" ? (
           <div className="bg-rose-50 text-rose-700 text-sm px-4 py-3 rounded-xl border border-rose-100">{(data?.error as string) || "에러"}</div>
