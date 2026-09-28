@@ -105,6 +105,9 @@ class TrainRequest(BaseModel):
 class ClusterRequest(BaseModel):
     sid: str = "s_unknown"
     num_clusters: int = 0
+    # "embedding" 이 ID 발급처다. "ward" 는 1.0 비교용이라 cluster_id 를
+    # 발급하지 않는다 (03-plan.md P1/T6).
+    method: str = "embedding"
 
 
 class ClusterRefineRequest(BaseModel):
