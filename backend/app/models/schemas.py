@@ -97,6 +97,9 @@ class TrainRequest(BaseModel):
     sid: str = "s_unknown"
     bk: str = ""
     problemDef: str = ""
+    # 목표 오류율. 검수량을 정하는 입력이다 — escalate_threshold 는 여기서
+    # 계산되므로 임계를 직접 받지 않는다 (계약 §2.2).
+    alpha: float = 0.03
 
 
 class ClusterRequest(BaseModel):
