@@ -3,7 +3,7 @@ from fastapi import APIRouter
 
 from app.services.s3 import save_json, load_json, list_prefixes, delete_object
 from app.jobs.manager import job_manager
-from app.models.schemas import SessionSaveRequest
+from app.models.schemas import SessionSaveRequest, normalize_known_insights
 
 router = APIRouter()
 
@@ -11,8 +11,14 @@ router = APIRouter()
 @router.post("/save-session")
 def save_session(req: SessionSaveRequest):
     try:
-        save_json(f"sessions/{req.sid}/session.json", req.data)
-        return {"status": "saved"}
+        data = dict(req.data)
+        # known_insights 는 저장 시점에 모양을 맞춘다 — 뒤 단계가 id 로
+        # 좌표를 찾으므로 여기서 어긋나면 STEP 05·09 가 조용히 빗나간다.
+        insights, warnings = normalize_known_insights(data.get("known_insights"))
+        data["known_insights"] = insights
+        save_json(f"sessions/{req.sid}/session.json", data)
+        # 경고는 알려주기만 한다. 저장을 막지 않는다.
+        return {"status": "saved", "warnings": warnings}
     except Exception as e:
         return {"status": "error", "error": str(e)}
 

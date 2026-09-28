@@ -10,6 +10,11 @@ const AGES = ["주부", "직장인", "1인가구", "신혼부부", "육아맘", 
 const RANGES = ["20대", "30대", "40대", "50대+"];
 const GENDERS = ["남성", "여성"];
 
+// known_insights — STEP 01 에서 받아 STEP 05 가 좌표를 붙이고
+// STEP 09 리랭킹이 감점 항으로 쓴다. 서버(schemas.py)와 같은 값.
+const KI_MIN = 5;
+const KI_MAX = 10;
+
 export default function StartPage() {
   const router = useRouter();
   const store = useSessionStore();
@@ -18,6 +23,13 @@ export default function StartPage() {
   const [ages, setAges] = useState<string[]>([]);
   const [ar, setAr] = useState<string[]>([]);
   const [gens, setGens] = useState<string[]>([]);
+  const [ki, setKi] = useState<string[]>(["", "", ""]);
+  const [warnings, setWarnings] = useState<string[]>([]);
+
+  const kiFilled = ki.map((t) => t.trim()).filter(Boolean);
+  const kiOff = kiFilled.length < KI_MIN || kiFilled.length > KI_MAX;
+  const setKiAt = (i: number, v: string) =>
+    setKi(ki.map((t, j) => (j === i ? v : t)));
 
   const toggle = (arr: string[], val: string, setter: (v: string[]) => void) => {
     setter(arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val]);
@@ -27,9 +39,14 @@ export default function StartPage() {
     if (!bk.trim()) return alert("키워드 입력");
     if (!pd.trim()) return alert("문제정의 입력");
     const sid = "s" + Date.now();
-    const sd = { bk, problemDef: pd, ages, ageRange: ar, gens, allKw: [], sid, step: "r1" };
+    const sd = {
+      bk, problemDef: pd, ages, ageRange: ar, gens, allKw: [], sid, step: "r1",
+      known_insights: kiFilled.map((text) => ({ text })),
+    };
     store.setSession({ sid, bk, pd, ages, ar, gens, kw: [], step: "r1", sd });
-    await saveSession(sid, sd);
+    const res = await saveSession(sid, sd);
+    // 개수 경고는 막지 않는다 — 알려주고 그대로 넘어간다.
+    if (res?.warnings?.length) setWarnings(res.warnings);
     router.push("/pipeline/keywords");
   };
 
@@ -93,6 +110,52 @@ export default function StartPage() {
               ))}
             </div>
           </div>
+          <div>
+            <div className="flex items-baseline gap-2 mb-1.5">
+              <label className="block text-sm font-medium text-stone-700">이미 알고 있는 사실</label>
+              <span className="text-meta text-ink-subtle">{KI_MIN}~{KI_MAX}문장</span>
+              <span className="grow" />
+              <span className={`text-meta ${kiOff ? "text-amber-700" : "text-ink-subtle"}`}>
+                {kiFilled.length} / {KI_MIN}~{KI_MAX}
+              </span>
+            </div>
+            <div className="flex flex-col gap-2">
+              {ki.map((t, i) => (
+                <div key={i} className="flex gap-2">
+                  <input
+                    className="flex-1 border border-stone-200 rounded-lg px-4 py-2.5 text-sm bg-surface-raised placeholder:text-stone-400"
+                    placeholder="예: 러너는 심박을 보려고 워치를 추가로 착용한다"
+                    value={t}
+                    onChange={(e) => setKiAt(i, e.target.value)}
+                  />
+                  {ki.length > 1 && (
+                    <button
+                      onClick={() => setKi(ki.filter((_, j) => j !== i))}
+                      className="px-3 rounded-lg text-sm text-ink-subtle border border-stone-200 hover:bg-stone-100 transition-colors"
+                      title="이 문장 지우기"
+                    >−</button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={() => setKi([...ki, ""])}
+              className="w-full mt-2 py-2 rounded-lg text-xs font-medium border border-dashed border-stone-300 text-ink-subtle hover:bg-stone-100 transition-colors"
+            >＋ 문장 추가</button>
+            <p className="mt-2 text-meta text-ink-subtle leading-relaxed">
+              여기 적힌 것과 겹치는 문서는 STEP 09 근거 순위에서 내려간다.
+              적지 않으면 이미 아는 이야기가 근거로 되돌아온다.
+            </p>
+          </div>
+
+          {warnings.length > 0 && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
+              {warnings.map((w, i) => (
+                <p key={i} className="text-meta text-amber-800 leading-relaxed">{w}</p>
+              ))}
+            </div>
+          )}
+
           <button onClick={handleNew} className="w-full bg-indigo-500 text-white py-3 rounded-lg text-sm font-semibold hover:bg-indigo-600 active:scale-[0.99] shadow-sm transition-all mt-2">시작</button>
         </div>
       </div>

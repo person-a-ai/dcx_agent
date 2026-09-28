@@ -12,7 +12,10 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 export const listSessions = () => request<{ status: string; sessions: { sid: string; bk: string; step: string }[] }>("/sessions");
 export const getSession = (sid: string) => request<{ status: string; data: Record<string, unknown> }>(`/session/${sid}`);
 export const saveSession = (sid: string, data: Record<string, unknown>) =>
-  request("/save-session", { method: "POST", body: JSON.stringify({ sid, data }) });
+  request<{ status: string; warnings?: string[] }>("/save-session", {
+    method: "POST",
+    body: JSON.stringify({ sid, data }),
+  });
 export const deleteSession = (sid: string) => request(`/delete-session/${sid}`, { method: "DELETE" });
 
 // Keywords
