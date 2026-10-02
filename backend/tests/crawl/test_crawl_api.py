@@ -679,3 +679,37 @@ def test_registered_sources_status_and_project_defaults(real_sources, env, monke
     manifest = store.read_json(control.collection_dir('S') / 'manifest.json')
     assert manifest['channels'] == sources
     assert len(env.calls) == 1  # Popen is injected; no real channel is contacted.
+
+
+def test_partial_naver_limits_preserve_defaults(env, monkeypatch):
+    monkeypatch.setattr(control, 'available_sources', lambda: ['naver_blog'])
+    response = env.client.put('/crawl/S/config', json={
+        'channels': ['naver_blog'], 'perChannel': {'naver_blog': {'max_per_keyword': 25}}})
+    assert response.status_code == 200
+    saved = store.load_session('S')['crawlConfig']
+    assert saved['perChannel']['naver_blog'] == {'max_per_keyword': 25}
+    control.start_list('S')
+    assert control._status_settings(store.load_session('S'))['min_interval_s']['naver_blog'] == 1
+    run = worker._Run(env.root, 'test', 'list', ['naver_blog'], None, saved)
+    try:
+        assert run.limiters['naver_blog'].min_interval_s == 1
+        assert run.limiters['naver_blog'].concurrency == 1
+    finally:
+        run.close('stopped')
+
+
+def test_resume_legacy_blocked_list_after_three_attempts(env, monkeypatch):
+    root, _ = prepared(env)
+    with closing(CrawlQueue(root / 'queue.sqlite')) as q:
+        q.connection.execute("UPDATE list_tasks SET status='failed', attempts=3, last_error='AdapterBlocked'")
+    assert env.client.post('/crawl/S/resume').status_code == 200
+    with closing(CrawlQueue(root / 'queue.sqlite')) as q:
+        assert {tuple(r) for r in q.connection.execute('SELECT status, attempts FROM list_tasks')} == {('pending', 0)}
+        q.connection.execute("UPDATE runs SET status='done'")
+    class Ready:
+        def list_page(self, kw, cursor):
+            return ListPage([], None, 0)
+    monkeypatch.setitem(REGISTRY, 'fixture', Ready)
+    worker.run_list('S', collection=root)
+    with closing(CrawlQueue(root / 'queue.sqlite')) as q:
+        assert {r[0] for r in q.connection.execute('SELECT status FROM list_tasks')} == {'done'}

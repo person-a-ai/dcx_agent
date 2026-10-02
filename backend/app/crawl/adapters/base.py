@@ -37,6 +37,10 @@ class FetchedDoc:
 class AdapterBlocked(Exception):
     """Real adapters raise this on HTTP 403 or 429."""
 
+    def __init__(self, message='', *, host=None):
+        super().__init__(message)
+        self.host = host
+
 
 class ChannelAdapter(Protocol):
     source: str

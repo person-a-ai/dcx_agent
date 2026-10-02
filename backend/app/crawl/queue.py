@@ -279,13 +279,19 @@ class CrawlQueue:
             raise LeaseLost('List task is no longer owned by this run')
         return row
 
-    def mark_list_failed(self, task: ListTask, err: str) -> None:
+    def mark_list_failed(self, task: ListTask, err: str, *, blocked=False) -> None:
         with self._write() as db:
             row = self._list_owner(db, task)
-            db.execute("""UPDATE list_tasks SET attempts=attempts+1,last_error=?,
+            db.execute("""UPDATE list_tasks SET attempts=attempts+?,last_error=?,
                 status=?,lease_run_id=NULL WHERE kw=? AND source=? AND cursor=?""",
-                       (err, 'failed' if row['attempts'] + 1 >= 3 else 'pending',
+                       (int(not blocked), err, 'failed' if not blocked and row['attempts'] + 1 >= 3 else 'pending',
                         task.kw, task.source, task.cursor or ''))
+
+    def requeue_blocked_lists(self, sources):
+        with self._write() as db:
+            db.executemany("""UPDATE list_tasks SET status='pending',attempts=0,lease_run_id=NULL
+                WHERE source=? AND status='failed' AND last_error='AdapterBlocked'""",
+                [(s,) for s in sources])
 
     def _prepare(self, items, task=None):
         result = []
@@ -315,7 +321,7 @@ class CrawlQueue:
             db.execute('INSERT OR IGNORE INTO url_hits VALUES (?,?,?,?,?,?)', row[:5] + (row[9],))
         return added
 
-    def record_list_page(self, task: ListTask, items: list[ListItemLike], next_cursor: str | None, *, filter_rules=None):
+    def record_list_page(self, task: ListTask, items: list[ListItemLike], next_cursor: str | None, *, filter_rules=None, total_hint=None):
         prepared = self._prepare(items, task)
         with self._write() as db:
             self._list_owner(db, task)
@@ -326,8 +332,8 @@ class CrawlQueue:
                         WHERE url_norm=? AND source=? AND status='pending' AND attempts=0""",
                         (rule, rule, row[0], row[1]))
             db.execute('''UPDATE list_tasks SET status='done', fetched=?, attempts=attempts+1,
-                last_error=NULL,lease_run_id=NULL WHERE kw=? AND source=? AND cursor=?''',
-                       (len(prepared), task.kw, task.source, task.cursor or ''))
+                last_error=NULL,lease_run_id=NULL,total_hint=? WHERE kw=? AND source=? AND cursor=?''',
+                       (len(prepared), total_hint, task.kw, task.source, task.cursor or ''))
             if next_cursor is not None:
                 db.execute('INSERT OR IGNORE INTO list_tasks(kw,source,cursor) VALUES (?,?,?)',
                            (task.kw, task.source, next_cursor))
@@ -433,10 +439,17 @@ class CrawlQueue:
                            (doc_count, last_error, fetch_level, access, url_norm, source))
 
     def mark_failed_attempt(self, url_norm: str, source: str, last_error: str,
-                            max_attempts: int = 3, backoff_s: float = 1) -> str:
+                            max_attempts: int = 3, backoff_s: float = 1, *, blocked=False) -> str:
         """Return pending for retry, or exhausted while retaining the snippet lease."""
         with self._write() as db:
             row = self._owns_completion(db, url_norm, source)
+            if blocked:
+                db.execute("""UPDATE urls SET status='pending',attempts=max(0,attempts-1),
+                    last_error=?,retry_at=?,lease_until=NULL,lease_run_id=NULL,exhausted=0
+                    WHERE url_norm=? AND source=?""",
+                    (last_error, time.time() + backoff_s, url_norm, source))
+                self._apply_exclusions(db, keys=[(url_norm, source)])
+                return 'pending'
             db.execute('UPDATE urls SET max_attempts=? WHERE url_norm=? AND source=?',
                        (max_attempts, url_norm, source))
             if row['exhausted'] or row['attempts'] >= max_attempts:

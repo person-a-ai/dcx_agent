@@ -1,5 +1,6 @@
 """Shared keyless search parsing and CommunityAdapter HTTP lifecycle."""
 import re
+from html import unescape
 from collections import OrderedDict
 from threading import Lock
 from datetime import datetime, timedelta
@@ -8,8 +9,11 @@ from zoneinfo import ZoneInfo
 
 from selectolax.parser import HTMLParser
 
+from app.config import settings
+from app.external.base import configured
+from app.crawl.ratelimit import ChannelLimiter
 from app.crawl.adapters.base import AdapterBlocked, ListItem, ListPage
-from app.crawl.adapters.community import CommunityAdapter, selected, text
+from app.crawl.adapters.community import CommunityAdapter, html_text, selected, text
 
 KST = ZoneInfo('Asia/Seoul')
 
@@ -17,9 +21,16 @@ KST = ZoneInfo('Asia/Seoul')
 class NaverAdapter(CommunityAdapter):
     def __init__(self, client=None, *, now=None, **kwargs):
         super().__init__(client, **kwargs)
+        self.search_limiter = self._limiter
+        self.search_limiter.blocked = False
+        self.api_limiter = ChannelLimiter(2, .1, **kwargs)
         self._pages = OrderedDict()
         self._pages_lock = Lock()
         self.now = now or (lambda: datetime.now(KST))
+
+    @property
+    def api_configured(self):
+        return configured('NAVER_CLIENT_ID') and configured('NAVER_CLIENT_SECRET')
 
     @property
     def kind(self):
@@ -70,8 +81,15 @@ class NaverAdapter(CommunityAdapter):
         return f'https://{self.kind}.naver.com/{owner}/{article_id}'
 
     def request(self, url, *, restricted=False):
-        with self._limiter:
+        search = urlsplit(url).hostname == 'search.naver.com'
+        limiter = self.search_limiter if search else self._limiter
+        with limiter:
+            if search and limiter.blocked:
+                raise AdapterBlocked('Naver search restricted', host='search.naver.com')
             response = self.client.get(url, headers=self.headers(), follow_redirects=False)
+            if search and '검색 서비스 이용이 제한' in response.content.decode('utf-8', errors='replace'):
+                limiter.blocked = True
+                raise AdapterBlocked('Naver search restricted', host='search.naver.com')
         if response.status_code == 429 or (response.status_code == 403 and not restricted):
             raise AdapterBlocked(f'{self.source}: HTTP {response.status_code}')
         # Cafe detail classifies 403 JSON restrictions versus channel blocking.
@@ -79,7 +97,47 @@ class NaverAdapter(CommunityAdapter):
             response.raise_for_status()
         return response
 
+    def api_list_page(self, kw, cursor):
+        sort, start = (cursor.split(':') if cursor and ':' in cursor else ('sim', cursor or '1'))
+        start = int(start)
+        if sort not in ('sim', 'date') or not 1 <= start <= 1000 or (start - 1) % 100:
+            raise ValueError('Invalid Naver API cursor')
+        endpoint = 'blog' if self.kind == 'blog' else 'cafearticle'
+        with self.api_limiter:
+            response = self.client.get(
+                f'{settings.naver_search_base_url.rstrip("/")}/v1/search/{endpoint}.json',
+                headers={'X-Naver-Client-Id': settings.naver_client_id,
+                         'X-Naver-Client-Secret': settings.naver_client_secret},
+                params={'query': kw, 'display': 100, 'start': start, 'sort': sort})
+        if response.status_code == 429:
+            raise AdapterBlocked('Naver API: HTTP 429')
+        if response.status_code in (401, 403):
+            raise ValueError('Naver API credentials rejected')
+        response.raise_for_status()
+        payload = response.json()
+        total, display, rows = int(payload['total']), int(payload['display']), payload['items']
+        items = []
+        for row in rows:
+            try:
+                url = self.article_url(row['link'])
+            except ValueError:
+                continue
+            owner, article_id = self.article_parts(url)
+            meta = {'article_id': article_id, f'{self.kind}_id': owner}
+            meta['blog_name' if self.kind == 'blog' else 'cafe'] = row.get(
+                'bloggername' if self.kind == 'blog' else 'cafename', '')
+            date = None
+            if self.kind == 'blog' and row.get('postdate'):
+                date = datetime.strptime(row['postdate'], '%Y%m%d').date().isoformat()
+            items.append(ListItem(url, unescape(html_text(row['title'])),
+                                  unescape(html_text(row['description'])), date, meta))
+        more = start + 100 <= min(1000, total) and len(rows) == display
+        cursor = f'{sort}:{start + 100}' if more else ('date:1' if sort == 'sim' else None)
+        return ListPage(items, cursor, total)
+
     def list_page(self, kw, cursor=None):
+        if self.api_configured:
+            return self.api_list_page(kw, cursor)
         start = int(cursor or 1)
         if start < 1 or (start - 1) % 30:
             raise ValueError('Naver cursor must be 1 + 30*n')

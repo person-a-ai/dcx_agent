@@ -19,7 +19,9 @@ def test_integration_dependencies(monkeypatch):
     monkeypatch.setattr(settings, 'naver_client_secret', 'configured')
     entries = {e.name: e for e in integration_status()}
     assert not {'youtube', 'naver_search'} & entries.keys()
-    assert set(entries) == {'openai', 'claude'}
+    assert set(entries) == {'openai', 'claude', 'naver'}
+    assert entries['naver'].connected
+    assert entries['naver'].affects == ['crawl']
 
 
 def test_cheap_availability_and_offline_flag(monkeypatch):

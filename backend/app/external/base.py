@@ -15,6 +15,7 @@ class IntegrationStatus(BaseModel):
 
 
 INTEGRATIONS = {
+    'naver': (['NAVER_CLIENT_ID', 'NAVER_CLIENT_SECRET'], ['crawl']),
     'naver_shopping': ([], ['category_suggest']),
     'naver_searchad': (['SEARCHAD_API_KEY', 'SEARCHAD_SECRET', 'SEARCHAD_CUSTOMER_ID'], ['coverage']),
     'openai': (['OPENAI_API_KEY', 'OPENAI_MODEL'], ['llm']),
