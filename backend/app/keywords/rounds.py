@@ -242,7 +242,7 @@ def _run(sid, n, job_id):
             return
         # Retained pending keywords are replaced by this job, not deduplicated against it.
         cleaned, logs = clean_generated([k.model_dump() for k in result.data.keywords], _all_keywords(data, exclude_round=n), set())
-        kws = volumes([Keyword(id=f'k_r{n}g{generation}_{i:04d}', kw=''.join(k['kw'].split()),
+        kws = volumes([Keyword(id=f'k_r{n}g{generation}_{i:04d}', kw=' '.join(k['kw'].split()),
                                axis=k['axis'], sub=k['sub'], round=n, origin='llm')
                        for i, k in enumerate(cleaned, 1)])
         def finish(latest):
@@ -505,7 +505,7 @@ def add_manual(sid, kw, axis, sub, origin='manual', version=None):
         version = data.get('version')
     if not norm_key(kw) or not is_valid(axis, sub):
         raise store.StoreError('키워드와 분류를 확인하세요', 422, 'validation')
-    keyword = volumes([Keyword(id='manual-' + uuid4().hex, kw=''.join(kw.split()), axis=axis,
+    keyword = volumes([Keyword(id='manual-' + uuid4().hex, kw=' '.join(kw.split()), axis=axis,
                                sub=sub, round=1, origin=origin, status='approved')])[0]
     def patch(data):
         duplicate = next((k for k in _all_keywords(data) if norm_key(k.kw) == norm_key(kw)), None)

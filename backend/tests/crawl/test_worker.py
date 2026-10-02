@@ -364,3 +364,57 @@ def test_worker_closes_adapters_on_setup_failure(tmp_path, corpus, monkeypatch, 
         else:
             detail(tmp_path, snapshot)
     assert len(closed) == 1
+
+
+@pytest.mark.parametrize('enabled', [None, True, False])
+def test_youtube_subtitles_option_and_document_identity(tmp_path, monkeypatch, enabled):
+    from app.crawl.adapters.base import FetchedDoc
+    snap = seed_channels(tmp_path, [('youtube', 2)])
+    received = []
+    class Adapter:
+        def fetch(self, item, *, max_comments=None, subtitles=None):
+            received.append((max_comments, subtitles))
+            return [FetchedDoc('', 'body', [], None, {'doc_kind': kind}, 'public', None, key)
+                    for kind, key in [('description', ''), ('subtitle', 'subtitle'), ('comment', 'root')]]
+    monkeypatch.setitem(REGISTRY, 'youtube', Adapter)
+    config = {'max_comments': 17}
+    if enabled is not None:
+        config['subtitles'] = enabled
+    write_limits(tmp_path, {'youtube': config})
+    detail(tmp_path, snap)
+    assert received == [(17, enabled is not False)] * 2
+    docs = list(read_docs(tmp_path / 'docs'))
+    assert len({d['doc_id'] for d in docs}) == 6
+    assert {d['src_meta']['doc_kind'] for d in docs} == {'description', 'subtitle', 'comment'}
+
+
+@pytest.mark.parametrize('source', ['ppomppu', 'clien'])
+def test_spaced_search_reaches_community_and_stored_docs(tmp_path, monkeypatch, source):
+    import httpx
+    from urllib.parse import parse_qs, urlsplit
+    from app.crawl.adapters.base import FetchedDoc, ListItem, ListPage
+    from app.crawl.adapters.clien import ClienAdapter
+    from app.crawl.adapters.ppomppu import PpomppuAdapter
+    from app.crawl.ratelimit import ChannelLimiter
+
+    kw = '아산병원 원무과'
+    cls = PpomppuAdapter if source == 'ppomppu' else ClienAdapter
+    encoding = 'euc-kr' if source == 'ppomppu' else 'utf-8'
+    parameter = 'keyword' if source == 'ppomppu' else 'q'
+    url = ('https://www.ppomppu.co.kr/zboard/view.php?id=freeboard&no=123'
+           if source == 'ppomppu' else 'https://www.clien.net/service/board/park/123')
+    def handler(request):
+        assert parse_qs(urlsplit(str(request.url)).query, encoding=encoding)[parameter] == [kw]
+        return httpx.Response(200, text='<html></html>')
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        adapter = cls(client)
+        monkeypatch.setattr(adapter, 'parse_list', lambda *args: ListPage(
+            [ListItem(url, '', '', None, {})], None, 1))
+        monkeypatch.setattr(adapter, 'fetch', lambda item: [FetchedDoc('', '진료 경험', [], None, {}, 'public', None)])
+        monkeypatch.setitem(REGISTRY, source, lambda: adapter)
+        limiters = {source: ChannelLimiter(1, 0)}
+        snap = worker.run_list('S', collection=tmp_path, keywords=[kw], sources=[source],
+                               filters=FilterConfig(date_from=None, date_to=None), limiters=limiters)
+        detail(tmp_path, snap, limiters=limiters)
+    doc, = read_docs(tmp_path / 'docs')
+    assert doc['kw'] == kw and doc['kw_hits'] == [kw]

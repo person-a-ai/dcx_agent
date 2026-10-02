@@ -224,3 +224,120 @@ def test_bot_confirmation_download_error(recording, monkeypatch, message, method
             adapter.list_page('test', None)
         else:
             adapter.fetch(item)
+
+
+@pytest.mark.parametrize('ext,payload', [
+    ('json3', json.dumps({'events': [
+        {'segs': [{'utf8': '첫 '}, {'utf8': '문장\n둘째 문장'}]},
+        {'segs': [{'utf8': '둘째 문장\n마지막   문장'}]}, {'tStartMs': 100}]})),
+    ('vtt', 'WEBVTT\nKind: captions\n\n1\n00:00:00.000 --> 00:00:02.000\n<c>첫 문장</c>\n둘째 문장\n\n'
+            'cue-id\n00:00:02.000 --> 00:00:04.000 align:start\n둘째 문장\n마지막   문장\n\nNOTE ignored\nmetadata'),
+    ('srv3', '<timedtext><body><p><s>첫 </s><s>문장</s>\n둘째 문장</p>'
+             '<p>둘째 문장\n마지막   문장</p></body></timedtext>'),
+])
+def test_caption_parsing(ext, payload):
+    from app.crawl.adapters.youtube import _caption_text
+
+    assert _caption_text(payload, ext) == '첫 문장 둘째 문장 마지막 문장'
+
+
+@pytest.mark.parametrize('language', ['ko', 'ko-KR', 'ko-orig'])
+@pytest.mark.parametrize('manual', [True, False])
+def test_korean_subtitle_document(recording, monkeypatch, language, manual):
+    import httpx
+    from app.crawl.adapters.youtube import YoutubeAdapter
+
+    _, details, _ = recording
+    info = details[0]
+    info['automatic_captions'] = {'ko': [{'ext': 'json3', 'url': 'https://caption.test/auto'}]}
+    if manual:
+        info['subtitles'] = {language: [
+            {'ext': 'vtt', 'url': 'https://caption.test/vtt'},
+            {'ext': 'json3', 'url': 'https://caption.test/manual'}]}
+    else:
+        info['automatic_captions'][language] = info['automatic_captions'].pop('ko')
+    info['availability'] = 'needs_auth'
+    calls = []
+    def get(url, **kwargs):
+        calls.append((url, kwargs))
+        return httpx.Response(200, json={'events': [{'segs': [{'utf8': '진료 여정 ' * 5000}]}]},
+                              request=httpx.Request('GET', url))
+    monkeypatch.setattr(httpx, 'get', get)
+    adapter = YoutubeAdapter()
+    docs = adapter.fetch(adapter.list_page('진료', None).items[0])
+    subtitle, = [d for d in docs if d.thread_key == 'subtitle']
+    assert subtitle.title == '' and subtitle.comments == []
+    assert subtitle.body == ('진료 여정 ' * 5000)[:20000]
+    assert subtitle.date == docs[0].date
+    assert subtitle.access == 'restricted'
+    assert subtitle.author_raw == info['channel_id']
+    assert subtitle.src_meta == {**docs[0].src_meta, 'doc_kind': 'subtitle',
+                                 'subtitle_kind': 'manual' if manual else 'auto'}
+    assert docs[0].src_meta['doc_kind'] == 'description'
+    assert all(d.src_meta['doc_kind'] == 'comment' for d in docs[2:])
+    assert calls == [('https://caption.test/' + ('manual' if manual else 'auto'),
+                      {'timeout': 20, 'follow_redirects': True})]
+
+
+@pytest.mark.parametrize('failure', [404, 429, 'timeout', 'parse', 'shape'])
+def test_subtitle_failure_preserves_other_docs(recording, monkeypatch, caplog, failure):
+    import httpx
+    from app.crawl.adapters.youtube import YoutubeAdapter
+
+    _, details, _ = recording
+    adapter = YoutubeAdapter()
+    item = adapter.list_page('진료', None).items[0]
+    expected = adapter.fetch(item)
+    url = 'https://caption.test/caption?token=secret'
+    details[0]['subtitles'] = {'ko': [{'ext': 'json3', 'url': url}]}
+    def get(*args, **kwargs):
+        if failure == 'timeout':
+            raise httpx.ReadTimeout(url)
+        return httpx.Response(failure if isinstance(failure, int) else 200,
+                              text='{}' if failure == 'shape' else 'bad json',
+                              request=httpx.Request('GET', url))
+    monkeypatch.setattr(httpx, 'get', get)
+    assert adapter.fetch(item) == expected
+    assert 'Skipping unavailable YouTube subtitles' in caplog.text
+    assert 'secret' not in caplog.text and url not in caplog.text
+
+
+@pytest.mark.parametrize('mode', ['no-korean', 'constructor', 'override'])
+def test_subtitles_no_request(recording, monkeypatch, mode):
+    import httpx
+    from app.crawl.adapters.youtube import YoutubeAdapter
+
+    _, details, _ = recording
+    tracks = {'en' if mode == 'no-korean' else 'ko': [
+        {'ext': 'json3', 'url': 'https://caption.test/subtitle'}]}
+    details[0].update(subtitles=tracks, automatic_captions=tracks)
+    def forbidden(*args, **kwargs):
+        pytest.fail('caption request must be skipped')
+    monkeypatch.setattr(httpx, 'get', forbidden)
+    adapter = YoutubeAdapter(subtitles=mode != 'constructor')
+    item = adapter.list_page('진료', None).items[0]
+    docs = adapter.fetch(item, **({'subtitles': False} if mode == 'override' else {}))
+    assert docs and all(d.thread_key != 'subtitle' for d in docs)
+
+
+@pytest.mark.parametrize('ext,payload', [
+    ('vtt', 'WEBVTT\n\n00:00:00.000 --> 00:00:01.000\n진료 &amp; 수납'),
+    ('srv3', '<timedtext><body><p>진료 &amp; 수납</p></body></timedtext>'),
+])
+def test_caption_format_fallback(recording, monkeypatch, ext, payload):
+    import httpx
+    from app.crawl.adapters.youtube import YoutubeAdapter
+
+    _, details, _ = recording
+    url = 'https://caption.test/' + ext
+    details[0]['subtitles'] = {'ko': [{'ext': ext, 'url': url}]}
+    details[0]['automatic_captions'] = {'ko': [{'ext': 'json3', 'url': 'https://caption.test/auto'}]}
+    def get(requested, **kwargs):
+        assert requested == url
+        return httpx.Response(200, text=payload, request=httpx.Request('GET', url))
+    monkeypatch.setattr(httpx, 'get', get)
+    adapter = YoutubeAdapter()
+    docs = adapter.fetch(adapter.list_page('진료', None).items[0])
+    subtitle, = [d for d in docs if d.thread_key == 'subtitle']
+    assert subtitle.body == '진료 & 수납'
+    assert subtitle.src_meta['subtitle_kind'] == 'manual'

@@ -713,3 +713,41 @@ def test_resume_legacy_blocked_list_after_three_attempts(env, monkeypatch):
     worker.run_list('S', collection=root)
     with closing(CrawlQueue(root / 'queue.sqlite')) as q:
         assert {r[0] for r in q.connection.execute('SELECT status FROM list_tasks')} == {'done'}
+
+
+@pytest.mark.parametrize('enabled', [None, True, False])
+def test_subtitles_config_persisted_to_manifest(env, enabled):
+    config = {'channels': ['fixture']}
+    if enabled is not None:
+        config['youtube'] = {'subtitles': enabled}
+    assert env.client.put('/crawl/S/config', json=config).status_code == 200
+    assert store.load_session('S')['crawlConfig']['youtube']['subtitles'] is (enabled is not False)
+    control.start_list('S')
+    manifest = store.read_json(control.collection_dir('S') / 'manifest.json')
+    assert manifest['config']['youtube']['subtitles'] is (enabled is not False)
+
+
+def test_spaced_keyword_queue_gate_and_known_collection(env):
+    kw = '아산병원 원무과'
+    store.update_session('S', {'keywords': [
+        {'kw': kw, 'axis': 'physical', 'sub': 'space', 'status': 'approved'}]})
+    control.start_list('S')
+    root = control.collection_dir('S')
+    with closing(CrawlQueue(root / 'queue.sqlite')) as q:
+        q.connection.execute("UPDATE runs SET status='done'")
+        q.register_run('list')
+        task, = q.next_list_tasks('fixture', 1)
+        assert task.kw == kw
+        q.record_list_page(task, [QueueListItem('fixture://aircon/1')], None)
+        snap = q.take_snapshot()
+        q.connection.execute("UPDATE runs SET status='done'")
+        row, = gate.compute_gate(q)
+        assert (row.kw, row.axis, row.listed) == (kw, 'physical', 1)
+        assert q.connection.execute('SELECT kw FROM url_hits').fetchone()[0] == kw
+    response = env.client.put('/crawl/S/gate', json={'exclusions': ['아산병원원무과']})
+    assert response.status_code == 200, response.text
+    assert store.load_session('S')['crawlConfig']['gateExclusions'] == [kw]
+    assert env.client.get('/crawl/S/status').json()['added_keywords_count'] == 0
+    control.start_detail('S', snap)
+    with closing(CrawlQueue(root / 'queue.sqlite')) as q:
+        assert q.counts()['excluded'] == 1

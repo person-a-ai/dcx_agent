@@ -378,16 +378,18 @@ def _detail_results(run, adapters, stop, batch, commit):
     fetch_options = {}
     for source, adapter in adapters.items():
         options = {}
-        max_comments = run.config.get('youtube', {}).get('max_comments') or 0
-        if source == 'youtube' and max_comments > 0:
-            # Optional adapter contract: fetch(item, *, max_comments=N), or
-            # **kwargs. Inspect before calling; never retry a fetch on TypeError.
-            try:
-                inspect.signature(adapter.fetch).bind(None, max_comments=max_comments)
-            except (TypeError, ValueError):
-                pass  # Legacy/uninspectable adapters keep their original call.
-            else:
-                options['max_comments'] = max_comments
+        youtube = run.config.get('youtube', {})
+        if source == 'youtube':
+            candidates = {'subtitles': youtube.get('subtitles', True)}
+            if (youtube.get('max_comments') or 0) > 0:
+                candidates['max_comments'] = youtube['max_comments']
+            for key, value in candidates.items():
+                try:
+                    inspect.signature(adapter.fetch).bind(None, **{key: value})
+                except (TypeError, ValueError):
+                    pass  # Legacy/uninspectable adapters keep their original call.
+                else:
+                    options[key] = value
         fetch_options[source] = options
 
     def call(future, row, started):

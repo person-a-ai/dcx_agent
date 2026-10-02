@@ -74,6 +74,7 @@ class Youtube(BaseModel):
     model_config = ConfigDict(extra='forbid')
     videos_per_keyword: int = Field(default=20, ge=1)
     max_comments: int = Field(default=500, ge=0)
+    subtitles: bool = True
 
 
 class Config(BaseModel):

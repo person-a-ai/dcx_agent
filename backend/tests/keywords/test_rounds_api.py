@@ -1013,3 +1013,31 @@ def test_qfix_autocomplete_empty_and_product_queries(client, monkeypatch, empty)
     cached = client.post('/keywords/test/coverage').json()
     assert cached['humanQueries'] == saved['humanQueries']
     assert cached['m1'] == saved['m1']
+
+
+@pytest.mark.parametrize('first,second', [('  아산병원\t 원무과  ', '아산병원원무과'),
+                                        ('아산병원원무과', '아산병원 원무과')])
+def test_manual_spacing_preserved_and_deduplicated(client, first, second):
+    payload = {'kw': first, 'axis': 'physical', 'sub': 'space'}
+    added = client.post('/keywords/test/manual', json=payload).json()
+    assert added['kw'] == ' '.join(first.split())
+    assert store.load_session('test')['keywords'][0]['kw'] == added['kw']
+    assert added['kw'] in (store.session_dir('test') / 'keyword_feedback.md').read_text()
+    duplicate = client.post('/keywords/test/manual', json={**payload, 'kw': second})
+    assert duplicate.status_code == 409
+    assert duplicate.json()['duplicateOf'] == added['id']
+
+
+def test_generated_spacing_preserved_and_deduplicated(client, monkeypatch):
+    fake = FakeBackend(responses={'keyword_r1': json.dumps({'keywords': [
+        {'kw': kw, 'axis': 'physical', 'sub': 'space', 'why': '상황'}
+        for kw in ['  아산병원\t 원무과  ', '아산병원원무과']]})})
+    def run(task):
+        fake.responses[task.task] = next(iter(fake.responses.values()))
+        return fake.run(task)
+    monkeypatch.setattr(rounds, 'run_task', run)
+    state = start(client, 1)
+    assert state['status'] == 'done'
+    assert [k['kw'] for k in state['keywords']] == ['아산병원 원무과']
+    assert commit(client, 1, state).status_code == 200
+    assert store.load_session('test')['keywords'][0]['kw'] == '아산병원 원무과'

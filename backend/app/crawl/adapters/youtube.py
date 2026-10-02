@@ -1,19 +1,80 @@
-"""Bounded yt-dlp search and comment threads, without downloading media.
+"""Bounded yt-dlp search, Korean subtitles and comments, without media downloads.
 
 A nonempty description becomes a document with thread_key="". Each top-level
 comment becomes a document whose body is that comment and whose comments are
-its replies (depth 1). max_comments counts roots and replies, not descriptions.
+its replies (depth 1). Korean captions use thread_key="subtitle". max_comments
+counts roots and replies, not descriptions or subtitles.
 Search is one bounded batch; there is no continuation cursor.
 """
 
 from datetime import datetime
+from html import unescape
+import json
+import logging
+import re
+from xml.etree import ElementTree
 from zoneinfo import ZoneInfo
+import httpx
 from app.config import settings
 import importlib
 
 from app.crawl.adapters.base import AdapterBlocked, FetchedDoc, ListItem, ListPage
 from app.crawl.hashing import author_hash
 from app.crawl.schema import Comment
+
+logger = logging.getLogger(__name__)
+
+
+def _caption_track(info: dict):
+    for field, kind in (('subtitles', 'manual'), ('automatic_captions', 'auto')):
+        tracks = info.get(field) or {}
+        for language in sorted(tracks, key=lambda key: (key != 'ko', key)):
+            if not language.startswith('ko'):
+                continue
+            for ext in ('json3', 'vtt', 'srv3'):
+                for track in tracks[language]:
+                    if track.get('ext') == ext and track.get('url'):
+                        return track, kind
+    return None
+
+
+def _caption_text(text: str, ext: str) -> str:
+    if ext == 'json3':
+        lines = [line for event in json.loads(text)['events']
+                 for line in ''.join(seg['utf8'] for seg in event.get('segs', [])).splitlines()]
+    elif ext == 'srv3':
+        lines = [line for p in ElementTree.fromstring(text).iter('p')
+                 for line in ''.join(p.itertext()).splitlines()]
+    else:
+        lines = []
+        for block in re.split(r'\n\s*\n', text.replace('\r\n', '\n')):
+            cue = block.splitlines()
+            if not cue or cue[0].startswith(('WEBVTT', 'NOTE', 'STYLE', 'REGION')):
+                continue
+            timing = next((i for i, line in enumerate(cue) if '-->' in line), None)
+            if timing is not None:
+                lines.extend(cue[timing + 1:])
+    kept = []
+    for line in lines:
+        line = ' '.join(unescape(re.sub(r'<[^>]*>', '', line)).split())
+        if line and (not kept or kept[-1] != line):
+            kept.append(line)
+    return ' '.join(kept)[:20000]
+
+
+def _subtitle(info: dict):
+    try:
+        selected = _caption_track(info)
+        if selected is None:
+            return None
+        track, kind = selected
+        response = httpx.get(track['url'], timeout=20, follow_redirects=True)
+        response.raise_for_status()
+        text = _caption_text(response.text, track['ext'])
+        return (text, kind) if text else None
+    except (httpx.HTTPError, ValueError, TypeError, KeyError, AttributeError, ElementTree.ParseError):
+        logger.warning('Skipping unavailable YouTube subtitles')
+        return None
 
 
 def _date(info: dict) -> str | None:
@@ -57,13 +118,14 @@ def _blocked(error: BaseException) -> bool:
 class YoutubeAdapter:
     source = 'youtube'
 
-    def __init__(self, videos_per_keyword: int = 10, max_comments: int = 30):
+    def __init__(self, videos_per_keyword: int = 10, max_comments: int = 30, subtitles: bool = True):
         if videos_per_keyword <= 0:
             raise ValueError('videos_per_keyword must be positive')
         if max_comments < 0:
             raise ValueError('max_comments must be nonnegative')
         self.videos_per_keyword = videos_per_keyword
         self.max_comments = max_comments
+        self.subtitles = subtitles
 
     @classmethod
     def is_available(cls) -> bool:
@@ -107,7 +169,8 @@ class YoutubeAdapter:
                 src_meta=_metadata(entry)))
         return ListPage(items, None, len(items))
 
-    def fetch(self, item: ListItem, *, max_comments: int | None = None) -> list[FetchedDoc]:
+    def fetch(self, item: ListItem, *, max_comments: int | None = None,
+              subtitles: bool | None = None) -> list[FetchedDoc]:
         limit = self.max_comments if max_comments is None else max_comments
         if limit < 0:
             raise ValueError('max_comments must be nonnegative')
@@ -120,8 +183,14 @@ class YoutubeAdapter:
         access = 'restricted' if restricted else 'public'
         docs = []
         if info.get('description'):
-            docs.append(FetchedDoc('', info['description'], [], video_date, meta, access,
+            docs.append(FetchedDoc('', info['description'], [], video_date, {**meta, 'doc_kind': 'description'}, access,
                                    info.get('channel_id') or info.get('uploader_id')))
+        subtitle = _subtitle(info) if (self.subtitles if subtitles is None else subtitles) else None
+        if subtitle:
+            body, kind = subtitle
+            docs.append(FetchedDoc('', body, [], video_date,
+                                   {**meta, 'doc_kind': 'subtitle', 'subtitle_kind': kind}, access,
+                                   info.get('channel_id') or info.get('uploader_id'), 'subtitle'))
         comments = (info.get('comments') or [])[:limit]
         # Index roots first so reply order does not matter. Orphans are omitted;
         # inventing a root would give the worker an incorrect document identity.
@@ -136,5 +205,5 @@ class YoutubeAdapter:
                     author_hash=author_hash(self.source, raw) if raw else ''))
         for key, root in roots.items():
             docs.append(FetchedDoc('', root.get('text') or '', replies[key], _date(root),
-                                   meta, access, _author(root), key))
+                                   {**meta, 'doc_kind': 'comment'}, access, _author(root), key))
         return docs
