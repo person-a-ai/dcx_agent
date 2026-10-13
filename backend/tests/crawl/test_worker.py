@@ -96,6 +96,21 @@ def test_restricted_recorded(tmp_path, corpus, monkeypatch):
     assert 'private-id' not in ''.join(p.read_text() for p in (tmp_path / 'docs').glob('*'))
 
 
+def test_exclude_restricted_adapter_excludes_urls(tmp_path, corpus, monkeypatch):
+    snapshot = setup_list(tmp_path)
+    class Restricted(FixtureAdapter):
+        exclude_restricted = True
+        def fetch(self, item):
+            return [replace(super().fetch(item)[0], access='restricted')]
+    monkeypatch.setitem(REGISTRY, 'fixture', lambda: Restricted(corpus))
+    detail(tmp_path, snapshot)
+    assert list(read_docs(tmp_path / 'docs')) == []
+    with closing(CrawlQueue(tmp_path / 'queue.sqlite')) as q:
+        assert q.counts()['excluded'] == 80
+        assert {r[0] for r in q.connection.execute('SELECT last_error FROM urls')} == {'restricted'}
+    assert state(tmp_path)['fixture']['status'] != 'paused_blocked'
+
+
 def test_list_dropped_invalid_url(tmp_path, monkeypatch):
     from app.crawl.adapters.base import ListItem, ListPage
     class Invalid:

@@ -475,6 +475,10 @@ def run_detail(sid, snapshot_id, *, collection=None, filters=None, limiters=None
                                                       blocked=isinstance(error, AdapterBlocked))
                     if result != 'exhausted':
                         continue
+                if (fetched and error is None and getattr(adapters[row.source], 'exclude_restricted', False)
+                        and all(item.access == 'restricted' for item in fetched)):
+                    run.q.mark_excluded(row.url_norm, row.source, 'restricted')
+                    continue
                 fallback = row.exhausted or error is not None
                 if fallback:
                     fetched = [FetchedDoc(row.title, row.snippet, [], row.date, row.src_meta, 'public', None)]
