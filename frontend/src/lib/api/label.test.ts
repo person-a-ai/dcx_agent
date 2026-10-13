@@ -18,8 +18,8 @@ it('uses seen POST and encodes the skip cursor and version', async () => {
 it('uses feature routes, methods and bodies for every stage 3–5 client', async () => {
  const fetcher = vi.fn().mockResolvedValue({ok:true,json:async()=>({})}); vi.stubGlobal('fetch',fetcher);
  const tags = {anchor:true,sem:{sense:1,feel:0,think:0,act:0,relate:0,outcome:0},situation:false} as const;
- const config = {adFilter:[],excludeSources:[],minBodyChars:10,boilerplate:{},analyzer:'kiwi',tokenPos:['NNG'],embedder:'voyage',embedModel:'voyage-4',embedDim:1024} as const;
- await prep.savePrepConfig('s',{...config,adFilter:[],excludeSources:[],tokenPos:['NNG']},'v1'); await prep.runPrep('s','v1'); await prep.getPrepStatus('s','v1');
+ const config = {adFilter:[],excludeSources:[],excludeChannels:[],minBodyChars:10,boilerplate:{},analyzer:'kiwi',tokenPos:['NNG'],embedder:'voyage',embedModel:'voyage-4',embedDim:1024} as const;
+ await prep.savePrepConfig('s',{...config,adFilter:[],excludeSources:[],excludeChannels:[],tokenPos:['NNG']},'v1'); await prep.runPrep('s','v1'); await prep.getPrepStatus('s','v1');
  await label.setLabelMode('s',{mode:'model',modelId:'m1'},'v1'); await label.startLabel('s','v1'); await label.controlLabeler('s','jev','pause','v1'); await label.controlLabeler('s','gpt','resume','v1'); await label.getLabelOverview('s','v1'); await label.previewLabelRule(tags); await label.submitLabel('s',{doc_id:'d',labeler:'human',mode:'audit',round:1,tags},'v1'); await label.createAudit('s','v1');
  await train.startTraining('s','parent','v1'); await train.getTrainingStatus('s','v1'); await train.exportTraining('s',true,'v1'); await train.getModels('s','v1'); await train.getModel('m/a');
  await known.getKnownInsights('s','v1'); await known.addKnownInsight('s',{type:'doc',doc_id:'d'},'v1'); await known.updateKnownInsight('s','i/a','새 문장','v1'); await known.deleteKnownInsight('s','i/a','v1');

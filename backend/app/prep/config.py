@@ -17,6 +17,8 @@ def analyzer_version() -> str:
 class PrepConfig(BaseModel):
     adFilter: list[str] = Field(default_factory=list)
     excludeSources: list[str] = Field(default_factory=list)
+    # Whole crawl channels (e.g. 'youtube') left out of preprocessing and labeling.
+    excludeChannels: list[str] = Field(default_factory=list)
     minBodyChars: int = Field(default=10, ge=0)
     boilerplate: dict[str, list[str]] = Field(default_factory=default_boilerplate)
     analyzer: Literal['kiwi'] = 'kiwi'
@@ -28,8 +30,10 @@ class PrepConfig(BaseModel):
 
 def prep_key(collection_id: str, cfg: PrepConfig, embedder: Embedder) -> str:
     config = cfg.model_dump()
-    for field in ('adFilter', 'excludeSources', 'tokenPos'):
+    for field in ('adFilter', 'excludeSources', 'excludeChannels', 'tokenPos'):
         config[field] = sorted(set(config[field]))
+    if not config['excludeChannels']:
+        del config['excludeChannels']  # Keep keys of existing derived data stable.
     config['boilerplate'] = {k: sorted(set(v)) for k, v in config['boilerplate'].items()}
     payload = dict(collectionId=collection_id, config=config,
                    embedder=dict(name=embedder.name, model=embedder.model, dim=embedder.dim),

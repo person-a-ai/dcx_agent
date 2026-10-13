@@ -29,7 +29,7 @@ export function prepConfig(session: PrepSession, includeDraft = true, serverConf
   const saved = session.prep?.config;
   const draft = includeDraft && !prepEditLock(session) ? session.drafts?.prep?.config : undefined;
   return {
-    adFilter: session.crawlConfig?.adWords ?? [], excludeSources: session.crawlConfig?.excludeSources ?? [],
+    adFilter: session.crawlConfig?.adWords ?? [], excludeSources: session.crawlConfig?.excludeSources ?? [], excludeChannels: [],
     minBodyChars: 10, analyzer: 'kiwi', tokenPos: ['NNG', 'NNP', 'VV', 'VA', 'XR'],
     embedder: serverConfig?.embedder ?? 'voyage', embedModel: serverConfig?.embedModel ?? 'voyage-4', embedDim: serverConfig?.embedDim ?? 1024,
     ...saved, ...draft,

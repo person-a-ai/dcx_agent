@@ -79,7 +79,15 @@ def test_filters_use_body(setup):
     root = pipeline.run_prep(Context({'adFilter': ['광고'], 'excludeSources': ['youtube']}), 's', 'v1')
     assert [d['doc_id'] for d in rows(root, 'docs')] == ['d1']
     assert json.loads((root / 'stage_3.json').read_text())['removed'] == {
-        'ad': 2, 'excluded_source': 1, 'duplicate': 0, 'too_short': 1}
+        'ad': 2, 'excluded_source': 1, 'duplicate': 0, 'too_short': 1, 'excluded_channel': 0}
+
+
+def test_excluded_channels_dropped_before_rules(setup):
+    setup([doc(), {**doc('yt1'), 'source': 'youtube'}, {**doc('yt2'), 'source': 'youtube'}])
+    root = pipeline.run_prep(Context({'excludeChannels': ['youtube']}), 's', 'v1')
+    assert [d['doc_id'] for d in rows(root, 'docs')] == ['d1']
+    report = json.loads((root / 'stage_3.json').read_text())
+    assert report['removed']['excluded_channel'] == 2 and report['after'] == 1
 
 
 def test_no_target_word_filter(setup):
@@ -122,6 +130,23 @@ def test_prep_key_reuse(setup):
     assert prep_key('c1', PrepConfig(adFilter=['b', 'a']), embedder) == prep_key(
         'c1', PrepConfig(adFilter=['a', 'b']), embedder)
     assert prep_key('c2', PrepConfig(), embedder) != prep_key('c1', PrepConfig(), embedder)
+    assert prep_key('c1', PrepConfig(excludeChannels=['youtube']), embedder) != prep_key(
+        'c1', PrepConfig(), embedder)
+
+
+def test_prep_key_unchanged_without_excluded_channels():
+    import hashlib
+    from app.prep.config import analyzer_version
+    config = PrepConfig().model_dump()
+    del config['excludeChannels']
+    for field in ('adFilter', 'excludeSources', 'tokenPos'):
+        config[field] = sorted(set(config[field]))
+    config['boilerplate'] = {k: sorted(set(v)) for k, v in config['boilerplate'].items()}
+    payload = dict(collectionId='c1', config=config,
+                   embedder=dict(name=Embedder.name, model=Embedder.model, dim=Embedder.dim),
+                   analyzer=analyzer_version())
+    encoded = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(',', ':'))
+    assert prep_key('c1', PrepConfig(), Embedder()) == 'p_' + hashlib.sha256(encoded.encode()).hexdigest()[:12]
 
 
 def test_embed_failure_zero_vector(setup):
