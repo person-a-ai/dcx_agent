@@ -292,6 +292,7 @@ def test_request_interval_shared_between_list_and_detail(cls):
 
 @pytest.mark.parametrize('result', [
     {'errorCode': '0004'},
+    {'errorCode': '0007', 'message': 'errorCode: 0007, message: 임시 폐쇄중인 카페'},
     {'reason': '등급'},
     {'errorCode': '9999', 'reason': '등급'},
 ])

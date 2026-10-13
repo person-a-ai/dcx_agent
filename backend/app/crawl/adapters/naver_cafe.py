@@ -6,12 +6,15 @@ from app.crawl.adapters.base import AdapterBlocked, FetchedDoc
 from app.crawl.adapters.community import html_text
 from app.crawl.adapters.naver_common import NaverAdapter
 
-# Login-required code recorded in detail-1.json and T15-naver-probe.md.
-RESTRICTION_CODES = frozenset({'0004'})
+# Login-required code recorded in detail-1.json and T15-naver-probe.md;
+# 0007 is a cafe Naver closed for policy violations ("임시 폐쇄중인 카페").
+RESTRICTION_CODES = frozenset({'0004', '0007'})
 
 
 class NaverCafeAdapter(NaverAdapter):
     source = 'naver_cafe'
+    # Restricted articles never yield a body; the worker excludes the URL.
+    exclude_restricted = True
 
     def headers(self):
         return {**super().headers(), 'Referer': 'https://m.cafe.naver.com/'}
