@@ -220,8 +220,11 @@ def _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnecte
             source = doc.get('source', '')
             replacements[source] = replacements.get(source, 0) + count
         cleaned.append(doc)
-    filtered, removed = filter_documents(cleaned, cfg.adFilter, cfg.excludeSources,
+    channels = set(cfg.excludeChannels)
+    kept = [d for d in cleaned if d.get('source', '') not in channels]
+    filtered, removed = filter_documents(kept, cfg.adFilter, cfg.excludeSources,
                                          cfg.minBodyChars, full_text=True)
+    removed['excluded_channel'] = len(cleaned) - len(kept)
     # Complete document/token preparation and the legacy export before any vectors.
     for shard, start in enumerate(range(0, len(filtered), SHARD_ROWS), 1):
         batch = filtered[start:start + SHARD_ROWS]

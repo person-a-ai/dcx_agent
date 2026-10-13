@@ -4,7 +4,7 @@ import { prepConfig, prepView, splitLines, prepPhase, prepEstimate } from './pre
 describe('preparation settings', () => {
   it('inherits crawl rules and uses the exact production defaults', () => {
     const config = prepConfig({ crawlConfig: { adWords: ['협찬'], excludeSources: ['판매 카페'] } });
-    expect(config).toMatchObject({ adFilter: ['협찬'], excludeSources: ['판매 카페'], minBodyChars: 10, analyzer: 'kiwi', tokenPos: ['NNG','NNP','VV','VA','XR'], embedder: 'voyage', embedModel: 'voyage-4', embedDim: 1024 });
+    expect(config).toMatchObject({ adFilter: ['협찬'], excludeSources: ['판매 카페'], excludeChannels: [], minBodyChars: 10, analyzer: 'kiwi', tokenPos: ['NNG','NNP','VV','VA','XR'], embedder: 'voyage', embedModel: 'voyage-4', embedDim: 1024 });
     expect(config.boilerplate.naver_cafe).toContain('카페 가입하기');
   });
   it('restores drafts ahead of saved config, preserving explicit empty lists and zero', () => {
