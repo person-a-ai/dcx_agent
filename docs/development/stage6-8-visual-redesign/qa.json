@@ -1,7 +1,7 @@
 {
   "verdict": "PASS",
-  "head": "",
-  "fingerprint": "",
+  "head": "a76d6c7892a2f4dbd3c4e08546a14607df7dbcae",
+  "fingerprint": "ae930a2d67abc6b4c37275f7cf7fbbe9acc664bdd787a1fc68a404520e76bd2f",
   "commands": [
     {
       "command": "$B (gstack browse) 브라우저 시나리오 Q1~Q8 + 재확인 2·3차",
