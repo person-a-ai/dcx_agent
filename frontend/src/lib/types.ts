@@ -288,10 +288,10 @@ export type PersonaContextRow = PersonaMapPoint & { name?: string; persona_name?
 export type PersonaSortDirection = 'asc' | 'desc';
 
 export type InsightErrorKind = 'persona_required' | 'not_found' | 'stale';
-export type InsightRunRequest = { mode: 'derive' | 'concept'; target?: string };
+export type InsightRunRequest = { mode: 'derive' | 'concept'; target?: string; fresh?: boolean };
 export type InsightRunResponse = { runId: string };
-export type InsightTarget = 'insights' | `concept:${string}`;
-export type InsightChatRequest = { target: InsightTarget; message: string };
+export type InsightTarget = 'insights' | `insight:${string}` | `concept:${string}`;
+export type InsightChatRequest = { target: InsightTarget; message: string; focus_id?: string };
 export type InsightChatResponse =
   | { ok: true; revision: number }
   | { ok: false; message: '요청을 반영하지 못했습니다. 다르게 말해 주세요.' };
@@ -299,7 +299,22 @@ export type InsightRevertRequest = { target: InsightTarget; revision: number };
 export type InsightRevertResponse = { revision: number };
 export type InsightConfirmRequest = { ids: string[] };
 export type InsightConfirmResponse = { confirmed: string[] };
-export type InsightItem = { id: string; title: string; pain_point: string; context_ids: string[]; known_ki_id: string | null };
+export type InsightFlowStep = { context_id: string; text: string };
+export type InsightContextView = {
+  context_id: string; short: string; persona_id?: string | null; persona_name?: string | null;
+  context_name?: string | null; odi?: number | null; axis?: 'Computed' | 'Connected' | 'Shared' | null;
+  dim?: string | null; counter?: boolean; pain_point?: string | null;
+};
+export type InsightSummary = {
+  context_odi_mean: number | null;
+  radar_mean: Record<'Computed' | 'Connected' | 'Shared', number> | null;
+};
+export type InsightItem = {
+  id: string; title: string; pain_point: string; context_ids: string[]; known_ki_id: string | null;
+  headline?: string; statements?: string[]; hashtags?: string[]; flow?: InsightFlowStep[];
+  contexts?: InsightContextView[];
+  radar?: { raw?: Partial<Record<'Computed' | 'Connected' | 'Shared', number | null>>; percentile?: Partial<Record<'Computed' | 'Connected' | 'Shared', number | null>> };
+};
 export type InsightCxDimension = '정신적' | '물리적' | '문화적' | '시스템';
 export type InsightJourneyRow = {
   context_id: string; action: string; feeling: string; service: string; service_action: string; cx_4d: InsightCxDimension;
@@ -320,7 +335,7 @@ export type InsightResponse = {
   /** Authoritative selection loaded from the selected version session by the API client. */
   confirmed?: string[];
   insights: InsightRevision<InsightItem>; concepts: InsightRevision<InsightConcept>;
-  bars: InsightBars | null; radar: InsightRadar | null;
+  bars: InsightBars | null; radar: InsightRadar | null; summary?: InsightSummary;
 };
 export type InsightSuggestion = { sessionId: string; insightId: string; title: string; painPoint: string };
 export type InsightSuggestionsResponse = { items: InsightSuggestion[] };
