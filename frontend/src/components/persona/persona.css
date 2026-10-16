@@ -77,3 +77,35 @@
   .hierarchy-row{gap:8px}
   .hierarchy-tree ul{padding-left:12px}
 }
+
+.persona-screen-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px;align-items:start}
+.persona-card-body{min-width:0;background:var(--paper);padding:24px}
+.persona-card-body section{min-width:0}
+.persona-comparison-layout,.persona-map-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;align-items:start}
+.persona-comparison-layout,.persona-support-panels,.persona-tree-section{margin-top:32px;border-top:1px solid var(--line);padding-top:12px}
+.persona-card-body h3{font:var(--type-card);margin:0 0 12px}
+.persona-support-panels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
+.persona-support-panels>section{padding:0 20px;border-left:1px solid var(--line)}
+.persona-support-panels>section:first-child{padding-left:0;border-left:0}
+.persona-support-panels>section:last-child{padding-right:0}
+.persona-context-table{overflow-x:auto}
+.persona-context-table table{table-layout:fixed}
+.persona-context-table td{overflow-wrap:anywhere}
+.persona-context-table button{min-height:44px}
+.persona-card-body .ds-card{box-shadow:none}
+@media(min-width:1280px){
+ .persona-comparison-layout,.persona-map-layout{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+}
+@media(max-width:1023px){
+ .persona-support-panels{grid-template-columns:minmax(0,1fr)}
+ .persona-support-panels>section{padding:16px 0;border-left:0;border-top:1px solid var(--line)}
+ .persona-support-panels>section:first-child{border-top:0}
+}
+@media(max-width:767px){
+ .persona-screen-layout{grid-template-columns:minmax(0,1fr)}
+ .persona-card-body{padding:12px}
+}
+.persona-map-surface{min-width:0;box-shadow:none}
+.persona-context-table th:nth-child(2),.persona-context-table td:nth-child(2){width:200px;white-space:normal;overflow-wrap:anywhere}
+.persona-context-table th:nth-child(9),.persona-context-table td:nth-child(9){width:200px;white-space:normal;overflow-wrap:anywhere}
+.persona-card-body [aria-busy="true"] .ds-skeleton{margin:12px 0}
