@@ -19,6 +19,8 @@ it('keeps missing ODI distinct from a measured zero',()=>{
  const bars=nodes(InsightScreen({sid:'s'})).find(n=>n.type===OpportunityBars);
  expect(bars.props.bars.map((b:any)=>b.value)).toEqual([null,0]);
  const rendered=OpportunityBars(bars.props);
- expect(nodes(rendered).filter(n=>n.type==='rect')).toHaveLength(1);
+ const barElements=nodes(rendered).filter(n=>n.type==='span'&&n.props.className==='opportunity-bar');
+ expect(barElements).toHaveLength(1);
+ expect(barElements[0].props.style.width).toBe('0%');
  expect(text(rendered)).toContain('—');
 });

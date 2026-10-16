@@ -151,11 +151,6 @@ it('sorts every Context column using the shared sorter without mutating input', 
   }
   expect(JSON.stringify(rows)).toBe(original);
 });
-it('scales hierarchy node area with document count through all four levels', () => {
-  const tree=HierarchyTree({root:{id:'product',name:'제품',doc_count:16,children:[{id:'CL',name:'Cluster',doc_count:4,children:[{id:'P',name:'Persona',doc_count:1,children:[{id:'C',name:'Context',doc_count:0}]}]}]}});
-  expect(nodes(tree,e=>e.type==='circle').map(e=>e.props.r)).toEqual([24,12,6,0]);
-  expect(nodes(tree,e=>e.type==='line')).toHaveLength(3);
-});
 it('renders empty charts and missing metrics without invalid coordinates', () => {
   const outputs=[html(draw(OpportunityMap,{map:map([])})),html(createElement(OpportunityBars,{bars:[],mean:null})),html(createElement(Radar,{values:{Computed:{raw:null,percentile:null},Connected:{raw:0,percentile:0},Shared:{raw:1,percentile:100}}})),html(createElement(JourneyTable,{rows:[]}))];
   outputs.forEach(out=>expect(out).not.toMatch(/NaN|Infinity/));
@@ -197,17 +192,16 @@ it('ranks opportunity bars without changing inputs and labels the mean independe
   const out = html(tree);
   expect(out.indexOf('높음')).toBeLessThan(out.indexOf('낮음'));
   expect(bars[0].id).toBe('low');
-  expect(nodes(tree,e=>e.type==='line')).toHaveLength(1);
-  expect(nodes(tree,e=>e.type==='svg')[0].props['aria-label']).toContain('평균 1');
+  expect(nodes(tree,e=>e.type==='svg')).toHaveLength(0);
+  const rows = nodes(tree,e=>e.props.className==='opportunity-row');
+  expect(rows).toHaveLength(2);
+  rows.forEach(row => {
+    expect(nodes(row.props.children as ReactNode,e=>e.type==='div')).toHaveLength(1);
+    expect((row.props.children as ReactNode[])).toHaveLength(4);
+    const area = nodes(row,e=>e.props.className==='opportunity-bar-area')[0];
+    expect(nodes(area,e=>e.props['data-mean']===1)).toHaveLength(1);
+  });
   expect(html(OpportunityBars({bars:[],mean:null}))).toContain('기회 정보가 없습니다.');
-});
-
-it('renders all hierarchy levels with proportional node areas and an accessible summary', () => {
-  const tree = HierarchyTree({root:{id:'product',name:'제품',doc_count:16,children:[{id:'CL1',name:'Cluster',doc_count:4,children:[{id:'P1',name:'Persona',doc_count:1,children:[{id:'C1',name:'Context',doc_count:0}]}]}]}});
-  expect(nodes(tree,e=>e.type==='circle').map(e=>e.props.r)).toEqual([24,12,6,0]);
-  expect(nodes(tree,e=>e.type==='line')).toHaveLength(3);
-  const svg = nodes(tree,e=>e.type==='svg')[0];
-  expect(svg.props.role).toBe('img'); expect(svg.props['aria-label']).toContain('Context 문서 0건');
 });
 
 it('keeps exact radar axes, missing values, and distinct raw/percentile encodings', () => {
@@ -382,4 +376,49 @@ it('defines CCM three-line clamp, scrolling, sticky paper headers, mobile widths
   expect(css).toMatch(/\.ccm-sticky\s*\{[^}]*position:\s*sticky;[^}]*left:\s*0;[^}]*background:\s*var\(--paper\)/);
   expect(css).toMatch(/\.ccm-cell-button\s*\{[^}]*min-height:\s*44px/);
   expect(css).toMatch(/@media\s*\(max-width:\s*767px\)[\s\S]*\.ccm-scroll[^}]*min-width:\s*200px/);
+});
+
+const hierarchy = {id:'root',name:'제품',doc_count:16,children:[
+  {id:'CL1',name:'Cluster 1',doc_count:4,children:[
+    {id:'P1',name:'Persona 1',doc_count:1,children:[{id:'C1',name:'Context 1',doc_count:0}]},
+    {id:'P2',name:'Persona 2',doc_count:2,children:[{id:'C2',name:'Context 2',doc_count:2}]}
+  ]},
+  {id:'CL2',name:'Cluster 2',doc_count:8,children:[{id:'P3',name:'Persona 3',doc_count:8}]}
+]};
+it('renders nested hierarchy lists with selected branch disclosures and proportional bars', () => {
+  const props = {root:hierarchy,expandedId:'P1'};
+  let tree = draw(HierarchyTree,props);
+  expect(nodes(tree,e=>e.type==='svg')).toHaveLength(0);
+  expect(nodes(tree,e=>e.type==='ul')).toHaveLength(4);
+  expect(nodes(tree,e=>e.props['data-ratio']!==undefined).map(e=>e.props['data-ratio'])).toEqual([1,.25,.0625,0,.125,.5]);
+  expect(html(tree)).toContain('문서 0건');
+  expect(html(tree)).not.toContain('Context 2'); expect(html(tree)).not.toContain('Persona 3');
+  const buttons = nodes(tree,e=>e.type==='button');
+  expect(buttons.map(e=>e.props['aria-expanded'])).toEqual([true,true,false,false]);
+  expect(buttons.every(e=>e.props.type==='button')).toBe(true);
+  (buttons[1].props.onClick as ()=>void)(); tree=draw(HierarchyTree,props,false);
+  expect(html(tree)).not.toContain('Context 1');
+  (nodes(tree,e=>e.type==='button')[1].props.onClick as ()=>void)();
+  expect(html(draw(HierarchyTree,props,false))).toContain('Context 1');
+});
+it('keeps only the root open without a selection and handles zero document totals', () => {
+  const tree=draw(HierarchyTree,{root:hierarchy});
+  expect(nodes(tree,e=>e.type==='ul')).toHaveLength(2);
+  expect(nodes(tree,e=>e.type==='button').every(e=>e.props['aria-expanded']===false)).toBe(true);
+  expect(html(draw(HierarchyTree,{root:{id:'zero',name:'빈 제품',doc_count:0}}))).toContain('data-ratio="0"');
+});
+it('keeps wrapping sentences in their own grid cell and omits absent mean lines', () => {
+  const label='긴 문장'.repeat(100);
+  const tree=OpportunityBars({bars:[{id:'null',label,value:null},{id:'zero',label:'영',value:0}],mean:null});
+  expect(nodes(tree,e=>e.props.className==='opportunity-sentence')[1].props.children).toBe(label);
+  expect(nodes(tree,e=>e.props['data-mean']!==undefined)).toHaveLength(0);
+  const fills=nodes(tree,e=>e.props.className==='opportunity-bar');
+  expect(fills).toHaveLength(1);
+  expect(fills[0].props.style).toEqual({width:'0%'});
+  expect(html(tree)).toContain('—');
+  expect(html(tree)).not.toMatch(/NaN|Infinity/);
+  const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+  expect(css).toMatch(/\.opportunity-row\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:/);
+  expect(css).toMatch(/\.opportunity-sentence\s*\{[^}]*overflow-wrap:\s*anywhere/);
+  expect(css).toMatch(/\.hierarchy-toggle\s*\{[^}]*min-height:\s*44px/);
 });
