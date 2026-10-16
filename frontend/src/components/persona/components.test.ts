@@ -295,3 +295,57 @@ it('omits null coordinates, explains missing contexts and preserves raw tooltip 
   for(const value of ['중요도 0.02','만족도 0.10','기회 0.32']) expect(title).toContain(value);
   expect(html(draw(OpportunityMap,{map:map([])}))).toContain('기회 지도를 만들 Context가 없습니다.');
 });
+
+// T5: list selection, responsive contracts and primary Pain Points summary (R6).
+import { readFileSync } from 'node:fs';
+import { PersonaList } from './PersonaList';
+import { PersonaSummary } from './PersonaSummary';
+const summaryProps = { name:'긴 이름', future:true, meta:'근거 4 · Context 2', desire:'쉬고 싶다', goals:['목표 하나','목표 둘'], legacy:false, onOpenEvidence:vi.fn() };
+const pains = [0,1,2].map(n=>({text:`불편 ${n}`, grade:n ? 'inferred' as const : 'observed' as const, context_ids:['C1','C2'], cite:['E1','E2']}));
+it('renders grouped desktop/mobile personas, full names, statuses and selection callbacks', () => {
+  const onSelect=vi.fn();
+  const groups=[{clusterId:'CL1',items:[{id:'P1',name:'긴 이름'.repeat(40),status:'done' as const,future:true},{id:'P2',name:'생성 중',status:'running' as const}]},{clusterId:'CL2',items:[{id:'P3',name:'오류',status:'failed' as const},{id:'P4',name:'대기',status:'pending' as const}]}];
+  const tree=PersonaList({groups,selectedId:'P1',onSelect});
+  expect(nodes(tree,e=>e.type==='optgroup').map(e=>e.props.label)).toEqual(['CL1','CL2']);
+  expect(nodes(tree,e=>e.props['aria-current']==='true')).toHaveLength(1);
+  expect(nodes(tree,e=>e.props.className==='persona-name')[0].props.title).toBe(groups[0].items[0].name);
+  for(const label of ['완료','진행 중','실패','대기','FUTURE']) expect(html(tree)).toContain(label);
+  (nodes(tree,e=>e.type==='button')[1].props.onClick as ()=>void)();
+  (nodes(tree,e=>e.type==='select')[0].props.onChange as (e:unknown)=>void)({target:{value:'P3'}});
+  expect(onSelect.mock.calls).toEqual([['P2'],['P3']]);
+  expect(html(PersonaList({groups:[],selectedId:null,onSelect}))).toContain('아직 확정된 페르소나가 없습니다.');
+});
+it('renders numbered primary pains with grades, contexts, evidence counts and index callbacks', () => {
+  const onOpenEvidence=vi.fn(); const tree=draw(PersonaSummary,{...summaryProps,painPoints:pains,onOpenEvidence});
+  expect(nodes(tree,e=>e.type==='ol')).toHaveLength(1);
+  expect(nodes(tree,e=>e.type==='li')).toHaveLength(3);
+  for(const word of ['Pain Points','관측','추론','C1','C2','근거 2건']) expect(html(tree)).toContain(word);
+  const buttons=nodes(tree,e=>e.props.className==='persona-pain-button');
+  buttons.forEach(e=>(e.props.onClick as ()=>void)());
+  expect(onOpenEvidence.mock.calls).toEqual([[0],[1],[2]]);
+  const more=nodes(tree,e=>e.props['aria-expanded']===false)[0];
+  (more.props.onClick as ()=>void)();
+  expect(nodes(draw(PersonaSummary,{...summaryProps,painPoints:pains,onOpenEvidence},false),e=>e.props['aria-expanded']===true)).toHaveLength(1);
+});
+it('distinguishes legacy R6, empty and partial pains and never offers a legacy button', () => {
+  const legacy=draw(PersonaSummary,{...summaryProps,legacy:true,painPoints:undefined});
+  expect(html(legacy)).toContain('근거 탐색을 다시 실행한 뒤 페르소나를 다시 만들면 페인포인트가 표시됩니다. 인사이트도 다시 만들어야 합니다.');
+  expect(nodes(legacy,e=>e.type==='button')).toHaveLength(0);
+  expect(nodes(legacy,e=>e.type==='a').map(e=>e.props.href)).toEqual(['/pipeline/evidence']);
+  expect(html(draw(PersonaSummary,{...summaryProps,painPoints:[]}))).toContain('근거가 부족해 페인포인트를 만들지 못했습니다.');
+  for(const n of [1,2]) expect(html(draw(PersonaSummary,{...summaryProps,painPoints:pains.slice(0,n)}))).toContain(`근거가 적어 ${n}개만 찾았습니다.`);
+});
+it('uses token-only responsive CSS with clamped names, mobile pain priority and touch targets', () => {
+  const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+  expect(css).toMatch(/-webkit-line-clamp:\s*2/);
+  expect(css).toMatch(/@media\s*\(max-width:\s*767px\)/);
+  expect(css).toMatch(/min-height:\s*44px/);
+  expect(css).toContain('--type-section'); expect(css).toContain('--type-screen');
+  expect(css).toMatch(/\.persona-mobile-select\{display:none/);
+  expect(css).toMatch(/\.persona-desktop-list\{display:none/);
+  expect(css).toMatch(/\.persona-pain-points\{order:1/);
+  expect(css).toMatch(/\.persona-desire-goals\{order:2/);
+  expect(css).not.toMatch(/#[\da-f]{3,8}\b|rgba?\(/i);
+  const tokens=readFileSync(new URL('../../styles/tokens.css',import.meta.url),'utf8');
+  for(const variable of css.matchAll(/var\((--[\w-]+)\)/g)) expect(tokens).toContain(`${variable[1]}:`);
+});
