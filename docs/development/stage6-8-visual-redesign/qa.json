@@ -1,0 +1,77 @@
+{
+  "verdict": "PASS",
+  "head": "",
+  "fingerprint": "",
+  "commands": [
+    {
+      "command": "$B (gstack browse) 브라우저 시나리오 Q1~Q8 + 재확인 2·3차",
+      "exitCode": 0
+    },
+    {
+      "command": "npm --prefix frontend test",
+      "exitCode": 0
+    },
+    {
+      "command": "backend/.venv/bin/python -m pytest backend/tests -q -n 6",
+      "exitCode": 0
+    }
+  ],
+  "findings": [],
+  "notes": "1차 QA 지적 F1~F8(qa-findings-1.md)은 사용자 요청으로 하네스 retry 한도 밖에서 Codex가 수정(115230b, bb1abdd, 978cbbc, eee264d)했고 Codex 읽기 전용 리뷰 2회로 확인. 상세: qa/qa-report-localhost-2026-10-16.md",
+  "scenarios": [
+    {
+      "id": "Q1",
+      "url": "http://localhost:3411/pipeline/personas",
+      "result": "PASS",
+      "evidence": "docs/development/stage6-8-visual-redesign/qa/screenshots/r2-overview.png; docs/development/stage6-8-visual-redesign/qa/screenshots/r3-label-edge.png"
+    },
+    {
+      "id": "Q2",
+      "url": "http://localhost:3411/pipeline/personas",
+      "result": "PASS",
+      "evidence": "docs/development/stage6-8-visual-redesign/qa/screenshots/q2-legacy-card.png"
+    },
+    {
+      "id": "Q3",
+      "url": "http://localhost:3411/pipeline/personas",
+      "result": "PASS",
+      "evidence": "docs/development/stage6-8-visual-redesign/qa/screenshots/q3-card-top.png; docs/development/stage6-8-visual-redesign/qa/screenshots/r2-mobile-card.png"
+    },
+    {
+      "id": "Q4",
+      "url": "http://localhost:3411/pipeline/personas",
+      "result": "PASS",
+      "evidence": "docs/development/stage6-8-visual-redesign/qa/screenshots/r2-card-table.png (키워드 나열 4/321칸, API 집계)"
+    },
+    {
+      "id": "Q5",
+      "url": "http://localhost:3411/pipeline/personas",
+      "result": "PASS",
+      "evidence": "docs/development/stage6-8-visual-redesign/qa/screenshots/r2-card-table.png (지도 370px, 선택 페르소나 강조)"
+    },
+    {
+      "id": "Q6",
+      "url": "http://localhost:3411/pipeline/personas ; http://localhost:3411/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage6-8-visual-redesign/qa/screenshots/q6-card-bottom.png; docs/development/stage6-8-visual-redesign/qa/screenshots/r3-insight-bars.png"
+    },
+    {
+      "id": "Q7",
+      "url": "http://localhost:3411/pipeline/personas (375px)",
+      "result": "PASS",
+      "evidence": "docs/development/stage6-8-visual-redesign/qa/screenshots/r2-mobile-card.png"
+    },
+    {
+      "id": "Q8",
+      "url": "http://localhost:3411/pipeline/personas",
+      "result": "PASS",
+      "evidence": "탭 순서 기록 (qa-report 결과 요약 Q8)"
+    },
+    {
+      "id": "F1",
+      "url": "http://localhost:3411/pipeline/personas (미생성 세션)",
+      "result": "PASS",
+      "evidence": "docs/development/stage6-8-visual-redesign/qa/screenshots/r3-not-generated.png"
+    }
+  ]
+}
