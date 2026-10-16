@@ -1,4 +1,4 @@
-import type { InsightCxDimension, PersonaGrade, PersonaGradeLabel, PersonaSortDirection, PersonaZone } from '../../lib/types';
+import type { InsightCxDimension, PersonaMap, PersonaMapPoint, PersonaGrade, PersonaGradeLabel, PersonaSortDirection, PersonaZone } from '../../lib/types';
 
 const gradeLabels: Record<PersonaGrade, PersonaGradeLabel> = {
   observed: { text: '관측', shape: 'circle' },
@@ -58,4 +58,73 @@ export function displayValue(value: unknown, empty = ''): string {
   return Object.entries(row).map(([key,item]) => `${fieldNames[key] ?? '항목'}: ${typeof item === 'number' && ['mention_count','doc_count','author_count','idx','start','end'].includes(key) ? formatCount(item) : displayValue(item,empty)}`).join(' · ');
  }
  return fieldNames[String(value)] ?? String(value);
+}
+
+
+export const MAP_TICKS = [0, 0.25, 0.5, 0.75, 1];
+
+export function zoneOf(i: number, s: number, base: PersonaMap['base']): PersonaZone {
+  const sMean = base.diag1[0][1], iMean = base.diag2[0][0];
+  if (s >= sMean + (1 - sMean) * i) return s >= base.s_line ? 'A' : 'D';
+  if (iMean < 1 && s < (i - iMean) / (1 - iMean)) return s >= base.s_line ? 'C' : 'F';
+  return s >= base.s_line ? 'B' : 'E';
+}
+
+type MapVertex = [number, number];
+type HalfPlane = (point: MapVertex) => number;
+
+/** Sutherland–Hodgman clipping; nonnegative signed distance is inside. */
+function clipPolygon(polygon: MapVertex[], distance: HalfPlane): MapVertex[] {
+  const result: MapVertex[] = [];
+  for (let n = 0; n < polygon.length; n++) {
+    const a = polygon[n], b = polygon[(n + 1) % polygon.length];
+    const da = distance(a), db = distance(b);
+    if (da >= 0) result.push(a);
+    if ((da >= 0) !== (db >= 0)) {
+      const t = da / (da - db);
+      result.push([a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])]);
+    }
+  }
+  return result;
+}
+
+export function zoneRegions(base: PersonaMap['base']): Record<PersonaZone, MapVertex[]> {
+  const sMean = base.diag1[0][1], iMean = base.diag2[0][0];
+  const horizontal: HalfPlane = ([, s]) => s - base.s_line;
+  const diag1: HalfPlane = ([i, s]) => s - sMean - (1 - sMean) * i;
+  const diag2: HalfPlane = ([i, s]) => (1 - iMean) * s - i + iMean;
+  const below = (line: HalfPlane): HalfPlane => point => -line(point);
+  const regions = {} as Record<PersonaZone, MapVertex[]>;
+  for (const zone of ['A', 'B', 'C', 'D', 'E', 'F'] as const) {
+    if (iMean === 1 && (zone === 'C' || zone === 'F')) {
+      regions[zone] = [];
+      continue;
+    }
+    const planes = [zone <= 'C' ? horizontal : below(horizontal)];
+    if (zone === 'A' || zone === 'D') planes.push(diag1);
+    else {
+      planes.push(below(diag1));
+      if (iMean < 1) planes.push(zone === 'C' || zone === 'F' ? below(diag2) : diag2);
+    }
+    let polygon: MapVertex[] = [[0, 0], [1, 0], [1, 1], [0, 1]];
+    for (const plane of planes) polygon = clipPolygon(polygon, plane);
+    // Shared boundaries are included in adjacent rendering polygons.
+    regions[zone] = polygon;
+  }
+  return regions;
+}
+
+export function jitter(index: number, count: number, radius = 3): [number, number] {
+  if (count <= 1) return [0, 0];
+  const angle = 2 * Math.PI * index / count;
+  return [radius * Math.cos(angle), radius * Math.sin(angle)];
+}
+
+export function topOpportunity(points: PersonaMapPoint[]): string | null {
+  let best: PersonaMapPoint | null = null;
+  for (const point of points) {
+    if (point.odi === null) continue;
+    if (best === null || point.odi > best.odi! || (point.odi === best.odi && point.context_id < best.context_id)) best = point;
+  }
+  return best?.context_id ?? null;
 }

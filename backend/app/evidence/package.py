@@ -5,7 +5,7 @@ represent unavailable observations; they must not silently become zero.
 """
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import model_serializer, BaseModel, ConfigDict, Field
 
 
 class PackageModel(BaseModel):
@@ -21,6 +21,12 @@ class Quote(PackageModel):
     verified: bool
 
 
+class PainPoint(PackageModel):
+    text: str
+    quote: str | None
+    verified: bool = False
+
+
 class EvidenceItem(PackageModel):
     doc_id: str
     source: str
@@ -33,6 +39,14 @@ class EvidenceItem(PackageModel):
     role: Literal['support', 'counter', 'rare']
     dist_centroid: float | None = None
     combo_rarity: float | None = None
+    pain_point: PainPoint | None = None
+
+    @model_serializer(mode='wrap')
+    def serialize_pain_point(self, handler):
+        data = handler(self)
+        if self.pain_point is None:
+            data.pop('pain_point', None)
+        return data
 
 
 class Situation(PackageModel):

@@ -1,5 +1,6 @@
 import json
 from copy import deepcopy
+from pathlib import Path
 
 import pytest
 from pydantic import BaseModel, ConfigDict
@@ -33,8 +34,8 @@ class Runner:
             keys = [k for k, ref in evidence_index(block).items() if ref.context_id in selected]
             mapping = {key: f'E{i+1}' for i, key in enumerate(keys)}
             for row in data['contexts']:
-                for field in ('state', 'emotion', 'barrier'):
-                    row[field]['cite'] = [mapping[c] for c in row[field]['cite']]
+                for cell in [row[field] for field in ('state', 'emotion', 'barrier')] + row.get('pain_points', []):
+                    cell['cite'] = [mapping[c] for c in cell['cite']]
         if self.mutate:
             self.mutate(task, data)
         return validate(task, json.dumps(data))
@@ -77,14 +78,15 @@ def test_action_from_6c_not_generated():
     assert 'action' not in schema['$defs']['ContextOut']['properties']
 
 
-def test_dims_situation_refined_only():
+@pytest.mark.parametrize('field', ['state', 'emotion', 'barrier'])
+def test_dims_situation_keeps_cited_llm_text(field):
     package, runner = setup()
     def mutate(task, data):
         if task.task == 'persona.card':
-            data['contexts'][0]['state']['text'] = '근거에 없는 완전히 다른 상황'
+            data['contexts'][0][field]['text'] = '다듬은 문장'
     runner.mutate = mutate
     result = generate_card('s', package.personas[0], run_task=runner)
-    assert result.card['contexts'][0]['state']['text'] == package.personas[0].context_evidence[0].situation.state
+    assert result.card['contexts'][0][field]['text'] == '다듬은 문장'
 
 
 def test_target_scope_not_in_prompt():
@@ -127,10 +129,13 @@ def test_null_when_no_evidence():
     def mutate(task, data):
         if task.task == 'persona.card':
             for row in data['contexts']:
+                row['pain_points'] = []
                 for field in ('state', 'emotion', 'barrier'):
                     row[field] = {'text': '지어낸 값', 'cite': []}
     runner.mutate = mutate
     result = generate_card('s', package.personas[-1], run_task=runner)
+    assert result.card['pain_points'] == []
+    assert result.card['contexts'][-1]['pain_points'] == []
     for field in ('state', 'emotion', 'barrier'):
         assert result.card['contexts'][-1][field] == {'text': None, 'cite': []}
 
@@ -230,3 +235,169 @@ def test_no_persona_evidence_nulls_summary():
     assert set(card['sensitivity'].values()) == {None}
     assert set(card['journey'].values()) == {None}
     assert card['trace'] == []
+    assert card['pain_points'] == []
+
+
+@pytest.mark.parametrize('field', ['state', 'emotion', 'barrier'])
+def test_dims_situation_uncited_keeps_text_as_speculated(field):
+    package, runner = setup()
+    def mutate(task, data):
+        if task.task == 'persona.card':
+            data['contexts'][0][field] = dict(text='근거에 없는 완전히 다른 상황', cite=[])
+    runner.mutate = mutate
+    card = generate_card('s', package.personas[0], run_task=runner).card
+    assert card['contexts'][0][field] == dict(
+        text='근거에 없는 완전히 다른 상황', cite=[])
+    cid = card['contexts'][0]['context_id']
+    assert card['grades'][cid][field] == 'speculated'
+
+
+def pain_card(*, text='냉방 조절이 번거로움', tagged=True, verified=True, barrier=False):
+    raw = make_package()
+    # Global E2 (chunk-local E1) is the first Context's first support.
+    evidence = raw['personas'][0]['context_evidence'][0]['evidence'][0]
+    evidence['pain_point'] = dict(text='냉방 조절이 번거로움', quote='인용', verified=verified) if tagged else None
+    package, runner = Package.model_validate(raw), Runner(raw)
+    def mutate(task, data):
+        if task.task == 'persona.card':
+            data['contexts'][0]['pain_points'] = [dict(text=text, cite=['E1'])]
+            if barrier:
+                data['contexts'][0]['barrier'] = dict(text=None, cite=[])
+    runner.mutate = mutate
+    return generate_card('s', package.personas[0], run_task=runner), runner
+
+
+def test_pain_points_observed_from_tagged_evidence():
+    result, runner = pain_card(text='냉방_조절이 번거로움!')
+    pain = result.card['contexts'][0]['pain_points'][0]
+    assert pain == dict(text='냉방_조절이 번거로움!', cite=['E2'], grade='observed', source_pain='냉방 조절이 번거로움')
+    payload = json.loads(runner.calls[0].attachments[0].body)
+    assert payload['evidence']['E1']['pain_point'] == '냉방 조절이 번거로움'
+    assert result.card['pain_points'][0]['grade'] == 'observed'
+
+
+def test_pain_points_inferred_when_rewritten():
+    result, _ = pain_card(text='냉방을 조절하기 어려움')
+    pain = result.card['contexts'][0]['pain_points'][0]
+    assert pain['grade'] == 'inferred'
+    assert pain['source_pain'] == '냉방 조절이 번거로움'
+
+
+def test_pain_points_observed_requires_pain_quote_verified():
+    result, _ = pain_card(verified=False)
+    assert result.card['contexts'][0]['pain_points'][0]['grade'] == 'inferred'
+
+
+def test_pain_points_inferred_when_untagged():
+    result, runner = pain_card(tagged=False)
+    pain = result.card['contexts'][0]['pain_points'][0]
+    assert pain['grade'] == 'inferred' and pain['source_pain'] is None
+    assert json.loads(runner.calls[0].attachments[0].body)['evidence']['E1']['pain_point'] is None
+
+
+@pytest.mark.parametrize('cites', [['E6'], [], ['E999']])
+def test_pain_cite_must_belong_to_context(cites):
+    package, runner = setup()
+    def mutate(task, data):
+        if task.task == 'persona.card':
+            data['contexts'][0]['pain_points'] = [dict(text='불편', cite=cites)]
+    runner.mutate = mutate
+    result = generate_card('s', package.personas[0], run_task=runner)
+    assert result.status == 'failed' and result.error == 'schema'
+    assert len(runner.calls) == 2
+
+
+def test_pain_cite_required():
+    from app.persona.cards import PainCell
+    from pydantic import ValidationError
+    with pytest.raises(ValidationError):
+        PainCell(text='불편', cite=[])
+
+
+def test_pain_points_empty_without_evidence(monkeypatch):
+    from app.persona import cards
+    original_call = cards._call
+    def call(*args):
+        data, error = original_call(*args)
+        if args[1] == 'card' and not error:
+            data['contexts'][-1]['pain_points'] = [dict(text='지어낸 불편', cite=['E999'])]
+        return data, error
+    monkeypatch.setattr(cards, '_call', call)
+    package, runner = setup()
+    result = generate_card('s', package.personas[-1], run_task=runner)
+    assert result.card['contexts'][-1]['pain_points'] == []
+
+
+def test_barrier_filled_from_pain_point():
+    result, _ = pain_card(barrier=True)
+    assert result.card['contexts'][0]['barrier'] == dict(text='냉방 조절이 번거로움', cite=['E2'])
+
+
+def test_aggregate_pain_points():
+    from app.persona.cards import aggregate_pain_points
+    def pain(text, cites, grade='inferred'):
+        return dict(text=text, cite=cites, grade=grade, source_pain=None)
+    contexts = [dict(context_id='c1', pain_points=[pain('같은 문장', ['E1']),
+        pain('인용 많음', ['E3', 'E4', 'E9']), pain('문서 많음', ['E5'])]),
+        dict(context_id='c2', pain_points=[pain('같은_문장!', ['E1', 'E2'], 'observed'),
+            pain('문서 적음', ['E6']), pain('끝1', ['E7']), pain('끝2', ['E8'])])]
+    original = deepcopy(contexts)
+    result = aggregate_pain_points(contexts, {'c1': 10, 'c2': 1})
+    assert len(result) == 5
+    assert [p['text'] for p in result[:4]] == ['같은 문장', '인용 많음', '문서 많음', '문서 적음']
+    assert result[0] == dict(text='같은 문장', grade='observed', context_ids=['c1', 'c2'], cite=['E1', 'E2'])
+    assert contexts == original
+    assert aggregate_pain_points([], {}) == []
+
+
+def test_pain_cites_remapped_in_later_chunk():
+    package, runner = setup(big_persona_contexts=10)
+    card = generate_card('s', package.personas[0], run_task=runner).card
+    assert card['contexts'][4]['pain_points'][0]['cite'] == ['E18']
+
+
+def test_pain_source_uses_matching_tag_among_cited_refs():
+    raw = make_package()
+    evidence = raw['personas'][0]['context_evidence'][0]['evidence']
+    evidence[0]['pain_point']['text'] = '첫 태그'
+    evidence[1]['pain_point']['text'] = '일치하는 태그'
+    package, runner = Package.model_validate(raw), Runner(raw)
+    def mutate(task, data):
+        if task.task == 'persona.card':
+            data['contexts'][0]['pain_points'] = [dict(text='일치하는 태그!', cite=['E1', 'E2'])]
+    runner.mutate = mutate
+    pain = generate_card('s', package.personas[0], run_task=runner).card['contexts'][0]['pain_points'][0]
+    assert pain['grade'] == 'observed' and pain['source_pain'] == '일치하는 태그'
+
+
+def test_context_pain_points_max_three():
+    from app.persona.cards import ContextOut
+    from pydantic import ValidationError
+    row = dict(context_id='c', **{field: dict(text=None, cite=[]) for field in ('state', 'emotion', 'barrier')})
+    row['pain_points'] = [dict(text='불편', cite=['E1'])] * 4
+    with pytest.raises(ValidationError):
+        ContextOut.model_validate(row)
+
+
+def test_card_prompt_requires_exact_tagged_pain_point_text():
+    from app.persona import cards
+    prompt = (Path(cards.__file__).with_name('prompts') / 'card.v1.md').read_text(encoding='utf-8')
+    assert '입력 evidence의 pain_point가 있으면 그 문장을 한 글자도 바꾸지 말고 그대로 text로 쓴다.' in prompt
+    assert '비슷한 pain_point가 여럿이면 가장 대표적인 하나만 고른다.' in prompt
+    assert '태깅된 pain_point가 없을 때만 직접 쓴다.' in prompt
+    assert '페인포인트는 항상 해당 Context의 근거 번호를 1개 이상 단다.' in prompt
+
+
+@pytest.mark.parametrize('tag_text', ['냉방 조절이 번거로움', '예약 설정을 매번 다시 해야 해서 불편하다.'])
+def test_fake_backend_copies_tagged_pain_point_as_observed(tag_text):
+    raw = make_package()
+    raw['personas'][0]['context_evidence'][0]['evidence'][0]['pain_point']['text'] = tag_text
+    package, runner = Package.model_validate(raw), Runner(raw)
+    block = package.personas[0]
+    card = generate_card('s', block, run_task=runner).card
+    pain = card['contexts'][0]['pain_points'][0]
+    assert pain['text'] == tag_text
+    assert pain['source_pain'] == tag_text
+    assert pain['cite'] == ['E2']
+    assert pain['grade'] == 'observed'
+    assert card['pain_points'][0]['grade'] == 'observed'

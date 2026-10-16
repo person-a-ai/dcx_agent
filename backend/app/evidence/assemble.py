@@ -130,10 +130,9 @@ def _mean(values):
 
 def _raw_metrics(context, docs):
     assigned = [d for d in docs if d['context_id'] == context['context_id']]
-    persona_count = sum(d['persona_id'] == context['persona_id'] for d in docs)
     theta = [d['theta'] for d in assigned if d.get('theta') is not None]
     sentiment = _mean(d.get('sentiment') for d in assigned)
-    return dict(importance=sum(theta) / persona_count if theta and persona_count else None,
+    return dict(importance=sum(theta) if theta else None,
                 satisfaction=(sentiment + 1) / 2 if sentiment is not None else None,
                 doc_count=len(assigned), author_count=len({d['author_hash'] for d in assigned if d.get('author_hash')}))
 
@@ -230,8 +229,18 @@ def _item(doc_id, docs, tags, *, role='support', tabs=('all',), novelty=None):
     quotes = tag.get('quotes') or []
     located = [locate(q, doc) for q in quotes]
     quote = next((q for q in located if q['verified']), located[0] if located else None)
+    pain = tag.get('pain_point')
+    pain_point = None
+    if isinstance(pain, dict) and isinstance(pain.get('text'), str) and pain['text'].strip():
+        pain_quote = pain.get('quote') if isinstance(pain.get('quote'), str) else None
+        locations = [('title', None), ('body', None)]
+        locations.extend(('comment', idx) for idx in range(len(doc.get('comments') or [])))
+        verified = bool(pain_quote) and any(
+            locate(dict(field=field, idx=idx, text=pain_quote), doc)['verified']
+            for field, idx in locations)
+        pain_point = dict(text=pain['text'].strip(), quote=pain_quote, verified=verified)
     probabilities = doc.get('tagProbs') or {}
-    return dict(doc_id=doc_id, source=doc.get('source') or '', quote=quote,
+    return dict(doc_id=doc_id, source=doc.get('source') or '', quote=quote, pain_point=pain_point,
                 tags=[dim for dim in ('sense', 'feel', 'think', 'act', 'relate', 'outcome')
                       if (probabilities.get(dim) or 0) >= params.TAG_PROB_ON],
                 polarity=tag.get('polarity'), novelty=novelty, known_match=tag.get('known_match', 'none'),

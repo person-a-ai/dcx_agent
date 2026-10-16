@@ -20,6 +20,9 @@ from app.services import s3
 from app.vectors.embedder import FakeEmbedder
 from tests.fixtures.segment_synth import CHANNELS, make_segment_session
 
+# Captured with load_package + pipeline._digest before the pain-point change.
+LEGACY_PACKAGE_DIGEST = '7543b5c50fb77b6297debcbe5b88332f8fa282b8a1694a673d6ccd1ca9729c7b'
+
 CONSTRAINT = '의료적 효과 표현 금지'
 PROJECT_CONTEXT = dict(bk='LG 에어컨', oneLiner='편안한 실내 생활',
     researchQuestion={'text': '냉방 조절의 불편은 무엇인가?'},
@@ -57,6 +60,7 @@ def _evidence(index, offset=0, *, role='support', novelty='low', verified=True):
                 quote=dict(field='body', idx=None, start=0 if verified else None,
                            end=len(text) if verified else None, text=text, verified=verified),
                 tags=['situation', 'pain_point'], polarity=-0.5, novelty=novelty,
+                pain_point=dict(text='냉방 조절이 번거로움', quote=text, verified=verified),
                 known_match=None, tab=['all', 'new'], role=role, dist_centroid=None, combo_rarity=None)
 
 
@@ -153,7 +157,12 @@ def _responses(package, block, selected=None, concept_edit=False):
     cards = []
     for c in rows:
         cites = [key for key, ref in refs.items() if ref.context_id == c.context_id and ref.role == 'support']
-        cards.append(dict(context_id=c.context_id, **{field: dict(text=getattr(c.situation, field) if cites else None, cite=cites[:1])
+        tagged = next((key for key, ref in refs.items()
+                       if ref.context_id == c.context_id and ref.pain_point), None)
+        pain_points = ([dict(text=refs[tagged].pain_point['text'], cite=[tagged])]
+                       if tagged else [dict(text='가짜 불편', cite=cites[:1])] if cites else [])
+        cards.append(dict(context_id=c.context_id,
+            pain_points=pain_points, **{field: dict(text=getattr(c.situation, field) if cites else None, cite=cites[:1])
                                                       for field in ('state', 'emotion', 'barrier')}))
     cids = [c.context_id for c in block.context_evidence]
     cite = list(refs)[:1]

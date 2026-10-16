@@ -5,6 +5,7 @@ import { GradeMark } from './GradeMark';
 import { ProvisionalBadge } from './ProvisionalBadge';
 import { CCMTable, type CCMContext } from './CCMTable';
 import { OpportunityMap } from './OpportunityMap';
+import { MAP_TICKS } from './personaView';
 import { ContextTable } from './ContextTable';
 import { HierarchyTree } from './HierarchyTree';
 import { Radar } from './Radar';
@@ -77,12 +78,13 @@ it('synchronizes row focus/hover and map click through shared highlightedId', ()
   const chart = draw(OpportunityMap, { map: map(rows), highlightedId: 'C1', onHighlight });
   const dot = nodes(chart, e => e.props['data-context-id'] === 'C1')[0];
   (dot.props.onClick as () => void)(); expect(onHighlight).toHaveBeenLastCalledWith('C1'); expect(dot.props['data-highlighted']).toBe(true);
-  (nodes(tree, e => e.props.children === '카드 열기')[0].props.onClick as () => void)(); expect(onOpenCard).toHaveBeenCalledWith('P1', 'C1');
+  const stopPropagation=vi.fn();
+  (nodes(tree, e => e.props.children === '카드 열기')[0].props.onClick as (event: {stopPropagation:()=>void}) => void)({stopPropagation});expect(stopPropagation).toHaveBeenCalledOnce(); expect(onOpenCard).toHaveBeenCalledWith('P1', 'C1');
 });
 it('test_overlapping_points_table_lists_all', () => {
   const rows = [point('C1'), point('C2')];
   const out = html(draw(OpportunityMap, { map: map(rows) }));
-  expect(out).toContain('겹친 Context 2개'); expect(out.match(/translate\(300 180\)/g)).toHaveLength(2);
+  expect(out).toContain('겹친 Context 2개'); expect(new Set(nodes(draw(OpportunityMap, { map: map(rows) }), e => !!e.props['data-context-id']).map(e => e.props.transform)).size).toBe(2);
   expect(out).toContain('role="img"'); expect(out).toContain('B Experiencing 2개');
   const table = html(draw(ContextTable, { rows, onOpenCard: vi.fn() })); for (const row of rows) expect(table).toContain(row.name);
 });
@@ -91,9 +93,9 @@ it('renders cluster shapes, hollow counters, stars, baselines and toggling legen
   const props = { map: map(points) }; let tree = draw(OpportunityMap, props); const out = html(tree);
   for (const shape of ['circle','square','triangle','diamond','pentagon']) expect(out).toContain(`data-shape="${shape}"`);
   expect(out).toContain('fill="none"'); expect(out).toContain('★'); expect(out).toContain('CL5'); expect(out.match(/data-baseline=/g)).toHaveLength(3);
-  const chip = nodes(tree, e => e.type === 'button' && e.props['aria-label'] === 'Persona P0')[0];
+  const chip = nodes(tree, e => e.type === 'button' && e.props['data-cluster'] === 'CL0')[0];
   (chip.props.onClick as () => void)(); tree = draw(OpportunityMap, props, false); expect(nodes(tree, e => e.props['data-context-id'] === 'C0')).toHaveLength(0);
-  expect(nodes(tree, e => e.props['aria-label'] === 'Persona P0')[0].props['aria-pressed']).toBe(false);
+  expect(nodes(tree, e => e.props['data-cluster'] === 'CL0')[0].props['aria-pressed']).toBe(false);
 });
 it('renders hierarchy sizes, radar raw and percentile, bars mean, journey distribution and revisions', () => {
   expect(html(createElement(HierarchyTree, { root: { id:'product', name:'제품', doc_count:10, children:[{id:'CL1',name:'Cluster',doc_count:4}] } }))).toContain('문서 10건');
@@ -126,7 +128,7 @@ it('uses backend persona tones and toggles visibility', () => {
   const props={map:map(points)}; let tree=draw(OpportunityMap,props);
   for (const tone of ['--ink-strong','--ink','--line-strong']) expect(html(tree)).toContain(`var(${tone})`);
   expect(html(tree)).not.toContain('var(--blue)');
-  const chip=()=>nodes(tree,e=>e.props['aria-label']==='Persona P0')[0];
+  const chip=()=>nodes(tree,e=>e.props['data-cluster']==='CL1')[0];
   (chip().props.onClick as ()=>void)(); tree=draw(OpportunityMap,props,false);
   expect(chip().props['aria-pressed']).toBe(false);
   expect(nodes(tree,e=>e.props['data-context-id']==='C0')).toHaveLength(0);
@@ -150,11 +152,6 @@ it('sorts every Context column using the shared sorter without mutating input', 
   }
   expect(JSON.stringify(rows)).toBe(original);
 });
-it('scales hierarchy node area with document count through all four levels', () => {
-  const tree=HierarchyTree({root:{id:'product',name:'제품',doc_count:16,children:[{id:'CL',name:'Cluster',doc_count:4,children:[{id:'P',name:'Persona',doc_count:1,children:[{id:'C',name:'Context',doc_count:0}]}]}]}});
-  expect(nodes(tree,e=>e.type==='circle').map(e=>e.props.r)).toEqual([24,12,6,0]);
-  expect(nodes(tree,e=>e.type==='line')).toHaveLength(3);
-});
 it('renders empty charts and missing metrics without invalid coordinates', () => {
   const outputs=[html(draw(OpportunityMap,{map:map([])})),html(createElement(OpportunityBars,{bars:[],mean:null})),html(createElement(Radar,{values:{Computed:{raw:null,percentile:null},Connected:{raw:0,percentile:0},Shared:{raw:1,percentile:100}}})),html(createElement(JourneyTable,{rows:[]}))];
   outputs.forEach(out=>expect(out).not.toMatch(/NaN|Infinity/));
@@ -175,7 +172,7 @@ it('keeps hover emphasis neutral, reserves blue for selected personas, and label
   const tree = draw(OpportunityMap, props);
   const dot = nodes(tree, e => e.props['data-context-id'] === 'C1')[0];
   expect(dot.props.stroke).toBe('var(--ink-strong)');
-  const labels = nodes(tree, e => e.type === 'text').map(e => html(e)).join('');
+  const labels = html(tree);
   for (const label of ['A Exciting', 'B Experiencing', 'C Competitive', 'D Forgiven', 'E Dangling', 'F At-risk']) expect(labels).toContain(label);
   const selected = draw(OpportunityMap, { ...props, selectedPersonaId: 'P1' });
   expect(nodes(selected, e => e.props['data-context-id'] === 'C1')[0].props.stroke).toBe('var(--blue)');
@@ -196,17 +193,16 @@ it('ranks opportunity bars without changing inputs and labels the mean independe
   const out = html(tree);
   expect(out.indexOf('높음')).toBeLessThan(out.indexOf('낮음'));
   expect(bars[0].id).toBe('low');
-  expect(nodes(tree,e=>e.type==='line')).toHaveLength(1);
-  expect(nodes(tree,e=>e.type==='svg')[0].props['aria-label']).toContain('평균 1');
+  expect(nodes(tree,e=>e.type==='svg')).toHaveLength(0);
+  const rows = nodes(tree,e=>e.props.className==='opportunity-row');
+  expect(rows).toHaveLength(2);
+  rows.forEach(row => {
+    expect(nodes(row.props.children as ReactNode,e=>e.type==='div')).toHaveLength(1);
+    expect((row.props.children as ReactNode[])).toHaveLength(4);
+    const area = nodes(row,e=>e.props.className==='opportunity-bar-area')[0];
+    expect(nodes(area,e=>e.props['data-mean']===1)).toHaveLength(1);
+  });
   expect(html(OpportunityBars({bars:[],mean:null}))).toContain('기회 정보가 없습니다.');
-});
-
-it('renders all hierarchy levels with proportional node areas and an accessible summary', () => {
-  const tree = HierarchyTree({root:{id:'product',name:'제품',doc_count:16,children:[{id:'CL1',name:'Cluster',doc_count:4,children:[{id:'P1',name:'Persona',doc_count:1,children:[{id:'C1',name:'Context',doc_count:0}]}]}]}});
-  expect(nodes(tree,e=>e.type==='circle').map(e=>e.props.r)).toEqual([24,12,6,0]);
-  expect(nodes(tree,e=>e.type==='line')).toHaveLength(3);
-  const svg = nodes(tree,e=>e.type==='svg')[0];
-  expect(svg.props.role).toBe('img'); expect(svg.props['aria-label']).toContain('Context 문서 0건');
 });
 
 it('keeps exact radar axes, missing values, and distinct raw/percentile encodings', () => {
@@ -238,4 +234,288 @@ it('opens actual CCM evidence and closes the previous cell with matching disclos
   tree = draw(CCMTable,props,false);
   expect(nodes(tree,e=>e.type==='button' && e.props['aria-expanded']===true)).toHaveLength(1);
   expect(nodes(tree,e=>e.type==='button')[0].props['aria-expanded']).toBe(false);
+});
+
+
+it('renders six token-colored zone polygons with names in the outside legend', () => {
+  const tree = draw(OpportunityMap, {map: map([point('C1')])});
+  const out = html(tree);
+  const regions = out.match(/<polygon data-zone="[A-F]"[^>]*>/g) ?? [];
+  expect(regions).toHaveLength(6);
+  for (const zone of ['A','B','C','D','E','F']) {
+    expect(regions.find(region => region.includes(`data-zone="${zone}"`))).toContain(`fill="var(--${zone === 'F' ? 'danger-soft' : zone === 'C' ? 'warning-soft' : 'sunken'})"`);
+    const label = out.match(new RegExp(`<li data-zone-name="${zone}"[^>]*>`))?.[0];
+    expect(label).toContain(`color:var(--${zone === 'F' ? 'danger' : zone === 'C' ? 'warning' : 'sub'})`);
+  }
+});
+it('uses linear ticks, responsive dimensions and straight dashed baselines', () => {
+  const tree = draw(OpportunityMap, {map: map([point('C1')]), compact: true});
+  const svg = nodes(tree, e => e.type === 'svg')[0];
+  expect(svg.props.viewBox).toBe('0 0 600 420');
+  expect(svg.props.style).toMatchObject({minHeight: 320});
+  const ticks = nodes(tree, e => e.type === 'text' && !!e.props['data-axis-tick']);
+  expect(ticks.map(e => e.props.children)).toEqual([...MAP_TICKS, ...MAP_TICKS]);
+  expect(html(tree)).not.toContain('로그 척도');
+  expect(ticks.some(e => String(e.props.children) === '10')).toBe(false);
+  for (const line of nodes(tree, e => e.props['data-baseline'] !== undefined)) {
+    expect(line.type).toBe('polyline');
+    expect(line.props.points.split(' ')).toHaveLength(2);
+    expect(line.props.stroke).toBe('var(--line-strong)');
+    expect(line.props.strokeDasharray).toBeTruthy();
+  }
+  const dot = nodes(tree, e => e.props['data-context-id'] === 'C1')[0];
+  expect(dot.props.transform).toBe(`translate(${60 + .5*480} ${340-.5*320})`);
+});
+it.each([[-1, 2, 'translate(60 20)'], [2, -1, 'translate(540 340)']])('clamps linear map coordinates (%s, %s)', (i, s, transform) => {
+  const tree = draw(OpportunityMap, {map: map([{...point('C1'), i: Number(i), s: Number(s)}])});
+  expect(nodes(tree, e => e.props['data-context-id'] === 'C1')[0].props.transform).toBe(transform);
+});
+it('RV2 labels focused and highlighted points and dims other personas in focus mode', () => {
+  const props = {map: map([point('C1'), {...point('C2'), persona_id:'P2'}]), focusPersonaId:'P1', selectedPersonaId:'P1'};
+  expect(nodes(draw(OpportunityMap, props), e => e.type === 'text' && !!e.props['data-label'])).toHaveLength(1);
+  const tree = draw(OpportunityMap, {...props, highlightedId:'C2'});
+  expect(nodes(tree, e => e.type === 'text' && !!e.props['data-label']).map(e => e.props.children)).toEqual(['C1','C2']);
+  expect(nodes(tree, e => !!e.props['data-context-id']).map(e => e.props.opacity)).toEqual([1,.25]);
+});
+it('uses cluster-only legend buttons and toggles all cluster members', () => {
+  const props = {map: map([point('C1'), {...point('C2'),persona_id:'P2'}, {...point('C3'),cluster_id:'CL2'}])};
+  let tree = draw(OpportunityMap,props);
+  expect(nodes(tree,e=>e.type==='button')).toHaveLength(2);
+  const click = nodes(tree,e=>e.type==='button')[0].props.onClick as ()=>void;
+  click(); tree=draw(OpportunityMap,props,false);
+  expect(nodes(tree,e=>!!e.props['data-context-id']).map(e=>e.props['data-context-id'])).toEqual(['C3']);
+  (nodes(tree,e=>e.type==='button')[0].props.onClick as ()=>void)();
+  expect(nodes(draw(OpportunityMap,props,false),e=>!!e.props['data-context-id'])).toHaveLength(3);
+});
+it('omits null coordinates, explains missing contexts and preserves raw tooltip metrics', () => {
+  const tree=draw(OpportunityMap,{map:map([{...point('C1'),i:null},{...point('C2'),s:null},{...point('C3'),i:.02,s:.1,odi:.32}])});
+  expect(nodes(tree,e=>!!e.props['data-context-id']).map(e=>e.props['data-context-id'])).toEqual(['C3']);
+  expect(html(tree)).toContain('지도에 없는 Context 2개는 표에서 확인하세요.');
+  const title=html(nodes(tree,e=>e.type==='title')[0]);
+  for(const value of ['중요도 0.02','만족도 0.10','기회 0.32']) expect(title).toContain(value);
+  expect(html(draw(OpportunityMap,{map:map([])}))).toContain('기회 지도를 만들 Context가 없습니다.');
+});
+
+// T5: list selection, responsive contracts and primary Pain Points summary (R6).
+import { readFileSync } from 'node:fs';
+import { PersonaList } from './PersonaList';
+import { PersonaSummary } from './PersonaSummary';
+const summaryProps = { name:'긴 이름', future:true, meta:'근거 4 · Context 2', desire:'쉬고 싶다', goals:['목표 하나','목표 둘'], legacy:false, onOpenEvidence:vi.fn() };
+const pains = [0,1,2].map(n=>({text:`불편 ${n}`, grade:n ? 'inferred' as const : 'observed' as const, context_ids:['C1','C2'], cite:['E1','E2']}));
+it('renders grouped desktop/mobile personas, full names, statuses and selection callbacks', () => {
+  const onSelect=vi.fn();
+  const groups=[{clusterId:'CL1',items:[{id:'P1',name:'긴 이름'.repeat(40),status:'done' as const,future:true},{id:'P2',name:'생성 중',status:'running' as const}]},{clusterId:'CL2',items:[{id:'P3',name:'오류',status:'failed' as const},{id:'P4',name:'대기',status:'pending' as const}]}];
+  const tree=PersonaList({groups,selectedId:'P1',onSelect});
+  expect(nodes(tree,e=>e.type==='optgroup').map(e=>e.props.label)).toEqual(['CL1','CL2']);
+  expect(nodes(tree,e=>e.props['aria-current']==='true')).toHaveLength(1);
+  expect(nodes(tree,e=>e.props.className==='persona-name')[0].props.title).toBe(groups[0].items[0].name);
+  for(const label of ['완료','진행 중','실패','대기','FUTURE']) expect(html(tree)).toContain(label);
+  (nodes(tree,e=>e.type==='button')[1].props.onClick as ()=>void)();
+  (nodes(tree,e=>e.type==='select')[0].props.onChange as (e:unknown)=>void)({target:{value:'P3'}});
+  expect(onSelect.mock.calls).toEqual([['P2'],['P3']]);
+  expect(html(PersonaList({groups:[],selectedId:null,onSelect}))).toContain('아직 확정된 페르소나가 없습니다.');
+});
+it('renders numbered primary pains with grades, contexts, evidence counts and index callbacks', () => {
+  const onOpenEvidence=vi.fn(); const tree=draw(PersonaSummary,{...summaryProps,painPoints:pains,onOpenEvidence});
+  expect(nodes(tree,e=>e.type==='ol')).toHaveLength(1);
+  expect(nodes(tree,e=>e.type==='li')).toHaveLength(3);
+  for(const word of ['Pain Points','관측','추론','C1','C2','근거 2건']) expect(html(tree)).toContain(word);
+  const buttons=nodes(tree,e=>e.props.className==='persona-pain-button');
+  buttons.forEach(e=>(e.props.onClick as ()=>void)());
+  expect(onOpenEvidence.mock.calls).toEqual([[0],[1],[2]]);
+  const more=nodes(tree,e=>e.props['aria-expanded']===false)[0];
+  (more.props.onClick as ()=>void)();
+  expect(nodes(draw(PersonaSummary,{...summaryProps,painPoints:pains,onOpenEvidence},false),e=>e.props['aria-expanded']===true)).toHaveLength(1);
+});
+it('distinguishes legacy R6, empty and partial pains and never offers a legacy button', () => {
+  const legacy=draw(PersonaSummary,{...summaryProps,legacy:true,painPoints:undefined});
+  expect(html(legacy)).toContain('근거 탐색을 다시 실행한 뒤 페르소나를 다시 만들면 페인포인트가 표시됩니다. 인사이트도 다시 만들어야 합니다.');
+  expect(nodes(legacy,e=>e.type==='button')).toHaveLength(0);
+  expect(nodes(legacy,e=>e.type==='a').map(e=>e.props.href)).toEqual(['/pipeline/evidence']);
+  expect(html(draw(PersonaSummary,{...summaryProps,painPoints:[]}))).toContain('근거가 부족해 페인포인트를 만들지 못했습니다.');
+  for(const n of [1,2]) expect(html(draw(PersonaSummary,{...summaryProps,painPoints:pains.slice(0,n)}))).toContain(`근거가 적어 ${n}개만 찾았습니다.`);
+});
+it('uses token-only responsive CSS with clamped names, mobile pain priority and touch targets', () => {
+  const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+  expect(css).toMatch(/-webkit-line-clamp:\s*2/);
+  expect(css).toMatch(/@media\s*\(max-width:\s*767px\)/);
+  expect(css).toMatch(/min-height:\s*44px/);
+  expect(css).toContain('--type-section'); expect(css).toContain('--type-screen');
+  expect(css).toMatch(/\.persona-mobile-select\{display:none/);
+  expect(css).toMatch(/\.persona-desktop-list\{display:none/);
+  expect(css).toMatch(/\.persona-pain-points\{order:1/);
+  expect(css).toMatch(/\.persona-desire-goals\{order:2/);
+  expect(css).not.toMatch(/#[\da-f]{3,8}\b|rgba?\(/i);
+  const tokens=readFileSync(new URL('../../styles/tokens.css',import.meta.url),'utf8');
+  for(const variable of css.matchAll(/var\((--[\w-]+)\)/g)) expect(tokens).toContain(`${variable[1]}:`);
+});
+
+it('renders the ten CCM rows in contract order with plain table surfaces and sticky headers', () => {
+  const tree = draw(CCMTable, {contexts: contexts.slice(0, 1)});
+  expect(nodes(tree, e => e.type === 'th' && e.props.scope === 'row').map(e => html(e))).toEqual(
+    ['행동','상태','감정','장벽','페인포인트','키워드','쓰는 제품·수단','만족도','기회','근거 수'].map(label => expect.stringContaining(label))
+  );
+  expect(nodes(tree, e => e.props.className === 'ccm-scroll')).toHaveLength(1);
+  expect(nodes(tree, e => e.type === 'th' && e.props.scope === 'row').every(e => e.props.className === 'ccm-sticky')).toBe(true);
+  expect(html(tree)).not.toContain('ds-card');
+});
+it('clamps CCM text, shows extra pain count, and expands full text together with evidence', () => {
+  const text = '긴 페인포인트 '.repeat(100);
+  const props = {contexts: [{id:'C1',name:'이름',cells:{pain_point:{text,more:2,evidence:'모든 페인포인트와 인용'}}}]};
+  let tree = draw(CCMTable, props);
+  const button = nodes(tree, e => e.type === 'button' && String(e.props['aria-label']).includes('페인포인트'))[0];
+  expect(html(button)).toContain('+2');
+  expect(nodes(button, e => e.props.className === 'ccm-clamp')).toHaveLength(1);
+  (button.props.onClick as () => void)(); tree = draw(CCMTable, props, false);
+  expect(nodes(tree, e => e.props.className === 'ccm-full-text').map(e => e.props.children)).toContain(text);
+  expect(html(tree)).toContain('모든 페인포인트와 인용');
+});
+it('marks missing and blank CCM cells as insufficient evidence', () => {
+  const tree = draw(CCMTable, {contexts:[{id:'C1',name:'이름',cells:{action:{text:'  '},state:{text:''}}}]});
+  expect(nodes(tree, e => e.props.className === 'ccm-empty')).toHaveLength(10);
+  expect(nodes(tree, e => e.props.className === 'ccm-empty').every(e => e.props.children === '근거 부족')).toBe(true);
+});
+it('defines CCM three-line clamp, scrolling, sticky paper headers, mobile widths and touch targets', () => {
+  const css = readFileSync(new URL('./persona.css', import.meta.url), 'utf8');
+  expect(css).toMatch(/\.ccm-clamp\s*\{[^}]*-webkit-line-clamp:\s*3/);
+  expect(css).toMatch(/\.ccm-scroll\s*\{[^}]*overflow-x:\s*auto/);
+  expect(css).toMatch(/\.ccm-sticky\s*\{[^}]*position:\s*sticky;[^}]*left:\s*0;[^}]*background:\s*var\(--paper\)/);
+  expect(css).toMatch(/\.ccm-cell-button\s*\{[^}]*min-height:\s*44px/);
+  expect(css).toMatch(/@media\s*\(max-width:\s*767px\)[\s\S]*\.ccm-scroll[^}]*min-width:\s*200px/);
+});
+
+const hierarchy = {id:'root',name:'제품',doc_count:16,children:[
+  {id:'CL1',name:'Cluster 1',doc_count:4,children:[
+    {id:'P1',name:'Persona 1',doc_count:1,children:[{id:'C1',name:'Context 1',doc_count:0}]},
+    {id:'P2',name:'Persona 2',doc_count:2,children:[{id:'C2',name:'Context 2',doc_count:2}]}
+  ]},
+  {id:'CL2',name:'Cluster 2',doc_count:8,children:[{id:'P3',name:'Persona 3',doc_count:8}]}
+]};
+it('renders nested hierarchy lists with selected branch disclosures and proportional bars', () => {
+  const props = {root:hierarchy,expandedId:'P1'};
+  let tree = draw(HierarchyTree,props);
+  expect(nodes(tree,e=>e.type==='svg')).toHaveLength(0);
+  expect(nodes(tree,e=>e.type==='ul')).toHaveLength(4);
+  expect(nodes(tree,e=>e.props['data-ratio']!==undefined).map(e=>e.props['data-ratio'])).toEqual([1,.25,.0625,0,.125,.5]);
+  expect(html(tree)).toContain('문서 0건');
+  expect(html(tree)).not.toContain('Context 2'); expect(html(tree)).not.toContain('Persona 3');
+  const buttons = nodes(tree,e=>e.type==='button');
+  expect(buttons.map(e=>e.props['aria-expanded'])).toEqual([true,true,false,false]);
+  expect(buttons.every(e=>e.props.type==='button')).toBe(true);
+  (buttons[1].props.onClick as ()=>void)(); tree=draw(HierarchyTree,props,false);
+  expect(html(tree)).not.toContain('Context 1');
+  (nodes(tree,e=>e.type==='button')[1].props.onClick as ()=>void)();
+  expect(html(draw(HierarchyTree,props,false))).toContain('Context 1');
+});
+it('keeps only the root open without a selection and handles zero document totals', () => {
+  const tree=draw(HierarchyTree,{root:hierarchy});
+  expect(nodes(tree,e=>e.type==='ul')).toHaveLength(2);
+  expect(nodes(tree,e=>e.type==='button').every(e=>e.props['aria-expanded']===false)).toBe(true);
+  expect(html(draw(HierarchyTree,{root:{id:'zero',name:'빈 제품',doc_count:0}}))).toContain('data-ratio="0"');
+});
+it('keeps wrapping sentences in their own grid cell and omits absent mean lines', () => {
+  const label='긴 문장'.repeat(100);
+  const tree=OpportunityBars({bars:[{id:'null',label,value:null},{id:'zero',label:'영',value:0}],mean:null});
+  expect(nodes(tree,e=>e.props.className==='opportunity-sentence')[1].props.children).toBe(label);
+  expect(nodes(tree,e=>e.props['data-mean']!==undefined)).toHaveLength(0);
+  const fills=nodes(tree,e=>e.props.className==='opportunity-bar');
+  expect(fills).toHaveLength(1);
+  expect(fills[0].props.style).toEqual({width:'0%'});
+  expect(html(tree)).toContain('—');
+  expect(html(tree)).not.toMatch(/NaN|Infinity/);
+  const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+  expect(css).toMatch(/\.opportunity-row\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:/);
+  expect(css).toMatch(/\.opportunity-sentence\s*\{[^}]*overflow-wrap:\s*anywhere/);
+  expect(css).toMatch(/\.hierarchy-toggle\s*\{[^}]*min-height:\s*44px/);
+});
+
+it('RV2 separates nearby focused labels deterministically',()=>{
+ const props={map:map([point('C1'),{...point('C2'),i:.50001,s:.50001}]),focusPersonaId:'P1'};
+ const labels=nodes(draw(OpportunityMap,props),e=>!!e.props['data-label']);
+ expect(labels).toHaveLength(2);
+ expect(labels[0].props.y).not.toBe(labels[1].props.y);
+ expect(nodes(draw(OpportunityMap,props),e=>!!e.props['data-label']).map(e=>e.props.y)).toEqual(labels.map(e=>e.props.y));
+});
+
+it.each([1,0])('RV8 keeps three coincident focused labels inside the viewBox at s=%s',s=>{
+ const tree=draw(OpportunityMap,{map:map(['C1','C2','C3'].map(id=>({...point(id),s}))),focusPersonaId:'P1'});
+ const positions=nodes(tree,e=>!!e.props['data-context-id']).map(dot=>{
+   const label=nodes(dot,e=>!!e.props['data-label'])[0];
+   const [,px,py]=String(dot.props.transform).match(/translate\(([^ ]+) ([^)]+)\)/)!;
+   const x=Number(px)+Number(label.props.x), y=Number(py)+Number(label.props.y);
+   expect(x).toBeGreaterThanOrEqual(0);expect(x).toBeLessThanOrEqual(600);
+   expect(y).toBeGreaterThanOrEqual(12);expect(y).toBeLessThanOrEqual(420);
+   return y;
+ });
+ for(let i=0;i<positions.length;i++) for(let j=i+1;j<positions.length;j++) expect(Math.abs(positions[i]-positions[j])).toBeGreaterThanOrEqual(12);
+});
+
+it('RV9 gives ContextTable actions and scoped map legend chips 44px touch targets',()=>{
+ const tree=draw(ContextTable,{rows:[point('C1')],onOpenCard:vi.fn()});
+ const action=nodes(tree,e=>e.type==='button' && e.props.children==='카드 열기')[0];
+ expect((action.props.style as {minHeight:number}).minHeight).toBeGreaterThanOrEqual(44);
+ const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+ expect(css).toMatch(/\.persona-map-legend\s+\.ds-chip\s*\{[^}]*min-height:\s*44px/);
+ expect(nodes(draw(OpportunityMap,{map:map([point('C1')])}),e=>e.props.className==='persona-map-legend')).toHaveLength(1);
+});
+
+it('F2 preserves readable column widths and local horizontal scrolling',()=>{
+ const source=readFileSync(new URL('./ContextTable.tsx',import.meta.url),'utf8');
+ expect(source).toContain('<colgroup>');
+ const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+ expect(css).toContain('.persona-context-table table{table-layout:fixed;min-width:1180px}');
+ for(const width of [96,220,160,72,100,260]) expect(source).toContain(`width:${width}`);
+ expect(css).toContain('.persona-context-table{overflow-x:auto}');
+});
+it('F3 reserves 420px for the card map only at desktop widths',()=>{
+ const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+ expect(css).toMatch(/@media\(min-width:1280px\)\{\s*\.persona-comparison-layout\{grid-template-columns:minmax\(0,1fr\) minmax\(420px,0.8fr\)\}/);
+});
+it('F7 reduces mobile pain typography and indentation while hiding the duplicate card heading accessibly',()=>{
+ const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+ expect(css).toMatch(/@media\(max-width:767px\)\{[^}]*\}[^]*?\.persona-pain-points ol\{padding-left:20px\}/);
+ expect(css).toContain('.persona-pain-text,.persona-pain-item::marker{font:var(--type-card)}');
+ expect(css).toContain('.persona-summary-header h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}');
+});
+
+
+it('RV8 separates overlapping rendered intervals with mixed label anchors deterministically', () => {
+ const points = [450, 540].map((px, index) => ({
+   ...point(`CONTEXT0${index + 1}`), i: (px - 60) / 480,
+ }));
+ const props = {map: map(points), focusPersonaId: 'P1'};
+ const positions = (tree: ReactNode) => nodes(tree, e => !!e.props['data-context-id']).map(dot => {
+   const label = nodes(dot, e => !!e.props['data-label'])[0];
+   const [,px,py] = String(dot.props.transform).match(/translate\(([^ ]+) ([^)]+)\)/)!;
+   const anchorX = Number(px) + Number(label.props.x);
+   const width = String(label.props.children).length * 6.5;
+   const left = anchorX - (label.props.textAnchor === 'end' ? width : 0);
+   return {left, right: left + width, y: Number(py) + Number(label.props.y), anchor: label.props.textAnchor};
+ });
+ const labels = positions(draw(OpportunityMap, props));
+ expect(labels.map(label => label.anchor)).toEqual(['start', 'end']);
+ expect(labels[0].left).toBeCloseTo(462);
+ expect(labels[1].left).toBeCloseTo(469.5);
+ for (let i = 0; i < labels.length; i++) for (let j = i + 1; j < labels.length; j++) {
+   const a = labels[i], b = labels[j];
+   if (Math.abs(a.y - b.y) < 12) expect(a.left < b.right && b.left < a.right).toBe(false);
+ }
+ expect(positions(draw(OpportunityMap, props))).toEqual(labels);
+ expect(positions(draw(OpportunityMap, {...props, map: map([...points].reverse())})).reverse()).toEqual(labels);
+});
+
+it.each([1, 0])('keeps focused point labels horizontally inside the viewBox at i=%s', i => {
+ const id = 'CL1-P2-C1';
+ const props = {map: map([{...point(id), i}]), focusPersonaId: 'P1'};
+ const tree = draw(OpportunityMap, props);
+ const dot = nodes(tree, e => e.props['data-context-id'] === id)[0];
+ const label = nodes(dot, e => e.props['data-label'] === id)[0];
+ const px = Number(String(dot.props.transform).match(/translate\(([^ ]+)/)![1]);
+ const anchorX = px + Number(label.props.x);
+ const width = id.length * 6.5;
+ const left = anchorX - (label.props.textAnchor === 'end' ? width : 0);
+ expect(left).toBeGreaterThanOrEqual(4);
+ expect(left + width).toBeLessThanOrEqual(596);
+ expect(label.props.textAnchor ?? 'start').toBe(i === 1 ? 'end' : 'start');
+ expect(nodes(draw(OpportunityMap, props), e => e.props['data-label'] === id)[0].props).toEqual(label.props);
 });

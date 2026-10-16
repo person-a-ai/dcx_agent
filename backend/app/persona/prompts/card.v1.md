@@ -1,5 +1,5 @@
 주어진 Context마다 이 Context에서 관측되는 담론을 서술한다.
-출력은 contexts 배열이며 각 항목은 context_id, state, emotion, barrier만 포함한다.
+출력은 contexts 배열이며 각 항목은 context_id, state, emotion, barrier, pain_points만 포함한다.
 각 칸은 {text: 문자열 또는 null, cite: 근거 번호 배열}이다.
 입력의 모든 Context를 정확히 한 번씩 반환한다. 다른 Context를 만들지 않는다.
 각 Context의 지지 근거, 반례, 희소 근거를 함께 검토하고 상충하는 근거를 숨기지 않는다.
@@ -9,3 +9,9 @@ situation_origin이 dims이고 situation 값이 있으면 의미와 범위를 �
 Action은 6-C 확정값을 코드가 채우므로 생성하지 않는다.
 이름, Desire, Goal은 확정된 입력이며 바꾸지 않는다.
 지표, 등급, 근거 원문, basis, 수치 계산은 출력하지 않는다.
+
+pain_points는 최대 3개의 {text: 문자열, cite: 근거 번호 배열} 항목이다.
+입력 evidence의 pain_point가 있으면 그 문장을 한 글자도 바꾸지 말고 그대로 text로 쓴다.
+비슷한 pain_point가 여럿이면 가장 대표적인 하나만 고른다.
+태깅된 pain_point가 없을 때만 직접 쓴다. 이때 근거 인용만 보고 그 Context의 불편·어려움을 쓴다.
+페인포인트는 항상 해당 Context의 근거 번호를 1개 이상 단다. 근거가 없으면 pain_points는 빈 배열로 반환한다.

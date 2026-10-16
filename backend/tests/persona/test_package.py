@@ -191,3 +191,58 @@ def test_fake_backend_responses_validate_and_concept_edit():
     # These values must be supplied by code, never by the fake language model.
     for raw in backend.responses.values():
         assert not any(f'"{key}"' in raw for key in ('odi', 'radar', 'basis', 'quote', 'importance', 'satisfaction'))
+
+
+@pytest.mark.parametrize('with_pain', [False, True])
+def test_load_package_with_and_without_pain_point(data_dir, with_pain):
+    from app.evidence.package import EvidencePackage
+    from app.persona.package import Evidence
+
+    raw = make_package()
+    for block in raw['personas']:
+        for row in [block['persona_evidence']['desire_support'],
+                    *(c[key] for c in block['context_evidence']
+                      for key in ('evidence', 'counter_evidence', 'rare_evidence'))]:
+            for evidence in row:
+                evidence.pop('pain_point', None)
+    pain = {'text': '비용 불안', 'quote': '비용', 'verified': True}
+    if with_pain:
+        raw['personas'][0]['persona_evidence']['desire_support'][0]['pain_point'] = pain
+    path = data_dir / 'sessions/legacy/versions/v1/evidence/package.json'
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(raw))
+    package = load_package('legacy', 'v1')
+    ref = evidence_index(package.personas[0])['E1']
+    assert ref.pain_point == (pain if with_pain else None)
+    assert ('pain_point' in ref.model_dump()) is with_pain
+    evidence = Evidence.model_validate(raw['personas'][0]['persona_evidence']['desire_support'][0])
+    assert ('pain_point' in json.loads(evidence.model_dump_json())) is with_pain
+    producer = EvidencePackage.model_validate(raw)
+    assert producer.model_dump(mode='json', by_alias=True) == raw
+    dumped = package.model_dump(mode='json', by_alias=True)
+    dumped.pop('run')
+    assert dumped == raw
+
+
+def test_existing_package_digest_unchanged(data_dir):
+    from app.context import store as sessions
+    from app.persona import pipeline
+    from tests.fixtures.evidence_package import LEGACY_PACKAGE_DIGEST
+
+    session = write_session_with_package(data_dir)
+    base = data_dir / 'sessions' / session.sid / 'versions' / session.version
+    raw = json.loads((base / 'evidence/package.json').read_text())
+    for block in raw['personas']:
+        for row in [block['persona_evidence']['desire_support'],
+                    *(c[key] for c in block['context_evidence']
+                      for key in ('evidence', 'counter_evidence', 'rare_evidence'))]:
+            for evidence in row:
+                evidence.pop('pain_point', None)
+    sessions.write_json(base / 'evidence/package.json', raw)
+    sessions.update_session(session.sid, {'evidence': {'status': 'done', 'run': 'legacy-run'}})
+    package = load_package(session.sid, session.version)
+    assert pipeline._digest(package) == LEGACY_PACKAGE_DIGEST
+    sessions.write_json(base / 'persona/cards.json', {
+        'package_run': 'legacy-run', 'package_hash': LEGACY_PACKAGE_DIGEST,
+        'items': [{'persona_id': 'CL0-P0', 'status': 'done', 'card': {}}]})
+    assert pipeline.mark_stale_if_changed(session.sid, session.version) is False

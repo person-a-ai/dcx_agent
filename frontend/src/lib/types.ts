@@ -259,8 +259,10 @@ export type PersonaPrescription = {
 export type PersonaScope = { verdict: 'in' | 'outside'; reason: string };
 // Nested card/trace serialization is not specified by the API table. Keep those
 // payloads open instead of asserting a router-specific layout before T11 lands.
-export type PersonaCardContext = Record<string, unknown> & { context_id: string; keywords: string[] };
-export type PersonaCardBody = Record<string, unknown> & { contexts?: PersonaCardContext[]; artifacts?: { name: string; mention_count: number }[] };
+export type PersonaPainPoint = { text: string; grade: PersonaGrade; context_ids: string[]; cite: string[] };
+export type PersonaCardContextPain = { text: string; cite: string[]; grade: PersonaGrade; source_pain?: string | null };
+export type PersonaCardContext = Record<string, unknown> & { context_id: string; keywords: string[]; pain_points?: PersonaCardContextPain[] };
+export type PersonaCardBody = Record<string, unknown> & { contexts?: PersonaCardContext[]; pain_points?: PersonaPainPoint[]; artifacts?: { name: string; mention_count: number }[] };
 export type PersonaCard = {
   status: PersonaState; card: PersonaCardBody | null;
   grades?: Record<string, Record<string, PersonaGrade | null>>;

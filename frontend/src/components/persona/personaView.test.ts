@@ -1,5 +1,7 @@
+import type { PersonaMap, PersonaMapPoint, PersonaZone } from '../../lib/types';
+import fixture from './fixtures/map-s8b25-v2.json';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cxCounts, foldColumns, gradeLabel, sortContexts, zoneName } from './personaView';
+import { cxCounts, foldColumns, gradeLabel, sortContexts, zoneName, MAP_TICKS, zoneOf, zoneRegions, jitter, topOpportunity } from './personaView';
 import * as persona from '../../lib/api/persona';
 import * as insight from '../../lib/api/insight';
 
@@ -156,5 +158,79 @@ describe('insight API wire contract (offline)', () => {
     const message = kind === 'persona_required' ? '페르소나를 만든 뒤 인사이트를 도출할 수 있습니다.' : '요청에 실패했습니다. 다시 시도하세요.';
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 409, json: async () => ({ error: { kind, message } }) }));
     await expect(insight.startInsight('s', { mode: 'derive' })).rejects.toThrow(message);
+  });
+});
+
+
+// Ray casting with an explicit inclusive segment check for boundaries.
+function contains(polygon: [number, number][], x: number, y: number): boolean {
+  let inside = false;
+  for (let a = 0, b = polygon.length - 1; a < polygon.length; b = a++) {
+    const [ax, ay] = polygon[a], [bx, by] = polygon[b];
+    const cross = (x - ax) * (by - ay) - (y - ay) * (bx - ax);
+    if (Math.abs(cross) <= 1e-10 && x >= Math.min(ax, bx) - 1e-10 && x <= Math.max(ax, bx) + 1e-10 && y >= Math.min(ay, by) - 1e-10 && y <= Math.max(ay, by) + 1e-10) return true;
+    if ((ay > y) !== (by > y) && x < (bx - ax) * (y - ay) / (by - ay) + ax) inside = !inside;
+  }
+  return inside;
+}
+
+describe('map calculations', () => {
+  const base: PersonaMap['base'] = { s_line: .5, diag1: [[0, .25], [1, 1]], diag2: [[.25, 0], [1, 1]] };
+  it('uses evenly spaced linear ticks and exact clipped vertices', () => {
+    expect(MAP_TICKS).toEqual([0, .25, .5, .75, 1]);
+    const regions = zoneRegions(base);
+    expect(regions.D).toHaveLength(3);
+    expect(regions.D[0][0]).toBeCloseTo(1 / 3);
+    expect(regions.D[0][1]).toBe(.5);
+    expect(regions.D.slice(1)).toEqual([[0, .5], [0, .25]]);
+    expect(Object.values(regions).every(polygon => polygon.length <= 6)).toBe(true);
+  });
+  // Copied from backend test_boundary_goes_upper.
+  it.each([
+    [0, .5, 'A'], [.5, .5, 'B'], [.9, .5, 'C'], [0, .25, 'D'],
+    [.5, .625, 'A'], [.4375, .25, 'E'], [.625, .5, 'B'], [1, 1, 'A'],
+  ] as const)('matches backend boundary (%s, %s) -> %s', (i, s, expected) => {
+    expect(zoneOf(i, s, base)).toBe(expected);
+  });
+  it('does not use an epsilon band below the baselines', () => {
+    expect(zoneOf(.5, .5 - Number.EPSILON, base)).toBe('E');
+    expect(zoneOf(.5, .625 - Number.EPSILON, base)).toBe('B');
+    expect(zoneOf(.625, .5 - Number.EPSILON, base)).toBe('F');
+  });
+  it('contains all 114 fixture points in their backend zone polygons', () => {
+    const regions = zoneRegions(fixture.base as PersonaMap['base']);
+    expect(Object.keys(regions).sort()).toEqual(['A', 'B', 'C', 'D', 'E', 'F']);
+    expect(fixture.points).toHaveLength(114);
+    for (const point of fixture.points) {
+      expect(point.i).not.toBeNull();
+      expect(point.s).not.toBeNull();
+      expect(contains(regions[point.zone as PersonaZone], point.i!, point.s!), point.context_id).toBe(true);
+    }
+  });
+  it('handles a vertical diag2 and gives diag1 priority at (1,1)', () => {
+    const vertical: PersonaMap['base'] = { ...base, diag2: [[1, 0], [1, 1]] };
+    expect(zoneRegions(vertical).C).toEqual([]);
+    expect(zoneRegions(vertical).F).toEqual([]);
+    expect(zoneOf(1, 0, vertical)).toBe('E');
+    expect(zoneOf(1, 1, vertical)).toBe('A');
+  });
+  it('jitters deterministically with a fixed angle and radius', () => {
+    expect(jitter(0, 1)).toEqual([0, 0]);
+    const offsets = Array.from({ length: 4 }, (_, i) => jitter(i, 4));
+    expect(new Set(offsets.map(p => JSON.stringify(p))).size).toBe(4);
+    offsets.forEach(([x, y], i) => {
+      expect(Math.hypot(x, y)).toBeLessThanOrEqual(3);
+      expect(x).toBeCloseTo(3 * Math.cos(2 * Math.PI * i / 4));
+      expect(y).toBeCloseTo(3 * Math.sin(2 * Math.PI * i / 4));
+      expect(jitter(i, 4)).toEqual([x, y]);
+    });
+    expect(jitter(0, 2, 2)).toEqual([2, 0]);
+  });
+  it('chooses the maximum non-null ODI, breaking ties by context ID', () => {
+    const point = (context_id: string, odi: number | null): PersonaMapPoint => ({ ...fixture.points[0], context_id, odi, zone: 'A' });
+    expect(topOpportunity([])).toBeNull();
+    expect(topOpportunity([point('C0', null)])).toBeNull();
+    expect(topOpportunity([point('C0', null), point('C2', .8), point('C1', .8), point('C3', .2)])).toBe('C1');
+    expect(topOpportunity([point('C2', 0), point('C1', -.1)])).toBe('C2');
   });
 });

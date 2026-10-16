@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import * as api from '@/lib/api/persona';
 import { getInsights, startInsight } from '@/lib/api/insight';
@@ -8,18 +8,20 @@ import { addKnownInsight } from '@/lib/api/known';
 import { ApiError, displayError } from '@/lib/api/errors';
 import { usePolling } from '@/lib/usePolling';
 import { useStageCompletionRefresh } from '../versions/useStageCompletionRefresh';
-import { Button, Badge } from '../ds';
+import { Button, Badge, Skeleton } from '../ds';
+import { PersonaList } from './PersonaList';
+import { PersonaSummary } from './PersonaSummary';
 import { GradeMark } from './GradeMark';
 import { CCMTable, ccmRows, type CCMContext } from './CCMTable';
 import { OpportunityMap } from './OpportunityMap';
 import { ContextTable } from './ContextTable';
-import { zoneName, formatMetric, formatCount, displayValue } from './personaView';
+import { foldColumns, topOpportunity, zoneName, formatMetric, formatCount, displayValue } from './personaView';
 import { HierarchyTree, type HierarchyNode } from './HierarchyTree';
-import type { PersonaCardsResponse, PersonaGrade, PersonaMap, PersonaStatus, PersonaTree, SegmentPersona } from '@/lib/types';
+import type { PersonaPainPoint, PersonaState, PersonaCardsResponse, PersonaGrade, PersonaMap, PersonaStatus, PersonaTree, SegmentPersona } from '@/lib/types';
 
 const missingCopy = '근거 탐색을 마친 뒤 페르소나를 만들 수 있습니다.';
 const quoteWarning = '인용 문장을 원문에서 찾지 못해 추론으로 낮췄습니다.';
-const tabs = ['8-A CCM', '8-B 수렴', '8-C 속성', '8-D 처방', '구조 트리'] as const;
+type Area = 'cards' | 'map' | 'tree' | 'identities';
 const record = (value: unknown): Record<string, unknown> => value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
 const rows = (value: unknown): Record<string, unknown>[] => Array.isArray(value) ? value.map(record) : [];
 const label = (value: unknown): string => displayValue(value, '근거 부족');
@@ -31,14 +33,18 @@ function hierarchy(value: unknown): HierarchyNode {
   const node = record(value);
   return {id:String(node.id ?? 'product'),name:String(node.name ?? '제품'),doc_count:Number(node.doc_count ?? node.size ?? 0),children:rows(node.children).map(hierarchy)};
 }
-type Snapshot = {status: PersonaStatus; cards: PersonaCardsResponse; map: PersonaMap | null; tree: PersonaTree | null; identities: SegmentPersona[]; missing?: boolean; error?: string};
+type Snapshot = {status: PersonaStatus; cards: PersonaCardsResponse; map: PersonaMap | null; tree: PersonaTree | null; identities: SegmentPersona[]; missing?: boolean; notReady?: boolean; errors?: Partial<Record<Area, string>>};
 type Props = {sid: string; version?: string; readonly?: boolean};
 
 export function PersonaScreen({sid, version, readonly = false}: Props) {
   const router = useRouter();
   const [view, setView] = useState<'map' | 'card'>('map');
   const [selected, setSelected] = useState('');
-  const [tab, setTab] = useState<typeof tabs[number]>('8-A CCM');
+  const [recovered, setRecovered] = useState<{source: Snapshot | null; snapshot: Snapshot} | null>(null);
+  const [retrying, setRetrying] = useState<Area | null>(null);
+  const [painIndex, setPainIndex] = useState<number | null>(null);
+  const [selectedContext, setSelectedContext] = useState<string | null>(null);
+  const [cardSelectedContext, setCardSelectedContext] = useState<string | null>(null);
   const [highlighted, setHighlighted] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState(false);
@@ -56,6 +62,11 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
       setPending(false);
       const key = JSON.stringify(status);
       if (cache.current && cacheKey.current === key) return cache.current;
+      if (status.status !== 'done') {
+        cache.current = null;cacheKey.current = '';
+        const identities = await getSegmentPersonas(sid, undefined, version);
+        return {status,cards:{run:status.run,personas:{}},map:null,tree:null,identities:identities.personas,missing:status.package === false};
+      }
       const results = await Promise.allSettled([
         api.getPersonaCards(sid, version), api.getPersonaMap(sid, version),
         api.getPersonaTree(sid, version), getSegmentPersonas(sid, undefined, version),
@@ -67,8 +78,9 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
         cards:cards.status === 'fulfilled' ? cards.value : {run:status.run,personas:{}},
         map:map.status === 'fulfilled' ? map.value : null,
         tree:tree.status === 'fulfilled' ? tree.value : null,
+        notReady: results.some(result => result.status === 'rejected' && result.reason instanceof ApiError && result.reason.kind === 'not_ready'),
         identities:identities.status === 'fulfilled' ? identities.value.personas : [], missing:missingEvidence,
-        error: status.status === 'done' && failures.length ? '일부 결과를 불러오지 못했습니다. 다시 불러오세요.' : undefined,
+        errors: Object.fromEntries(results.flatMap((result, index) => result.status === 'rejected' && !(result.reason instanceof ApiError && result.reason.kind === 'not_ready') ? [[(['cards','map','tree','identities'] as Area[])[index], displayError(result.reason)]] : [])),
       };
       // Only cache complete results; transient reads can recover on the next poll.
       if (!failures.length) {cacheKey.current = key; cache.current = result;}
@@ -76,7 +88,9 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
       return result;
     } catch (cause) {setPending(false);const message = displayError(cause);setError(message);if(needsEvidence(cause)) setMissing(true);throw cause;}
   }, [sid, version]);
-  const {data, refresh} = usePolling({fetcher,interval:3000,enabled:true});
+  const {data: polledData, refresh} = usePolling({fetcher,interval:3000,enabled:true});
+  const data = recovered && recovered.source === polledData ? recovered.snapshot : polledData;
+  const treeRoot = useMemo(() => data?.tree ? hierarchy(data.tree) : null, [data?.tree]);
   const status = data?.status;
   useStageCompletionRefresh(status?.status === 'done' ? `persona:${version ?? ''}:${status.run}` : null);
   const blocked = readonly || busy || pending || running(status?.status);
@@ -93,8 +107,8 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
   const contexts = rows(card.contexts);
   const packageCounts = record(current?.package_counts);
   const metrics = record(card.metrics ?? packageCounts);
-  const state = status?.personas.find(p => p.id === chosen)?.status ?? current?.status;
-  const openCard = (id: string, contextId?: string) => {setSelected(id);setHighlighted(contextId ?? null);setView('card');setTab('8-A CCM');};
+  const state = current?.status === 'failed' ? 'failed' : status?.personas.find(p => p.id === chosen)?.status ?? current?.status;
+  const openCard = (id: string, contextId?: string) => {if (id !== chosen) setCardSelectedContext(null);setSelected(id);setHighlighted(contextId ?? null);setView('card');setPainIndex(null);};
   async function mutate(action: () => Promise<unknown>, waitForPoll = false) {
     if (blocked || lock.current) return;
     lock.current = true;setBusy(true);setError('');setNotice('');
@@ -102,20 +116,24 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
     catch (cause) {const message = displayError(cause);setError(message);if(needsEvidence(cause)) setMissing(true);}
     finally {lock.current = false;setBusy(false);}
   }
-  const evidence = (contextId: string | null, field: string) => {
-    const traces = rows(current?.trace ?? card.trace).filter(row => row.context_id === contextId && row.field === field);
+  const evidence = (contextId: string | null, field: string, cites?: string[]) => {
+    const traces = rows(current?.trace ?? card.trace).filter(row => row.context_id === contextId && row.field === field && (!cites || cites.includes(String(row.evidence_id))));
     return traces.length ? <ul className="space-y-3">{traces.map((trace, index) => {
-      const ref = record(trace.evidence), quote = record(ref.quote);
-      const unverified = ref.quote == null || quote.verified === false;
-      return <li key={`${trace.evidence_id}:${index}`}><Badge>{label(ref.source)}</Badge> <span>{label(trace.evidence_id)} · {ref.quote == null ? '인용 없음 · 추론' : <>{label(quote.field)} {quote.idx == null ? '' : String(quote.idx)} · {label(quote.start)}–{label(quote.end)}</>}</span><blockquote title={unverified ? quoteWarning : undefined}><mark>{ref.quote == null ? '—' : label(quote.text)}</mark></blockquote>{unverified && <span title={quoteWarning} aria-label={quoteWarning}>▲ 추론 · 인용 미확인</span>}<Button size="sm" disabled={blocked || typeof ref.doc_id !== 'string'} onClick={() => mutate(async () => {await addKnownInsight(sid,{type:'doc',doc_id:String(ref.doc_id)},version);setNotice('Known Insight에 추가했습니다.');})}>Known Insight에 추가</Button></li>;
+      const ref = record(trace.evidence);
+      const pain = field === 'pain_point' && ref.pain_point != null ? record(ref.pain_point) : null;
+      const sourceQuote = pain ? pain.quote : ref.quote;
+      const quote = pain ? {...pain, text:pain.quote} : record(ref.quote);
+      const unverified = sourceQuote == null || quote.verified === false;
+      return <li key={`${trace.evidence_id}:${index}`}><Badge>{label(ref.source)}</Badge> <span>{label(trace.evidence_id)} · {sourceQuote == null ? '인용 없음 · 추론' : <>{label(quote.field)} {quote.idx == null ? '' : String(quote.idx)} · {label(quote.start)}–{label(quote.end)}</>}</span><blockquote title={unverified ? quoteWarning : undefined}><mark>{sourceQuote == null ? '—' : label(quote.text)}</mark></blockquote>{unverified && <span title={quoteWarning} aria-label={quoteWarning}>▲ 추론 · 인용 미확인</span>}<Button size="sm" disabled={blocked || typeof ref.doc_id !== 'string'} onClick={() => mutate(async () => {await addKnownInsight(sid,{type:'doc',doc_id:String(ref.doc_id)},version);setNotice('Known Insight에 추가했습니다.');})}>Known Insight에 추가</Button></li>;
     })}</ul> : <p>근거가 없습니다.</p>;
   };
   const ccm: CCMContext[] = contexts.map(context => {
     const id = String(context.context_id); const point = data?.map?.points.find(p => p.context_id === id);
     const grades = record(record(current?.grades ?? card.grades)[id]);
     return {id,name:String(context.context_name ?? id),counter:point?.counter ?? false,cells:Object.fromEntries(ccmRows.map(([field]) => {
-      const value = field === 'artifact' ? rows(card.artifacts).map(item => `${label(item.name)} (${formatCount(Number(item.mention_count))}건)`).join(' · ') || null : field === 'satisfaction' ? record(context.metrics).satisfaction : field === 'opportunity' ? point ? `${zoneName(point.zone)} · ${formatMetric(point.odi)}` : record(context.metrics).odi : context[field];
-      return [field,{text:label(value),...(['state','emotion','barrier'].includes(field) ? {grade:grade(grades[field])} : {}),evidence:evidence(id,field)}];
+      const pains = rows(context.pain_points);
+      const value = field === 'pain_point' ? pains[0]?.text : field === 'evidence_count' ? record(context.metrics).doc_count : field === 'artifact' ? rows(card.artifacts).map(item => `${label(item.name)} (${formatCount(Number(item.mention_count))}건)`).join(' · ') || null : field === 'satisfaction' ? record(context.metrics).satisfaction : field === 'opportunity' ? point ? `${zoneName(point.zone)} · ${formatMetric(point.odi)}` : record(context.metrics).odi : context[field];
+      return [field,{text:field === 'evidence_count' ? value == null ? '근거 부족' : formatCount(Number(value)) : label(value),...(['state','emotion','barrier'].includes(field) ? {grade:grade(grades[field])} : {}),...(field === 'pain_point' ? {grade:grade(pains[0]?.grade),more:Math.max(0,pains.length-1)} : {}),evidence:field === 'pain_point' ? <>{pains.map((pain,index) => <p key={index}>{label(pain.text)}</p>)}{evidence(id,field)}</> : evidence(id,field)}];
     }))};
   });
   const prescription = current?.prescription;
@@ -125,8 +143,12 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
   const support = supportValues.length ? supportValues.reduce((sum, value) => sum + value, 0) / supportValues.length : 0;
   const confidence = support >= .7 ? '상' : support >= .4 ? '중' : '하';
   const constraintSummary = prescription?.blocked || constraints.some(c => c.verdict === 'violates') ? '✕ 차단' : constraints.some(c => c.verdict === 'review') ? '⚠ 검토' : prescription ? '✓ 통과' : '—';
-  const contextRows = data?.map?.points.map(point => ({...point,persona_name:name(point.persona_id),name:String(rows(body(point.persona_id).contexts).find(c => c.context_id === point.context_id)?.context_name ?? point.context_id)})) ?? [];
-  const highlightedRow = contextRows.find(row => row.context_id === highlighted);
+  const contextRows = data?.map?.points.map(point => ({...point,persona_name:name(point.persona_id),pain_point:label(rows(rows(body(point.persona_id).contexts).find(c => c.context_id === point.context_id)?.pain_points)[0]?.text),name:String(rows(body(point.persona_id).contexts).find(c => c.context_id === point.context_id)?.context_name ?? point.context_id)})) ?? [];
+  const activeSelection = selectedContext ?? topOpportunity(data?.map?.points ?? []);
+  const activeHighlight = highlighted ?? activeSelection;
+  const highlightedColumn = ccm.findIndex(context => context.id === (highlighted ?? cardSelectedContext));
+  const {columns: ccmColumns} = foldColumns(ccm.length);
+  const highlightedRow = contextRows.find(row => row.context_id === activeSelection);
   if (status?.package === false || missing || data?.missing) return <section className="ds-card space-y-4"><p>{missingCopy}</p>{!readonly && <Button onClick={() => router.push('/pipeline/evidence')}>근거 탐색으로</Button>}</section>;
   if (status?.evidence_required) return <section className="ds-card space-y-4"><p>근거 탐색을 다시 실행한 뒤 페르소나를 만드세요.</p>{!readonly && <Button onClick={() => router.push('/pipeline/evidence')}>근거 탐색으로</Button>}</section>;
   const start = () => {
@@ -140,37 +162,49 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
     if (fresh && !globalThis.confirm('페르소나를 다시 만들면 인사이트와 컨셉도 지워집니다. 계속할까요?')) return;
     return mutate(() => api.startPersona(sid, fresh ? {fresh:true} : {}, version), true);
   };
+  async function retryArea(area: Area) {
+    if (!data || retrying) return;
+    setRetrying(area);
+    try {
+      const value = await ({cards: () => api.getPersonaCards(sid,version), map: () => api.getPersonaMap(sid,version), tree: () => api.getPersonaTree(sid,version), identities: async () => (await getSegmentPersonas(sid,undefined,version)).personas}[area])();
+      setRecovered({source:polledData,snapshot:{...data,[area]:value,errors:{...data.errors,[area]:undefined}}});
+      cacheKey.current = '';
+    } catch (cause) {setRecovered({source:polledData,snapshot:{...data,errors:{...data.errors,[area]:displayError(cause)}}});}
+    finally {setRetrying(null);}
+  }
+  const skeleton = (title: string, count = 3) => <section aria-label={title} aria-busy="true"><h3>{title}</h3>{Array.from({length:count},(_,i) => <Skeleton key={i} height={32}/>)}</section>;
+  const areaError = (area: Area) => <div role="alert">{data?.errors?.[area]} <Button disabled={retrying === area} onClick={() => retryArea(area)}>다시 불러오기</Button></div>;
+  const emptyMap: PersonaMap = {points:[],legend:[],base:{s_line:.5,diag1:[[0,.5],[1,1]],diag2:[[.5,0],[1,1]]}};
+  const mapArea = <div className="ds-card persona-map-surface">{!data || retrying === 'map' ? <section aria-label="Opportunity Map" aria-busy="true"><OpportunityMap map={data?.map ? {...data.map,points:[]} : emptyMap}/><Skeleton height={32}/></section> : data.errors?.map ? areaError('map') : data.map?.points.length ? <OpportunityMap map={data.map} highlightedId={highlighted} selectedId={view === 'card' ? cardSelectedContext : activeSelection} selectedPersonaId={chosen} focusPersonaId={view === 'card' ? chosen : null} onHighlight={setHighlighted} onSelect={id => {if (view === 'map') setSelectedContext(id);else setCardSelectedContext(id);}} onOpenCard={openCard}/> : <p>기회 지도를 만들 Context가 없습니다.</p>}</div>;
+  const treeArea = !data || retrying === 'tree' ? skeleton('구조 트리',5) : data.errors?.tree ? areaError('tree') : treeRoot ? <HierarchyTree root={treeRoot} expandedId={chosen}/> : <p>구조 트리가 준비되지 않았습니다.</p>;
+  const ccmLoading = <section aria-label="Context 비교 표" aria-busy="true"><table className="ds-tbl"><thead><tr><th>항목</th><th>Context</th></tr></thead><tbody>{ccmRows.map(([key,title]) => <tr key={key}><th scope="row">{title}</th><td><Skeleton height={44}/></td></tr>)}</tbody></table></section>;
+  const cardLoading = <>{skeleton('Pain Points')}{ccmLoading}{mapArea}<div className="persona-support-panels">{['8-B 수렴','8-C 속성','8-D 처방'].map(title => <section key={title}>{skeleton(title,2)}</section>)}</div></>;
+  const meta = `근거 ${formatCount(Number(metrics.doc_count ?? identity(chosen)?.docs))}건 · 작성자 ${formatCount(Number(metrics.author_count ?? identity(chosen)?.authors))}명 · Context ${formatCount(Number(packageCounts.context_count ?? contexts.length))}개 · 신뢰도 ${confidence} · 처방 · 제약 ${constraintSummary}`;
   return <section className="space-y-5 min-w-0">
     <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="ds-eyebrow">8단계 · 페르소나</p><h1 className="ds-t-screen">{view === 'map' ? '세션 전체에서 어느 Context가 기회인가' : chosen ? name(chosen) : 'Persona 카드'}</h1>{readonly && <p>{version} · 읽기 전용</p>}</div><Button variant="primary" disabled={blocked || !status} onClick={start}>{complete ? '인사이트 도출' : status?.status === 'stale' ? '페르소나 다시 만들기' : '페르소나 만들기'}</Button></header>
-    {(error || data?.error) && <div role="alert">{error || data?.error} <Button onClick={() => {cacheKey.current='';refresh();}}>다시 불러오기</Button></div>}
+    {error && <div role="alert">{error} <Button onClick={() => {cacheKey.current='';refresh();}}>다시 불러오기</Button></div>}
     {notice && <p role="status">{notice}</p>}
     {(pending || running(status?.status)) && <p role="status">페르소나를 만들고 있습니다. {Math.round((status?.progress ?? 0) * 100)}% · 화면을 닫아도 계속됩니다.</p>}
     {status?.status === 'stale' && <p role="status">근거 또는 확정값이 바뀌었습니다. 페르소나를 다시 만들어 주세요.</p>}
-    <div className="grid gap-5 md:grid-cols-[220px_minmax(0,1fr)]">
-      <nav aria-label="Persona 목록" className="ds-card space-y-4 min-w-0">{[...new Set(ids.map(cluster))].map(group => <div key={group}><h2 className="ds-t-label">{group}</h2>{ids.filter(id => cluster(id) === group).map(id => <Button key={id} className="w-full h-auto whitespace-normal text-left my-1" aria-current={chosen === id ? 'true' : undefined} onClick={() => openCard(id)}>{name(id)} <Badge>{statusLabel(status?.personas.find(p => p.id === id)?.status ?? cards[id]?.status)}</Badge>{cards[id]?.scope?.verdict === 'outside' && <Badge>FUTURE</Badge>}</Button>)}</div>)}</nav>
+    <div className="persona-screen-layout">
+      <aside>{!data || retrying === 'identities' ? skeleton('페르소나 목록',9) : data.errors?.identities ? areaError('identities') : <PersonaList groups={[...new Set(ids.map(cluster))].map(clusterId => ({clusterId,items:ids.filter(id => cluster(id) === clusterId).map(id => ({id,name:name(id),status:(status?.personas.find(p => p.id === id)?.status ?? cards[id]?.status ?? 'pending') as PersonaState,future:cards[id]?.scope?.verdict === 'outside'}))}))} selectedId={chosen ?? null} onSelect={openCard}/>}</aside>
       <div className="min-w-0 space-y-4"><div role="group" aria-label="보기" className="flex gap-2"><Button aria-pressed={view === 'map'} onClick={() => setView('map')}>전체 맵</Button><Button aria-pressed={view === 'card'} onClick={() => setView('card')}>Persona 카드</Button></div>
-      {!data ? <p role="status">페르소나 정보를 불러오는 중…</p> : view === 'map' ? data.map ? <>
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(160px,1fr)]"><OpportunityMap map={data.map} highlightedId={highlighted} selectedPersonaId={selected || null} onHighlight={setHighlighted} onOpenCard={openCard}/><aside className="ds-card" aria-label="선택 Context 상세">{highlightedRow ? <><h2>{highlightedRow.name}</h2><p>{highlightedRow.persona_name} · {zoneName(highlightedRow.zone)} · 기회 {formatMetric(highlightedRow.odi)}</p><Button onClick={() => openCard(highlightedRow.persona_id,highlightedRow.context_id)}>카드 열기</Button></> : <p>점을 가리키거나 아래 표에서 Context를 고르세요.</p>}</aside></div>
-        <div className="overflow-x-auto"><ContextTable rows={contextRows} highlightedId={highlighted} onHighlight={setHighlighted} onOpenCard={openCard}/></div>
-      </> : <p>페르소나를 만들면 전체 맵과 Context를 확인할 수 있습니다.</p> : !chosen ? <p>아직 페르소나 카드가 없습니다.</p> : <>
-        <header className="ds-card space-y-2"><h2 className="ds-t-card">{name(chosen)} {current?.scope?.verdict === 'outside' && <Badge title={current.scope.reason}>FUTURE</Badge>}</h2><p>{`근거 ${formatCount(Number(metrics.doc_count ?? identity(chosen)?.docs))}건 · 작성자 ${formatCount(Number(metrics.author_count ?? identity(chosen)?.authors))}명 · Context ${formatCount(Number(packageCounts.context_count ?? contexts.length))}개`}</p><p>신뢰도 {confidence} · 처방 · 제약 {constraintSummary}</p><p>Desire · {label(identity(chosen)?.desire ?? card.desire)}</p><p>Goal · {label(identity(chosen)?.goals ?? card.goal)}</p></header>
-        {state === 'failed' ? <div role="alert"><p>이 페르소나 카드를 만들지 못했습니다.</p><Button disabled={blocked || !status?.run} onClick={() => mutate(() => api.retryPersonaCard(sid,chosen,{run:status!.run!},version),true)}>다시 만들기</Button></div> : !current?.card ? <p role="status">{statusLabel(state)} · 카드가 준비되면 표시됩니다.</p> : <>
-          <div role="tablist" aria-label="Persona 상세" className="flex flex-wrap gap-2">{tabs.map(item => <Button key={item} role="tab" id={`persona-tab-${tabs.indexOf(item)}`} aria-controls="persona-panel" aria-selected={tab === item} tabIndex={tab === item ? 0 : -1} onKeyDown={event => {
-            const index = tabs.indexOf(item);
-            const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : event.key === 'ArrowRight' ? (index + 1) % tabs.length : event.key === 'ArrowLeft' ? (index + tabs.length - 1) % tabs.length : null;
-            if (next === null) return;
-            event.preventDefault();setTab(tabs[next]);
-            event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next]?.focus();
-          }} onClick={() => setTab(item)}>{item}</Button>)}</div>
-          <div role="tabpanel" id="persona-panel" aria-labelledby={`persona-tab-${tabs.indexOf(tab)}`} className="ds-card min-w-0 space-y-4">
-            {tab === '8-A CCM' && <><p>각 칸은 개인이 아니라 그 Context에서 관측되는 담론입니다. 칸을 누르면 근거 원문이 펼쳐집니다.</p><CCMTable contexts={ccm}/></>}
-            {tab === '8-B 수렴' && <><p role="note">의도 ≠ 행동</p><GradeMark grade="speculated"/><p>{label(record(card.intent).text)}</p><p>수렴 Context · {label(record(card.intent).basis_context_ids)}</p><p>유보 Context · {label(record(card.intent).reserved_context_ids)}</p></>}
-            {tab === '8-C 속성' && <dl className="space-y-3">{[['usage_context','사용 맥락'],['jtbd','JTBD'],['journey','여정'],['sensitivity','민감도'],['values','가치관'],['decision_style','결정 방식']].map(([key,title]) => <div key={key}><dt>{title}</dt><dd>{['usage_context','jtbd'].includes(key) && <GradeMark grade={grade(record(card.summary)[key])}/>} {label(card[key])}{['usage_context','jtbd'].includes(key) && <details><summary>근거 원문</summary>{evidence(null,key)}</details>}</dd></div>)}</dl>}
-            {tab === '8-D 처방' && <>{prescription ? <><h3>{prescription.blocked ? '차단된 처방' : '처방'}</h3>{prescription.blocked ? <p><s className="text-muted" style={{color:'var(--sub)'}}>{prescription.direction}</s></p> : <><p>{prescription.direction}</p><p>핵심 지표 · {displayValue(prescription.target_metric)}</p><p>기여 · {prescription.contribution}</p><p>여정 가설 · {prescription.journey_hypothesis}</p></>}{prescription.represcribed && <Badge>재처방</Badge>}</> : <p>처방이 없습니다.</p>}<ul>{constraints.map((constraint,index) => <li key={index}>{constraint.verdict === 'ok' ? '✓' : '⚠'} {constraint.constraint} · {constraint.reason}{prescription?.blocked && constraint.verdict === 'violates' && <p>{`사내 제약 '${constraint.constraint}'를 지키는 처방을 만들지 못했습니다.`}</p>}</li>)}</ul></>}
-            {tab === '구조 트리' && (data.tree ? <HierarchyTree root={hierarchy(data.tree)}/> : <p>구조 트리가 준비되지 않았습니다.</p>)}
+      {data && (!complete || data.notReady) ? <p role="status">페르소나를 만들면 전체 맵과 Context를 확인할 수 있습니다.</p> : view === 'map' ? <>
+        <div className="persona-map-layout">{mapArea}<aside aria-label="선택 Context 상세">{highlightedRow ? <><h2>{highlightedRow.name}</h2><p>{highlightedRow.persona_name} · {zoneName(highlightedRow.zone)}</p><p>중요도 {formatMetric(highlightedRow.i)} · 만족도 {formatMetric(highlightedRow.s)} · 기회 {formatMetric(highlightedRow.odi)}</p><p>페인포인트 · {label(rows(rows(body(highlightedRow.persona_id).contexts).find(c => c.context_id === highlightedRow.context_id)?.pain_points)[0]?.text)}</p><Button onClick={() => openCard(highlightedRow.persona_id,highlightedRow.context_id)}>카드 열기</Button></> : <p>점을 가리키거나 아래 표에서 Context를 고르세요.</p>}</aside></div>
+        {!data ? skeleton('Context 비교 표',10) : <div className="persona-context-table"><ContextTable onSelect={setSelectedContext} rows={contextRows} highlightedId={activeHighlight} onHighlight={setHighlighted} onOpenCard={openCard}/></div>}
+      </> : <div className="persona-card-body">
+        {!data || retrying === 'cards' ? cardLoading : data.errors?.cards ? areaError('cards') : !chosen ? <p>아직 확정된 페르소나가 없습니다.</p> : state === 'failed' ? <><h2>{name(chosen)}</h2><p>{meta}</p><div role="alert"><p>이 페르소나 카드를 만들지 못했습니다.</p><Button disabled={blocked || !status?.run} onClick={() => mutate(() => api.retryPersonaCard(sid,chosen,{run:status!.run!},version),true)}>다시 만들기</Button></div></> : !current?.card ? <><p role="status">{statusLabel(state)} · 카드가 준비되면 표시됩니다.</p>{cardLoading}</> : <>
+          <PersonaSummary name={name(chosen)} future={current.scope?.verdict === 'outside'} meta={meta} desire={label(identity(chosen)?.desire ?? card.desire)} goals={(identity(chosen)?.goals ?? (Array.isArray(card.goal) ? card.goal : [label(card.goal)])) as string[]} painPoints={card.pain_points as PersonaPainPoint[] | undefined} legacy={card.pain_points === undefined} onOpenEvidence={index => setPainIndex(painIndex === index ? null : index)}/>
+          {painIndex !== null && <section aria-label="페인포인트 근거">{(card.pain_points as PersonaPainPoint[] | undefined)?.[painIndex]?.context_ids.map(id => <div key={id}>{evidence(id,'pain_point',(card.pain_points as PersonaPainPoint[])[painIndex].cite)}</div>)}</section>}
+          <div className="persona-comparison-layout">{highlightedColumn >= 0 && <style>{`.persona-comparison-layout .ccm-scroll > table:nth-child(${Math.floor(highlightedColumn / ccmColumns) + 1}) :is(th,td):nth-child(${highlightedColumn % ccmColumns + 2}){background:var(--blue-soft)}`}</style>}<section><h3>Context 비교 표</h3><p>각 칸은 개인이 아니라 그 Context에서 관측되는 담론입니다. 칸을 누르면 근거 원문이 펼쳐집니다.</p>{ccm.length ? <CCMTable contexts={ccm}/> : <p>이 페르소나에 확정된 Context가 없습니다.</p>}</section>{mapArea}</div>
+          <div className="persona-support-panels">
+            <section><h3>8-B 수렴</h3><p role="note">의도 ≠ 행동</p><GradeMark grade="speculated"/><p>{label(record(card.intent).text)}</p><p>수렴 Context · {label(record(card.intent).basis_context_ids)}</p><p>유보 Context · {label(record(card.intent).reserved_context_ids)}</p></section>
+            <section><h3>8-C 속성</h3><dl className="space-y-3">{[['usage_context','사용 맥락'],['jtbd','JTBD'],['journey','여정'],['sensitivity','민감도'],['values','가치관'],['decision_style','결정 방식']].map(([key,title]) => <div key={key}><dt>{title}</dt><dd>{['usage_context','jtbd'].includes(key) && <GradeMark grade={grade(record(card.summary)[key])}/>} {label(card[key])}{['usage_context','jtbd'].includes(key) && <details><summary>근거 원문</summary>{evidence(null,key)}</details>}</dd></div>)}</dl></section>
+            <section><h3>8-D 처방</h3>{prescription ? <><h3>{prescription.blocked ? '차단된 처방' : '처방'}</h3>{prescription.blocked ? <p><s className="text-muted" style={{color:'var(--sub)'}}>{prescription.direction}</s></p> : <><p>{prescription.direction}</p><p>핵심 지표 · {displayValue(prescription.target_metric)}</p><p>기여 · {prescription.contribution}</p><p>여정 가설 · {prescription.journey_hypothesis}</p></>}{prescription.represcribed && <Badge>재처방</Badge>}</> : <p>근거 부족</p>}<ul>{constraints.map((constraint,index) => <li key={index}>{constraint.verdict === 'ok' ? '✓' : '⚠'} {constraint.constraint} · {constraint.reason}{prescription?.blocked && constraint.verdict === 'violates' && <p>{`사내 제약 '${constraint.constraint}'를 지키는 처방을 만들지 못했습니다.`}</p>}</li>)}</ul></section>
           </div>
         </>}
-      </>}
+        <section className="persona-tree-section"><h3>구조 트리</h3>{treeArea}</section>
+      </div>}
       </div>
     </div>
   </section>;
