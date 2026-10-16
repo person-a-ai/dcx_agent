@@ -39,3 +39,25 @@ it('axis badge hidden when null and dim null shows 근거 부족',()=>{
  expect(render(h(InsightFlow,{cards:[{...card,axis:'Shared',dim:'Feel'}]}))).toContain('insight-axis-badge');
 });
 it('no hardcoded colors',()=>{for(const file of ['Radar.tsx','OpportunityBars.tsx','InsightFlow.tsx','insight.css']) expect(readFileSync(new URL(file,import.meta.url),'utf8')).not.toMatch(/#[0-9a-fA-F]{3,6}/);});
+it('bars mean label is in the header outside bar columns',()=>{
+ const html = bars([{...rows[1],value:2.34}],2.34);
+ expect(html).toMatch(/<figcaption>Opportunity Score<span class="insight-bars-mean-label">평균 2.3<\/span><\/figcaption>/);
+ const grid = html.slice(html.indexOf('class="insight-bars-grid"'));
+ expect(grid).not.toContain('insight-bars-mean-label');
+ expect(grid).not.toContain('>평균 2.3<');
+});
+it('bars aria summary matches visible formatted values and missing copy',()=>{
+ const html = bars([rows[0],{...rows[1],value:2.3456}],1.234);
+ expect(html).toContain('aria-label="러너-C1: 값 없음, 러너-C2: 2.3; 평균 1.2"');
+ expect(html).toContain('class="insight-bar-value">2.3</span>');
+});
+it('partial radar mean omits polygon and announces the missing axis',()=>{
+ const html = render(h(Radar,{values,mean:{Computed:.3,Connected:null,Shared:.7},label:'Insight 2'}));
+ expect(html).not.toContain('stroke-dasharray');
+ expect(html).toMatch(/aria-label="[^"]*Connected 평균 없음/);
+ expect(html).not.toContain('--- 평균(전체 인사이트)');
+});
+it('radar legend uses the caption text color',()=>{
+ const css = readFileSync(new URL('./insight.css',import.meta.url),'utf8');
+ expect(css).toMatch(/\.insight-chart-legend\s*\{[^}]*color:\s*var\(--sub\)/);
+});

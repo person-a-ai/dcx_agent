@@ -203,7 +203,7 @@ it('keeps Context order without changing inputs and labels the mean independentl
   });
   const average = nodes(tree,e=>e.props.className==='insight-bars-mean');
   expect(average).toHaveLength(1);
-  expect(html(average[0])).toContain('평균 1.0');
+  expect(nodes(tree,e=>e.type==='figcaption').map(html).join('')).toContain('평균 1.0');
   expect(out).toContain('평균 1.0');
   expect(html(OpportunityBars({rows:[],mean:null}))).toContain('이 인사이트의 Context에 ODI 값이 없습니다');
 });

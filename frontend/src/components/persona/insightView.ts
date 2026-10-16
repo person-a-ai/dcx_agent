@@ -64,7 +64,7 @@ export function toInsightView(item: InsightItem, summary?: InsightSummary | null
   };
 }
 
-export function radarMean(items: InsightItem[]): Record<'Computed' | 'Connected' | 'Shared', number> | null {
+export function radarMean(items: InsightItem[]): Record<'Computed' | 'Connected' | 'Shared', number | null> | null {
   const axes = ['Computed', 'Connected', 'Shared'] as const;
   let hasValues = false;
   const means = axes.map(axis => {
@@ -73,7 +73,7 @@ export function radarMean(items: InsightItem[]): Record<'Computed' | 'Connected'
       return typeof value === 'number' && Number.isFinite(value) ? [value] : [];
     });
     if (values.length) hasValues = true;
-    return [axis, values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0];
+    return [axis, values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null];
   });
-  return hasValues ? Object.fromEntries(means) as Record<typeof axes[number], number> : null;
+  return hasValues ? Object.fromEntries(means) as Record<typeof axes[number], number | null> : null;
 }

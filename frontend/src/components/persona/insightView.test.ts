@@ -55,3 +55,7 @@ it('missing contexts use short IDs without inventing evidence', () => {
  expect(view.bars).toEqual([{contextId:'C1',short:'C1',label:'C1',value:null}]);
  expect(view.personas).toEqual([]);
 });
+it('radarMean leaves axes with no observations null and preserves observed zero',()=>{
+ expect(radarMean([item({radar:{raw:{Computed:0,Connected:null,Shared:.6}}}),item({radar:{raw:{Computed:null,Connected:null,Shared:.2}}})])).toEqual({Computed:0,Connected:null,Shared:.4});
+ expect(radarMean([item({radar:{raw:{Computed:null,Connected:null,Shared:null}}})])).toBeNull();
+});
