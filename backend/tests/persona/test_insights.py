@@ -366,3 +366,96 @@ def test_derive_does_not_retry_terminal_errors(env, kind):
     with pytest.raises(InsightError):
         derive(session.sid, session.version, run_task=run_task, embedder=Embedder())
     assert len(calls) == 1
+
+
+def test_dominant_dim_counts_support_only(env):
+    from app.persona.insights import dominant_dim
+    session, _, _, _ = env
+    context = load_package(session.sid, session.version).personas[0].context_evidence[0]
+    context.evidence[0].tags = ['think', 'act']
+    context.evidence[1].tags = ['act']
+    context.counter_evidence = [context.counter_evidence[0].model_copy(update={'tags': ['feel']})] * 5
+    context.rare_evidence[0].tags = ['feel'] * 10
+    assert dominant_dim(context) == 'Act'
+
+
+def test_dominant_dim_tie_and_empty(env):
+    from app.persona.insights import dominant_dim
+    session, _, _, _ = env
+    context = load_package(session.sid, session.version).personas[0].context_evidence[0]
+    context.evidence[0].tags = ['feel']
+    context.evidence[1].tags = ['sense']
+    assert dominant_dim(context) == 'Sense'
+    context.evidence = []
+    assert dominant_dim(context) is None
+
+
+def test_dominant_dim_ignores_non_list_tags(env):
+    from app.persona.insights import dominant_dim
+    session, _, _, _ = env
+    context = load_package(session.sid, session.version).personas[0].context_evidence[0]
+    base = context.evidence[0]
+    context.evidence = [base.model_copy(update={'tags': tags})
+                        for tags in ({'think': 10}, None, 'think', ['unknown', {}, None])]
+    assert dominant_dim(context) is None
+    context.evidence.append(base.model_copy(update={'tags': ['think']}))
+    assert dominant_dim(context) == 'Think'
+
+
+def test_context_axis_max_and_zero():
+    from app.persona.insights import context_axis
+    from app.persona.params import RADAR_AXES
+    axes = np.eye(3)
+    names = list(RADAR_AXES)
+    assert context_axis(axes[1], axes) == names[1]
+    assert context_axis(np.zeros(3), axes) is None
+    assert context_axis(np.array([1, 1, 0]), axes) == names[0]
+
+
+def test_context_view_rows(env):
+    from app.persona.insights import context_view
+    session, _, _, _ = env
+    package = load_package(session.sid, session.version)
+    first = package.personas[0].context_evidence[1]
+    counter = package.personas[1].context_evidence[0]
+    first.evidence[0].tags = ['think']
+    cards = {'personas': {'CL0-P0': {'card': {'contexts': [
+        {'context_id': 'other', 'pain_points': [{'text': 'wrong'}]},
+        {'context_id': first.context_id, 'pain_points': [{'text': '첫 불편', 'cite': ['E1']}, {'text': '둘째'}]}]}}}}
+    item = {'context_ids': [first.context_id, counter.context_id]}
+    rows = context_view(package, cards, item, {first.context_id: 'Shared'})
+    assert rows[0] == dict(context_id=first.context_id, short='C1', persona_id='CL0-P0',
+        persona_name=package.personas[0].persona_evidence.persona_name,
+        context_name=first.context_name, odi=first.metrics.odi, axis='Shared', dim='Think',
+        counter=False, pain_point='첫 불편')
+    assert rows[1]['context_id'] == counter.context_id and rows[1]['counter'] is True
+    assert rows[1]['pain_point'] is None and rows[1]['axis'] is None
+    for old in ({}, {'pain_points': []}):
+        cards['personas']['CL0-P0']['card']['contexts'][1] = {'context_id': first.context_id, **old}
+        assert context_view(package, cards, item)[0]['pain_point'] is None
+    assert context_view(None, cards, item)[0] == dict(context_id=first.context_id, short='C1',
+        persona_id=None, persona_name=None, context_name=None, odi=None, axis=None, dim=None,
+        counter=False, pain_point=None)
+
+
+def test_recompute_stores_contexts_with_axis(env, monkeypatch):
+    from app.persona.params import RADAR_AXES
+    session, store, rows, _ = env
+    runner(monkeypatch, [rows])
+    derive(session.sid, session.version, embedder=Embedder())
+    for item in store.read('insights')['items']:
+        assert [c['context_id'] for c in item['contexts']] == item['context_ids']
+        assert all(c['axis'] in RADAR_AXES for c in item['contexts'])
+
+
+def test_summary_means(env):
+    from app.persona.insights import summary
+    from app.persona.params import RADAR_AXES
+    session, _, _, _ = env
+    package = load_package(session.sid, session.version)
+    for n, context in enumerate(c for b in package.personas for c in b.context_evidence):
+        context.metrics.odi = [1., None, 3.][n] if n < 3 else None
+    items = [{'radar': {'raw': dict.fromkeys(RADAR_AXES, value)}} for value in (.2, .6)]
+    assert summary(package, items) == {'context_odi_mean': 2., 'radar_mean': dict.fromkeys(RADAR_AXES, .4)}
+    assert summary(None, []) == {'context_odi_mean': None, 'radar_mean': None}
+    assert summary(package, []) == {'context_odi_mean': 2., 'radar_mean': None}

@@ -87,6 +87,7 @@ def test_insight_routes(api, monkeypatch):
     empty = ok(api.client.get(base))
     assert empty == dict(insights=dict(revision=0, items=[], history=[]),
                          concepts=dict(revision=0, items=[], history=[]), bars=None, radar=None,
+                         summary=dict(context_odi_mean=pytest.approx(.5372727272727272), radar_mean=None),
                          worker=dict(status='idle', reason=None, runId=None, mode=None, target=None))
     generate(api)
     assert ok(api.client.post(base + '/run', json={'mode': 'derive'})) == {'runId': 'worker-1'}
@@ -94,7 +95,8 @@ def test_insight_routes(api, monkeypatch):
                 odi=4, opportunity_mean=4, default_target=True, radar={'raw': {'Computed': .5}})
     api.store.new_revision('insights', [item], by='generate', message=None)
     response = ok(api.client.get(base))
-    assert response['insights']['items'] == [item]
+    assert [{k: v for k, v in row.items() if k != 'contexts'}
+            for row in response['insights']['items']] == [item]
     assert response['bars'] == dict(bars=[{'id': 'I1', 'odi': 4}], mean=4, targets=['I1'])
     assert response['radar'] == {'I1': item['radar']}
     assert ok(api.client.post(base + '/concept/I1')) == {'runId': 'worker-1'}
@@ -214,3 +216,53 @@ def test_invalid_package_has_korean_error_and_safe_reads(api):
     cards['personas']['CL0-P0']['status'] = 'failed'
     api.store.write('cards', cards)
     ok(api.client.get(f'/persona/{api.sid}/cards'))
+
+
+@pytest.fixture
+def legacy_insights(api, monkeypatch):
+    from app.vectors import embedder
+    from app.persona import insights
+    calls = []
+    def forbidden(*args, **kwargs):
+        calls.append((args, kwargs))
+        raise AssertionError('GET must not embed')
+    monkeypatch.setattr(embedder.FakeEmbedder, 'embed', forbidden)
+    monkeypatch.setattr(insights, 'embed_axes', forbidden)
+    item = dict(id='I1', title='Title', pain_point='Pain', context_ids=['CL0-P0-C1'],
+                radar={'raw': dict(Computed=.2, Connected=.4, Shared=.6)})
+    api.store.new_revision('insights', [item], by='generate', message=None)
+    return item, calls
+
+
+def test_get_insights_summary_and_legacy_contexts(api, legacy_insights):
+    item, calls = legacy_insights
+    before = api.store.read('insights')
+    response = ok(api.client.get(f'/insight/{api.sid}'))
+    row = response['insights']['items'][0]['contexts'][0]
+    assert row['context_id'] == 'CL0-P0-C1' and row['axis'] is None
+    assert row['persona_id'] == 'CL0-P0' and row['short'] == 'C1'
+    assert response['summary']['context_odi_mean'] is not None
+    assert response['summary']['radar_mean'] == item['radar']['raw']
+    assert api.store.read('insights') == before
+    assert calls == []
+
+
+def test_get_insights_enriches_history(api, legacy_insights):
+    item, calls = legacy_insights
+    stored = {**item, 'contexts': [{'context_id': 'CL0-P0-C1', 'axis': 'Shared'}]}
+    api.store.new_revision('insights', [stored], by='chat', message='edit')
+    response = ok(api.client.get(f'/insight/{api.sid}'))
+    assert response['insights']['items'][0]['contexts'] == stored['contexts']
+    assert response['insights']['history'][0]['items'][0]['contexts'][0]['axis'] is None
+    assert calls == []
+
+
+def test_get_insights_without_package(api, legacy_insights):
+    _, calls = legacy_insights
+    (api.root / 'evidence/package.json').unlink()
+    response = ok(api.client.get(f'/insight/{api.sid}'))
+    assert response['insights']['items'][0]['contexts'] == [dict(context_id='CL0-P0-C1',
+        short='C1', persona_id=None, persona_name=None, context_name=None, odi=None,
+        axis=None, dim=None, counter=False, pain_point=None)]
+    assert response['summary']['context_odi_mean'] is None
+    assert calls == []

@@ -245,6 +245,15 @@ def get_insights(sid: str, version: str | None = None):
     data, store = _open(sid, version)
     docs = {name: store.read(name) or dict(revision=0, items=[], history=[])
             for name in ('insights', 'concepts')}
+    try:
+        package = load_package(sid, data['version'])
+    except PackageMissing:
+        package = None
+    cards = store.read('cards')
+    for revision in [docs['insights'], *docs['insights'].get('history', [])]:
+        for item in revision.get('items', []):
+            if 'contexts' not in item:
+                item['contexts'] = insights.context_view(package, cards, item, axes_by_cid=None)
     items = docs['insights']['items']
     bars = None
     radar = None
@@ -253,7 +262,8 @@ def get_insights(sid: str, version: str | None = None):
                     mean=items[0].get('opportunity_mean'),
                     targets=[row['id'] for row in items if row.get('default_target')])
         radar = {row['id']: row['radar'] for row in items if 'radar' in row}
-    return {**docs, 'bars': bars, 'radar': radar, 'worker': _insight_worker(sid, data)}
+    return {**docs, 'bars': bars, 'radar': radar, 'worker': _insight_worker(sid, data),
+            'summary': insights.summary(package, items)}
 
 
 @router.post('/insight/{sid}/concept/{item_id}')

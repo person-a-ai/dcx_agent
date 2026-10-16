@@ -17,7 +17,7 @@ from app.context import store as sessions
 from app.context.versions import version_dir
 from app.llm import registry
 from app.llm.base import Attachment, LLMTask
-from app.persona.package import load_package
+from app.persona.package import ContextEvidence, Package, load_package
 from app.persona.params import INSIGHT_RANGE, RADAR_AXES
 from app.persona.radar import embed_axes, radar, session_percentiles
 from app.persona.store import PersonaStore
@@ -135,6 +135,68 @@ def opportunity_bars(insights, odi_by_context) -> dict:
                         if bar['odi'] is not None and mean is not None and bar['odi'] >= mean]}
 
 
+_DIMENSIONS = ('Sense', 'Feel', 'Think', 'Act', 'Relate', 'Outcome')
+
+
+def dominant_dim(context: ContextEvidence) -> str | None:
+    """Count recognized dimensions in support evidence, with stable tie order."""
+    counts = {dim.lower(): 0 for dim in _DIMENSIONS}
+    for evidence in context.evidence:
+        if not isinstance(evidence.tags, list):
+            continue
+        for tag in evidence.tags:
+            if isinstance(tag, str) and tag in counts:
+                counts[tag] += 1
+    winner = max(_DIMENSIONS, key=lambda dim: counts[dim.lower()])
+    return winner if counts[winner.lower()] else None
+
+
+def context_axis(centroid: np.ndarray, axes: np.ndarray) -> str | None:
+    raw = radar({'context': centroid}, {'context': 1}, axes)['raw']
+    winner = max(RADAR_AXES, key=raw.__getitem__)
+    return winner if raw[winner] > 0 else None
+
+
+def context_view(package: Package | None, cards: dict | None, item: dict,
+                 axes_by_cid: dict[str, str | None] | None = None) -> list[dict]:
+    """Project Context rows in item order without loading data or embedding."""
+    contexts = {c.context_id: (block.persona_evidence, c)
+                for block in package.personas for c in block.context_evidence} if package else {}
+    personas = (cards or {}).get('personas', {})
+    rows = []
+    for cid in item['context_ids']:
+        row = dict(context_id=cid, short=cid.rsplit('-', 1)[-1], persona_id=None,
+                   persona_name=None, context_name=None, odi=None, axis=None,
+                   dim=None, counter=False, pain_point=None)
+        if cid in contexts:
+            persona, context = contexts[cid]
+            card = personas.get(persona.persona_id, {}).get('card') or {}
+            card_context = next((c for c in card.get('contexts', [])
+                                 if c.get('context_id') == cid), {})
+            pain_points = card_context.get('pain_points') or []
+            row.update(persona_id=persona.persona_id, persona_name=persona.persona_name,
+                       context_name=context.context_name, odi=context.metrics.odi,
+                       axis=(axes_by_cid or {}).get(cid), dim=dominant_dim(context),
+                       counter='counter_context' in context.flags,
+                       pain_point=pain_points[0].get('text') if pain_points else None)
+        rows.append(row)
+    return rows
+
+
+def summary(package: Package | None, items: list[dict]) -> dict:
+    values = [c.metrics.odi for block in package.personas for c in block.context_evidence
+              if c.metrics.odi is not None] if package else []
+    raw = [item['radar']['raw'] for item in items if item.get('radar', {}).get('raw')]
+    radar_mean = None
+    if raw:
+        radar_mean = {}
+        for axis in RADAR_AXES:
+            scores = [row[axis] for row in raw if row.get(axis) is not None]
+            radar_mean[axis] = float(np.mean(scores)) if scores else None
+    return {'context_odi_mean': float(np.mean(values)) if values else None,
+            'radar_mean': radar_mean}
+
+
 def _centroids(sid, version, ids):
     path = version_dir(sid, version) / 'segment' / 'segment.sqlite'
     with closing(sqlite3.connect(path.as_uri() + '?mode=ro', uri=True)) as db:
@@ -205,8 +267,11 @@ def recompute(sid, version, items, *, package=None, embedder):
         axes = embed_axes(embedder)
         if axes.ndim != 2 or any(v.shape != (axes.shape[1],) for v in centroids.values()):
             raise InsightError('Preparation embedding dimension does not match Context centroids')
+        axes_by_cid = {cid: context_axis(vector, axes) for cid, vector in centroids.items()}
+        cards = PersonaStore.open(sid, version).read('cards')
         weights = {cid: c.metrics.doc_count for cid, c in contexts.items()}
         for item in items:
+            item['contexts'] = context_view(package, cards, item, axes_by_cid)
             item['radar'] = radar({cid: centroids[cid] for cid in item['context_ids']}, weights, axes)
         for axis in RADAR_AXES:
             ranks = session_percentiles([item['radar']['raw'][axis] for item in items])
