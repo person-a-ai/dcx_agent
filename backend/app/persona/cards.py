@@ -182,7 +182,7 @@ def generate_card(sid, block: PersonaBlock, *, run_task=None) -> CardResult:
     """At most four Contexts per card call, then one Persona-wide summary.
 
     Confirmed identity/action are copied from the package. Dims-derived
-    situations retain LLM text only when supported by Context citations.
+    situations retain LLM text; citations determine epistemic grades.
     """
     runner = registry.run_task if run_task is None else run_task
     refs = evidence_index(block)
@@ -229,8 +229,6 @@ def generate_card(sid, block: PersonaBlock, *, run_task=None) -> CardResult:
                 cell = row[field]
                 if not has_evidence:
                     cell.update(text=None, cite=[])
-                elif context.situation_origin == 'dims' and not cell['cite']:
-                    cell['text'] = getattr(context.situation, field)
                 if cell['text'] is None:
                     cell['cite'] = []
                 cell['cite'] = [mapping[cite] for cite in cell['cite']]

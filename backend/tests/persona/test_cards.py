@@ -1,5 +1,6 @@
 import json
 from copy import deepcopy
+from pathlib import Path
 
 import pytest
 from pydantic import BaseModel, ConfigDict
@@ -238,7 +239,7 @@ def test_no_persona_evidence_nulls_summary():
 
 
 @pytest.mark.parametrize('field', ['state', 'emotion', 'barrier'])
-def test_dims_situation_uncited_falls_back(field):
+def test_dims_situation_uncited_keeps_text_as_speculated(field):
     package, runner = setup()
     def mutate(task, data):
         if task.task == 'persona.card':
@@ -246,7 +247,9 @@ def test_dims_situation_uncited_falls_back(field):
     runner.mutate = mutate
     card = generate_card('s', package.personas[0], run_task=runner).card
     assert card['contexts'][0][field] == dict(
-        text=getattr(package.personas[0].context_evidence[0].situation, field), cite=[])
+        text='근거에 없는 완전히 다른 상황', cite=[])
+    cid = card['contexts'][0]['context_id']
+    assert card['grades'][cid][field] == 'speculated'
 
 
 def pain_card(*, text='냉방 조절이 번거로움', tagged=True, verified=True, barrier=False):
@@ -374,3 +377,27 @@ def test_context_pain_points_max_three():
     row['pain_points'] = [dict(text='불편', cite=['E1'])] * 4
     with pytest.raises(ValidationError):
         ContextOut.model_validate(row)
+
+
+def test_card_prompt_requires_exact_tagged_pain_point_text():
+    from app.persona import cards
+    prompt = (Path(cards.__file__).with_name('prompts') / 'card.v1.md').read_text(encoding='utf-8')
+    assert '입력 evidence의 pain_point가 있으면 그 문장을 한 글자도 바꾸지 말고 그대로 text로 쓴다.' in prompt
+    assert '비슷한 pain_point가 여럿이면 가장 대표적인 하나만 고른다.' in prompt
+    assert '태깅된 pain_point가 없을 때만 직접 쓴다.' in prompt
+    assert '페인포인트는 항상 해당 Context의 근거 번호를 1개 이상 단다.' in prompt
+
+
+@pytest.mark.parametrize('tag_text', ['냉방 조절이 번거로움', '예약 설정을 매번 다시 해야 해서 불편하다.'])
+def test_fake_backend_copies_tagged_pain_point_as_observed(tag_text):
+    raw = make_package()
+    raw['personas'][0]['context_evidence'][0]['evidence'][0]['pain_point']['text'] = tag_text
+    package, runner = Package.model_validate(raw), Runner(raw)
+    block = package.personas[0]
+    card = generate_card('s', block, run_task=runner).card
+    pain = card['contexts'][0]['pain_points'][0]
+    assert pain['text'] == tag_text
+    assert pain['source_pain'] == tag_text
+    assert pain['cite'] == ['E2']
+    assert pain['grade'] == 'observed'
+    assert card['pain_points'][0]['grade'] == 'observed'
