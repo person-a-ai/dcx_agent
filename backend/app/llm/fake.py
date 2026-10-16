@@ -79,7 +79,11 @@ def _persona_echo(task):
         ids = [row['context_id'] for row in payload['contexts']]
         return dict(items=[dict(id=f'I{n+1}', title=f'냉방 조절 경험 개선 {n+1}',
             pain_point='냉방을 조절할 때 번거로움을 겪는다.', context_ids=[ids[n % len(ids)]],
-            known_ki_id=None) for n in range(3)])
+            known_ki_id=None, headline=f'냉방 조절 경험 개선 {n+1}',
+            statements=['편안한 냉방을 원한다', '냉방을 조절할 때 번거로움을 겪는다.'],
+            hashtags=['냉방', '조절'],
+            flow=[dict(context_id=ids[n % len(ids)],
+                       text='냉방을 조절할 때 번거로움을 겪는다.')]) for n in range(3)])
     return dict(persona_profile='편안한 실내 생활을 원하는 합성 사용자',
         pain_points=list(payload['evidence'])[:3],
         journey=[dict(context_id=row['context_id'], action=row['action'], feeling='번거롭다',

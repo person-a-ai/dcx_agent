@@ -7,7 +7,22 @@
       "context_ids": [
         "CL0-P0-C0"
       ],
-      "known_ki_id": null
+      "known_ki_id": null,
+      "headline": "냉방 조절 경험 개선 1",
+      "statements": [
+        "편안한 냉방을 원한다",
+        "냉방을 조절할 때 번거로움을 겪는다."
+      ],
+      "hashtags": [
+        "냉방",
+        "조절"
+      ],
+      "flow": [
+        {
+          "context_id": "CL0-P0-C0",
+          "text": "냉방을 조절할 때 번거로움을 겪는다."
+        }
+      ]
     },
     {
       "id": "I2",
@@ -16,7 +31,22 @@
       "context_ids": [
         "CL0-P0-C1"
       ],
-      "known_ki_id": null
+      "known_ki_id": null,
+      "headline": "냉방 조절 경험 개선 2",
+      "statements": [
+        "편안한 냉방을 원한다",
+        "냉방을 조절할 때 번거로움을 겪는다."
+      ],
+      "hashtags": [
+        "냉방",
+        "조절"
+      ],
+      "flow": [
+        {
+          "context_id": "CL0-P0-C1",
+          "text": "냉방을 조절할 때 번거로움을 겪는다."
+        }
+      ]
     },
     {
       "id": "I3",
@@ -25,7 +55,22 @@
       "context_ids": [
         "CL0-P0-C2"
       ],
-      "known_ki_id": null
+      "known_ki_id": null,
+      "headline": "냉방 조절 경험 개선 3",
+      "statements": [
+        "편안한 냉방을 원한다",
+        "냉방을 조절할 때 번거로움을 겪는다."
+      ],
+      "hashtags": [
+        "냉방",
+        "조절"
+      ],
+      "flow": [
+        {
+          "context_id": "CL0-P0-C2",
+          "text": "냉방을 조절할 때 번거로움을 겪는다."
+        }
+      ]
     }
   ]
 }

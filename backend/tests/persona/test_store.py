@@ -138,3 +138,25 @@ def test_invalid_name_rejected(store, name):
     with pytest.raises(sessions.StoreError) as exc:
         store.write(name, {})
     assert (exc.value.status, exc.value.kind) == (400, 'validation')
+
+
+@pytest.mark.parametrize('field,outdated', [('statements', True), ('headline', True),
+                                           ('flow', True), ('hashtags', False)])
+def test_concept_outdated_on_statement_change(store, field, outdated):
+    item = dict(id='I1', title='제목', pain_point='불편', context_ids=['a'],
+                headline='짧은 제목', statements=['원한다', '해결'], hashtags=['태그', '수면'],
+                flow=[dict(context_id='a', text='불편하다')])
+    store.new_revision('insights', [item], by='generate', message=None)
+    store.write('concepts', {'items': [{'id': 'C1', 'insight_id': 'I1', 'outdated': False}]})
+    changed = deepcopy(item)
+    changed[field] = '새 제목' if field == 'headline' else ['새 내용']
+    store.new_revision('insights', [changed], by='chat', message='수정')
+    assert store.read('concepts')['items'][0]['outdated'] is outdated
+
+
+def test_legacy_concept_not_outdated_by_new_keys(store):
+    item = dict(id='I1', title='제목', pain_point='불편', context_ids=['a'])
+    store.new_revision('insights', [item], by='generate', message=None)
+    store.write('concepts', {'items': [{'id': 'C1', 'insight_id': 'I1', 'outdated': False}]})
+    store.new_revision('insights', [item], by='chat', message='같은 내용')
+    assert store.read('concepts')['items'][0]['outdated'] is False

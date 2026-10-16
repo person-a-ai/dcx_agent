@@ -33,6 +33,10 @@ def env(data_dir):
                        (np.eye(3, dtype=np.float32)[n % 3].tobytes(), context.context_id))
     backend = fake_persona_backend(package)
     rows = json.loads(backend.responses['insight.derive'])['items']
+    for row in rows:
+        row.update(headline=row['title'], statements=['편안한 냉방을 원한다', row['pain_point']],
+                   hashtags=['냉방', '조절'],
+                   flow=[dict(context_id=cid, text=row['pain_point']) for cid in row['context_ids']])
     return session, store, rows, cards
 
 
@@ -135,6 +139,7 @@ def test_derive_weights_context_cosines_by_document_count(env, monkeypatch):
     contexts[1]['metrics']['doc_count'] = 3
     path.write_text(json.dumps(package), encoding='utf-8')
     rows[0]['context_ids'] = [contexts[0]['context_id'], contexts[1]['context_id']]
+    rows[0]['flow'] = [dict(context_id=cid, text='온도를 조절한다') for cid in rows[0]['context_ids']]
     runner(monkeypatch, [rows])
     derive(session.sid, session.version, embedder=Embedder())
     first = store.read('insights')['items'][0]
@@ -153,3 +158,138 @@ def test_missing_centroid_preserves_previous_revision(env, monkeypatch):
     with pytest.raises(InsightError):
         derive(session.sid, session.version, embedder=Embedder())
     assert store.read('insights') == previous
+
+
+NEW_FIELDS = ('headline', 'statements', 'hashtags', 'flow')
+
+
+def modern_items():
+    return [dict(id=f'I{i}', title='제목', pain_point='불편', known_ki_id=None,
+                 context_ids=['a'], headline='짧은 제목', statements=['원한다', '해결해 줘'],
+                 hashtags=['심박', '수면'], flow=[dict(context_id='a', text='불편하다')])
+            for i in range(3)]
+
+
+def validate(items, **kwargs):
+    from app.persona.insights import validate_items
+    return validate_items(items, {'a', 'b', 'c'}, **kwargs)
+
+
+def test_validate_ok():
+    items = modern_items()
+    assert validate(items) == items
+    assert validate(items) is not items
+
+
+@pytest.mark.parametrize('count', [1, 3])
+def test_validate_statements_count(count):
+    items = modern_items()
+    items[0]['statements'] = ['문장'] * count
+    with pytest.raises(ValueError):
+        validate(items)
+
+
+def test_validate_flow_outside_context_ids():
+    items = modern_items()
+    items[0]['flow'][0]['context_id'] = 'b'
+    with pytest.raises(ValueError):
+        validate(items)
+
+
+@pytest.mark.parametrize('ids,ok', [(['a'], False), (['a', 'b'], True),
+                                     (['a', 'b', 'c'], True), (['a', 'a'], False)])
+def test_validate_flow_count(ids, ok):
+    items = modern_items()
+    items[0]['context_ids'] = ['a', 'b', 'c']
+    items[0]['flow'] = [dict(context_id=cid, text='문장') for cid in ids]
+    if ok:
+        assert validate(items) == items
+    else:
+        with pytest.raises(ValueError):
+            validate(items)
+
+
+def test_validate_flow_single_context():
+    assert validate(modern_items()) == modern_items()
+
+
+@pytest.mark.parametrize('field,limit', [('headline', 30), ('statements', 70)])
+def test_validate_length_caps(field, limit):
+    items = modern_items()
+    def set_text(text):
+        items[0][field] = text if field == 'headline' else [text, '문장']
+    set_text(' ' + '가' * limit + ' ')
+    assert validate(items)[0][field] == ('가' * limit if field == 'headline' else ['가' * limit, '문장'])
+    set_text('가' * (limit + 1))
+    with pytest.raises(ValueError):
+        validate(items)
+
+
+def test_validate_cleans_hashtag_and_quotes():
+    items = modern_items()
+    items[0].update(headline='“귀로 재는 컨디션”', hashtags=['#심박', ' 수면 '])
+    cleaned = validate(items)
+    assert cleaned[0]['headline'] == '귀로 재는 컨디션'
+    assert cleaned[0]['hashtags'] == ['심박', '수면']
+    assert items[0]['hashtags'] == ['#심박', ' 수면 ']
+    for tags in (['#', '수면'], ['#수면', ' 수면 ']):
+        items[0]['hashtags'] = tags
+        with pytest.raises(ValueError):
+            validate(items)
+
+
+def test_validate_edit_all_or_none():
+    from app.persona.insights import EditOut
+    items = modern_items()
+    legacy = [{k: v for k, v in row.items() if k not in NEW_FIELDS} for row in items]
+    assert validate(legacy, require_new=False) == legacy
+    assert validate(items, require_new=False) == items
+    assert EditOut.model_validate({'items': legacy}).items[0].headline is None
+    nullable = EditOut.model_validate({'items': legacy}).model_dump()['items']
+    assert validate(nullable, require_new=False) == legacy
+    legacy[0]['headline'] = '일부만'
+    with pytest.raises(ValueError):
+        validate(legacy, require_new=False)
+    items[0]['flow'][0]['context_id'] = 'b'
+    with pytest.raises(ValueError):
+        validate(items, require_new=False)
+
+
+def test_validate_edit_no_regression():
+    previous = modern_items()
+    legacy = [{k: v for k, v in row.items() if k not in NEW_FIELDS} for row in previous]
+    with pytest.raises(ValueError):
+        validate(legacy, require_new=False, previous=previous)
+
+
+@pytest.mark.parametrize('case', ['range', 'id', 'unknown', 'duplicate'])
+def test_validate_keeps_existing_rules(case):
+    items = modern_items()
+    if case == 'range':
+        items = items[:2]
+    elif case == 'id':
+        items[0]['id'] = items[1]['id']
+    elif case == 'unknown':
+        items[0]['context_ids'] = ['missing']
+    else:
+        items[0]['context_ids'] = ['a', 'a']
+    with pytest.raises(ValueError):
+        validate(items)
+
+
+def test_derive_retries_once_on_invalid_flow(env, monkeypatch):
+    from copy import deepcopy
+    session, _, rows, _ = env
+    invalid = deepcopy(rows)
+    invalid[0]['flow'][0]['context_id'] = 'missing'
+    calls = runner(monkeypatch, [invalid, rows])
+    assert derive(session.sid, session.version, embedder=Embedder()) == 1
+    assert len(calls) == 2
+    assert 'flow' in json.loads(calls[1].attachments[0].body)['retry']
+
+
+def test_derive_uses_v2_prompt(env, monkeypatch):
+    session, _, rows, _ = env
+    calls = runner(monkeypatch, [rows])
+    derive(session.sid, session.version, embedder=Embedder())
+    assert 'headline' in calls[0].instructions
