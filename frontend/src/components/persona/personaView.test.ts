@@ -1,7 +1,7 @@
 import type { PersonaMap, PersonaMapPoint, PersonaZone } from '../../lib/types';
 import fixture from './fixtures/map-s8b25-v2.json';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cxCounts, foldColumns, gradeLabel, sortContexts, zoneName, logScale, LOG_TICKS, zoneOf, zoneRegions, jitter, topOpportunity } from './personaView';
+import { cxCounts, foldColumns, gradeLabel, sortContexts, zoneName, MAP_TICKS, zoneOf, zoneRegions, jitter, topOpportunity } from './personaView';
 import * as persona from '../../lib/api/persona';
 import * as insight from '../../lib/api/insight';
 
@@ -162,7 +162,7 @@ describe('insight API wire contract (offline)', () => {
 });
 
 
-// Ray casting with an explicit inclusive segment check for sampled boundaries.
+// Ray casting with an explicit inclusive segment check for boundaries.
 function contains(polygon: [number, number][], x: number, y: number): boolean {
   let inside = false;
   for (let a = 0, b = polygon.length - 1; a < polygon.length; b = a++) {
@@ -176,16 +176,14 @@ function contains(polygon: [number, number][], x: number, y: number): boolean {
 
 describe('map calculations', () => {
   const base: PersonaMap['base'] = { s_line: .5, diag1: [[0, .25], [1, 1]], diag2: [[.25, 0], [1, 1]] };
-  it('expands low values monotonically and clamps to the unit interval', () => {
-    expect(logScale(0)).toBe(0);
-    expect(logScale(1)).toBe(1);
-    expect(logScale(.08)).toBeGreaterThanOrEqual(.4);
-    expect(logScale(.08)).toBeGreaterThanOrEqual(5 * .08);
-    expect(logScale(-1)).toBe(0);
-    expect(logScale(2)).toBe(1);
-    for (let n = 1; n <= 100; n++) expect(logScale(n / 100)).toBeGreaterThan(logScale((n - 1) / 100));
-    expect(logScale(.2, 10)).toBe(Math.log1p(2) / Math.log1p(10));
-    expect(LOG_TICKS).toEqual([0, .02, .05, .1, .2, .5, 1]);
+  it('uses evenly spaced linear ticks and exact clipped vertices', () => {
+    expect(MAP_TICKS).toEqual([0, .25, .5, .75, 1]);
+    const regions = zoneRegions(base);
+    expect(regions.D).toHaveLength(3);
+    expect(regions.D[0][0]).toBeCloseTo(1 / 3);
+    expect(regions.D[0][1]).toBe(.5);
+    expect(regions.D.slice(1)).toEqual([[0, .5], [0, .25]]);
+    expect(Object.values(regions).every(polygon => polygon.length <= 6)).toBe(true);
   });
   // Copied from backend test_boundary_goes_upper.
   it.each([
@@ -206,7 +204,7 @@ describe('map calculations', () => {
     for (const point of fixture.points) {
       expect(point.i).not.toBeNull();
       expect(point.s).not.toBeNull();
-      expect(contains(regions[point.zone as PersonaZone], logScale(point.i!), logScale(point.s!)), point.context_id).toBe(true);
+      expect(contains(regions[point.zone as PersonaZone], point.i!, point.s!), point.context_id).toBe(true);
     }
   });
   it('handles a vertical diag2 and gives diag1 priority at (1,1)', () => {

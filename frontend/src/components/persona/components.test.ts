@@ -5,7 +5,7 @@ import { GradeMark } from './GradeMark';
 import { ProvisionalBadge } from './ProvisionalBadge';
 import { CCMTable, type CCMContext } from './CCMTable';
 import { OpportunityMap } from './OpportunityMap';
-import { LOG_TICKS, logScale } from './personaView';
+import { MAP_TICKS } from './personaView';
 import { ContextTable } from './ContextTable';
 import { HierarchyTree } from './HierarchyTree';
 import { Radar } from './Radar';
@@ -248,22 +248,27 @@ it('renders six token-colored zone polygons with names in the outside legend', (
     expect(label).toContain(`color:var(--${zone === 'F' ? 'danger' : zone === 'C' ? 'warning' : 'sub'})`);
   }
 });
-it('uses original log ticks, responsive dimensions and sampled dashed baselines', () => {
+it('uses linear ticks, responsive dimensions and straight dashed baselines', () => {
   const tree = draw(OpportunityMap, {map: map([point('C1')]), compact: true});
   const svg = nodes(tree, e => e.type === 'svg')[0];
   expect(svg.props.viewBox).toBe('0 0 600 420');
   expect(svg.props.style).toMatchObject({minHeight: 320});
   const ticks = nodes(tree, e => e.type === 'text' && !!e.props['data-axis-tick']);
-  expect(ticks.map(e => e.props.children)).toEqual([...LOG_TICKS, ...LOG_TICKS]);
-  expect(html(tree)).toContain('로그 척도');
+  expect(ticks.map(e => e.props.children)).toEqual([...MAP_TICKS, ...MAP_TICKS]);
+  expect(html(tree)).not.toContain('로그 척도');
   expect(ticks.some(e => String(e.props.children) === '10')).toBe(false);
   for (const line of nodes(tree, e => e.props['data-baseline'] !== undefined)) {
     expect(line.type).toBe('polyline');
+    expect(line.props.points.split(' ')).toHaveLength(2);
     expect(line.props.stroke).toBe('var(--line-strong)');
     expect(line.props.strokeDasharray).toBeTruthy();
   }
   const dot = nodes(tree, e => e.props['data-context-id'] === 'C1')[0];
-  expect(dot.props.transform).toBe(`translate(${60 + logScale(.5)*480} ${340-logScale(.5)*320})`);
+  expect(dot.props.transform).toBe(`translate(${60 + .5*480} ${340-.5*320})`);
+});
+it.each([[-1, 2, 'translate(60 20)'], [2, -1, 'translate(540 340)']])('clamps linear map coordinates (%s, %s)', (i, s, transform) => {
+  const tree = draw(OpportunityMap, {map: map([{...point('C1'), i: Number(i), s: Number(s)}])});
+  expect(nodes(tree, e => e.props['data-context-id'] === 'C1')[0].props.transform).toBe(transform);
 });
 it('RV2 labels focused and highlighted points and dims other personas in focus mode', () => {
   const props = {map: map([point('C1'), {...point('C2'), persona_id:'P2'}]), focusPersonaId:'P1', selectedPersonaId:'P1'};
@@ -476,7 +481,7 @@ it('F7 reduces mobile pain typography and indentation while hiding the duplicate
 
 it('RV8 separates overlapping rendered intervals with mixed label anchors deterministically', () => {
  const points = [450, 540].map((px, index) => ({
-   ...point(`CONTEXT0${index + 1}`), i: (51 ** ((px - 60) / 480) - 1) / 50,
+   ...point(`CONTEXT0${index + 1}`), i: (px - 60) / 480,
  }));
  const props = {map: map(points), focusPersonaId: 'P1'};
  const positions = (tree: ReactNode) => nodes(tree, e => !!e.props['data-context-id']).map(dot => {

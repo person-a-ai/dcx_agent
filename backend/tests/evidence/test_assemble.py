@@ -125,6 +125,25 @@ def test_metrics(persisted):
     assert p['doc_count'] == 8 and p['author_count'] == 1
 
 
+def test_importance_uses_session_mention_volume_without_inflating_small_personas(tmp_path):
+    seg = SegmentStore(tmp_path)
+    contexts = [dict(context_id='large', persona_id='p_large'),
+                dict(context_id='small', persona_id='p_small'),
+                dict(context_id='missing', persona_id='p_small')]
+    docs = [dict(doc_id=f'd{i}', context_id='large', persona_id='p_large',
+                 theta=.5, sentiment=0.) for i in range(4)]
+    docs += [dict(doc_id='small', context_id='small', persona_id='p_small', theta=1., sentiment=0.),
+             dict(doc_id='missing', context_id='missing', persona_id='p_small')]
+    seg.write_layers(contexts=contexts, docs=docs)
+    ranges = assembly.session_minmax(seg)
+    large = assembly.context_metrics(seg, 'large', session_minmax=ranges)
+    small = assembly.context_metrics(seg, 'small', session_minmax=ranges)
+    assert (large['importance'], small['importance']) == (1., 0.)
+    assert ranges['importance'] == (1., 2.)
+    assert assembly._raw_metrics(contexts[0], docs)['importance'] == 2.
+    assert assembly.context_metrics(seg, 'missing', session_minmax=ranges)['importance'] is None
+
+
 def test_metrics_missing_and_constant(tmp_path):
     seg = SegmentStore(tmp_path)
     seg.write_layers(contexts=[dict(context_id='empty', persona_id='p'), dict(context_id='c', persona_id='p')],

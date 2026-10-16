@@ -130,10 +130,9 @@ def _mean(values):
 
 def _raw_metrics(context, docs):
     assigned = [d for d in docs if d['context_id'] == context['context_id']]
-    persona_count = sum(d['persona_id'] == context['persona_id'] for d in docs)
     theta = [d['theta'] for d in assigned if d.get('theta') is not None]
     sentiment = _mean(d.get('sentiment') for d in assigned)
-    return dict(importance=sum(theta) / persona_count if theta and persona_count else None,
+    return dict(importance=sum(theta) if theta else None,
                 satisfaction=(sentiment + 1) / 2 if sentiment is not None else None,
                 doc_count=len(assigned), author_count=len({d['author_hash'] for d in assigned if d.get('author_hash')}))
 

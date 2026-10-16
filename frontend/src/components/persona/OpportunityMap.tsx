@@ -1,13 +1,13 @@
 'use client';
 import { useMemo, useState } from 'react';
 import type { PersonaMap, PersonaZone } from '../../lib/types';
-import { zoneName, formatMetric, formatCount, logScale, LOG_TICKS, zoneRegions, jitter } from './personaView';
+import { zoneName, formatMetric, formatCount, MAP_TICKS, zoneRegions, jitter } from './personaView';
 import { ProvisionalBadge } from './ProvisionalBadge';
 const shapes = ['circle','square','triangle','diamond','pentagon'];
 const symbols = ['●','■','▲','◆','⬟'];
 const tones = ['--ink-strong','--ink','--line-strong'];
-const x = (value: number) => 60 + logScale(value) * 480;
-const y = (value: number) => 340 - logScale(value) * 320;
+const x = (value: number) => 60 + Math.max(0, Math.min(1, value)) * 480;
+const y = (value: number) => 340 - Math.max(0, Math.min(1, value)) * 320;
 function Shape({ index }: { index: number }) {
   if (index === 1) return <rect x={-7} y={-7} width={14} height={14}/>;
   if (index === 2) return <polygon points="0,-9 8,7 -8,7"/>;
@@ -68,12 +68,9 @@ export function OpportunityMap({ map, highlightedId, selectedId, selectedPersona
     <svg viewBox="0 0 600 420" role="img" aria-label={`Opportunity Map: ${summary}`} style={{ width:'100%',display:'block',minHeight:320 }}>
       <ZoneLayer base={map.base}/>
       <path d="M60 20V340H540" fill="none" stroke="var(--ink)"/>
-      {lines.map((line,index) => <polyline key={index} data-baseline={index} points={Array.from({length:129},(_,n) => {
-        const t=n/128;
-        return `${x(line[0][0]+t*(line[1][0]-line[0][0]))},${y(line[0][1]+t*(line[1][1]-line[0][1]))}`;
-      }).join(' ')} fill="none" stroke="var(--line-strong)" strokeDasharray="4 4"/>)}
-      {(['x','y'] as const).map(axis => LOG_TICKS.map(tick => <text key={`${axis}-${tick}`} data-axis-tick={axis} x={axis === 'x' ? x(tick) : 52} y={axis === 'x' ? 359 : y(tick)+4} textAnchor={axis === 'x' ? 'middle' : 'end'} fontSize={11} fill="var(--sub)">{tick}</text>))}
-      <text x={300} y={392} textAnchor="middle" fill="var(--ink)">중요도 · 로그 척도</text><text x={14} y={180} transform="rotate(-90 14 180)" textAnchor="middle" fill="var(--ink)">만족도 · 로그 척도</text>
+      {lines.map((line,index) => <polyline key={index} data-baseline={index} points={line.map(([i,s]) => `${x(i)},${y(s)}`).join(' ')} fill="none" stroke="var(--line-strong)" strokeDasharray="4 4"/>)}
+      {(['x','y'] as const).map(axis => MAP_TICKS.map(tick => <text key={`${axis}-${tick}`} data-axis-tick={axis} x={axis === 'x' ? x(tick) : 52} y={axis === 'x' ? 359 : y(tick)+4} textAnchor={axis === 'x' ? 'middle' : 'end'} fontSize={11} fill="var(--sub)">{tick}</text>))}
+      <text x={300} y={392} textAnchor="middle" fill="var(--ink)">중요도</text><text x={14} y={180} transform="rotate(-90 14 180)" textAnchor="middle" fill="var(--ink)">만족도</text>
       {validPoints.filter(point => !hiddenClusters.includes(point.cluster_id)).map(point => {
         if (point.i === null || point.s === null) return null;
         const entry = legend.get(point.cluster_id);

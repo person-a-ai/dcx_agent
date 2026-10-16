@@ -61,11 +61,7 @@ export function displayValue(value: unknown, empty = ''): string {
 }
 
 
-const clamp01 = (v: number): number => Math.max(0, Math.min(1, v));
-export function logScale(v: number, k = 50): number {
-  return Math.log1p(k * clamp01(v)) / Math.log1p(k);
-}
-export const LOG_TICKS = [0, 0.02, 0.05, 0.1, 0.2, 0.5, 1];
+export const MAP_TICKS = [0, 0.25, 0.5, 0.75, 1];
 
 export function zoneOf(i: number, s: number, base: PersonaMap['base']): PersonaZone {
   const sMean = base.diag1[0][1], iMean = base.diag2[0][0];
@@ -92,14 +88,13 @@ function clipPolygon(polygon: MapVertex[], distance: HalfPlane): MapVertex[] {
   return result;
 }
 
-export function zoneRegions(base: PersonaMap['base'], edgeSamples = 128): Record<PersonaZone, MapVertex[]> {
+export function zoneRegions(base: PersonaMap['base']): Record<PersonaZone, MapVertex[]> {
   const sMean = base.diag1[0][1], iMean = base.diag2[0][0];
   const horizontal: HalfPlane = ([, s]) => s - base.s_line;
   const diag1: HalfPlane = ([i, s]) => s - sMean - (1 - sMean) * i;
   const diag2: HalfPlane = ([i, s]) => (1 - iMean) * s - i + iMean;
   const below = (line: HalfPlane): HalfPlane => point => -line(point);
   const regions = {} as Record<PersonaZone, MapVertex[]>;
-  const samples = Math.max(1, Math.floor(edgeSamples));
   for (const zone of ['A', 'B', 'C', 'D', 'E', 'F'] as const) {
     if (iMean === 1 && (zone === 'C' || zone === 'F')) {
       regions[zone] = [];
@@ -114,13 +109,7 @@ export function zoneRegions(base: PersonaMap['base'], edgeSamples = 128): Record
     let polygon: MapVertex[] = [[0, 0], [1, 0], [1, 1], [0, 1]];
     for (const plane of planes) polygon = clipPolygon(polygon, plane);
     // Shared boundaries are included in adjacent rendering polygons.
-    regions[zone] = polygon.flatMap((a, n) => {
-      const b = polygon[(n + 1) % polygon.length];
-      return Array.from({ length: samples }, (_, step): MapVertex => {
-        const t = step / samples;
-        return [logScale(a[0] + t * (b[0] - a[0])), logScale(a[1] + t * (b[1] - a[1]))];
-      });
-    });
+    regions[zone] = polygon;
   }
   return regions;
 }
