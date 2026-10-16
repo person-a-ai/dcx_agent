@@ -82,3 +82,19 @@ it.each([0,1,2,4])('QA ISSUE-002 keeps each arrow after its preceding card (%i c
  expect(css).toMatch(/@media \(max-width: 767px\)[\s\S]*?\.insight-flow-arrow-wide\s*\{\s*display: none/);
  expect(css).toMatch(/\.insight-flow-arrow-narrow\s*\{\s*display: inline/);
 });
+
+it('QA ISSUE-004 reserves label space inside the fixed chart height',()=>{
+ const css=readFileSync(new URL('./insight.css',import.meta.url),'utf8');
+ expect(css).toMatch(/\.insight-bars-scroll\s*\{[^}]*overflow-y:\s*hidden;/);
+ expect(css).toMatch(/\.insight-bars-scroll\s*\{[^}]*min-height:\s*0;/);
+ expect(css).toMatch(/\.insight-bars-grid\s*\{[^}]*height:\s*100%;/);
+ expect(css).toMatch(/\.insight-bars-column\s*\{[^}]*grid-template-rows:\s*minmax\(0,\s*1fr\) 78px;/);
+ expect(css).toMatch(/\.insight-bars-plot\s*\{[^}]*height:\s*calc\(100% - 78px\);/);
+ expect(css).toMatch(/\.insight-bar-label\s*\{[^}]*height:\s*78px;/);
+ expect(css).toMatch(/\.insight-bar-label \.insight-clamp-2\s*\{[^}]*height:\s*36px;/);
+});
+it('QA ARROW-TRAIL hides arrows at full row ends for each desktop breakpoint',()=>{
+ const css=readFileSync(new URL('./insight.css',import.meta.url),'utf8');
+ expect(css).toMatch(/@media \(min-width: 1280px\)\s*\{\s*\.insight-flow-step:nth-child\(4n\) > \.insight-flow-arrow\s*\{\s*display: none;\s*\}/);
+ expect(css).toMatch(/@media \(min-width: 768px\) and \(max-width: 1279px\)\s*\{[^@]*\.insight-flow-step:nth-child\(2n\) > \.insight-flow-arrow\s*\{\s*display: none;\s*\}/);
+});
