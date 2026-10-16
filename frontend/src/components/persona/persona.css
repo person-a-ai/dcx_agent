@@ -41,3 +41,17 @@
   .persona-desire-goals{order:2}
   .persona-pain-button{padding:12px}
 }
+
+.ccm-scroll{overflow-x:auto;min-width:0;max-width:100%}
+.ccm-clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.ccm-sticky{position:sticky;left:0;background:var(--paper);z-index:1}
+.ccm-empty{color:var(--sub)}
+.ccm-cell-button{min-height:44px}
+.ccm-cell-button:focus-visible{outline:2px solid var(--action);outline-offset:2px}
+.ccm-more{display:block;color:var(--sub);font:var(--type-caption)}
+.ccm-full-text{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0}
+@media (max-width: 767px){
+  .ccm-scroll .ds-tbl{table-layout:auto !important;min-width:100%}
+  .ccm-scroll th,.ccm-scroll td{min-width:200px;width:200px}
+  .ccm-scroll{background:linear-gradient(to left,var(--line),transparent) right top / 8px 100% no-repeat;background-attachment:scroll}
+}

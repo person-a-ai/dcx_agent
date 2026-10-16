@@ -349,3 +349,37 @@ it('uses token-only responsive CSS with clamped names, mobile pain priority and 
   const tokens=readFileSync(new URL('../../styles/tokens.css',import.meta.url),'utf8');
   for(const variable of css.matchAll(/var\((--[\w-]+)\)/g)) expect(tokens).toContain(`${variable[1]}:`);
 });
+
+it('renders the ten CCM rows in contract order with plain table surfaces and sticky headers', () => {
+  const tree = draw(CCMTable, {contexts: contexts.slice(0, 1)});
+  expect(nodes(tree, e => e.type === 'th' && e.props.scope === 'row').map(e => html(e))).toEqual(
+    ['행동','상태','감정','장벽','페인포인트','키워드','쓰는 제품·수단','만족도','기회','근거 수'].map(label => expect.stringContaining(label))
+  );
+  expect(nodes(tree, e => e.props.className === 'ccm-scroll')).toHaveLength(1);
+  expect(nodes(tree, e => e.type === 'th' && e.props.scope === 'row').every(e => e.props.className === 'ccm-sticky')).toBe(true);
+  expect(html(tree)).not.toContain('ds-card');
+});
+it('clamps CCM text, shows extra pain count, and expands full text together with evidence', () => {
+  const text = '긴 페인포인트 '.repeat(100);
+  const props = {contexts: [{id:'C1',name:'이름',cells:{pain_point:{text,more:2,evidence:'모든 페인포인트와 인용'}}}]};
+  let tree = draw(CCMTable, props);
+  const button = nodes(tree, e => e.type === 'button' && String(e.props['aria-label']).includes('페인포인트'))[0];
+  expect(html(button)).toContain('+2');
+  expect(nodes(button, e => e.props.className === 'ccm-clamp')).toHaveLength(1);
+  (button.props.onClick as () => void)(); tree = draw(CCMTable, props, false);
+  expect(nodes(tree, e => e.props.className === 'ccm-full-text').map(e => e.props.children)).toContain(text);
+  expect(html(tree)).toContain('모든 페인포인트와 인용');
+});
+it('marks missing and blank CCM cells as insufficient evidence', () => {
+  const tree = draw(CCMTable, {contexts:[{id:'C1',name:'이름',cells:{action:{text:'  '},state:{text:''}}}]});
+  expect(nodes(tree, e => e.props.className === 'ccm-empty')).toHaveLength(10);
+  expect(nodes(tree, e => e.props.className === 'ccm-empty').every(e => e.props.children === '근거 부족')).toBe(true);
+});
+it('defines CCM three-line clamp, scrolling, sticky paper headers, mobile widths and touch targets', () => {
+  const css = readFileSync(new URL('./persona.css', import.meta.url), 'utf8');
+  expect(css).toMatch(/\.ccm-clamp\s*\{[^}]*-webkit-line-clamp:\s*3/);
+  expect(css).toMatch(/\.ccm-scroll\s*\{[^}]*overflow-x:\s*auto/);
+  expect(css).toMatch(/\.ccm-sticky\s*\{[^}]*position:\s*sticky;[^}]*left:\s*0;[^}]*background:\s*var\(--paper\)/);
+  expect(css).toMatch(/\.ccm-cell-button\s*\{[^}]*min-height:\s*44px/);
+  expect(css).toMatch(/@media\s*\(max-width:\s*767px\)[\s\S]*\.ccm-scroll[^}]*min-width:\s*200px/);
+});
