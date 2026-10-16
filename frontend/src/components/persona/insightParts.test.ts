@@ -1,0 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {createElement as h} from 'react';
+import {renderToStaticMarkup as render} from 'react-dom/server';
+import {readFileSync} from 'node:fs';
+import {expect,it,vi} from 'vitest';
+const state=vi.hoisted(()=>({values:[] as any[],cursor:0,set:vi.fn()}));
+vi.mock('react',async original=>({...await original<typeof import('react')>(),useState:(initial:any)=>[state.cursor in state.values?state.values[state.cursor++]: (state.cursor++,initial),state.set],useId:()=>"test-id",useRef:()=>({current:null}),useEffect:()=>{}}));
+import {InsightTopBar} from './InsightTopBar';
+import {InsightHeader} from './InsightHeader';
+import {InsightChatBar} from './InsightChatBar';
+import {InsightConcept} from './InsightConcept';
+import ChatPanel from '../ChatPanel';
+import type {InsightView} from './insightView';
+const noop=()=>{};
+const view:InsightView={headline:'headline',statements:['원한다','막힌다'],hashtags:['심박'],personas:['러너'],flow:[],bars:[],legacy:false,chips:[]};
+const top={count:5,index:0,onPrev:vi.fn(),onNext:vi.fn(),confirmed:false,onToggleConfirm:noop,confirmDisabled:false,onDerive:noop,deriveDisabled:false};
+const header={view,index:1,onRederive:vi.fn(),rederiveDisabled:false};
+const revisions={revisions:[],currentRevision:0,onView:noop,onRevert:noop};
+const chat={target:'insight:I2' as const,onTarget:noop,conceptAvailable:false,focusLabel:'Insight 2',focusId:'I2',chips:['질문1','질문2'],disabled:false,onSend:async()=>'',historyCount:0,revisions};
+function nodes(n:any):any[]{return !n||typeof n!=='object'?[]:Array.isArray(n)?n.flatMap(nodes):[n,...nodes(n.props?.children)];}
+function reset(values:any[]=[]){state.cursor=0;state.values=values;state.set.mockClear();}
+it('pager group and boundaries',()=>{const html=render(h(InsightTopBar,top));expect(html).toContain('role="group" aria-label="인사이트 넘기기"');expect(html).toMatch(/aria-label="이전 인사이트"[^>]*disabled/);expect(render(h(InsightTopBar,{...top,index:4}))).toMatch(/aria-label="다음 인사이트"[^>]*disabled/);expect(render(h(InsightTopBar,{...top,index:1}))).toContain('aria-live="polite">Insight 2 / 5');});
+it('pager arrow keys only on group',()=>{const group=nodes(InsightTopBar(top)).find(n=>n.props?.role==='group');const preventDefault=vi.fn();group.props.onKeyDown({key:'ArrowRight',preventDefault});expect(top.onNext).toHaveBeenCalledTimes(1);group.props.onKeyDown({key:'ArrowLeft',preventDefault});expect(top.onPrev).not.toHaveBeenCalled();expect(readFileSync(new URL('./InsightTopBar.tsx',import.meta.url),'utf8')).not.toContain('addEventListener');});
+it('confirm toggle and empty derive',()=>{expect(render(h(InsightTopBar,{...top,confirmed:true,confirmDisabled:true}))).toMatch(/aria-pressed="true"[^>]*disabled[^>]*>확정됨/);expect(render(h(InsightTopBar,top))).toContain('확정하기');const empty=render(h(InsightTopBar,{...top,count:0,deriveDisabled:true}));expect(empty).toContain('인사이트 도출</button>');expect(empty).not.toContain('인사이트 넘기기');expect(empty).not.toContain('aria-pressed');});
+it('header renders quote numbered clamped statements hashtags and optional rows',()=>{reset();const html=render(h(InsightHeader,header));expect(html).toContain('“headline”');expect(html).toContain('<ol');expect(html.match(/insight-clamp-2/g)).toHaveLength(2);expect(html).toContain('title="원한다"');expect(html).toContain('#심박');reset();const empty=render(h(InsightHeader,{...header,view:{...view,hashtags:[],personas:[]}}));expect(empty).not.toContain('insight-hashtags');expect(empty).not.toContain('기여 페르소나');});
+it('legacy notice and rederive confirmation only after approval',()=>{reset();const props={...header,view:{...view,legacy:true}};const html=render(h(InsightHeader,props));expect(html).toContain('예전 방식으로 만든 인사이트입니다. 다시 도출하면 제목·문장·흐름이 채워집니다.');expect(html).toContain('<summary>자세히</summary>');expect(html).toContain('다시 도출하면 확정과 컨셉이 초기화됩니다.');reset();nodes(InsightHeader(props)).find(n=>n.type==='button'&&n.props.children==='다시 도출').props.onClick();expect(header.onRederive).not.toHaveBeenCalled();expect(state.set).toHaveBeenCalledWith(true);reset([true]);const tree=InsightHeader(props);expect(render(tree)).toContain('다시 도출하면 확정과 컨셉이 초기화됩니다. 이전 판은 판 목록에서 되돌릴 수 있습니다.');nodes(tree).find(n=>n.type==='button'&&n.props.children==='확인').props.onClick();expect(header.onRederive).toHaveBeenCalledTimes(1);reset([true]);const disabled=render(h(InsightHeader,{...props,rederiveDisabled:true}));expect(disabled).toMatch(/disabled[^>]*>확인/);});
+it.each([['insight:I2','Insight 2에 대해 수정 요청'],['insights','인사이트 목록 전체 수정'],['concept:I2','선택 컨셉 수정']])('chat focus %s',(target,label)=>{reset();const html=render(h(InsightChatBar,{...chat,target:target as any}));expect(html).toContain(label);expect(html.match(/<option /g)).toHaveLength(3);expect(html).toMatch(/value="concept:I2" disabled/);expect(html).toMatch(/disabled[^>]*>대화 기록 0/);});
+it('chat history expands revision list',()=>{reset([true]);expect(render(h(InsightChatBar,{...chat,historyCount:2}))).toContain('aria-label="판 목록"');});
+it('chat panel suggestions optional and click fills input and focuses',()=>{reset();expect(render(h(ChatPanel,{initialMessage:'안내',onSend:chat.onSend}))).not.toContain('insight-suggestions');reset();const tree=ChatPanel({initialMessage:'안내',onSend:chat.onSend,suggestions:chat.chips});expect(render(tree).match(/class="insight-hit"/g)).toHaveLength(2);const input=nodes(tree).find(n=>n.type==='input');const focus=vi.fn();input.props.ref.current={focus};nodes(tree).find(n=>n.type==='button'&&n.props.children==='질문1').props.onClick();expect(state.set).toHaveBeenCalledWith('질문1');expect(focus).toHaveBeenCalledOnce();});
+it('touch targets and token css',()=>{reset();expect(render(h(InsightTopBar,top)).match(/insight-hit/g)).toHaveLength(3);const css=readFileSync(new URL('./insight.css',import.meta.url),'utf8');expect(css).toMatch(/\.insight-hit\s*\{[^}]*min-width: 44px;[^}]*min-height: 44px/);expect(css).not.toMatch(/#[0-9a-fA-F]{3,6}/);});
+it('concept empty and outdated states',()=>{expect(render(h(InsightConcept,{onCreate:noop,disabled:true}))).toContain('선택 컨셉 만들기');expect(render(h(InsightConcept,{concept:{outdated:true} as any,onCreate:noop,disabled:false}))).toContain('인사이트가 바뀌어 컨셉을 다시 만들어야 합니다');});
