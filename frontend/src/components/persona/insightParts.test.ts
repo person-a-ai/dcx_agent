@@ -67,3 +67,13 @@ it('QA ISSUE-001 centers the rederive dialog despite the global margin reset',()
   const css=readFileSync(new URL('./insight.css',import.meta.url),'utf8');
   expect(css).toMatch(/\.insight-confirm\s*\{[^}]*margin:\s*auto\s*;/);
 });
+
+it('QA fix round 1 preserves global tokens and uses approved dialog values',()=>{
+  const tokens=readFileSync(new URL('../../styles/tokens.css',import.meta.url),'utf8');
+  expect(tokens).not.toMatch(/--(?:space-4|space-6|overlay-backdrop)\s*:/);
+  const css=readFileSync(new URL('./insight.css',import.meta.url),'utf8');
+  expect(css).not.toMatch(/var\(--(?:space-4|space-6|overlay-backdrop)\)/);
+  expect(css).toMatch(/\.insight-confirm\s*\{[^}]*padding: 24px;/);
+  expect(css).toContain('max-width: min(32rem, calc(100% - 32px));');
+  expect(css).toMatch(/\.insight-confirm::backdrop\s*\{\s*background: rgba\(28,30,34,\.4\);\s*\}/);
+});

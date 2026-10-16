@@ -57,8 +57,8 @@
 .insight-personas > span:first-child { font: var(--type-label); color: var(--ink-strong); }
 .insight-legacy, .insight-caption { font: var(--type-caption); color: var(--sub); }
 .insight-legacy p { margin: 4px 0; }
-.insight-confirm { margin: auto; inset: 0; padding: var(--space-6); color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-overlay); box-shadow: var(--shadow-overlay); font: var(--type-body); max-width: min(calc(var(--space-4) * 32), calc(100% - var(--space-4) * 2)); }
-.insight-confirm::backdrop { background: var(--overlay-backdrop); }
+.insight-confirm { margin: auto; inset: 0; padding: 24px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-overlay); box-shadow: var(--shadow-overlay); font: var(--type-body); max-width: min(32rem, calc(100% - 32px)); }
+.insight-confirm::backdrop { background: rgba(28,30,34,.4); }
 .insight-chat { border: 1px solid var(--line); border-radius: var(--r-input); padding: 12px; }
 .insight-chat h2 { font: var(--type-label); color: var(--action); }
 .insight-focus { font: var(--type-label); color: var(--ink-strong); }
