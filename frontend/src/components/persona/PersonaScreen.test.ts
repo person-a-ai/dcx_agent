@@ -284,3 +284,31 @@ it('RV7 preserves selected A and hovered B labels while detail stays A',()=>{
  expect(nodes(selected).some(n=>n.props?.['data-selected-marker'])).toBe(true);
  expect(text(nodes(tree).find(n=>n.props?.['aria-label']==='선택 Context 상세'))).toContain('C1');
 });
+
+it('RV10 persists card selection across mouseleave and hover, then clears it on persona change',()=>{
+ h.data.cards.personas.P1.card.contexts=[{context_id:'C1'},{context_id:'C2'}];
+ h.data.cards.personas.P2={status:'done',card:{persona_name:'다른 이름',contexts:[{context_id:'C1'},{context_id:'C2'}]}};
+ button(draw(),'Persona 카드').props.onClick();
+ const map=()=>nodes(draw()).find(n=>n.type===OpportunityMap);
+ const mapPoint=(id:string)=>nodes(OpportunityMap(map().props)).find(n=>n.props?.['data-context-id']===id);
+ const column=()=>text(nodes(draw()).find(n=>n.type==='style'));
+ mapPoint('C1').props.onClick();
+ mapPoint('C1').props.onMouseLeave();
+ expect(column()).toContain('nth-child(2)');
+ expect(map().props.selectedId).toBe('C1');
+ mapPoint('C2').props.onMouseEnter();
+ expect(column()).toContain('nth-child(3)');
+ expect(map().props.selectedId).toBe('C1');
+ mapPoint('C2').props.onMouseLeave();
+ expect(column()).toContain('nth-child(2)');
+ expect(map().props.selectedId).toBe('C1');
+ const rendered=OpportunityMap(map().props);
+ expect(nodes(rendered).some(n=>n.props?.['data-label']==='C1')).toBe(true);
+ expect(nodes(nodes(rendered).find(n=>n.props?.['data-context-id']==='C1')).some(n=>n.props?.['data-selected-marker'])).toBe(true);
+ map().props.onOpenCard('P2');
+ expect(map().props.selectedId).toBeNull();
+ expect(column()).toBe('');
+ map().props.onOpenCard('P1');
+ expect(map().props.selectedId).toBeNull();
+ expect(column()).toBe('');
+});

@@ -44,6 +44,7 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
   const [retrying, setRetrying] = useState<Area | null>(null);
   const [painIndex, setPainIndex] = useState<number | null>(null);
   const [selectedContext, setSelectedContext] = useState<string | null>(null);
+  const [cardSelectedContext, setCardSelectedContext] = useState<string | null>(null);
   const [highlighted, setHighlighted] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState(false);
@@ -101,7 +102,7 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
   const packageCounts = record(current?.package_counts);
   const metrics = record(card.metrics ?? packageCounts);
   const state = current?.status === 'failed' ? 'failed' : status?.personas.find(p => p.id === chosen)?.status ?? current?.status;
-  const openCard = (id: string, contextId?: string) => {setSelected(id);setHighlighted(contextId ?? null);setView('card');setPainIndex(null);};
+  const openCard = (id: string, contextId?: string) => {if (id !== chosen) setCardSelectedContext(null);setSelected(id);setHighlighted(contextId ?? null);setView('card');setPainIndex(null);};
   async function mutate(action: () => Promise<unknown>, waitForPoll = false) {
     if (blocked || lock.current) return;
     lock.current = true;setBusy(true);setError('');setNotice('');
@@ -139,7 +140,7 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
   const contextRows = data?.map?.points.map(point => ({...point,persona_name:name(point.persona_id),pain_point:label(rows(rows(body(point.persona_id).contexts).find(c => c.context_id === point.context_id)?.pain_points)[0]?.text),name:String(rows(body(point.persona_id).contexts).find(c => c.context_id === point.context_id)?.context_name ?? point.context_id)})) ?? [];
   const activeSelection = selectedContext ?? topOpportunity(data?.map?.points ?? []);
   const activeHighlight = highlighted ?? activeSelection;
-  const highlightedColumn = ccm.findIndex(context => context.id === activeHighlight);
+  const highlightedColumn = ccm.findIndex(context => context.id === (highlighted ?? cardSelectedContext));
   const {columns: ccmColumns} = foldColumns(ccm.length);
   const highlightedRow = contextRows.find(row => row.context_id === activeSelection);
   if (status?.package === false || missing || data?.missing) return <section className="ds-card space-y-4"><p>{missingCopy}</p>{!readonly && <Button onClick={() => router.push('/pipeline/evidence')}>근거 탐색으로</Button>}</section>;
@@ -168,7 +169,7 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
   const skeleton = (title: string, count = 3) => <section aria-label={title} aria-busy="true"><h3>{title}</h3>{Array.from({length:count},(_,i) => <Skeleton key={i} height={32}/>)}</section>;
   const areaError = (area: Area) => <div role="alert">{data?.errors?.[area]} <Button disabled={retrying === area} onClick={() => retryArea(area)}>다시 불러오기</Button></div>;
   const emptyMap: PersonaMap = {points:[],legend:[],base:{s_line:.5,diag1:[[0,.5],[1,1]],diag2:[[.5,0],[1,1]]}};
-  const mapArea = <div className="ds-card persona-map-surface">{!data || retrying === 'map' ? <section aria-label="Opportunity Map" aria-busy="true"><OpportunityMap map={data?.map ? {...data.map,points:[]} : emptyMap}/><Skeleton height={32}/></section> : data.errors?.map ? areaError('map') : data.map?.points.length ? <OpportunityMap map={data.map} highlightedId={highlighted} selectedId={activeSelection} selectedPersonaId={chosen} focusPersonaId={view === 'card' ? chosen : null} onHighlight={setHighlighted} onSelect={id => {if (view === 'map') setSelectedContext(id);else setHighlighted(id);}} onOpenCard={openCard}/> : <p>기회 지도를 만들 Context가 없습니다.</p>}</div>;
+  const mapArea = <div className="ds-card persona-map-surface">{!data || retrying === 'map' ? <section aria-label="Opportunity Map" aria-busy="true"><OpportunityMap map={data?.map ? {...data.map,points:[]} : emptyMap}/><Skeleton height={32}/></section> : data.errors?.map ? areaError('map') : data.map?.points.length ? <OpportunityMap map={data.map} highlightedId={highlighted} selectedId={view === 'card' ? cardSelectedContext : activeSelection} selectedPersonaId={chosen} focusPersonaId={view === 'card' ? chosen : null} onHighlight={setHighlighted} onSelect={id => {if (view === 'map') setSelectedContext(id);else setCardSelectedContext(id);}} onOpenCard={openCard}/> : <p>기회 지도를 만들 Context가 없습니다.</p>}</div>;
   const treeArea = !data || retrying === 'tree' ? skeleton('구조 트리',5) : data.errors?.tree ? areaError('tree') : treeRoot ? <HierarchyTree root={treeRoot} expandedId={chosen}/> : <p>구조 트리가 준비되지 않았습니다.</p>;
   const ccmLoading = <section aria-label="Context 비교 표" aria-busy="true"><table className="ds-tbl"><thead><tr><th>항목</th><th>Context</th></tr></thead><tbody>{ccmRows.map(([key,title]) => <tr key={key}><th scope="row">{title}</th><td><Skeleton height={44}/></td></tr>)}</tbody></table></section>;
   const cardLoading = <>{skeleton('Pain Points')}{ccmLoading}{mapArea}<div className="persona-support-panels">{['8-B 수렴','8-C 속성','8-D 처방'].map(title => <section key={title}>{skeleton(title,2)}</section>)}</div></>;
