@@ -474,6 +474,31 @@ it('F7 reduces mobile pain typography and indentation while hiding the duplicate
 });
 
 
+it('RV8 separates overlapping rendered intervals with mixed label anchors deterministically', () => {
+ const points = [450, 540].map((px, index) => ({
+   ...point(`CONTEXT0${index + 1}`), i: (51 ** ((px - 60) / 480) - 1) / 50,
+ }));
+ const props = {map: map(points), focusPersonaId: 'P1'};
+ const positions = (tree: ReactNode) => nodes(tree, e => !!e.props['data-context-id']).map(dot => {
+   const label = nodes(dot, e => !!e.props['data-label'])[0];
+   const [,px,py] = String(dot.props.transform).match(/translate\(([^ ]+) ([^)]+)\)/)!;
+   const anchorX = Number(px) + Number(label.props.x);
+   const width = String(label.props.children).length * 6.5;
+   const left = anchorX - (label.props.textAnchor === 'end' ? width : 0);
+   return {left, right: left + width, y: Number(py) + Number(label.props.y), anchor: label.props.textAnchor};
+ });
+ const labels = positions(draw(OpportunityMap, props));
+ expect(labels.map(label => label.anchor)).toEqual(['start', 'end']);
+ expect(labels[0].left).toBeCloseTo(462);
+ expect(labels[1].left).toBeCloseTo(469.5);
+ for (let i = 0; i < labels.length; i++) for (let j = i + 1; j < labels.length; j++) {
+   const a = labels[i], b = labels[j];
+   if (Math.abs(a.y - b.y) < 12) expect(a.left < b.right && b.left < a.right).toBe(false);
+ }
+ expect(positions(draw(OpportunityMap, props))).toEqual(labels);
+ expect(positions(draw(OpportunityMap, {...props, map: map([...points].reverse())})).reverse()).toEqual(labels);
+});
+
 it.each([1, 0])('keeps focused point labels horizontally inside the viewBox at i=%s', i => {
  const id = 'CL1-P2-C1';
  const props = {map: map([{...point(id), i}]), focusPersonaId: 'P1'};
