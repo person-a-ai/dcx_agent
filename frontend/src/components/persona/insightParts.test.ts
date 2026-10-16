@@ -4,8 +4,8 @@ import {renderToStaticMarkup as render} from 'react-dom/server';
 import {readFileSync} from 'node:fs';
 import {expect,it,vi} from 'vitest';
 const state=vi.hoisted(()=>({values:[] as any[],cursor:0,set:vi.fn()}));
-vi.mock('react',async original=>({...await original<typeof import('react')>(),useState:(initial:any)=>[state.cursor in state.values?state.values[state.cursor++]: (state.cursor++,initial),state.set],useId:()=>"test-id",useRef:()=>({current:null}),useEffect:()=>{}}));
-import {InsightTopBar} from './InsightTopBar';
+vi.mock('react',async original=>({...await original<typeof import('react')>(),useState:(initial:any)=>[state.cursor in state.values?state.values[state.cursor++]: (state.cursor++,initial),state.set],useId:()=>"test-id",useRef:()=>({current:null}),useLayoutEffect:()=>{},useEffect:()=>{}}));
+import {pagerFocusTarget,InsightTopBar} from './InsightTopBar';
 import {InsightHeader} from './InsightHeader';
 import {InsightChatBar} from './InsightChatBar';
 import {InsightConcept} from './InsightConcept';
@@ -29,3 +29,31 @@ it('chat history expands revision list',()=>{reset([true]);expect(render(h(Insig
 it('chat panel suggestions optional and click fills input and focuses',()=>{reset();expect(render(h(ChatPanel,{initialMessage:'안내',onSend:chat.onSend}))).not.toContain('insight-suggestions');reset();const tree=ChatPanel({initialMessage:'안내',onSend:chat.onSend,suggestions:chat.chips});expect(render(tree).match(/class="insight-hit"/g)).toHaveLength(2);const input=nodes(tree).find(n=>n.type==='input');const focus=vi.fn();input.props.ref.current={focus};nodes(tree).find(n=>n.type==='button'&&n.props.children==='질문1').props.onClick();expect(state.set).toHaveBeenCalledWith('질문1');expect(focus).toHaveBeenCalledOnce();});
 it('touch targets and token css',()=>{reset();expect(render(h(InsightTopBar,top)).match(/insight-hit/g)).toHaveLength(3);const css=readFileSync(new URL('./insight.css',import.meta.url),'utf8');expect(css).toMatch(/\.insight-hit\s*\{[^}]*min-width: 44px;[^}]*min-height: 44px/);expect(css).not.toMatch(/#[0-9a-fA-F]{3,6}/);});
 it('concept empty and outdated states',()=>{expect(render(h(InsightConcept,{onCreate:noop,disabled:true}))).toContain('선택 컨셉 만들기');expect(render(h(InsightConcept,{concept:{outdated:true} as any,onCreate:noop,disabled:false}))).toContain('인사이트가 바뀌어 컨셉을 다시 만들어야 합니다');});
+
+it('boundary navigation keeps the focus target inside the pager group',()=>{
+  for (const boundary of ['previous','next']) {
+    const previous={disabled:boundary==='previous'}, next={disabled:boundary==='next'}, group={};
+    const focused=boundary==='previous'?previous:next;
+    expect(pagerFocusTarget(focused,previous,next,group)).toBe(boundary==='previous'?next:previous);
+    expect([previous,next,group]).toContain(pagerFocusTarget(focused,previous,next,group));
+  }
+  const previous={disabled:true},next={disabled:true},group={};
+  expect(pagerFocusTarget(previous,previous,next,group)).toBe(group);
+  expect(pagerFocusTarget(null,previous,next,group)).toBeNull();
+  expect(pagerFocusTarget({disabled:false},previous,next,group)).toBeNull();
+  expect(nodes(InsightTopBar(top)).find(n=>n.props?.role==='group').props.tabIndex).toBe(-1);
+});
+it.each(['cancel','escape','confirm'])('rederive %s restores focus to its trigger',action=>{
+  reset([true]);
+  const tree=InsightHeader({...header,view:{...view,legacy:true}});
+  const trigger=nodes(tree).find(n=>n.type==='button'&&n.props.children==='다시 도출');
+  const focus=vi.fn();trigger.props.ref.current={focus};
+  const dialog=nodes(tree).find(n=>n.type==='dialog');
+  if(action==='escape') dialog.props.onCancel({preventDefault:vi.fn()});
+  else nodes(dialog).find(n=>n.type==='button'&&n.props.children===(action==='cancel'?'취소':'확인')).props.onClick();
+  expect(focus).toHaveBeenCalledOnce();
+  expect(state.set).toHaveBeenCalledWith(false);
+});
+it('rederive trigger is disabled while rederive is disabled',()=>{
+  reset();expect(render(h(InsightHeader,{...header,view:{...view,legacy:true},rederiveDisabled:true}))).toMatch(/disabled[^>]*>다시 도출/);
+});
