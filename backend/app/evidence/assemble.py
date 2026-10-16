@@ -230,8 +230,18 @@ def _item(doc_id, docs, tags, *, role='support', tabs=('all',), novelty=None):
     quotes = tag.get('quotes') or []
     located = [locate(q, doc) for q in quotes]
     quote = next((q for q in located if q['verified']), located[0] if located else None)
+    pain = tag.get('pain_point')
+    pain_point = None
+    if isinstance(pain, dict) and isinstance(pain.get('text'), str) and pain['text'].strip():
+        pain_quote = pain.get('quote') if isinstance(pain.get('quote'), str) else None
+        locations = [('title', None), ('body', None)]
+        locations.extend(('comment', idx) for idx in range(len(doc.get('comments') or [])))
+        verified = bool(pain_quote) and any(
+            locate(dict(field=field, idx=idx, text=pain_quote), doc)['verified']
+            for field, idx in locations)
+        pain_point = dict(text=pain['text'].strip(), quote=pain_quote, verified=verified)
     probabilities = doc.get('tagProbs') or {}
-    return dict(doc_id=doc_id, source=doc.get('source') or '', quote=quote,
+    return dict(doc_id=doc_id, source=doc.get('source') or '', quote=quote, pain_point=pain_point,
                 tags=[dim for dim in ('sense', 'feel', 'think', 'act', 'relate', 'outcome')
                       if (probabilities.get(dim) or 0) >= params.TAG_PROB_ON],
                 polarity=tag.get('polarity'), novelty=novelty, known_match=tag.get('known_match', 'none'),

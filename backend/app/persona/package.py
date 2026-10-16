@@ -7,7 +7,7 @@ quotes remain separate references because their context/role can differ.
 """
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import model_serializer, BaseModel, ConfigDict, Field, ValidationError
 
 from app.context.versions import version_dir
 from app.context.store import read_json
@@ -35,6 +35,14 @@ class Evidence(ContractModel):
     tags: Any
     # Desire support does not require Context-only annotations in section 2.4.
     novelty: str | None = None
+    pain_point: dict | None = None
+
+    @model_serializer(mode='wrap')
+    def serialize_pain_point(self, handler):
+        data = handler(self)
+        if self.pain_point is None:
+            data.pop('pain_point', None)
+        return data
 
 
 class ContextEvidenceItem(Evidence):

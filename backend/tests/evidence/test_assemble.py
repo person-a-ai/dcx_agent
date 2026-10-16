@@ -8,7 +8,7 @@ from app.context import store as sessions
 from app.context.versions import version_dir
 from app.evidence import assemble as assembly
 from app.evidence.cache import TagCache, prompt_version, known_key
-from app.evidence.package import EvidencePackage
+from app.evidence.package import EvidenceItem, EvidencePackage
 from app.evidence.store import EvidenceStore
 from app.model.infer import prepared_root
 from app.segment.store import SegmentStore
@@ -140,6 +140,9 @@ def test_package_schema_and_fields(persisted):
     package = assembly.assemble(sid, version)
     saved = json.loads((base / 'evidence/package.json').read_text())
     assert EvidencePackage.model_validate(saved) == package
+    legacy = dict(saved['personas'][0]['context_evidence'][0]['evidence'][0])
+    legacy.pop('pain_point', None)
+    assert EvidenceItem.model_validate(legacy).pain_point is None
     block = saved['personas'][0]
     context = block['context_evidence'][0]
     assert context['evidence'][0]['tab'] == ['all', 'new']
@@ -204,3 +207,46 @@ def test_assembly_with_real_stage6_fixture(data_dir):
     assert all(c.action for p in package.personas for c in p.context_evidence)
     assert all(p.persona_evidence.quality['cohesion'] is not None for p in package.personas)
     assert [p.persona_evidence.quality.model_dump() for p in package.personas] == [p['quality'] for p in seg.personas()]
+
+
+def test_pain_point_carried():
+    item = assembly._item('d', {'d': {'body': '기본비용이라고 안내함'}},
+                          {'d': {'pain_point': {'text': '  추가비용 불안  ', 'quote': '기본비용이라고'}}})
+    assert item['pain_point'] == {'text': '추가비용 불안', 'quote': '기본비용이라고', 'verified': True}
+
+
+@pytest.mark.parametrize('field,idx', [('body', None), ('title', None), ('comment', 0)])
+@pytest.mark.parametrize('pain_quote,verified', [('추가 비용', True), ('없는 인용', False)])
+def test_pain_quote_verified(field, idx, pain_quote, verified):
+    doc = {'body': '', 'title': '', 'comments': [{'text': ''}]}
+    if field == 'comment':
+        doc['comments'][idx]['text'] = '추가\n비용 때문에 불안'
+    else:
+        doc[field] = '추가\n비용 때문에 불안'
+    tag = {'pain_point': {'text': '비용 불안', 'quote': pain_quote},
+           'quotes': [{'field': field, 'idx': idx, 'text': '없는 일반 인용' if verified else '추가 비용'}]}
+    item = assembly._item('d', {'d': doc}, {'d': tag})
+    assert item['pain_point']['verified'] is verified
+    assert item['quote']['verified'] is not verified
+
+
+@pytest.mark.parametrize('pain,expected', [
+    (None, None), ({}, None), ({'text': '  ', 'quote': 'x'}, None),
+    ({'text': 'a', 'quote': 3}, {'text': 'a', 'quote': None, 'verified': False}),
+    ({'text': 'a', 'quote': None}, {'text': 'a', 'quote': None, 'verified': False}),
+])
+def test_pain_point_blank_becomes_none(pain, expected):
+    assert assembly._item('d', {'d': {}}, {'d': {'pain_point': pain}})['pain_point'] == expected
+
+
+def test_dump_omits_none_pain_point():
+    raw = assembly._item('d', {'d': {}}, {'d': {}})
+    item = EvidenceItem.model_validate(raw)
+    assert item.pain_point is None
+    assert 'pain_point' not in item.model_dump()
+    assert 'pain_point' not in json.loads(item.model_dump_json(by_alias=True))
+    assert 'pain_point' not in item.model_dump(mode='json', by_alias=True)
+    raw['pain_point'] = {'text': '불편', 'quote': None}
+    item = EvidenceItem.model_validate(raw)
+    assert item.model_dump(mode='json', by_alias=True)['pain_point'] == {
+        'text': '불편', 'quote': None, 'verified': False}
