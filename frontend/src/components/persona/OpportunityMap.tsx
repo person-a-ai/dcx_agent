@@ -34,8 +34,8 @@ function ZoneLayer({ base }: { base: PersonaMap['base'] }) {
       })}
   </g>;
 }
-export type OpportunityMapProps = { map: PersonaMap; highlightedId?: string | null; selectedPersonaId?: string | null; focusPersonaId?: string | null; compact?: boolean; onHighlight?: (id: string | null) => void; onSelect?: (id: string) => void; onOpenCard?: (personaId: string, contextId: string) => void };
-export function OpportunityMap({ map, highlightedId, selectedPersonaId, focusPersonaId, compact, onHighlight, onSelect, onOpenCard }: OpportunityMapProps) {
+export type OpportunityMapProps = { map: PersonaMap; highlightedId?: string | null; selectedId?: string | null; selectedPersonaId?: string | null; focusPersonaId?: string | null; compact?: boolean; onHighlight?: (id: string | null) => void; onSelect?: (id: string) => void; onOpenCard?: (personaId: string, contextId: string) => void };
+export function OpportunityMap({ map, highlightedId, selectedId, selectedPersonaId, focusPersonaId, compact, onHighlight, onSelect, onOpenCard }: OpportunityMapProps) {
   const [hiddenClusters, setHiddenClusters] = useState<string[]>([]);
   const validPoints = map.points.filter(point => point.i !== null && point.s !== null);
   const missingCount = map.points.length - validPoints.length;
@@ -52,15 +52,20 @@ export function OpportunityMap({ map, highlightedId, selectedPersonaId, focusPer
   const labelOffsets = new Map<string, number>();
   const placed: {x:number;y:number}[] = [];
   for (const point of [...validPoints].sort((a,b)=>a.context_id.localeCompare(b.context_id))) {
-    if (hiddenClusters.includes(point.cluster_id) || (point.context_id !== highlightedId && point.persona_id !== focusPersonaId)) continue;
+    if (hiddenClusters.includes(point.cluster_id) || (point.context_id !== highlightedId && point.context_id !== selectedId && point.persona_id !== focusPersonaId)) continue;
     const group = overlapGroups.get(`${point.i}:${point.s}`)!;
     const [dx,dy] = jitter(group.indexOf(point.context_id),group.length);
     const px=x(point.i!)+dx+12, py=y(point.s!)+dy;
-    let offset=-12;
-    for (let n=0; placed.some(label=>Math.abs(label.x-px)<72 && Math.abs(label.y-(py+offset))<12); n++) {
-      offset = n % 2 === 0 ? 12 + Math.floor(n/2)*12 : -24 - Math.floor(n/2)*12;
+    const clampY = (value: number) => Math.max(12, Math.min(420, value));
+    // Prefer the interior at either edge; all candidates include text height.
+    const direction = py < 36 ? 1 : -1;
+    const preferred = clampY(py + direction * 12);
+    const candidates = [preferred];
+    for (let step = 1; step <= 34; step++) {
+      candidates.push(clampY(preferred + direction * step * 12), clampY(preferred - direction * step * 12));
     }
-    placed.push({x:px,y:py+offset});labelOffsets.set(point.context_id,offset);
+    const labelY = candidates.find(candidate => !placed.some(label => Math.abs(label.x-px)<72 && Math.abs(label.y-candidate)<12)) ?? preferred;
+    placed.push({x:px,y:labelY});labelOffsets.set(point.context_id,labelY-py);
   }
   const lines = [ [[0,map.base.s_line],[1,map.base.s_line]], map.base.diag1, map.base.diag2 ];
   return <figure data-compact={compact || undefined} style={{ margin: 0, minWidth: 0 }}><figcaption className="ds-t-label">Opportunity Map · Context {formatCount(map.points.length)}개 · 기회 <ProvisionalBadge/></figcaption>
@@ -87,12 +92,13 @@ export function OpportunityMap({ map, highlightedId, selectedPersonaId, focusPer
         const [dx,dy] = jitter(group.indexOf(point.context_id), count);
         return <g key={point.context_id} data-context-id={point.context_id} data-highlighted={highlighted} data-shape={shape} opacity={focusPersonaId && focusPersonaId !== point.persona_id ? 0.25 : 1} transform={`translate(${x(point.i)+dx} ${y(point.s)+dy})`} fill={point.counter ? 'none' : color} stroke={color} strokeWidth={highlighted ? 3 : 2} style={{cursor:'pointer'}} onMouseEnter={() => onHighlight?.(point.context_id)} onMouseLeave={() => onHighlight?.(null)} onClick={() => {if (onSelect) onSelect(point.context_id); else {onHighlight?.(point.context_id); onOpenCard?.(point.persona_id,point.context_id);}}}>
           <title>{`${point.context_id} · ${point.persona_id} · ${zoneName(point.zone)} · 중요도 ${formatMetric(point.i)} · 만족도 ${formatMetric(point.s)} · 기회 ${formatMetric(point.odi)} (잠정)${point.counter ? " · 반례" : ""}${count > 1 ? ` · 겹친 Context ${formatCount(count)}개` : ""}`}</title>
+          {point.context_id === selectedId && <circle data-selected-marker="true" r={16} fill="none" strokeWidth={2}/>}
           {highlighted && <circle r={13} fill="none" strokeDasharray="3 2"/>}<Shape index={cluster}/>
           {point.star && <text x={-5} y={-14} fill={color} stroke="none">★</text>}{labelOffsets.has(point.context_id) && <text data-label={point.context_id} x={12} y={labelOffsets.get(point.context_id)} fill={color} stroke="none" fontSize={11}>{point.context_id}</text>}
         </g>;
       })}
     </svg>
-    <div aria-label="클러스터 범례" style={{display:'flex',flexWrap:'wrap',gap:8,marginTop:8}}>{clusters.map(cluster => <button key={cluster} data-cluster={cluster} aria-label={`Persona ${[...new Set(map.points.filter(p => p.cluster_id === cluster).map(p => p.persona_id))].join(', ')}`} title={legend.get(cluster)?.personas.map(p => p.persona_name).join(', ')} type="button" className="ds-chip" aria-pressed={!hiddenClusters.includes(cluster)} onClick={() => toggle(cluster)}>{symbols[shapes.indexOf(legend.get(cluster)?.shape ?? shapes[clusters.indexOf(cluster)])] || '●'} {cluster}{legend.get(cluster)?.cluster_label ? ` · ${legend.get(cluster)?.cluster_label}` : ''}</button>)}</div>
+    <div className="persona-map-legend" aria-label="클러스터 범례" style={{display:'flex',flexWrap:'wrap',gap:8,marginTop:8}}>{clusters.map(cluster => <button key={cluster} data-cluster={cluster} aria-label={`Persona ${[...new Set(map.points.filter(p => p.cluster_id === cluster).map(p => p.persona_id))].join(', ')}`} title={legend.get(cluster)?.personas.map(p => p.persona_name).join(', ')} type="button" className="ds-chip" aria-pressed={!hiddenClusters.includes(cluster)} onClick={() => toggle(cluster)}>{symbols[shapes.indexOf(legend.get(cluster)?.shape ?? shapes[clusters.indexOf(cluster)])] || '●'} {cluster}{legend.get(cluster)?.cluster_label ? ` · ${legend.get(cluster)?.cluster_label}` : ''}</button>)}</div>
     {missingCount > 0 && <p className="ds-t-caption">지도에 없는 Context {missingCount}개는 표에서 확인하세요.</p>}
     {map.points.length === 0 && <p className="ds-t-caption">기회 지도를 만들 Context가 없습니다.</p>}
     <p className="ds-t-caption">속 빈 모양 · 반례 Context / ★ 몰랐고 기회도 큰 지점 · 겹친 점은 아래 Context 표에서 각각 확인할 수 있습니다.</p>

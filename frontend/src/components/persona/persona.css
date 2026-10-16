@@ -109,3 +109,5 @@
 .persona-context-table th:nth-child(2),.persona-context-table td:nth-child(2){width:200px;white-space:normal;overflow-wrap:anywhere}
 .persona-context-table th:nth-child(9),.persona-context-table td:nth-child(9){width:200px;white-space:normal;overflow-wrap:anywhere}
 .persona-card-body [aria-busy="true"] .ds-skeleton{margin:12px 0}
+
+.persona-map-legend .ds-chip{min-height:44px}

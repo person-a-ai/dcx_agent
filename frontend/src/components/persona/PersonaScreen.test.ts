@@ -149,7 +149,7 @@ it('marks traces with no quote as unverified inference',()=>{
 });
 
 it('T8 preselects the highest opportunity and assembles a continuous card surface',()=>{
- let tree=draw();expect(nodes(tree).find(n=>n.type===OpportunityMap).props.highlightedId).toBe('C2');expect(text(nodes(tree).find(n=>n.props?.['aria-label']==='선택 Context 상세'))).toContain('C2');
+ let tree=draw();expect(nodes(tree).find(n=>n.type===OpportunityMap).props.selectedId).toBe('C2');expect(text(nodes(tree).find(n=>n.props?.['aria-label']==='선택 Context 상세'))).toContain('C2');
  button(tree,'Persona 카드').props.onClick();tree=draw();
  const all=nodes(tree);expect(all.find(n=>n.type===PersonaSummary)).toBeTruthy();
  expect(all.find(n=>n.type===OpportunityMap).props.focusPersonaId).toBe('P1');
@@ -270,4 +270,17 @@ it('RV6 shared ContextTable shows representative pain and wrapping fixed name co
  expect(cell.props.style).toMatchObject({width:180,minWidth:180,maxWidth:180,whiteSpace:'normal',overflowWrap:'anywhere'});
  const row=nodes(rendered).find(n=>n.type==='tr'&&text(n).includes('아주 긴 상황 이름')&&n.props.tabIndex===0);
  row.props.onClick();expect(button(draw(),'전체 맵').props['aria-pressed']).toBe(true);
+});
+
+it('RV7 preserves selected A and hovered B labels while detail stays A',()=>{
+ let tree=draw();
+ nodes(tree).find(n=>n.type===OpportunityMap).props.onSelect('C1');
+ tree=draw();nodes(tree).find(n=>n.type===OpportunityMap).props.onHighlight('C2');
+ tree=draw();const props=nodes(tree).find(n=>n.type===OpportunityMap).props;
+ expect(props.highlightedId).toBe('C2');expect(props.selectedId).toBe('C1');
+ const rendered=OpportunityMap(props);
+ expect(nodes(rendered).filter(n=>n.props?.['data-label']).map(n=>n.props['data-label'])).toEqual(['C1','C2']);
+ const selected=nodes(rendered).find(n=>n.props?.['data-context-id']==='C1');
+ expect(nodes(selected).some(n=>n.props?.['data-selected-marker'])).toBe(true);
+ expect(text(nodes(tree).find(n=>n.props?.['aria-label']==='선택 Context 상세'))).toContain('C1');
 });

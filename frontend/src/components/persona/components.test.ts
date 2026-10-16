@@ -431,3 +431,25 @@ it('RV2 separates nearby focused labels deterministically',()=>{
  expect(labels[0].props.y).not.toBe(labels[1].props.y);
  expect(nodes(draw(OpportunityMap,props),e=>!!e.props['data-label']).map(e=>e.props.y)).toEqual(labels.map(e=>e.props.y));
 });
+
+it.each([1,0])('RV8 keeps three coincident focused labels inside the viewBox at s=%s',s=>{
+ const tree=draw(OpportunityMap,{map:map(['C1','C2','C3'].map(id=>({...point(id),s}))),focusPersonaId:'P1'});
+ const positions=nodes(tree,e=>!!e.props['data-context-id']).map(dot=>{
+   const label=nodes(dot,e=>!!e.props['data-label'])[0];
+   const [,px,py]=String(dot.props.transform).match(/translate\(([^ ]+) ([^)]+)\)/)!;
+   const x=Number(px)+Number(label.props.x), y=Number(py)+Number(label.props.y);
+   expect(x).toBeGreaterThanOrEqual(0);expect(x).toBeLessThanOrEqual(600);
+   expect(y).toBeGreaterThanOrEqual(12);expect(y).toBeLessThanOrEqual(420);
+   return y;
+ });
+ for(let i=0;i<positions.length;i++) for(let j=i+1;j<positions.length;j++) expect(Math.abs(positions[i]-positions[j])).toBeGreaterThanOrEqual(12);
+});
+
+it('RV9 gives ContextTable actions and scoped map legend chips 44px touch targets',()=>{
+ const tree=draw(ContextTable,{rows:[point('C1')],onOpenCard:vi.fn()});
+ const action=nodes(tree,e=>e.type==='button' && e.props.children==='카드 열기')[0];
+ expect((action.props.style as {minHeight:number}).minHeight).toBeGreaterThanOrEqual(44);
+ const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+ expect(css).toMatch(/\.persona-map-legend\s+\.ds-chip\s*\{[^}]*min-height:\s*44px/);
+ expect(nodes(draw(OpportunityMap,{map:map([point('C1')])}),e=>e.props.className==='persona-map-legend')).toHaveLength(1);
+});
