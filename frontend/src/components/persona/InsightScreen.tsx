@@ -74,14 +74,24 @@ export function InsightScreen({sid,version,readonly = false,initialConfirmed = [
  const index = Math.max(0, insightItems.findIndex(item => item.id === selected));
  const item = insightItems[index];
  const selectedId = item?.id ?? '';
- const chatTarget: InsightTarget = !target || target.startsWith('insight:') ? `insight:${selectedId}` : target;
+ const usableConcept = data?.concepts.items.some(row => (row.insight_id ?? row.id) === selectedId && !row.outdated);
+ const chatTarget: InsightTarget = target === 'insights' ? target : target.startsWith('concept:') && usableConcept ? `concept:${selectedId}` : `insight:${selectedId}`;
  const focusId = chatTarget === 'insights' ? selectedId : chatTarget.slice(chatTarget.indexOf(':') + 1);
  const concept = concepts.find(row => (row.insight_id ?? row.id) === selectedId);
  const view = item ? toInsightView(item,data?.summary) : null;
  const historicalInsights = preview !== null && insightTarget;
  const mean = historicalInsights ? radarMean(insightItems) : data?.summary?.radar_mean ?? null;
  const controlsDisabled = disabled || preview !== null;
- const navigate = (next: number) => {if (insightItems[next]) setSelected(insightItems[next].id);};
+ const navigate = (next: number) => {
+  const nextId = insightItems[next]?.id;
+  if (!nextId) return;
+  setSelected(nextId);
+  if (target.startsWith('concept:')) {
+   const available = data?.concepts.items.some(row => (row.insight_id ?? row.id) === nextId && !row.outdated);
+   setTarget(available ? `concept:${nextId}` : `insight:${nextId}`);
+   setPreview(null);
+  }
+ };
  const derive = (fresh = false) => {
   if (controlsDisabled || pending) return Promise.resolve();
   return mutate(async () => {
@@ -99,7 +109,7 @@ export function InsightScreen({sid,version,readonly = false,initialConfirmed = [
   {readonly && <p>읽기 전용</p>}{((pending && !failureVisible) || running) && <p role="status">처리 중…</p>}
   {error && <div role="alert">{error}<Button onClick={() => setRetry(value => value+1)}>다시 불러오기</Button></div>}
   {!data && !error && <p role="status">불러오는 중…</p>}
-  {failureVisible && <div role="alert"><p>{worker.mode === 'concept' ? '컨셉을 만들지 못했습니다. 다시 시도하세요.' : '인사이트를 만들지 못했습니다. 다시 시도하세요.'}</p>{worker.reason && <p>{worker.reason}</p>}<Button disabled={disabled} onClick={() => void mutate(async () => {const mode = worker.mode ?? 'derive';const run = await api.startInsight(sid,{mode,...(worker.target ? {target:worker.target} : {})},version);setPending({runId:run.runId,mode,target:worker.target ?? undefined});})}>{worker.status === 'interrupted' ? '이어서 진행' : '다시 시도'}</Button></div>}
+  {failureVisible && <div role="alert"><p>{worker.mode === 'concept' ? '컨셉을 만들지 못했습니다. 다시 시도하세요.' : '인사이트를 만들지 못했습니다. 다시 시도하세요.'}</p>{worker.reason && <p>{worker.reason}</p>}<Button disabled={disabled} onClick={() => void mutate(async () => {const mode = worker.mode ?? 'derive';const run = await api.startInsight(sid,{mode,...(worker.fresh !== undefined ? {fresh:worker.fresh} : {}),...(worker.target ? {target:worker.target} : {})},version);setPending({runId:run.runId,mode,target:worker.target ?? undefined});})}>{worker.status === 'interrupted' ? '이어서 진행' : '다시 시도'}</Button></div>}
   {data && !insightItems.length && !pending && !running && !stopped && <p role="status">페르소나를 바탕으로 인사이트를 도출하세요.</p>}
   {preview !== null && <p role="status">판 {preview} 보기 <Button onClick={() => setPreview(null)}>현재 판으로</Button></p>}
   {item && view && <>

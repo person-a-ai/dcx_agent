@@ -78,7 +78,7 @@ def run(context):
         if mode == 'concept' and (not isinstance(targets, list) or not targets or
                 any(not isinstance(i, str) or i not in ids for i in targets)):
             raise sessions.StoreError('Unknown insight target', 400, 'validation')
-        publish_status(sid, version, 'running', run=context.run_id, reason=None, mode=mode, target=target)
+        publish_status(sid, version, 'running', run=context.run_id, reason=None, mode=mode, target=target, fresh=bool(context.args.get('fresh', False)))
 
         def pulse():
             if context.should_stop():
@@ -107,9 +107,24 @@ def run(context):
             pulse()
             if mode == 'derive':
                 if context.args.get('fresh', False) or not current.get('revision'):
-                    derive(sid, version, run_task=call,
-                        embedder=known.session_embedder(
-                            sid, data, get_embedder), before_publish=source.check)
+                    try:
+                        derive(sid, version, run_task=call,
+                            embedder=known.session_embedder(
+                                sid, data, get_embedder), before_publish=source.check)
+                    finally:
+                        # A saved fresh revision must clear confirmations even if
+                        # derive or the following pulse fails after publication.
+                        if context.args.get('fresh', False):
+                            with sessions.locked(sid):
+                                latest = store.read('insights') or {}
+                                if latest.get('revision', 0) > current.get('revision', 0):
+                                    path = version_dir(sid, version) / 'session.json'
+                                    session = sessions.read_json(path)
+                                    state = session.setdefault('insight', {})
+                                    current_ids = set(ids) | {row['id'] for row in latest.get('items', [])}
+                                    state['confirmed_ids'] = [i for i in state.get('confirmed_ids', state.get('confirmed', [])) if i not in current_ids]
+                                    state['confirmed'] = []
+                                    sessions.write_json(path, session)
             else:
                 for insight_id in dict.fromkeys(targets):
                     pulse()
@@ -119,13 +134,7 @@ def run(context):
                     if insight_id not in done:
                         make_concept(sid, version, insight_id, run_task=call, before_publish=source.check)
             pulse()
-            values = {}
-            if mode == 'derive' and context.args.get('fresh', False):
-                state = sessions.load_session(sid).get('insight', {})
-                current_ids = set(ids) | {row['id'] for row in (store.read('insights') or {}).get('items', [])}
-                values = dict(confirmed=[], confirmed_ids=[i for i in state.get('confirmed_ids', state.get('confirmed', []))
-                                                          if i not in current_ids])
-            publish_status(sid, version, 'done', before_publish=source.check, **values)
+            publish_status(sid, version, 'done', before_publish=source.check)
             context.heartbeat(1, {'mode': mode})
         except _Stopped:
             publish_status(sid, version, 'interrupted')

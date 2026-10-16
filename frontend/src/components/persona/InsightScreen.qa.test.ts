@@ -54,8 +54,16 @@ it.each(['readonly','busy','pending','running','preview'])('rederive is disabled
  await header.props.onRederive();
  expect(api.startInsight).not.toHaveBeenCalled();
 });
-it('concept chat keeps its target and matching focus id while paging',()=>{
- h.values[3]='concept:I2';props(InsightTopBar).onNext();
- expect(props(InsightChatBar).target).toBe('concept:I2');
- expect(props(InsightChatBar).focusId).toBe('I2');
+it.each([false,true,null])('concept paging follows selection or falls back (outdated %s)',outdated=>{
+ h.values[3]='concept:I2';data.concepts.items=outdated===null?[]:[{insight_id:'I3',outdated}];props(InsightTopBar).onNext();
+ expect(props(InsightChatBar).target).toBe(outdated===false?'concept:I3':'insight:I3');
+ expect(props(InsightChatBar).focusId).toBe('I3');
+ expect(h.values[3]).toBe(outdated===false?'concept:I3':'insight:I3');
+ expect(props(InsightChatBar).revisions.currentRevision).toBe(outdated===false?0:2);
+});
+it('retry resends fresh worker flag',async()=>{
+ data.worker={status:'interrupted',mode:'derive',fresh:true};
+ const button=nodes(draw()).find(n=>text(n)==='이어서 진행' && n.props?.onClick);
+ await button.props.onClick();
+ expect(api.startInsight).toHaveBeenCalledWith('s',{mode:'derive',fresh:true},'v2');
 });

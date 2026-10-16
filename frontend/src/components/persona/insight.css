@@ -17,7 +17,7 @@
 .insight-bar { width: 32px; background: var(--action); position: relative; }
 .insight-bar-value { position: absolute; bottom: 100%; width: 100%; text-align: center; font: var(--type-label); color: var(--ink-strong); }
 .insight-bar-label { padding: 6px 4px 0; text-align: center; overflow-wrap: anywhere; font: var(--type-caption); }
-.insight-bar-label span { display: block; }
+.insight-bar-label .insight-bar-short { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .insight-flow { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 12px 0; }
 .insight-flow-step { display: flex; align-items: center; flex: 0 0 25%; min-width: 0; }
 .insight-flow-card { border: 1px solid var(--line); padding: 12px; flex: 1; min-width: 0; align-self: stretch; }

@@ -22,7 +22,7 @@ export function InsightChatBar({target,onTarget,conceptAvailable,focusLabel,focu
       <option value={`insight:${id}`} disabled={!id}>현재 인사이트</option><option value="insights">인사이트 목록</option><option value={`concept:${id}`} disabled={!conceptAvailable || !id}>선택 컨셉</option>
     </select></label>
     <p className="insight-focus">{label}</p>
-    <ChatPanel initialMessage="수정할 내용을 알려 주세요." suggestions={chips} readonly={disabled} onSend={onSend}/>
+    <ChatPanel key={target} initialMessage="수정할 내용을 알려 주세요." suggestions={chips} readonly={disabled} onSend={onSend}/>
     <button type="button" className="ds-btn insight-hit" disabled={historyCount === 0} aria-expanded={historyOpen && historyCount > 0} aria-controls={historyId} onClick={() => setHistoryOpen(!historyOpen)}>대화 기록 {historyCount}</button>
     {historyOpen && historyCount > 0 && <div id={historyId}><RevisionList {...revisions}/></div>}
   </section>;

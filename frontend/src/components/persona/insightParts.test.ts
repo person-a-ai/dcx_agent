@@ -57,3 +57,5 @@ it.each(['cancel','escape','confirm'])('rederive %s restores focus to its trigge
 it('rederive trigger is disabled while rederive is disabled',()=>{
   reset();expect(render(h(InsightHeader,{...header,view:{...view,legacy:true},rederiveDisabled:true}))).toMatch(/disabled[^>]*>다시 도출/);
 });
+
+it('chat transcript is keyed by target',()=>{for(const target of ['insight:I2','concept:I3','insights'] as const){reset();const panel=nodes(InsightChatBar({...chat,target})).find(n=>n.type===ChatPanel);expect(panel.key).toBe(target);}});

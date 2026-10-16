@@ -41,7 +41,7 @@ it('axis badge hidden when null and dim null shows 근거 부족',()=>{
 it('no hardcoded colors',()=>{for(const file of ['Radar.tsx','OpportunityBars.tsx','InsightFlow.tsx','insight.css']) expect(readFileSync(new URL(file,import.meta.url),'utf8')).not.toMatch(/#[0-9a-fA-F]{3,6}/);});
 it('bars mean label is in the header outside bar columns',()=>{
  const html = bars([{...rows[1],value:2.34}],2.34);
- expect(html).toMatch(/<figcaption>Opportunity Score<span class="insight-bars-mean-label">평균 2.3<\/span><\/figcaption>/);
+ expect(html).toMatch(/<figcaption>Opportunity Score.*<span class="insight-bars-mean-label">평균 2.3<\/span><\/figcaption>/);
  const grid = html.slice(html.indexOf('class="insight-bars-grid"'));
  expect(grid).not.toContain('insight-bars-mean-label');
  expect(grid).not.toContain('>평균 2.3<');
@@ -61,3 +61,7 @@ it('radar legend uses the caption text color',()=>{
  const css = readFileSync(new URL('./insight.css',import.meta.url),'utf8');
  expect(css).toMatch(/\.insight-chart-legend\s*\{[^}]*color:\s*var\(--sub\)/);
 });
+
+it('bars scroll region is keyboard reachable and named',()=>{expect(bars()).toMatch(/tabindex="0" role="group" aria-label="[^"]+"/);});
+it('bar labels clamp with full title',()=>{const html=bars();expect(html).toContain('class="insight-bar-short" title="C1"');expect(html).toContain('class="insight-clamp-2" title="러너-C1"');});
+it('charts show provisional badges',()=>{expect(radar()).toContain('잠정');expect(bars()).toContain('잠정');});

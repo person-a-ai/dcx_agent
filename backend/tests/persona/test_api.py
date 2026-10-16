@@ -88,7 +88,7 @@ def test_insight_routes(api, monkeypatch):
     assert empty == dict(insights=dict(revision=0, items=[], history=[]),
                          concepts=dict(revision=0, items=[], history=[]), bars=None, radar=None,
                          summary=dict(context_odi_mean=pytest.approx(.5372727272727272), radar_mean=None),
-                         worker=dict(status='idle', reason=None, runId=None, mode=None, target=None))
+                         worker=dict(status='idle', reason=None, runId=None, mode=None, target=None, fresh=False))
     generate(api)
     assert ok(api.client.post(base + '/run', json={'mode': 'derive'})) == {'runId': 'worker-1'}
     item = dict(id='I1', title='Title', pain_point='Pain', context_ids=['C1'], known_ki_id=None,

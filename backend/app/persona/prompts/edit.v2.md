@@ -11,7 +11,8 @@ insights 대상은 derive.v2의 새 필드 headline, statements, hashtags, flow�
 예전 항목은 새 필드 4개를 모두 생략하거나 모두 채우세요. 이미 새 필드가 있던 항목은 생략하지 마세요.
 headline: 사용자 말투의 한 줄(20자 안팎), 따옴표 없이 1~30자.
 statements: 정확히 2개, 각 1~70자. 1번은 원하는 것, 2번은 막히는 점·바라는 해결.
-hashtags: 2~4개, # 없이 명사형 짧은 단어.
+hashtags: 중복 없이 2~4개, # 없이 명사형 짧은 단어.
+flow text: 각 문장은 1~80자.
 flow: context_ids 중 경험이 이어지는 순서로 고르고 사용자 1인칭 한 문장으로 쓰세요.
 context_ids를 바꾸면 flow도 맞춰 고치세요. 중복 없이 Context가 하나면 1개, 그 외에는 2개 이상 고르세요.
 headline·statements는 title·pain_point와 같은 내용을 짧게 다시 쓴 것입니다.

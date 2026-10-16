@@ -299,6 +299,7 @@ def _insight_worker(sid, data):
     reason = state.get('reason')
     run_id = state.get('run')
     mode, target = state.get('mode'), state.get('target')
+    fresh = bool(state.get('fresh', False))
     # A reset removes the pipeline run; old terminal supervisor rows are history.
     if work and ((run_id and work.get('runId') == run_id) or work['state'] in ('running', 'paused')):
         same = work.get('runId') == run_id
@@ -309,6 +310,7 @@ def _insight_worker(sid, data):
         reason = reason if same else None
         if not same:
             mode, target = None, None
+            fresh = False
         from app.work.status import database_path, transaction
         if database_path(sid).exists():
             with transaction(sid) as db:
@@ -316,6 +318,7 @@ def _insight_worker(sid, data):
             if row:
                 args = json.loads(row[0])
                 mode, target = args.get('mode'), args.get('target')
+                fresh = bool(args.get('fresh', False))
     if status == 'paused':
         status = 'running'
     if status not in ('idle', 'running', 'done', 'failed', 'interrupted'):
@@ -324,4 +327,4 @@ def _insight_worker(sid, data):
         reason = (insights.CONCEPT_FAILURE_COPY if mode == 'concept' else insights.FAILURE_COPY) if status == 'failed' else '작업이 중단되었습니다. 이어서 진행하세요.'
     if status in ('idle', 'running', 'done'):
         reason = None
-    return dict(status=status, reason=reason, runId=run_id, mode=mode, target=target)
+    return dict(status=status, reason=reason, runId=run_id, mode=mode, target=target, fresh=fresh)

@@ -307,7 +307,7 @@ export type InsightContextView = {
 };
 export type InsightSummary = {
   context_odi_mean: number | null;
-  radar_mean: Record<'Computed' | 'Connected' | 'Shared', number> | null;
+  radar_mean: Record<'Computed' | 'Connected' | 'Shared', number | null> | null;
 };
 export type InsightItem = {
   id: string; title: string; pain_point: string; context_ids: string[]; known_ki_id: string | null;
@@ -329,7 +329,7 @@ export type InsightConcept = {
 export type InsightRevision<T> = { revision: number; items: T[]; history: Record<string, unknown>[] };
 export type InsightBars = { bars: unknown; mean: number | null; targets: string[] };
 export type InsightRadar = Record<string, unknown>;
-export type InsightWorker = { status: 'idle' | 'running' | 'done' | 'failed' | 'interrupted'; reason: string | null; runId: string | null; mode: 'derive' | 'concept' | null; target: string | null };
+export type InsightWorker = { fresh?: boolean; status: 'idle' | 'running' | 'done' | 'failed' | 'interrupted'; reason: string | null; runId: string | null; mode: 'derive' | 'concept' | null; target: string | null };
 export type InsightResponse = {
   worker: InsightWorker;
   /** Authoritative selection loaded from the selected version session by the API client. */
