@@ -472,3 +472,20 @@ it('F7 reduces mobile pain typography and indentation while hiding the duplicate
  expect(css).toContain('.persona-pain-text,.persona-pain-item::marker{font:var(--type-card)}');
  expect(css).toContain('.persona-summary-header h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}');
 });
+
+
+it.each([1, 0])('keeps focused point labels horizontally inside the viewBox at i=%s', i => {
+ const id = 'CL1-P2-C1';
+ const props = {map: map([{...point(id), i}]), focusPersonaId: 'P1'};
+ const tree = draw(OpportunityMap, props);
+ const dot = nodes(tree, e => e.props['data-context-id'] === id)[0];
+ const label = nodes(dot, e => e.props['data-label'] === id)[0];
+ const px = Number(String(dot.props.transform).match(/translate\(([^ ]+)/)![1]);
+ const anchorX = px + Number(label.props.x);
+ const width = id.length * 6.5;
+ const left = anchorX - (label.props.textAnchor === 'end' ? width : 0);
+ expect(left).toBeGreaterThanOrEqual(4);
+ expect(left + width).toBeLessThanOrEqual(596);
+ expect(label.props.textAnchor ?? 'start').toBe(i === 1 ? 'end' : 'start');
+ expect(nodes(draw(OpportunityMap, props), e => e.props['data-label'] === id)[0].props).toEqual(label.props);
+});

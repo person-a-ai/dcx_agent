@@ -78,11 +78,17 @@ export function OpportunityMap({ map, highlightedId, selectedId, selectedPersona
         const group = overlapGroups.get(`${point.i}:${point.s}`)!;
         const count = group.length;
         const [dx,dy] = jitter(group.indexOf(point.context_id), count);
+        const px = x(point.i) + dx;
+        const labelWidth = point.context_id.length * 6.5;
+        const labelAnchor = px + 12 + labelWidth > 596 ? 'end' : 'start';
+        const labelX = labelAnchor === 'end'
+          ? Math.max(4 + labelWidth, Math.min(596, px - 12)) - px
+          : Math.max(4, Math.min(596 - labelWidth, px + 12)) - px;
         return <g key={point.context_id} data-context-id={point.context_id} data-highlighted={highlighted} data-shape={shape} opacity={focusPersonaId && focusPersonaId !== point.persona_id ? 0.25 : 1} transform={`translate(${x(point.i)+dx} ${y(point.s)+dy})`} fill={point.counter ? 'none' : color} stroke={color} strokeWidth={highlighted ? 3 : 2} style={{cursor:'pointer'}} onMouseEnter={() => onHighlight?.(point.context_id)} onMouseLeave={() => onHighlight?.(null)} onClick={() => {if (onSelect) onSelect(point.context_id); else {onHighlight?.(point.context_id); onOpenCard?.(point.persona_id,point.context_id);}}}>
           <title>{`${point.context_id} · ${point.persona_id} · ${zoneName(point.zone)} · 중요도 ${formatMetric(point.i)} · 만족도 ${formatMetric(point.s)} · 기회 ${formatMetric(point.odi)} (잠정)${point.counter ? " · 반례" : ""}${count > 1 ? ` · 겹친 Context ${formatCount(count)}개` : ""}`}</title>
           {point.context_id === selectedId && <circle data-selected-marker="true" r={16} fill="none" strokeWidth={2}/>}
           {highlighted && <circle r={13} fill="none" strokeDasharray="3 2"/>}<Shape index={cluster}/>
-          {point.star && <text x={-5} y={-14} fill={color} stroke="none">★</text>}{labelOffsets.has(point.context_id) && <text data-label={point.context_id} x={12} y={labelOffsets.get(point.context_id)} fill={color} stroke="none" fontSize={11}>{point.context_id}</text>}
+          {point.star && <text x={-5} y={-14} fill={color} stroke="none">★</text>}{labelOffsets.has(point.context_id) && <text data-label={point.context_id} textAnchor={labelAnchor} x={labelX} y={labelOffsets.get(point.context_id)} fill={color} stroke="none" fontSize={11}>{point.context_id}</text>}
         </g>;
       })}
     </svg>
