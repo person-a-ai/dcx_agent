@@ -4,15 +4,19 @@
   "fingerprint": "03969745920e44b9bcd69493585d0a1f6eeeb13cd339823188b96c936f00e068",
   "commands": [
     {
-      "command": "backend/.venv/bin/python -m pytest backend/tests -q -n 6",
-      "exitCode": 0
-    },
-    {
       "command": "npm --prefix frontend test",
       "exitCode": 0
     },
     {
+      "command": "npm --prefix frontend run lint",
+      "exitCode": 0
+    },
+    {
       "command": "npm --prefix frontend run build",
+      "exitCode": 0
+    },
+    {
+      "command": "backend/.venv/bin/python -m pytest backend/tests -q -n 6",
       "exitCode": 0
     }
   ],
@@ -81,6 +85,14 @@
       "red": "docs/development/stage6-8-visual-redesign/tasks/T8.md#RED",
       "green": "docs/development/stage6-8-visual-redesign/tasks/T8.md#GREEN",
       "review": "docs/development/stage6-8-visual-redesign/tasks/orchestrator-checks.md#T8"
+    },
+    {
+      "id": "FIX1",
+      "executor": "codex",
+      "dispatch": "/Users/tech/.claude/projects/-Users-tech-code-dcx-agent-stage6-8-visual-redesign/61d816c1-f265-4ba3-be77-d8b59b133f0c/subagents/agent-adaee2fd4becd2749.jsonl",
+      "red": "docs/development/stage6-8-visual-redesign/tasks/fix-1.md#RED",
+      "green": "docs/development/stage6-8-visual-redesign/tasks/fix-1.md#GREEN",
+      "review": "docs/development/stage6-8-visual-redesign/review-findings.md"
     }
   ]
 }
