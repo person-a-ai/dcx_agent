@@ -106,7 +106,7 @@ def run(context):
             source = Source(sid, version)
             pulse()
             if mode == 'derive':
-                if not current.get('revision'):
+                if context.args.get('fresh', False) or not current.get('revision'):
                     derive(sid, version, run_task=call,
                         embedder=known.session_embedder(
                             sid, data, get_embedder), before_publish=source.check)
@@ -119,7 +119,13 @@ def run(context):
                     if insight_id not in done:
                         make_concept(sid, version, insight_id, run_task=call, before_publish=source.check)
             pulse()
-            publish_status(sid, version, 'done', before_publish=source.check)
+            values = {}
+            if mode == 'derive' and context.args.get('fresh', False):
+                state = sessions.load_session(sid).get('insight', {})
+                current_ids = set(ids) | {row['id'] for row in (store.read('insights') or {}).get('items', [])}
+                values = dict(confirmed=[], confirmed_ids=[i for i in state.get('confirmed_ids', state.get('confirmed', []))
+                                                          if i not in current_ids])
+            publish_status(sid, version, 'done', before_publish=source.check, **values)
             context.heartbeat(1, {'mode': mode})
         except _Stopped:
             publish_status(sid, version, 'interrupted')

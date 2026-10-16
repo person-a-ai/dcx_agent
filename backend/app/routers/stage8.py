@@ -23,7 +23,7 @@ from app.work import runner
 
 router = APIRouter(route_class=LabelRoute)
 Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
-Target = Annotated[str, StringConstraints(pattern=r'^(insights|concept:.+)$')]
+Target = Annotated[str, StringConstraints(pattern=r'^(insights|concept:.+|insight:.+)$')]
 
 
 class Body(BaseModel):
@@ -40,11 +40,13 @@ class Retry(Body):
 
 
 class InsightRun(Body):
+    fresh: bool = False
     mode: Literal['derive', 'concept']
     target: Text | None = None
 
 
 class Chat(Body):
+    focus_id: Text | None = None
     target: Target
     message: Text
 
@@ -274,7 +276,7 @@ def create_concept(sid: str, item_id: str, version: str | None = None):
 @router.post('/insight/{sid}/chat')
 def edit_insight(sid: str, body: Chat, version: str | None = None):
     data, _ = _open(sid, version, writable=True)
-    return chat.edit(sid, data['version'], body.target, body.message)
+    return chat.edit(sid, data['version'], body.target, body.message, focus_id=body.focus_id)
 
 
 @router.post('/insight/{sid}/revert')

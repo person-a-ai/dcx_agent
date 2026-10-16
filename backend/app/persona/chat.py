@@ -2,14 +2,15 @@
 import json
 from pathlib import Path
 
+from pydantic import BaseModel
+
 from app.context import store as sessions
 from app.known import store as known
 from app.persona.source import Source, require_persona
 from app.llm.base import Attachment, LLMTask
 from app.persona import concepts, insights, prescribe
 from app.persona.insight_pipeline import serialized, publish_status
-from app.persona.package import load_package
-from app.persona.params import INSIGHT_RANGE
+from app.persona.package import load_package, PackageMissing
 from app.persona.store import PersonaStore
 from app.vectors.embedder import get_embedder
 
@@ -18,10 +19,16 @@ FAILURE_COPY = '요청을 반영하지 못했습니다. 다르게 말해 주세�
 
 def _target(target):
     if target == 'insights':
-        return 'insights', None
+        return 'insights', None, 'list'
     if isinstance(target, str) and target.startswith('concept:') and target[8:]:
-        return 'concepts', target[8:]
+        return 'concepts', target[8:], 'concept'
+    if isinstance(target, str) and target.startswith('insight:') and target[8:]:
+        return 'insights', target[8:], 'item'
     raise ValueError('Invalid chat target')
+
+
+class ItemOut(BaseModel):
+    item: insights.EditItem
 
 
 def _concept_draft(item):
@@ -30,7 +37,7 @@ def _concept_draft(item):
         journey=[{key: row[key] for key in concepts.JourneyRow.model_fields} for row in item['journey']])
 
 
-def edit(sid, version, target: str, message: str, *, run_task=None) -> dict:
+def edit(sid, version, target: str, message: str, *, focus_id: str | None = None, run_task=None) -> dict:
     require_persona(sessions.assert_writable(sid, version))
     with serialized(sid):
         source = Source(sid, version)
@@ -41,14 +48,28 @@ def edit(sid, version, target: str, message: str, *, run_task=None) -> dict:
             from app.persona.pipeline import _Calls
             run_task = _Calls(store.path, lambda: None).run_task
         try:
-            name, insight_id = _target(target)
+            name, insight_id, mode = _target(target)
             current = store.read(name)
+            if mode == 'item' and not any(row['id'] == insight_id for row in (current or {}).get('items', [])):
+                raise sessions.StoreError('Unknown insight target', 400, 'validation')
             if not current or not isinstance(message, str) or not message.strip():
                 raise ValueError('Missing input')
-            package = load_package(sid, version)
+            try:
+                package = load_package(sid, version)
+            except PackageMissing:
+                package = None
             payload = dict(current=current, message=message, target=target)
-            schema = insights.DeriveOut
-            if insight_id is not None:
+            schema = insights.EditOut
+            if name == 'insights':
+                context_ids = [c.context_id for b in package.personas for c in b.context_evidence] if package else []
+                payload['contexts'] = [{key: row[key] for key in ('context_id', 'context_name', 'pain_point')}
+                    for row in insights.context_view(package, store.read('cards'), {'context_ids': context_ids})]
+                if mode == 'item':
+                    payload['item_id'] = insight_id
+                    schema = ItemOut
+                elif focus_id in {row['id'] for row in current['items']}:
+                    payload['focus_id'] = focus_id
+            if mode == 'concept':
                 item = next(row for row in current['items'] if row['id'] == insight_id)
                 insight = next(row for row in store.read('insights')['items'] if row['id'] == insight_id)
                 contexts, _, refs, owners = concepts._inputs(package, insight)
@@ -56,7 +77,7 @@ def edit(sid, version, target: str, message: str, *, run_task=None) -> dict:
                     evidence={n: ref.model_dump() for n, ref in refs.items()})
                 schema = concepts.ConceptOut
             task = LLMTask(task='insight.edit', sid=sid,
-                instructions=Path(__file__).with_name('prompts').joinpath('edit.v1.md').read_text(encoding='utf-8'),
+                instructions=Path(__file__).with_name('prompts').joinpath('edit.v2.md').read_text(encoding='utf-8'),
                 attachments=[Attachment(title='현재 판과 수정 요청', body=json.dumps(payload, ensure_ascii=False))],
                 output_schema=schema)
             result = run_task(task)
@@ -64,15 +85,18 @@ def edit(sid, version, target: str, message: str, *, run_task=None) -> dict:
                 raise ValueError('Invalid edit schema')
             draft = result.data.model_dump()
             if name == 'insights':
-                items = draft['items']
-                available = {c.context_id for b in package.personas for c in b.context_evidence}
-                if (not INSIGHT_RANGE[0] <= len(items) <= INSIGHT_RANGE[1]
-                        or len({row['id'] for row in items}) != len(items)
-                        or any(not set(row['context_ids']) <= available or
-                               len(set(row['context_ids'])) != len(row['context_ids']) for row in items)):
-                    raise ValueError('Invalid insight references')
+                if mode == 'item':
+                    draft['item']['id'] = insight_id
+                    items = [draft['item'] if row['id'] == insight_id else row for row in current['items']]
+                else:
+                    items = draft['items']
+                available = {c.context_id for b in package.personas for c in b.context_evidence} if package else set()
+                items = insights.validate_items(items, available, require_new=False, previous=current['items'])
                 embedder = known.session_embedder(sid, sessions.assert_writable(sid, version), get_embedder)
                 insights.recompute(sid, version, items, package=package, embedder=embedder)
+                if mode == 'item':
+                    items = [row if row['id'] == insight_id else old
+                             for row, old in zip(items, current['items'])]
             else:
                 if (any(n not in refs for n in draft['pain_points']) or
                         any(row['context_id'] not in insight['context_ids'] for row in draft['journey'])):
@@ -111,8 +135,8 @@ def revert(sid, version, target: str, revision: int) -> dict:
         source.check()
         store = PersonaStore.open(sid, version)
         store.guard = source.check
-        name, insight_id = _target(target)
-        if insight_id is None:
+        name, insight_id, mode = _target(target)
+        if name == 'insights':
             number = store.revert(name, revision)
         else:
             current = store.read(name) or {}

@@ -308,6 +308,7 @@ def test_completion_reconciles_changed_confirmations(setup):
 def test_concept_revert_cannot_restore_obsolete_source(ready):
     concept(ready)
     ready[2][0]['context_ids'] = ['CL0-P0-C1']
+    ready[2][0]['flow'] = [dict(context_id='CL0-P0-C1', text='불편하다')]
     assert edit(ready, {'items': ready[2]})['ok']
     session = ready[0]
     chat.revert(session.sid, session.version, 'concept:I1', 1)

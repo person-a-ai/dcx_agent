@@ -100,11 +100,11 @@ def test_insight_routes(api, monkeypatch):
     assert response['bars'] == dict(bars=[{'id': 'I1', 'odi': 4}], mean=4, targets=['I1'])
     assert response['radar'] == {'I1': item['radar']}
     assert ok(api.client.post(base + '/concept/I1')) == {'runId': 'worker-1'}
-    assert api.calls[-1] == ('insight', {'mode': 'concept', 'target': 'I1'})
+    assert api.calls[-1] == ('insight', {'fresh': False, 'mode': 'concept', 'target': 'I1'})
     error(api.client.post(base + '/concept/missing'), 400, 'validation')
     from app.persona import chat
     seen = []
-    monkeypatch.setattr(chat, 'edit', lambda *a: seen.append(a) or {'ok': True, 'revision': 2})
+    monkeypatch.setattr(chat, 'edit', lambda *a, **kw: seen.append(a) or {'ok': True, 'revision': 2})
     assert ok(api.client.post(base + '/chat', json={'target': 'insights', 'message': 'edit'})) == {'ok': True, 'revision': 2}
     assert seen == [(api.sid, 'v1', 'insights', 'edit')]
     assert ok(api.client.post(base + '/revert', json={'target': 'insights', 'revision': 1})) == {'revision': 2}
@@ -266,3 +266,31 @@ def test_get_insights_without_package(api, legacy_insights):
         axis=None, dim=None, counter=False, pain_point=None)]
     assert response['summary']['context_odi_mean'] is None
     assert calls == []
+
+
+def test_chat_accepts_focus_id_and_item_target(api, monkeypatch):
+    from app.persona import chat
+    generate(api)
+    seen = []
+    monkeypatch.setattr(chat, 'edit', lambda *a, **kw: seen.append((a, kw)) or {'ok': True})
+    for target, extra in [('insights', {'focus_id': 'I1'}), ('insights', {}), ('insight:I1', {})]:
+        ok(api.client.post(f'/insight/{api.sid}/chat', json=dict(target=target, message='m', **extra)))
+    assert seen[0][1] == {'focus_id': 'I1'}
+    assert seen[1][1].get('focus_id') is None
+
+
+def test_run_accepts_fresh(api):
+    generate(api)
+    ok(api.client.post(f'/insight/{api.sid}/run', json={'mode': 'derive', 'fresh': True}))
+    assert api.calls[-1] == ('insight', {'mode': 'derive', 'fresh': True})
+
+
+def test_item_target_unknown_and_revert_routes(api):
+    generate(api)
+    base = f'/insight/{api.sid}'
+    error(api.client.post(base + '/chat', json={'target': 'insight:nope', 'message': '수정'}), 400, 'validation')
+    first = [{'id': 'I1', 'title': '이전'}]
+    api.store.new_revision('insights', first, by='generate', message=None)
+    api.store.new_revision('insights', [{'id': 'I1', 'title': '변경'}], by='chat', message='수정')
+    assert ok(api.client.post(base + '/revert', json={'target': 'insight:I1', 'revision': 1})) == {'revision': 3}
+    assert api.store.read('insights')['items'] == first

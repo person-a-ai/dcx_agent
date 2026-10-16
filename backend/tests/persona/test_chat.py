@@ -71,7 +71,7 @@ def test_edit_unknown_context_rejected(ready):
 
 def test_codes_recomputed_after_edit(ready):
     rows = ready[2]
-    rows[0].update(context_ids=['CL0-P0-C1'], odi=999, radar={'raw': 999})
+    rows[0].update(context_ids=['CL0-P0-C1'], flow=[dict(context_id='CL0-P0-C1', text='불편하다')], odi=999, radar={'raw': 999})
     assert edit(ready, {'items': rows})['ok']
     items = ready[1].read('insights')['items']
     assert items[0]['odi'] == pytest.approx(.75)
@@ -248,3 +248,125 @@ def test_worker_requires_persona(ready):
     with pytest.raises(sessions.StoreError) as exc:
         insight_pipeline.run(context(ready, mode='derive'))
     assert exc.value.kind == 'persona_required'
+
+
+@pytest.mark.parametrize('target', ['insights', 'insight:I1', 'concept:I1'])
+def test_edit_attaches_context_sources_and_focus(ready, target):
+    session, store, rows, _ = ready
+    value = {'items': rows} if target == 'insights' else {'item': rows[0]}
+    if target.startswith('concept:'):
+        value = concept(ready)
+    cid = rows[0]['context_ids'][0]
+    store.write('cards', {'personas': {'CL0-P0': {'card': {'contexts': [
+        {'context_id': cid, 'pain_points': [{'text': '카드 불편'}]}]}}}})
+    seen = []
+    def run(task):
+        if task.task != 'insight.edit':
+            return ready[3].run(task)
+        seen.append(task)
+        return FakeBackend(responses={'insight.edit': json.dumps(value)}).run(task)
+    assert chat.edit(session.sid, session.version, target, '수정', focus_id='I2', run_task=run)['ok']
+    payload = json.loads(seen[0].attachments[0].body)
+    assert 'focus_id' in seen[0].instructions
+    if target == 'insights':
+        assert payload['focus_id'] == 'I2'
+    else:
+        assert 'focus_id' not in payload
+    if target.startswith('concept:'):
+        assert 'contexts' not in payload
+    else:
+        assert payload['contexts'][0] == dict(context_id=cid,
+            context_name=load_package(session.sid, session.version).personas[0].context_evidence[0].context_name,
+            pain_point='카드 불편')
+        assert payload['contexts'][1]['pain_point'] is None
+        assert len(payload['contexts']) == sum(len(b.context_evidence) for b in load_package(session.sid, session.version).personas)
+
+
+def test_edit_ignores_unknown_focus_id(ready):
+    seen = []
+    def run(task):
+        seen.append(json.loads(task.attachments[0].body))
+        return FakeBackend(responses={'insight.edit': json.dumps({'items': ready[2]})}).run(task)
+    assert chat.edit(ready[0].sid, ready[0].version, 'insights', '수정', focus_id='nope', run_task=run)['ok']
+    assert 'focus_id' not in seen[0]
+
+
+@pytest.mark.parametrize('target', ['insights', 'insight:I1'])
+def test_edit_rejects_stale_flow(ready, target):
+    before = ready[1].read('insights')
+    ready[2][0]['context_ids'] = ['CL0-P0-C1']
+    value = {'items': ready[2]} if target == 'insights' else {'item': ready[2][0]}
+    assert edit(ready, value, target) == {'ok': False, 'message': chat.FAILURE_COPY}
+    assert ready[1].read('insights') == before
+
+
+def test_item_target_replaces_only_that_item(ready):
+    session, store, rows, _ = ready
+    before = store.read('insights')['items']
+    row = deepcopy(rows[1])
+    row.update(id='I9', title='대상만 변경', context_ids=rows[0]['context_ids'], flow=rows[0]['flow'])
+    assert edit(ready, {'item': row}, 'insight:I2') == {'ok': True, 'revision': 2}
+    after = store.read('insights')['items']
+    assert after[0] == before[0] and after[2] == before[2]
+    assert after[1]['id'] == 'I2' and after[1]['title'] == '대상만 변경'
+    assert chat.revert(session.sid, session.version, 'insight:I2', 1) == {'revision': 3}
+    assert store.read('insights')['items'] == before
+
+
+def test_item_target_unknown_id(ready):
+    with pytest.raises(sessions.StoreError) as exc:
+        edit(ready, {'item': ready[2][0]}, 'insight:nope')
+    assert exc.value.status == 400 and exc.value.kind == 'validation'
+
+
+def test_edit_legacy_list_stays_legacy(ready):
+    session, store, rows, _ = ready
+    legacy = [{k: v for k, v in row.items() if k not in ('headline', 'statements', 'hashtags', 'flow')} for row in rows]
+    store.new_revision('insights', legacy, by='generate', message=None)
+    assert edit(ready, {'items': legacy})['ok']
+    assert 'headline' not in store.read('insights')['items'][0]
+    before = store.read('insights')
+    legacy[0]['headline'] = '일부'
+    assert not edit(ready, {'items': legacy})['ok']
+    assert store.read('insights') == before
+
+
+def test_edit_prevents_new_field_regression(ready):
+    legacy = [{k: v for k, v in row.items() if k not in ('headline', 'statements', 'hashtags', 'flow')} for row in ready[2]]
+    assert not edit(ready, {'items': legacy})['ok']
+
+
+def test_fresh_derive_creates_new_revision_clears_confirmed_outdates_concepts(ready, monkeypatch):
+    session, store, rows, backend = ready
+    concept(ready)
+    first = store.read('insights')['items']
+    sessions.update_session(session.sid, {'insight': {'confirmed': ['I1'], 'confirmed_ids': ['I1', 'hidden']}})
+    rows[0]['headline'] = '다시 도출한 제목'
+    backend.responses['insight.derive'] = json.dumps({'items': rows})
+    calls = []
+    monkeypatch.setattr(insight_pipeline.registry, 'run_task', lambda task: calls.append(task.task) or backend.run(task))
+    insight_pipeline.run(context(ready, mode='derive', fresh=True))
+    assert calls == ['insight.derive']
+    document = store.read('insights')
+    assert document['revision'] == 2 and document['history'][0]['items'] == first
+    assert document['history'][1]['by'] == 'generate'
+    state = sessions.load_session(session.sid)['insight']
+    assert state['confirmed'] == [] and state['confirmed_ids'] == ['hidden']
+    assert store.read('concepts')['items'][0]['outdated'] is True
+    chat.revert(session.sid, session.version, 'insights', 1)
+    assert store.read('insights')['items'] == first
+
+
+@pytest.mark.parametrize('target', ['insights', 'insight:I1'])
+def test_edit_context_sources_empty_when_package_missing(ready, monkeypatch, target):
+    from app.persona.package import PackageMissing
+    from app.llm.base import failure
+    def missing(*args):
+        raise PackageMissing()
+    monkeypatch.setattr(chat, 'load_package', missing)
+    seen = []
+    def run(task):
+        seen.append(json.loads(task.attachments[0].body))
+        return failure('backend', 'unavailable')
+    assert not chat.edit(ready[0].sid, ready[0].version, target, '수정', run_task=run)['ok']
+    assert seen[0]['contexts'] == []
