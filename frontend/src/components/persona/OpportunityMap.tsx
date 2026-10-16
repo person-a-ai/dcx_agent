@@ -34,8 +34,8 @@ function ZoneLayer({ base }: { base: PersonaMap['base'] }) {
       })}
   </g>;
 }
-export type OpportunityMapProps = { map: PersonaMap; highlightedId?: string | null; selectedPersonaId?: string | null; focusPersonaId?: string | null; compact?: boolean; onHighlight?: (id: string | null) => void; onOpenCard?: (personaId: string, contextId: string) => void };
-export function OpportunityMap({ map, highlightedId, selectedPersonaId, focusPersonaId, compact, onHighlight, onOpenCard }: OpportunityMapProps) {
+export type OpportunityMapProps = { map: PersonaMap; highlightedId?: string | null; selectedPersonaId?: string | null; focusPersonaId?: string | null; compact?: boolean; onHighlight?: (id: string | null) => void; onSelect?: (id: string) => void; onOpenCard?: (personaId: string, contextId: string) => void };
+export function OpportunityMap({ map, highlightedId, selectedPersonaId, focusPersonaId, compact, onHighlight, onSelect, onOpenCard }: OpportunityMapProps) {
   const [hiddenClusters, setHiddenClusters] = useState<string[]>([]);
   const validPoints = map.points.filter(point => point.i !== null && point.s !== null);
   const missingCount = map.points.length - validPoints.length;
@@ -49,6 +49,19 @@ export function OpportunityMap({ map, highlightedId, selectedPersonaId, focusPer
   const legend = new Map((map.legend ?? []).map(row => [row.cluster_id, row]));
   const toggle = (cluster: string) => setHiddenClusters(current => current.includes(cluster) ? current.filter(id => id !== cluster) : [...current, cluster]);
   const summary = (['A','B','C','D','E','F'] as PersonaZone[]).map(zone => `${zoneName(zone)} ${formatCount(map.points.filter(p => p.zone === zone).length)}개`).join(', ');
+  const labelOffsets = new Map<string, number>();
+  const placed: {x:number;y:number}[] = [];
+  for (const point of [...validPoints].sort((a,b)=>a.context_id.localeCompare(b.context_id))) {
+    if (hiddenClusters.includes(point.cluster_id) || (point.context_id !== highlightedId && point.persona_id !== focusPersonaId)) continue;
+    const group = overlapGroups.get(`${point.i}:${point.s}`)!;
+    const [dx,dy] = jitter(group.indexOf(point.context_id),group.length);
+    const px=x(point.i!)+dx+12, py=y(point.s!)+dy;
+    let offset=-12;
+    for (let n=0; placed.some(label=>Math.abs(label.x-px)<72 && Math.abs(label.y-(py+offset))<12); n++) {
+      offset = n % 2 === 0 ? 12 + Math.floor(n/2)*12 : -24 - Math.floor(n/2)*12;
+    }
+    placed.push({x:px,y:py+offset});labelOffsets.set(point.context_id,offset);
+  }
   const lines = [ [[0,map.base.s_line],[1,map.base.s_line]], map.base.diag1, map.base.diag2 ];
   return <figure data-compact={compact || undefined} style={{ margin: 0, minWidth: 0 }}><figcaption className="ds-t-label">Opportunity Map · Context {formatCount(map.points.length)}개 · 기회 <ProvisionalBadge/></figcaption>
     <svg viewBox="0 0 600 420" role="img" aria-label={`Opportunity Map: ${summary}`} style={{ width:'100%',display:'block',minHeight:320 }}>
@@ -72,10 +85,10 @@ export function OpportunityMap({ map, highlightedId, selectedPersonaId, focusPer
         const group = overlapGroups.get(`${point.i}:${point.s}`)!;
         const count = group.length;
         const [dx,dy] = jitter(group.indexOf(point.context_id), count);
-        return <g key={point.context_id} data-context-id={point.context_id} data-highlighted={highlighted} data-shape={shape} opacity={focusPersonaId && focusPersonaId !== point.persona_id ? 0.25 : 1} transform={`translate(${x(point.i)+dx} ${y(point.s)+dy})`} fill={point.counter ? 'none' : color} stroke={color} strokeWidth={highlighted ? 3 : 2} style={{cursor:'pointer'}} onMouseEnter={() => onHighlight?.(point.context_id)} onMouseLeave={() => onHighlight?.(null)} onClick={() => {onHighlight?.(point.context_id); onOpenCard?.(point.persona_id,point.context_id);}}>
+        return <g key={point.context_id} data-context-id={point.context_id} data-highlighted={highlighted} data-shape={shape} opacity={focusPersonaId && focusPersonaId !== point.persona_id ? 0.25 : 1} transform={`translate(${x(point.i)+dx} ${y(point.s)+dy})`} fill={point.counter ? 'none' : color} stroke={color} strokeWidth={highlighted ? 3 : 2} style={{cursor:'pointer'}} onMouseEnter={() => onHighlight?.(point.context_id)} onMouseLeave={() => onHighlight?.(null)} onClick={() => {if (onSelect) onSelect(point.context_id); else {onHighlight?.(point.context_id); onOpenCard?.(point.persona_id,point.context_id);}}}>
           <title>{`${point.context_id} · ${point.persona_id} · ${zoneName(point.zone)} · 중요도 ${formatMetric(point.i)} · 만족도 ${formatMetric(point.s)} · 기회 ${formatMetric(point.odi)} (잠정)${point.counter ? " · 반례" : ""}${count > 1 ? ` · 겹친 Context ${formatCount(count)}개` : ""}`}</title>
           {highlighted && <circle r={13} fill="none" strokeDasharray="3 2"/>}<Shape index={cluster}/>
-          {point.star && <text x={-5} y={-14} fill={color} stroke="none">★</text>}{highlighted && <text data-label={point.context_id} x={12} y={group.indexOf(point.context_id) % 2 ? 18 : -12} fill={color} stroke="none" fontSize={11}>{point.context_id}</text>}
+          {point.star && <text x={-5} y={-14} fill={color} stroke="none">★</text>}{labelOffsets.has(point.context_id) && <text data-label={point.context_id} x={12} y={labelOffsets.get(point.context_id)} fill={color} stroke="none" fontSize={11}>{point.context_id}</text>}
         </g>;
       })}
     </svg>

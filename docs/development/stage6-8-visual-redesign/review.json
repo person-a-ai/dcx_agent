@@ -1,0 +1,56 @@
+{
+  "verdict": "FAIL",
+  "head": "d601ef42f6780c67c371cdecd4b28a5e515f8786",
+  "fingerprint": "03969745920e44b9bcd69493585d0a1f6eeeb13cd339823188b96c936f00e068",
+  "commands": [
+    {
+      "command": "codex read-only review of git diff 80d2878..HEAD",
+      "exitCode": 0
+    }
+  ],
+  "findings": [
+    {
+      "id": "RV1",
+      "severity": "P2",
+      "location": "frontend/src/components/persona/PersonaScreen.tsx:127",
+      "summary": "페인포인트 근거 펼침이 일반 인용(ref.quote)과 그 검증값을 보여 줌. 태그 페인포인트 근거는 ref.pain_point.quote와 pain_point.verified를 보여야 함(R4).",
+      "source": "codex read-only review + Main Claude 코드 확인"
+    },
+    {
+      "id": "RV2",
+      "severity": "P2",
+      "location": "frontend/src/components/persona/OpportunityMap.tsx:78",
+      "summary": "카드 화면 지도에서 선택 페르소나 Context 라벨이 안 붙음. 설계 3.3: 강조 Context + focusPersonaId 페르소나 Context에 라벨, 겹치면 위아래로 비킴. components.test.ts:269 테스트가 잘못된 동작을 고정.",
+      "source": "codex read-only review + Main Claude 코드 확인"
+    },
+    {
+      "id": "RV3",
+      "severity": "P2",
+      "location": "frontend/src/components/persona/OpportunityMap.tsx:75",
+      "summary": "전체 맵에서 점 클릭이 바로 카드를 엶. 결정 3A: 클릭은 오른쪽 상세에 선택만 유지(hover와 분리), [카드 열기]로 카드 진입.",
+      "source": "codex read-only review + Main Claude 코드 확인"
+    },
+    {
+      "id": "RV4",
+      "severity": "P2",
+      "location": "frontend/src/components/persona/PersonaScreen.tsx:138",
+      "summary": "근거 수 행이 trace의 인용된 근거만 셈. Context의 실제 근거 수(card context metrics.doc_count)를 써야 함.",
+      "source": "codex read-only review + Main Claude 코드 확인"
+    },
+    {
+      "id": "RV5",
+      "severity": "P2",
+      "location": "frontend/src/components/persona/HierarchyTree.tsx:20",
+      "summary": "PersonaScreen이 렌더마다 hierarchy(data.tree)로 새 root를 만들어 펼침 상태가 초기화됨. useMemo로 data.tree 기준 고정.",
+      "source": "codex read-only review + Main Claude 코드 확인"
+    },
+    {
+      "id": "RV6",
+      "severity": "P3",
+      "location": "frontend/src/components/persona/PersonaScreen.tsx:41",
+      "summary": "PersonaContextTable이 ContextTable.tsx와 중복. ContextTable에 페인포인트 열을 추가해 재사용하고 중복 제거, 테스트를 공용 컴포넌트로.",
+      "source": "codex read-only review + Main Claude 코드 확인"
+    }
+  ],
+  "tasks": []
+}

@@ -78,7 +78,8 @@ it('synchronizes row focus/hover and map click through shared highlightedId', ()
   const chart = draw(OpportunityMap, { map: map(rows), highlightedId: 'C1', onHighlight });
   const dot = nodes(chart, e => e.props['data-context-id'] === 'C1')[0];
   (dot.props.onClick as () => void)(); expect(onHighlight).toHaveBeenLastCalledWith('C1'); expect(dot.props['data-highlighted']).toBe(true);
-  (nodes(tree, e => e.props.children === '카드 열기')[0].props.onClick as () => void)(); expect(onOpenCard).toHaveBeenCalledWith('P1', 'C1');
+  const stopPropagation=vi.fn();
+  (nodes(tree, e => e.props.children === '카드 열기')[0].props.onClick as (event: {stopPropagation:()=>void}) => void)({stopPropagation});expect(stopPropagation).toHaveBeenCalledOnce(); expect(onOpenCard).toHaveBeenCalledWith('P1', 'C1');
 });
 it('test_overlapping_points_table_lists_all', () => {
   const rows = [point('C1'), point('C2')];
@@ -264,11 +265,11 @@ it('uses original log ticks, responsive dimensions and sampled dashed baselines'
   const dot = nodes(tree, e => e.props['data-context-id'] === 'C1')[0];
   expect(dot.props.transform).toBe(`translate(${60 + logScale(.5)*480} ${340-logScale(.5)*320})`);
 });
-it('labels only the highlighted point and dims other personas in focus mode', () => {
+it('RV2 labels focused and highlighted points and dims other personas in focus mode', () => {
   const props = {map: map([point('C1'), {...point('C2'), persona_id:'P2'}]), focusPersonaId:'P1', selectedPersonaId:'P1'};
-  expect(nodes(draw(OpportunityMap, props), e => e.type === 'text' && !!e.props['data-label'])).toHaveLength(0);
+  expect(nodes(draw(OpportunityMap, props), e => e.type === 'text' && !!e.props['data-label'])).toHaveLength(1);
   const tree = draw(OpportunityMap, {...props, highlightedId:'C2'});
-  expect(nodes(tree, e => e.type === 'text' && !!e.props['data-label']).map(e => e.props.children)).toEqual(['C2']);
+  expect(nodes(tree, e => e.type === 'text' && !!e.props['data-label']).map(e => e.props.children)).toEqual(['C1','C2']);
   expect(nodes(tree, e => !!e.props['data-context-id']).map(e => e.props.opacity)).toEqual([1,.25]);
 });
 it('uses cluster-only legend buttons and toggles all cluster members', () => {
@@ -421,4 +422,12 @@ it('keeps wrapping sentences in their own grid cell and omits absent mean lines'
   expect(css).toMatch(/\.opportunity-row\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:/);
   expect(css).toMatch(/\.opportunity-sentence\s*\{[^}]*overflow-wrap:\s*anywhere/);
   expect(css).toMatch(/\.hierarchy-toggle\s*\{[^}]*min-height:\s*44px/);
+});
+
+it('RV2 separates nearby focused labels deterministically',()=>{
+ const props={map:map([point('C1'),{...point('C2'),i:.50001,s:.50001}]),focusPersonaId:'P1'};
+ const labels=nodes(draw(OpportunityMap,props),e=>!!e.props['data-label']);
+ expect(labels).toHaveLength(2);
+ expect(labels[0].props.y).not.toBe(labels[1].props.y);
+ expect(nodes(draw(OpportunityMap,props),e=>!!e.props['data-label']).map(e=>e.props.y)).toEqual(labels.map(e=>e.props.y));
 });

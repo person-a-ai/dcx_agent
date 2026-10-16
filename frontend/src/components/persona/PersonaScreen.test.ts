@@ -2,7 +2,7 @@
 import { beforeEach, expect, it, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 const h = vi.hoisted(() => ({values: [] as any[], cursor: 0, data: null as any, options: null as any, session: {sid:'s',sd:{prep:{derivedRef:'ref'}}} as any, push:vi.fn(), refresh:vi.fn(), history:false}));
-vi.mock('react', async original => ({...await original<typeof import('react')>(), useState:(initial:any)=>{const i=h.cursor++;if(!(i in h.values))h.values[i]=typeof initial==='function'?initial():initial;return [h.values[i],(next:any)=>{h.values[i]=typeof next==='function'?next(h.values[i]):next;}];},useRef:(v:any)=>{const i=h.cursor++;return h.values[i]??(h.values[i]={current:v});},useCallback:(f:any)=>f,useEffect:()=>{}}));
+vi.mock('react', async original => ({...await original<typeof import('react')>(), useState:(initial:any)=>{const i=h.cursor++;if(!(i in h.values))h.values[i]=typeof initial==='function'?initial():initial;return [h.values[i],(next:any)=>{h.values[i]=typeof next==='function'?next(h.values[i]):next;}];},useRef:(v:any)=>{const i=h.cursor++;return h.values[i]??(h.values[i]={current:v});},useMemo:(factory:any,deps:any[])=>{const i=h.cursor++;const previous=h.values[i];if(!previous||deps.some((value,index)=>!Object.is(value,previous.deps[index])))h.values[i]={deps,value:factory()};return h.values[i].value;},useCallback:(f:any)=>f,useEffect:()=>{}}));
 vi.mock('next/navigation',()=>({useRouter:()=>({push:h.push}),usePathname:()=>'/pipeline/personas'}));
 vi.mock('@/stores/useSessionStore',()=>({useSessionStore:()=>h.session}));
 vi.mock('@/components/versions/VersionProvider',()=>({useVersion:()=>({version:'v2',readonly:h.history,meta:{activeVersion:'v3'},session:null})}));
@@ -10,7 +10,8 @@ vi.mock('@/components/versions/useStageCompletionRefresh',()=>({useStageCompleti
 vi.mock('@/lib/usePolling',()=>({usePolling:(options:any)=>{h.options=options;return {data:h.data,refresh:h.refresh};}}));
 vi.mock('@/lib/api/persona',()=>({getPersonaStatus:vi.fn(),getPersonaCards:vi.fn(),getPersonaMap:vi.fn(),getPersonaTree:vi.fn(),startPersona:vi.fn(),retryPersonaCard:vi.fn()}));
 vi.mock('@/lib/api/segment',()=>({getSegmentPersonas:vi.fn().mockResolvedValue({personas:[]})}));
-import { PersonaScreen, PersonaContextTable } from './PersonaScreen';
+import { PersonaScreen } from './PersonaScreen';
+import { ContextTable } from './ContextTable';
 import { VersionRouteBoundary } from '../versions/StageVersion';
 import Page from '../../app/pipeline/personas/page';
 import { OpportunityMap } from './OpportunityMap';
@@ -29,7 +30,7 @@ const button=(tree:any,label:string)=>nodes(tree).find(n=>text(n)===label&&n.pro
 const point=(id:string,odi:number)=>({context_id:id,persona_id:'P1',cluster_id:'CL0',i:.5,s:.4,odi,zone:'B',star:false,counter:false,shape:'circle',tone:0});
 beforeEach(()=>{vi.clearAllMocks();h.history=false;h.values=[];h.cursor=0;h.session={sid:'s',sd:{prep:{derivedRef:'ref'}}};h.data={status:{package:true,status:'done',run:'r1',progress:1,personas:[{id:'P1',status:'done'}]},cards:{run:'r1',personas:{P1:{status:'done',card:{persona_name:'확정 이름',cluster_id:'CL0',desire:'확정 Desire',goal:['목표'],metrics:{doc_count:12,author_count:8},contexts:[]}}}},map:{points:[point('C1',1),point('C2',3)],base:{s_line:.5,diag1:[[0,.4],[1,1]],diag2:[[.5,0],[1,1]]}},tree:null,identities:[]};});
 it('opens map first, switches both views, and opens the point persona card',()=>{let tree=draw();expect(nodes(tree).some(n=>n.type===OpportunityMap)).toBe(true);button(tree,'Persona 카드').props.onClick();tree=draw();expect(text(tree)).toContain('확정 이름');expect(text(tree)).toContain('근거 12건 · 작성자 8명 · Context 0개');button(tree,'전체 맵').props.onClick();tree=draw();nodes(tree).find(n=>n.type===OpportunityMap).props.onOpenCard('P1','C2');tree=draw();expect(button(tree,'Persona 카드').props['aria-pressed']).toBe(true);expect(nodes(tree).find(n=>n.type===OpportunityMap).props.focusPersonaId).toBe('P1');});
-it('places the sortable Context table below the map',()=>{const tree=draw();const all=nodes(tree);expect(all.findIndex(n=>n.type===PersonaContextTable)).toBeGreaterThan(all.findIndex(n=>n.type===OpportunityMap));const props=all.find(n=>n.type===PersonaContextTable).props;h.values=[];h.cursor=0;let table=PersonaContextTable(props);expect(renderToStaticMarkup(table).indexOf('C2')).toBeLessThan(renderToStaticMarkup(table).indexOf('C1'));button(table,'기회').props.onClick();h.cursor=0;table=PersonaContextTable(props);expect(renderToStaticMarkup(table).indexOf('C1')).toBeLessThan(renderToStaticMarkup(table).indexOf('C2'));});
+it('places the sortable Context table below the map',()=>{const tree=draw();const all=nodes(tree);expect(all.findIndex(n=>n.type===ContextTable)).toBeGreaterThan(all.findIndex(n=>n.type===OpportunityMap));const props=all.find(n=>n.type===ContextTable).props;h.values=[];h.cursor=0;let table=ContextTable(props);expect(renderToStaticMarkup(table).indexOf('C2')).toBeLessThan(renderToStaticMarkup(table).indexOf('C1'));button(table,'기회').props.onClick();h.cursor=0;table=ContextTable(props);expect(renderToStaticMarkup(table).indexOf('C1')).toBeLessThan(renderToStaticMarkup(table).indexOf('C2'));});
 it('retries only the failed persona with the current run and version',async()=>{h.data.cards.personas.P1.status='failed';h.data.status.personas[0].status='failed';let tree=draw();button(tree,'Persona 카드').props.onClick();tree=draw();expect(text(tree)).toContain('이 페르소나 카드를 만들지 못했습니다.');await button(tree,'다시 만들기').props.onClick();expect(api.retryPersonaCard).toHaveBeenCalledWith('s','P1',{run:'r1'},'v2');});
 it('shows the exact missing-package empty state and evidence navigation',()=>{h.data={...h.data,missing:true};const tree=draw();expect(text(tree)).toContain('근거 탐색을 마친 뒤 페르소나를 만들 수 있습니다.');button(tree,'근거 탐색으로').props.onClick();expect(h.push).toHaveBeenCalledWith('/pipeline/evidence');expect(button(tree,'페르소나 만들기')).toBeUndefined();});
 it('keeps legacy sessions on the original page and keys new sessions by version',()=>{expect(Page().type).toBe(PersonaScreen);expect(Page().key).toBe('s:v2');h.session.sd={};expect(Page().type).not.toBe(PersonaScreen);});
@@ -155,8 +156,8 @@ it('T8 preselects the highest opportunity and assembles a continuous card surfac
  expect(all.some(n=>['tab','tablist','tabpanel'].includes(n.props?.role))).toBe(false);
  expect(text(tree)).toContain('8-B 수렴');expect(text(tree)).toContain('8-C 속성');expect(text(tree)).toContain('8-D 처방');
 });
-it('T8 maps pain points and evidence reference counts into CCM',()=>{
- h.data.cards.personas.P1.card.contexts=[{context_id:'C1',pain_points:[{text:'불편',grade:'observed',cite:['E1']},{text:'불안',grade:'inferred',cite:['E2']}],evidence:[{id:'E1'},{id:'E2'}]}];
+it('T8 maps pain points and context document counts into CCM',()=>{
+ h.data.cards.personas.P1.card.contexts=[{context_id:'C1',pain_points:[{text:'불편',grade:'observed',cite:['E1']},{text:'불안',grade:'inferred',cite:['E2']}],metrics:{doc_count:2},evidence:[{id:'E1'},{id:'E2'}]}];
  button(draw(),'Persona 카드').props.onClick();
  const cells=nodes(draw()).find(n=>n.type===CCMTable).props.contexts[0].cells;
  expect(cells.pain_point).toMatchObject({text:'불편',grade:'observed',more:1});expect(cells.evidence_count.text).toBe('2');
@@ -213,4 +214,60 @@ it.each([undefined,[]])('T8 distinguishes legacy pain fields from empty evidence
  h.data.cards.personas.P1.card.pain_points=painPoints;
  button(draw(),'Persona 카드').props.onClick();
  expect(nodes(draw()).find(n=>n.type===PersonaSummary).props.legacy).toBe(painPoints===undefined);
+});
+
+it.each([true,false])('RV1 pain quote verification %s is independent',verified=>{
+ h.data.cards.personas.P1.card.contexts=[{context_id:'C1',pain_points:[{text:'불편'}]}];
+ h.data.cards.personas.P1.trace=[{context_id:'C1',field:'pain_point',evidence_id:'E1',evidence:{quote:{text:'일반 인용',verified:!verified},pain_point:{quote:'페인 인용',verified}}}];
+ button(draw(),'Persona 카드').props.onClick();
+ const evidence=nodes(draw()).find(n=>n.type===CCMTable).props.contexts[0].cells.pain_point.evidence;
+ expect(text(evidence)).toContain('페인 인용');expect(text(evidence)).not.toContain('일반 인용');
+ expect(text(evidence).includes('인용 미확인')).toBe(!verified);
+});
+it('RV3 map and row clicks persist detail without opening the card',()=>{
+ let tree=draw();let map=nodes(tree).find(n=>n.type===OpportunityMap);
+ const rendered=OpportunityMap(map.props);
+ nodes(rendered).find(n=>n.props?.['data-context-id']==='C1').props.onClick();
+ tree=draw();expect(button(tree,'전체 맵').props['aria-pressed']).toBe(true);
+ const detail=()=>text(nodes(draw()).find(n=>n.props?.['aria-label']==='선택 Context 상세'));
+ expect(detail()).toContain('C1');
+ map=nodes(tree).find(n=>n.type===OpportunityMap);map.props.onHighlight('C2');expect(detail()).toContain('C1');
+ map.props.onHighlight(null);expect(detail()).toContain('C1');
+ const table=nodes(draw()).find(n=>n.type===ContextTable);
+ table.props.onSelect('C2');expect(detail()).toContain('C2');
+ expect(button(draw(),'전체 맵').props['aria-pressed']).toBe(true);
+ button(nodes(draw()).find(n=>n.props?.['aria-label']==='선택 Context 상세'),'카드 열기').props.onClick();
+ expect(button(draw(),'Persona 카드').props['aria-pressed']).toBe(true);
+});
+it.each([11,undefined])('RV4 uses context doc_count %s rather than cited trace count',count=>{
+ h.data.cards.personas.P1.card.contexts=[{context_id:'C1',metrics:{doc_count:count}}];
+ h.data.cards.personas.P1.trace=[{context_id:'C1',field:'state',evidence_id:'E1'}];
+ button(draw(),'Persona 카드').props.onClick();
+ expect(nodes(draw()).find(n=>n.type===CCMTable).props.contexts[0].cells.evidence_count.text).toBe(count===11?'11':'근거 부족');
+});
+
+it('RV5 manual hierarchy expansion survives an unrelated screen render',()=>{
+ h.data.tree={id:'root',children:[{id:'CL0',name:'선택 클러스터',children:[{id:'P1'}]},{id:'CL1',name:'다른 클러스터',children:[{id:'P2',name:'다른 페르소나'}]}]};
+ button(draw(),'Persona 카드').props.onClick();
+ const first=nodes(draw()).find(n=>n.type===HierarchyTree);
+ const screenSlots=h.cursor;
+ h.cursor=screenSlots;let tree=HierarchyTree(first.props);
+ const toggle=nodes(tree).find(n=>n.type==='button'&&text(n).includes('다른 클러스터'));
+ expect(toggle.props['aria-expanded']).toBe(false);toggle.props.onClick();
+ nodes(draw()).find(n=>n.type===OpportunityMap).props.onHighlight('C1');
+ const next=nodes(draw()).find(n=>n.type===HierarchyTree);
+ h.cursor=screenSlots;tree=HierarchyTree(next.props);
+ expect(nodes(tree).find(n=>n.type==='button'&&text(n).includes('다른 클러스터')).props['aria-expanded']).toBe(true);
+ expect(text(tree)).toContain('다른 페르소나');
+});
+
+it('RV6 shared ContextTable shows representative pain and wrapping fixed name column',()=>{
+ h.data.cards.personas.P1.card.contexts=[{context_id:'C1',context_name:'아주 긴 상황 이름',pain_points:[{text:'대표 불편'}]}];
+ const table=nodes(draw()).find(n=>n.type===ContextTable);expect(table).toBeTruthy();
+ h.cursor=0;const rendered=ContextTable(table.props);
+ expect(text(rendered)).toContain('대표 페인포인트');expect(text(rendered)).toContain('대표 불편');
+ const cell=nodes(rendered).find(n=>n.type==='td'&&text(n)==='아주 긴 상황 이름');
+ expect(cell.props.style).toMatchObject({width:180,minWidth:180,maxWidth:180,whiteSpace:'normal',overflowWrap:'anywhere'});
+ const row=nodes(rendered).find(n=>n.type==='tr'&&text(n).includes('아주 긴 상황 이름')&&n.props.tabIndex===0);
+ row.props.onClick();expect(button(draw(),'전체 맵').props['aria-pressed']).toBe(true);
 });
