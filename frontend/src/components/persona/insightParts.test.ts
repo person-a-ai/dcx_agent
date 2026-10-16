@@ -59,3 +59,11 @@ it('rederive trigger is disabled while rederive is disabled',()=>{
 });
 
 it('chat transcript is keyed by target',()=>{for(const target of ['insight:I2','concept:I3','insights'] as const){reset();const panel=nodes(InsightChatBar({...chat,target})).find(n=>n.type===ChatPanel);expect(panel.key).toBe(target);}});
+
+it('QA ISSUE-001 centers the rederive dialog despite the global margin reset',()=>{
+  reset([true]);
+  const dialog=nodes(InsightHeader({...header,view:{...view,legacy:true}})).find(n=>n.type==='dialog');
+  expect(dialog.props.className).toBe('insight-confirm');
+  const css=readFileSync(new URL('./insight.css',import.meta.url),'utf8');
+  expect(css).toMatch(/\.insight-confirm\s*\{[^}]*margin:\s*auto\s*;/);
+});

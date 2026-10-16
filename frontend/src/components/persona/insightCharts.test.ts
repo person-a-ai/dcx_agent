@@ -65,3 +65,20 @@ it('radar legend uses the caption text color',()=>{
 it('bars scroll region is keyboard reachable and named',()=>{expect(bars()).toMatch(/tabindex="0" role="group" aria-label="[^"]+"/);});
 it('bar labels clamp with full title',()=>{const html=bars();expect(html).toContain('class="insight-bar-short" title="C1"');expect(html).toContain('class="insight-clamp-2" title="러너-C1"');});
 it('charts show provisional badges',()=>{expect(radar()).toContain('잠정');expect(bars()).toContain('잠정');});
+
+it.each([0,1,2,4])('QA ISSUE-002 keeps each arrow after its preceding card (%i cards)',count=>{
+ const cards=Array.from({length:count},(_,index)=>({...card,contextId:String(index)}));
+ const list=InsightFlow({cards});
+ expect(list.props['aria-label']).toBe('Context 흐름');
+ const steps=list.props.children;
+ expect(steps.flatMap(step=>step.props.children).filter(child=>child && child.props.className==='insight-flow-arrow')).toHaveLength(Math.max(0,count-1));
+ steps.forEach((step,index)=>{
+   const children=step.props.children;
+   expect(children[0]?.props?.className).toContain('insight-flow-card');
+   if(index<count-1) expect(children[1].props.className).toBe('insight-flow-arrow');
+   else expect(children[1]).toBeFalsy();
+ });
+ const css=readFileSync(new URL('./insight.css',import.meta.url),'utf8');
+ expect(css).toMatch(/@media \(max-width: 767px\)[\s\S]*?\.insight-flow-arrow-wide\s*\{\s*display: none/);
+ expect(css).toMatch(/\.insight-flow-arrow-narrow\s*\{\s*display: inline/);
+});

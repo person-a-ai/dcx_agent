@@ -59,3 +59,13 @@ it('radarMean leaves axes with no observations null and preserves observed zero'
  expect(radarMean([item({radar:{raw:{Computed:0,Connected:null,Shared:.6}}}),item({radar:{raw:{Computed:null,Connected:null,Shared:.2}}})])).toEqual({Computed:0,Connected:null,Shared:.4});
  expect(radarMean([item({radar:{raw:{Computed:null,Connected:null,Shared:null}}})])).toBeNull();
 });
+
+it.each([
+ ['시니어-C1','과'],['생활관리자-C4','와'],['중장년-C3','과'],
+ ['베개','와'],['건강','과'],
+ ...Array.from('0123456789',(digit,index)=>[`C${digit}`,[0,1,3,6,7,8].includes(index)?'과':'와']),
+ ['Label','와'],['기타!','와'],
+])('QA ISSUE-003 chooses the particle for %s', (label,particle)=>{
+ const view=toInsightView(item({context_ids:['first','last'],contexts:[{context_id:'first',short:label},{context_id:'last',short:'끝'}]}));
+ expect(view.chips[1]).toBe(`흐름에서 ${label}${particle} 끝 순서를 바꿔줘`);
+});

@@ -27,7 +27,7 @@
 .insight-axis-badge { background: var(--blue-soft); color: var(--blue-deep); }
 .insight-flow-card--counter { border-color: var(--danger); }
 .insight-counter-badge { background: var(--danger-soft); color: var(--danger); }
-.insight-flow-arrow { padding: 0 6px; color: var(--line-strong); }
+.insight-flow-arrow { flex-shrink: 0; padding: 0 6px; color: var(--line-strong); }
 .insight-flow-arrow-narrow { display: none; }
 @media (min-width: 768px) and (max-width: 1279px) { .insight-flow-step { flex-basis: 50%; } }
 @media (max-width: 767px) {
@@ -57,7 +57,8 @@
 .insight-personas > span:first-child { font: var(--type-label); color: var(--ink-strong); }
 .insight-legacy, .insight-caption { font: var(--type-caption); color: var(--sub); }
 .insight-legacy p { margin: 4px 0; }
-.insight-confirm { color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-card); font: var(--type-body); max-width: 32rem; }
+.insight-confirm { margin: auto; inset: 0; padding: var(--space-6); color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-overlay); box-shadow: var(--shadow-overlay); font: var(--type-body); max-width: min(calc(var(--space-4) * 32), calc(100% - var(--space-4) * 2)); }
+.insight-confirm::backdrop { background: var(--overlay-backdrop); }
 .insight-chat { border: 1px solid var(--line); border-radius: var(--r-input); padding: 12px; }
 .insight-chat h2 { font: var(--type-label); color: var(--action); }
 .insight-focus { font: var(--type-label); color: var(--ink-strong); }

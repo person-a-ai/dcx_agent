@@ -31,6 +31,13 @@ export function dimLabel(dim: string | null): string {
   return dim ?? '근거 부족';
 }
 
+function connectingParticle(label: string): '과' | '와' {
+  const last = label.at(-1) ?? '';
+  const code = last.charCodeAt(0);
+  if (code >= 0xac00 && code <= 0xd7a3) return (code - 0xac00) % 28 !== 0 ? '과' : '와';
+  return '013678'.includes(last) && last !== '' ? '과' : '와';
+}
+
 export function toInsightView(item: InsightItem, summary?: InsightSummary | null): InsightView {
   // Summary is session-wide; card and bar values always come from their Contexts.
   void summary;
@@ -52,7 +59,7 @@ export function toInsightView(item: InsightItem, summary?: InsightSummary | null
       dim:context.dim ?? null,axis:context.axis,counter:context.counter ?? false};
   });
   const chips = ['이 인사이트 문장을 더 짧게 다시 써줘'];
-  if (flow.length > 1) chips.push(`흐름에서 ${flow[0].label}과 ${flow[flow.length - 1].label} 순서를 바꿔줘`);
+  if (flow.length > 1) chips.push(`흐름에서 ${flow[0].label}${connectingParticle(flow[0].label)} ${flow[flow.length - 1].label} 순서를 바꿔줘`);
   return {
     headline:item.headline || item.title, statements:item.statements ?? [item.pain_point], hashtags:item.hashtags ?? [],
     personas:[...new Set(contexts.flatMap(context => context.persona_name ? [context.persona_name] : []))],
