@@ -1,7 +1,7 @@
 모든 Persona 카드의 Context 요약과 pain point 인용, Context ID, ODI,
 Known Insight 목록을 읽고 공통된 불편을 인사이트 3~8개로 묶으세요.
 각 인사이트는 고유 id, title, pain_point(2~3줄), context_ids,
-known_ki_id(같은 내용의 Known Insight ID 또는 null)만 반환하세요.
+known_ki_id(같은 내용의 Known Insight ID 또는 null), headline, statements, hashtags, flow를 반환하세요.
 입력에 있는 Context ID만 사용하고 각 목록에서 중복하지 마세요.
 Persona 이름, Desire, Goal은 확정된 입력 그대로 유지하세요.
 레이더, 코사인, 백분위, ODI 막대, 평균, 대상 여부 등의 숫자나 계산 필드를

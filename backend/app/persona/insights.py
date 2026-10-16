@@ -171,10 +171,12 @@ def derive(sid, version, *, run_task=None, embedder, before_publish=None) -> int
             raise
         except Exception as exc:
             raise InsightError() from exc
-        if not result.ok or not isinstance(result.data, DeriveOut):
+        if not result.ok and (result.error is None or result.error.kind != 'schema'):
             raise InsightError()
-        candidates = [item.model_dump() for item in result.data.items]
         try:
+            if not result.ok or not isinstance(result.data, DeriveOut):
+                raise ValueError('Invalid derive output schema')
+            candidates = [item.model_dump() for item in result.data.items]
             items = validate_items(candidates, set(contexts))
             break
         except ValueError:

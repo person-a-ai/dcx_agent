@@ -292,4 +292,77 @@ def test_derive_uses_v2_prompt(env, monkeypatch):
     session, _, rows, _ = env
     calls = runner(monkeypatch, [rows])
     derive(session.sid, session.version, embedder=Embedder())
-    assert 'headline' in calls[0].instructions
+    instructions = calls[0].instructions
+    assert 'headline' in instructions
+    output_rule = instructions.split('각 인사이트는', 1)[1].split('반환하세요.', 1)[0]
+    assert all(field in output_rule for field in NEW_FIELDS)
+    assert 'known_ki_id(같은 내용의 Known Insight ID 또는 null)만 반환하세요.' not in instructions
+
+
+@pytest.mark.parametrize('recover', [True, False])
+@pytest.mark.parametrize('field,values', [('statements', ['하나', '둘', '셋']),
+                                         ('hashtags', ['태그'])])
+def test_derive_retries_once_on_schema_error(env, recover, field, values):
+    from copy import deepcopy
+    session, store, rows, _ = env
+    invalid = deepcopy(rows)
+    invalid[0][field] = values
+    responses = iter([invalid, rows if recover else invalid])
+    calls = []
+
+    def run_task(task):
+        calls.append(task)
+        result = FakeBackend(responses={task.task: json.dumps({'items': next(responses)})}).run(task)
+        if len(calls) == 1:
+            assert not result.ok and result.error.kind == 'schema'
+        return result
+
+    if recover:
+        assert derive(session.sid, session.version, run_task=run_task, embedder=Embedder()) == 1
+    else:
+        with pytest.raises(InsightError):
+            derive(session.sid, session.version, run_task=run_task, embedder=Embedder())
+        assert store.read('insights') is None
+    assert len(calls) == 2
+    assert json.loads(calls[1].attachments[0].body)['retry'] == (
+        '인사이트를 3~8개 생성하고 고유 ID와 입력에 있는 Context ID만 사용하세요. '
+        'headline은 30자 이하, statements는 정확히 2개이며 각 70자 이하, '
+        'hashtags는 2~4개, flow는 그 인사이트 context_ids 안에서 고르세요.')
+
+
+@pytest.mark.parametrize('recover', [True, False])
+def test_derive_retries_once_on_wrong_result_model(env, recover):
+    from app.llm.base import LLMResult
+    from app.persona.insights import DeriveOut, EditOut
+    session, _, rows, _ = env
+    wrong = LLMResult(ok=True, data=EditOut.model_validate({'items': rows}))
+    valid = LLMResult(ok=True, data=DeriveOut.model_validate({'items': rows}))
+    responses = iter([wrong, valid if recover else wrong])
+    calls = []
+
+    def run_task(task):
+        calls.append(task)
+        return next(responses)
+
+    if recover:
+        assert derive(session.sid, session.version, run_task=run_task, embedder=Embedder()) == 1
+    else:
+        with pytest.raises(InsightError):
+            derive(session.sid, session.version, run_task=run_task, embedder=Embedder())
+    assert len(calls) == 2
+    assert 'retry' in json.loads(calls[1].attachments[0].body)
+
+
+@pytest.mark.parametrize('kind', ['backend', 'timeout', 'interrupted'])
+def test_derive_does_not_retry_terminal_errors(env, kind):
+    from app.llm.base import failure
+    session, _, _, _ = env
+    calls = []
+
+    def run_task(task):
+        calls.append(task)
+        return failure(kind, 'terminal failure')
+
+    with pytest.raises(InsightError):
+        derive(session.sid, session.version, run_task=run_task, embedder=Embedder())
+    assert len(calls) == 1
