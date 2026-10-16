@@ -19,19 +19,7 @@ function ZoneLayer({ base }: { base: PersonaMap['base'] }) {
   const regions = useMemo(() => zoneRegions(base), [base]);
   return <g>
       {(Object.keys(regions) as PersonaZone[]).map(zone => <polygon key={zone} data-zone={zone} points={regions[zone].map(([i,s]) => `${60+i*480},${340-s*320}`).join(' ')} fill={`var(--${zone === 'F' ? 'danger-soft' : zone === 'C' ? 'warning-soft' : 'sunken'})`}/>)}
-      {(Object.keys(regions) as PersonaZone[]).map(zone => {
-        const region = regions[zone];
-        if (!region.length) return null;
-        // A horizontal chord midpoint stays inside the transformed region.
-        const midY = (Math.min(...region.map(p => p[1])) + Math.max(...region.map(p => p[1])))/2;
-        const crossings = region.flatMap((a,n) => {
-          const b=region[(n+1)%region.length];
-          return (a[1] > midY) !== (b[1] > midY) ? [a[0]+(midY-a[1])*(b[0]-a[0])/(b[1]-a[1])] : [];
-        });
-        if (crossings.length < 2) return null;
-        const midX = (Math.min(...crossings)+Math.max(...crossings))/2;
-        return <text key={zone} data-zone-name={zone} x={60+midX*480} y={340-midY*320} textAnchor="middle" fontSize={11} fill={`var(--${zone === 'F' ? 'danger' : zone === 'C' ? 'warning' : 'sub'})`}>{zoneName(zone)}</text>;
-      })}
+
   </g>;
 }
 export type OpportunityMapProps = { map: PersonaMap; highlightedId?: string | null; selectedId?: string | null; selectedPersonaId?: string | null; focusPersonaId?: string | null; compact?: boolean; onHighlight?: (id: string | null) => void; onSelect?: (id: string) => void; onOpenCard?: (personaId: string, contextId: string) => void };
@@ -98,7 +86,8 @@ export function OpportunityMap({ map, highlightedId, selectedId, selectedPersona
         </g>;
       })}
     </svg>
-    <div className="persona-map-legend" aria-label="클러스터 범례" style={{display:'flex',flexWrap:'wrap',gap:8,marginTop:8}}>{clusters.map(cluster => <button key={cluster} data-cluster={cluster} aria-label={`Persona ${[...new Set(map.points.filter(p => p.cluster_id === cluster).map(p => p.persona_id))].join(', ')}`} title={legend.get(cluster)?.personas.map(p => p.persona_name).join(', ')} type="button" className="ds-chip" aria-pressed={!hiddenClusters.includes(cluster)} onClick={() => toggle(cluster)}>{symbols[shapes.indexOf(legend.get(cluster)?.shape ?? shapes[clusters.indexOf(cluster)])] || '●'} {cluster}{legend.get(cluster)?.cluster_label ? ` · ${legend.get(cluster)?.cluster_label}` : ''}</button>)}</div>
+    <ul className="persona-zone-legend" aria-label="구역 범례">{(['A','B','C','D','E','F'] as PersonaZone[]).map(zone => <li key={zone} data-zone-name={zone} style={{color:`var(--${zone === 'F' ? 'danger' : zone === 'C' ? 'warning' : 'sub'})`}}>{zoneName(zone)}</li>)}</ul>
+    <div className="persona-map-legend" aria-label="클러스터 범례" style={{display:'flex',flexWrap:'wrap',gap:8,marginTop:8}}>{clusters.map(cluster => <button key={cluster} data-cluster={cluster} aria-label={`Persona ${[...new Set(map.points.filter(p => p.cluster_id === cluster).map(p => p.persona_id))].join(', ')}`} title={legend.get(cluster)?.personas.map(p => p.persona_name).join(', ')} type="button" className="ds-chip" aria-pressed={!hiddenClusters.includes(cluster)} onClick={() => toggle(cluster)}>{symbols[shapes.indexOf(legend.get(cluster)?.shape ?? shapes[clusters.indexOf(cluster)])] || '●'} {cluster}{legend.get(cluster)?.cluster_label && legend.get(cluster)?.cluster_label !== cluster ? ` · ${legend.get(cluster)?.cluster_label}` : ''}</button>)}</div>
     {missingCount > 0 && <p className="ds-t-caption">지도에 없는 Context {missingCount}개는 표에서 확인하세요.</p>}
     {map.points.length === 0 && <p className="ds-t-caption">기회 지도를 만들 Context가 없습니다.</p>}
     <p className="ds-t-caption">속 빈 모양 · 반례 Context / ★ 몰랐고 기회도 큰 지점 · 겹친 점은 아래 Context 표에서 각각 확인할 수 있습니다.</p>

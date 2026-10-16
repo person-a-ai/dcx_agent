@@ -237,15 +237,15 @@ it('opens actual CCM evidence and closes the previous cell with matching disclos
 });
 
 
-it('renders six token-colored zone polygons and names inside the map', () => {
+it('renders six token-colored zone polygons with names in the outside legend', () => {
   const tree = draw(OpportunityMap, {map: map([point('C1')])});
   const out = html(tree);
   const regions = out.match(/<polygon data-zone="[A-F]"[^>]*>/g) ?? [];
   expect(regions).toHaveLength(6);
   for (const zone of ['A','B','C','D','E','F']) {
     expect(regions.find(region => region.includes(`data-zone="${zone}"`))).toContain(`fill="var(--${zone === 'F' ? 'danger-soft' : zone === 'C' ? 'warning-soft' : 'sunken'})"`);
-    const label = out.match(new RegExp(`<text data-zone-name="${zone}"[^>]*>`))?.[0];
-    expect(label).toContain(`fill="var(--${zone === 'F' ? 'danger' : zone === 'C' ? 'warning' : 'sub'})"`);
+    const label = out.match(new RegExp(`<li data-zone-name="${zone}"[^>]*>`))?.[0];
+    expect(label).toContain(`color:var(--${zone === 'F' ? 'danger' : zone === 'C' ? 'warning' : 'sub'})`);
   }
 });
 it('uses original log ticks, responsive dimensions and sampled dashed baselines', () => {
@@ -452,4 +452,23 @@ it('RV9 gives ContextTable actions and scoped map legend chips 44px touch target
  const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
  expect(css).toMatch(/\.persona-map-legend\s+\.ds-chip\s*\{[^}]*min-height:\s*44px/);
  expect(nodes(draw(OpportunityMap,{map:map([point('C1')])}),e=>e.props.className==='persona-map-legend')).toHaveLength(1);
+});
+
+it('F2 preserves readable column widths and local horizontal scrolling',()=>{
+ const source=readFileSync(new URL('./ContextTable.tsx',import.meta.url),'utf8');
+ expect(source).toContain('<colgroup>');
+ const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+ expect(css).toContain('.persona-context-table table{table-layout:fixed;min-width:1180px}');
+ for(const width of [96,220,160,72,100,260]) expect(source).toContain(`width:${width}`);
+ expect(css).toContain('.persona-context-table{overflow-x:auto}');
+});
+it('F3 reserves 420px for the card map only at desktop widths',()=>{
+ const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+ expect(css).toMatch(/@media\(min-width:1280px\)\{\s*\.persona-comparison-layout\{grid-template-columns:minmax\(0,1fr\) minmax\(420px,0.8fr\)\}/);
+});
+it('F7 reduces mobile pain typography and indentation while hiding the duplicate card heading accessibly',()=>{
+ const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+ expect(css).toMatch(/@media\(max-width:767px\)\{[^}]*\}[^]*?\.persona-pain-points ol\{padding-left:20px\}/);
+ expect(css).toContain('.persona-pain-text,.persona-pain-item::marker{font:var(--type-card)}');
+ expect(css).toContain('.persona-summary-header h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}');
 });

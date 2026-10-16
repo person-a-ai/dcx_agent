@@ -45,7 +45,7 @@ it('allows version-aware Persona screens through the historical route boundary',
 it('shows unverified original quotes and adds their source document to Known Insight',async()=>{h.data.cards.personas.P1.card.contexts=[{context_id:'C1',context_name:'상황',state:{text:'상태',cite:['E1']}}];h.data.cards.personas.P1.trace=[{context_id:'C1',field:'state',evidence_id:'E1',evidence:{doc_id:'doc1',source:'카페',quote:{text:'원문 인용',verified:false,field:'body',start:3,end:8}}}];let tree=draw();button(tree,'Persona 카드').props.onClick();tree=draw();const table=nodes(tree).find(n=>n.type===CCMTable);const cell=table.props.contexts[0].cells.state;expect(renderToStaticMarkup(cell.evidence)).toContain('인용 문장을 원문에서 찾지 못해 추론으로 낮췄습니다.');expect(text(cell.evidence)).toContain('원문 인용');await button(cell.evidence,'Known Insight에 추가').props.onClick();expect(addKnownInsight).toHaveBeenCalledWith('s',{type:'doc',doc_id:'doc1'},'v2');});
 
 it('C1 regenerates stale results with fresh true',async()=>{h.data.status.status='stale';vi.stubGlobal('confirm',vi.fn(()=>true));try{await button(draw(),'페르소나 다시 만들기').props.onClick();expect(api.startPersona).toHaveBeenCalledWith('s',{fresh:true},'v2');}finally{vi.unstubAllGlobals();}});
-it.each(['evidence_required'])('I1 uses real cards fetch error kind %s on entry',async kind=>{const real=await vi.importActual<typeof import('@/lib/api/persona')>('@/lib/api/persona');vi.mocked(api.getPersonaStatus).mockResolvedValue({status:'none',run:null,progress:0,personas:[]} as any);vi.mocked(api.getPersonaCards).mockImplementation(real.getPersonaCards);vi.mocked(api.getPersonaMap).mockResolvedValue(h.data.map);vi.mocked(api.getPersonaTree).mockResolvedValue({});vi.stubGlobal('fetch',vi.fn().mockResolvedValue({ok:false,status:409,json:async()=>({error:{kind,message:'아직 결과가 준비되지 않았습니다.'}})}));try{draw();h.data=await h.options.fetcher();const tree=draw();expect(text(tree)).toContain('근거 탐색을 마친 뒤 페르소나를 만들 수 있습니다.');button(tree,'근거 탐색으로').props.onClick();expect(h.push).toHaveBeenCalledWith('/pipeline/evidence');}finally{vi.unstubAllGlobals();}});
+it.each(['evidence_required'])('I1 uses real cards fetch error kind %s on entry',async kind=>{const real=await vi.importActual<typeof import('@/lib/api/persona')>('@/lib/api/persona');vi.mocked(api.getPersonaStatus).mockResolvedValue({status:'done',run:null,progress:0,personas:[]} as any);vi.mocked(api.getPersonaCards).mockImplementation(real.getPersonaCards);vi.mocked(api.getPersonaMap).mockResolvedValue(h.data.map);vi.mocked(api.getPersonaTree).mockResolvedValue({});vi.stubGlobal('fetch',vi.fn().mockResolvedValue({ok:false,status:409,json:async()=>({error:{kind,message:'아직 결과가 준비되지 않았습니다.'}})}));try{draw();h.data=await h.options.fetcher();const tree=draw();expect(text(tree)).toContain('근거 탐색을 마친 뒤 페르소나를 만들 수 있습니다.');button(tree,'근거 탐색으로').props.onClick();expect(h.push).toHaveBeenCalledWith('/pipeline/evidence');}finally{vi.unstubAllGlobals();}});
 it('I3 renders context keywords and persona artifacts in CCM',()=>{Object.assign(h.data.cards.personas.P1.card,{artifacts:[{name:'노트북',mention_count:1234}],contexts:[{context_id:'C1',keywords:['휴대','작업']}]});button(draw(),'Persona 카드').props.onClick();const cells=nodes(draw()).find(n=>n.type===CCMTable).props.contexts[0].cells;expect(cells.keywords.text).toBe('휴대 · 작업');expect(cells.artifact.text).toContain('노트북');expect(cells.artifact.text).toContain('1,234');});
 it('D315 localizes attribute keys and formats counts and metrics',()=>{Object.assign(h.data.cards.personas.P1.card,{metrics:{doc_count:12345,author_count:2345},journey:{pre_purchase:.623456,purchase:.2,post_purchase:.8},sensitivity:{price:'상',brand:'중',function:'하'}});button(draw(),'Persona 카드').props.onClick();expect(text(draw())).toContain('12,345건');const out=text(draw());expect(out).toContain('구매 전: 0.62');expect(out).toContain('가격: 상');expect(out).not.toContain('pre_purchase');});
 it('I1 handles a real status endpoint evidence_required error on entry',async()=>{const real=await vi.importActual<typeof import('@/lib/api/persona')>('@/lib/api/persona');vi.mocked(api.getPersonaStatus).mockImplementation(real.getPersonaStatus);vi.stubGlobal('fetch',vi.fn().mockResolvedValue({ok:false,status:409,json:async()=>({error:{kind:'evidence_required',message:'package missing'}})}));try{draw();await expect(h.options.fetcher()).rejects.toThrow();expect(text(draw())).toContain('근거 탐색을 마친 뒤 페르소나를 만들 수 있습니다.');}finally{vi.unstubAllGlobals();}});
@@ -267,7 +267,7 @@ it('RV6 shared ContextTable shows representative pain and wrapping fixed name co
  h.cursor=0;const rendered=ContextTable(table.props);
  expect(text(rendered)).toContain('대표 페인포인트');expect(text(rendered)).toContain('대표 불편');
  const cell=nodes(rendered).find(n=>n.type==='td'&&text(n)==='아주 긴 상황 이름');
- expect(cell.props.style).toMatchObject({width:180,minWidth:180,maxWidth:180,whiteSpace:'normal',overflowWrap:'anywhere'});
+ expect(cell.props.style).toMatchObject({whiteSpace:'normal',overflowWrap:'anywhere'});
  const row=nodes(rendered).find(n=>n.type==='tr'&&text(n).includes('아주 긴 상황 이름')&&n.props.tabIndex===0);
  row.props.onClick();expect(button(draw(),'전체 맵').props['aria-pressed']).toBe(true);
 });
@@ -311,4 +311,32 @@ it('RV10 persists card selection across mouseleave and hover, then clears it on 
  map().props.onOpenCard('P1');
  expect(map().props.selectedId).toBeNull();
  expect(column()).toBe('');
+});
+
+it.each(['none','stale','running','queued','failed'])('F1 only requests result endpoints when done (%s)',async status=>{
+ vi.mocked(api.getPersonaStatus).mockResolvedValue({...h.data.status,status} as any);
+ draw();h.data=await h.options.fetcher();await h.options.fetcher();
+ expect(api.getPersonaCards).not.toHaveBeenCalled();expect(api.getPersonaMap).not.toHaveBeenCalled();expect(api.getPersonaTree).not.toHaveBeenCalled();
+ if(['none','stale'].includes(status)) {
+  expect(text(draw())).toContain('페르소나를 만들면 전체 맵과 Context를 확인할 수 있습니다.');
+  expect(nodes(draw()).some(n=>n.type===ContextTable||n.type===OpportunityMap)).toBe(false);
+ }
+});
+it('F1 treats a done/result publication race as guidance without a retry error',async()=>{
+ vi.mocked(api.getPersonaStatus).mockResolvedValue(h.data.status);
+ for(const fn of [api.getPersonaCards,api.getPersonaMap,api.getPersonaTree]) vi.mocked(fn).mockRejectedValue(new ApiError('준비 중','not_ready',409));
+ draw();h.data=await h.options.fetcher();expect(h.data.errors).toEqual({});expect(text(draw())).not.toContain('준비 중');expect(text(draw())).toContain('페르소나를 만들면 전체 맵과 Context를 확인할 수 있습니다.');
+});
+it('F4 puts all six zone names outside the plot in a deterministic legend',()=>{
+ const map=h.data.map;
+ const first=renderToStaticMarkup(OpportunityMap({map}));h.cursor=0;
+ expect(renderToStaticMarkup(OpportunityMap({map}))).toBe(first);
+ expect(first.match(/data-zone-name=/g)).toHaveLength(6);
+ expect(first.slice(first.indexOf('<svg'),first.indexOf('</svg>'))).not.toContain('data-zone-name');
+ expect(first).toContain('aria-label="구역 범례"');
+});
+it('F5 shows a cluster label only once when it equals its ID',()=>{
+ h.data.map.legend=[{cluster_id:'CL0',cluster_label:'CL0',shape:'circle',personas:[]}];
+ const tree=OpportunityMap({map:h.data.map});
+ expect(text(nodes(tree).find(n=>n.props?.['data-cluster']==='CL0'))).toBe('● CL0');
 });

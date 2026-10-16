@@ -33,7 +33,7 @@ function hierarchy(value: unknown): HierarchyNode {
   const node = record(value);
   return {id:String(node.id ?? 'product'),name:String(node.name ?? '제품'),doc_count:Number(node.doc_count ?? node.size ?? 0),children:rows(node.children).map(hierarchy)};
 }
-type Snapshot = {status: PersonaStatus; cards: PersonaCardsResponse; map: PersonaMap | null; tree: PersonaTree | null; identities: SegmentPersona[]; missing?: boolean; errors?: Partial<Record<Area, string>>};
+type Snapshot = {status: PersonaStatus; cards: PersonaCardsResponse; map: PersonaMap | null; tree: PersonaTree | null; identities: SegmentPersona[]; missing?: boolean; notReady?: boolean; errors?: Partial<Record<Area, string>>};
 type Props = {sid: string; version?: string; readonly?: boolean};
 
 export function PersonaScreen({sid, version, readonly = false}: Props) {
@@ -62,6 +62,11 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
       setPending(false);
       const key = JSON.stringify(status);
       if (cache.current && cacheKey.current === key) return cache.current;
+      if (status.status !== 'done') {
+        cache.current = null;cacheKey.current = '';
+        const identities = await getSegmentPersonas(sid, undefined, version);
+        return {status,cards:{run:status.run,personas:{}},map:null,tree:null,identities:identities.personas,missing:status.package === false};
+      }
       const results = await Promise.allSettled([
         api.getPersonaCards(sid, version), api.getPersonaMap(sid, version),
         api.getPersonaTree(sid, version), getSegmentPersonas(sid, undefined, version),
@@ -73,8 +78,9 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
         cards:cards.status === 'fulfilled' ? cards.value : {run:status.run,personas:{}},
         map:map.status === 'fulfilled' ? map.value : null,
         tree:tree.status === 'fulfilled' ? tree.value : null,
+        notReady: results.some(result => result.status === 'rejected' && result.reason instanceof ApiError && result.reason.kind === 'not_ready'),
         identities:identities.status === 'fulfilled' ? identities.value.personas : [], missing:missingEvidence,
-        errors: Object.fromEntries(results.flatMap((result, index) => result.status === 'rejected' ? [[(['cards','map','tree','identities'] as Area[])[index], displayError(result.reason)]] : [])),
+        errors: Object.fromEntries(results.flatMap((result, index) => result.status === 'rejected' && !(result.reason instanceof ApiError && result.reason.kind === 'not_ready') ? [[(['cards','map','tree','identities'] as Area[])[index], displayError(result.reason)]] : [])),
       };
       // Only cache complete results; transient reads can recover on the next poll.
       if (!failures.length) {cacheKey.current = key; cache.current = result;}
@@ -183,7 +189,7 @@ export function PersonaScreen({sid, version, readonly = false}: Props) {
     <div className="persona-screen-layout">
       <aside>{!data || retrying === 'identities' ? skeleton('페르소나 목록',9) : data.errors?.identities ? areaError('identities') : <PersonaList groups={[...new Set(ids.map(cluster))].map(clusterId => ({clusterId,items:ids.filter(id => cluster(id) === clusterId).map(id => ({id,name:name(id),status:(status?.personas.find(p => p.id === id)?.status ?? cards[id]?.status ?? 'pending') as PersonaState,future:cards[id]?.scope?.verdict === 'outside'}))}))} selectedId={chosen ?? null} onSelect={openCard}/>}</aside>
       <div className="min-w-0 space-y-4"><div role="group" aria-label="보기" className="flex gap-2"><Button aria-pressed={view === 'map'} onClick={() => setView('map')}>전체 맵</Button><Button aria-pressed={view === 'card'} onClick={() => setView('card')}>Persona 카드</Button></div>
-      {view === 'map' ? <>
+      {data && (!complete || data.notReady) ? <p role="status">페르소나를 만들면 전체 맵과 Context를 확인할 수 있습니다.</p> : view === 'map' ? <>
         <div className="persona-map-layout">{mapArea}<aside aria-label="선택 Context 상세">{highlightedRow ? <><h2>{highlightedRow.name}</h2><p>{highlightedRow.persona_name} · {zoneName(highlightedRow.zone)}</p><p>중요도 {formatMetric(highlightedRow.i)} · 만족도 {formatMetric(highlightedRow.s)} · 기회 {formatMetric(highlightedRow.odi)}</p><p>페인포인트 · {label(rows(rows(body(highlightedRow.persona_id).contexts).find(c => c.context_id === highlightedRow.context_id)?.pain_points)[0]?.text)}</p><Button onClick={() => openCard(highlightedRow.persona_id,highlightedRow.context_id)}>카드 열기</Button></> : <p>점을 가리키거나 아래 표에서 Context를 고르세요.</p>}</aside></div>
         {!data ? skeleton('Context 비교 표',10) : <div className="persona-context-table"><ContextTable onSelect={setSelectedContext} rows={contextRows} highlightedId={activeHighlight} onHighlight={setHighlighted} onOpenCard={openCard}/></div>}
       </> : <div className="persona-card-body">
