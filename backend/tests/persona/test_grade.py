@@ -97,3 +97,17 @@ def test_summary_and_synthetic_profile(refs):
                                      usage_context='observed', jtbd='inferred')
     assert result['grades'] == {}
     assert result['traceable_support'] == {}
+
+
+def test_pain_point_trace_rows(refs):
+    card = dict(contexts=[dict(context_id='CL0-P0-C0', state=cell(['E2']),
+        pain_points=[dict(text='불편', cite=['E2', 'E4'], grade='inferred'),
+                     dict(text='다른 불편', cite=['E5'], grade='observed')])])
+    original = deepcopy(card)
+    result = grade_card(card, refs)
+    pains = [row for row in result['trace'] if row['field'] == 'pain_point']
+    assert [row['evidence_id'] for row in pains] == ['E2', 'E4', 'E5']
+    assert all(row['context_id'] == 'CL0-P0-C0' and row['evidence'] == refs[row['evidence_id']].model_dump() for row in pains)
+    assert result['grades'] == {'CL0-P0-C0': {'state': 'observed'}}
+    assert result['traceable_support'] == {'CL0-P0-C0': 1.0}
+    assert card == original

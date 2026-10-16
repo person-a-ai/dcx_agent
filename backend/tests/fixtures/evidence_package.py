@@ -157,7 +157,8 @@ def _responses(package, block, selected=None, concept_edit=False):
     cards = []
     for c in rows:
         cites = [key for key, ref in refs.items() if ref.context_id == c.context_id and ref.role == 'support']
-        cards.append(dict(context_id=c.context_id, **{field: dict(text=getattr(c.situation, field) if cites else None, cite=cites[:1])
+        cards.append(dict(context_id=c.context_id,
+            pain_points=[dict(text='가짜 불편', cite=cites[:1])] if cites else [], **{field: dict(text=getattr(c.situation, field) if cites else None, cite=cites[:1])
                                                       for field in ('state', 'emotion', 'barrier')}))
     cids = [c.context_id for c in block.context_evidence]
     cite = list(refs)[:1]

@@ -81,6 +81,11 @@ def grade_card(card: dict, refs: dict[str, EvidenceRef]) -> dict:
         support = traceable_support(fields, refs)
         result['traceable_support'][context_id] = support
         result['grades'][context_id] = grade_fields(fields, context_id, support < TRACE_MIN)
+        for pain in context.get('pain_points', []):
+            for cite in dict.fromkeys(pain.get('cite', [])):
+                if cite in refs:
+                    result['trace'].append(dict(context_id=context_id, field='pain_point',
+                        evidence_id=cite, evidence=refs[cite].model_dump()))
 
     summary = {name: value for name, value in card.items() if name != 'contexts'}
     # Concepts use a plain string for persona_profile (design 5.7).
