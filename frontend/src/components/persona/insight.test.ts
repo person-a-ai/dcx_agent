@@ -47,7 +47,7 @@ it('links insight sidebar and reports completion at 8/9', () => {
  expect(renderToStaticMarkup(createElement(StepBar,{currentStep:'insight',session:{completion:{insightDone:true}}}))).toContain('href="/pipeline/insights"');
 });
 
-import { ConceptDetail } from './InsightScreen';
+import { ConceptDetail } from './InsightConcept';
 import { addSuggestedKnownInsight } from '@/lib/api/insight';
 it('renders synthetic persona, quoted evidence location, journey and all four CX dimensions', () => {
  const html = renderToStaticMarkup(createElement(ConceptDetail,{concept:{outdated:false,persona_profile:{text:'프로필'},basis:'근거 45건',pain_points:[{quote:'실제 인용',channel:'cafe',location:{field:'body',idx:1},context_id:'C1'}],journey:[{context_id:'C1',action:'행동',feeling:'불편',service:'서비스',service_action:'변화',cx_4d:'정신적'}],constraint_check:[{constraint:'예산',verdict:'review',reason:'확인 필요'}]}}));

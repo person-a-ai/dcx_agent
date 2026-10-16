@@ -67,3 +67,22 @@
 @media (min-width: 1280px) {
   .insight-chat form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center; }
 }
+.insight-panel { display: flex; flex-direction: column; gap: 16px; min-width: 0; border: 1px solid var(--line); border-radius: var(--r-card); box-shadow: none; }
+.insight-charts { height: 240px; display: grid; grid-template-columns: 5fr 7fr; border: 1px solid var(--line); border-radius: var(--r-input); min-width: 0; }
+.insight-charts > :first-child { border-right: 1px solid var(--line); }
+.insight-charts > * { padding: 8px; box-sizing: border-box; }
+.insight-flow-card { border-radius: var(--r-input); }
+.insight-chat form > .flex { min-width: 0; }
+@media (min-width: 1280px) {
+  .insight-topbar { flex-wrap: nowrap; min-height: 48px; gap: 8px; }
+  .insight-topbar h1 { flex: 1; }
+  .insight-header { padding: 0; }
+}
+@media (max-width: 767px) {
+  .insight-charts { height: auto; grid-template-columns: 1fr; }
+  .insight-charts > :first-child { border-right: 0; border-bottom: 1px solid var(--line); }
+  .insight-pager { margin-left: 0; }
+}
+@media (min-width: 1280px) {
+  .insight-statements { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+}
