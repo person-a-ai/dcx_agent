@@ -5,6 +5,7 @@ import { GradeMark } from './GradeMark';
 import { ProvisionalBadge } from './ProvisionalBadge';
 import { CCMTable, type CCMContext } from './CCMTable';
 import { OpportunityMap } from './OpportunityMap';
+import { LOG_TICKS, logScale } from './personaView';
 import { ContextTable } from './ContextTable';
 import { HierarchyTree } from './HierarchyTree';
 import { Radar } from './Radar';
@@ -82,7 +83,7 @@ it('synchronizes row focus/hover and map click through shared highlightedId', ()
 it('test_overlapping_points_table_lists_all', () => {
   const rows = [point('C1'), point('C2')];
   const out = html(draw(OpportunityMap, { map: map(rows) }));
-  expect(out).toContain('겹친 Context 2개'); expect(out.match(/translate\(300 180\)/g)).toHaveLength(2);
+  expect(out).toContain('겹친 Context 2개'); expect(new Set(nodes(draw(OpportunityMap, { map: map(rows) }), e => !!e.props['data-context-id']).map(e => e.props.transform)).size).toBe(2);
   expect(out).toContain('role="img"'); expect(out).toContain('B Experiencing 2개');
   const table = html(draw(ContextTable, { rows, onOpenCard: vi.fn() })); for (const row of rows) expect(table).toContain(row.name);
 });
@@ -91,9 +92,9 @@ it('renders cluster shapes, hollow counters, stars, baselines and toggling legen
   const props = { map: map(points) }; let tree = draw(OpportunityMap, props); const out = html(tree);
   for (const shape of ['circle','square','triangle','diamond','pentagon']) expect(out).toContain(`data-shape="${shape}"`);
   expect(out).toContain('fill="none"'); expect(out).toContain('★'); expect(out).toContain('CL5'); expect(out.match(/data-baseline=/g)).toHaveLength(3);
-  const chip = nodes(tree, e => e.type === 'button' && e.props['aria-label'] === 'Persona P0')[0];
+  const chip = nodes(tree, e => e.type === 'button' && e.props['data-cluster'] === 'CL0')[0];
   (chip.props.onClick as () => void)(); tree = draw(OpportunityMap, props, false); expect(nodes(tree, e => e.props['data-context-id'] === 'C0')).toHaveLength(0);
-  expect(nodes(tree, e => e.props['aria-label'] === 'Persona P0')[0].props['aria-pressed']).toBe(false);
+  expect(nodes(tree, e => e.props['data-cluster'] === 'CL0')[0].props['aria-pressed']).toBe(false);
 });
 it('renders hierarchy sizes, radar raw and percentile, bars mean, journey distribution and revisions', () => {
   expect(html(createElement(HierarchyTree, { root: { id:'product', name:'제품', doc_count:10, children:[{id:'CL1',name:'Cluster',doc_count:4}] } }))).toContain('문서 10건');
@@ -126,7 +127,7 @@ it('uses backend persona tones and toggles visibility', () => {
   const props={map:map(points)}; let tree=draw(OpportunityMap,props);
   for (const tone of ['--ink-strong','--ink','--line-strong']) expect(html(tree)).toContain(`var(${tone})`);
   expect(html(tree)).not.toContain('var(--blue)');
-  const chip=()=>nodes(tree,e=>e.props['aria-label']==='Persona P0')[0];
+  const chip=()=>nodes(tree,e=>e.props['data-cluster']==='CL1')[0];
   (chip().props.onClick as ()=>void)(); tree=draw(OpportunityMap,props,false);
   expect(chip().props['aria-pressed']).toBe(false);
   expect(nodes(tree,e=>e.props['data-context-id']==='C0')).toHaveLength(0);
@@ -175,7 +176,7 @@ it('keeps hover emphasis neutral, reserves blue for selected personas, and label
   const tree = draw(OpportunityMap, props);
   const dot = nodes(tree, e => e.props['data-context-id'] === 'C1')[0];
   expect(dot.props.stroke).toBe('var(--ink-strong)');
-  const labels = nodes(tree, e => e.type === 'text').map(e => html(e)).join('');
+  const labels = html(tree);
   for (const label of ['A Exciting', 'B Experiencing', 'C Competitive', 'D Forgiven', 'E Dangling', 'F At-risk']) expect(labels).toContain(label);
   const selected = draw(OpportunityMap, { ...props, selectedPersonaId: 'P1' });
   expect(nodes(selected, e => e.props['data-context-id'] === 'C1')[0].props.stroke).toBe('var(--blue)');
@@ -238,4 +239,59 @@ it('opens actual CCM evidence and closes the previous cell with matching disclos
   tree = draw(CCMTable,props,false);
   expect(nodes(tree,e=>e.type==='button' && e.props['aria-expanded']===true)).toHaveLength(1);
   expect(nodes(tree,e=>e.type==='button')[0].props['aria-expanded']).toBe(false);
+});
+
+
+it('renders six token-colored zone polygons and names inside the map', () => {
+  const tree = draw(OpportunityMap, {map: map([point('C1')])});
+  const out = html(tree);
+  const regions = out.match(/<polygon data-zone="[A-F]"[^>]*>/g) ?? [];
+  expect(regions).toHaveLength(6);
+  for (const zone of ['A','B','C','D','E','F']) {
+    expect(regions.find(region => region.includes(`data-zone="${zone}"`))).toContain(`fill="var(--${zone === 'F' ? 'danger-soft' : zone === 'C' ? 'warning-soft' : 'sunken'})"`);
+    const label = out.match(new RegExp(`<text data-zone-name="${zone}"[^>]*>`))?.[0];
+    expect(label).toContain(`fill="var(--${zone === 'F' ? 'danger' : zone === 'C' ? 'warning' : 'sub'})"`);
+  }
+});
+it('uses original log ticks, responsive dimensions and sampled dashed baselines', () => {
+  const tree = draw(OpportunityMap, {map: map([point('C1')]), compact: true});
+  const svg = nodes(tree, e => e.type === 'svg')[0];
+  expect(svg.props.viewBox).toBe('0 0 600 420');
+  expect(svg.props.style).toMatchObject({minHeight: 320});
+  const ticks = nodes(tree, e => e.type === 'text' && !!e.props['data-axis-tick']);
+  expect(ticks.map(e => e.props.children)).toEqual([...LOG_TICKS, ...LOG_TICKS]);
+  expect(html(tree)).toContain('로그 척도');
+  expect(ticks.some(e => String(e.props.children) === '10')).toBe(false);
+  for (const line of nodes(tree, e => e.props['data-baseline'] !== undefined)) {
+    expect(line.type).toBe('polyline');
+    expect(line.props.stroke).toBe('var(--line-strong)');
+    expect(line.props.strokeDasharray).toBeTruthy();
+  }
+  const dot = nodes(tree, e => e.props['data-context-id'] === 'C1')[0];
+  expect(dot.props.transform).toBe(`translate(${60 + logScale(.5)*480} ${340-logScale(.5)*320})`);
+});
+it('labels only the highlighted point and dims other personas in focus mode', () => {
+  const props = {map: map([point('C1'), {...point('C2'), persona_id:'P2'}]), focusPersonaId:'P1', selectedPersonaId:'P1'};
+  expect(nodes(draw(OpportunityMap, props), e => e.type === 'text' && !!e.props['data-label'])).toHaveLength(0);
+  const tree = draw(OpportunityMap, {...props, highlightedId:'C2'});
+  expect(nodes(tree, e => e.type === 'text' && !!e.props['data-label']).map(e => e.props.children)).toEqual(['C2']);
+  expect(nodes(tree, e => !!e.props['data-context-id']).map(e => e.props.opacity)).toEqual([1,.25]);
+});
+it('uses cluster-only legend buttons and toggles all cluster members', () => {
+  const props = {map: map([point('C1'), {...point('C2'),persona_id:'P2'}, {...point('C3'),cluster_id:'CL2'}])};
+  let tree = draw(OpportunityMap,props);
+  expect(nodes(tree,e=>e.type==='button')).toHaveLength(2);
+  const click = nodes(tree,e=>e.type==='button')[0].props.onClick as ()=>void;
+  click(); tree=draw(OpportunityMap,props,false);
+  expect(nodes(tree,e=>!!e.props['data-context-id']).map(e=>e.props['data-context-id'])).toEqual(['C3']);
+  (nodes(tree,e=>e.type==='button')[0].props.onClick as ()=>void)();
+  expect(nodes(draw(OpportunityMap,props,false),e=>!!e.props['data-context-id'])).toHaveLength(3);
+});
+it('omits null coordinates, explains missing contexts and preserves raw tooltip metrics', () => {
+  const tree=draw(OpportunityMap,{map:map([{...point('C1'),i:null},{...point('C2'),s:null},{...point('C3'),i:.02,s:.1,odi:.32}])});
+  expect(nodes(tree,e=>!!e.props['data-context-id']).map(e=>e.props['data-context-id'])).toEqual(['C3']);
+  expect(html(tree)).toContain('지도에 없는 Context 2개는 표에서 확인하세요.');
+  const title=html(nodes(tree,e=>e.type==='title')[0]);
+  for(const value of ['중요도 0.02','만족도 0.10','기회 0.32']) expect(title).toContain(value);
+  expect(html(draw(OpportunityMap,{map:map([])}))).toContain('기회 지도를 만들 Context가 없습니다.');
 });
