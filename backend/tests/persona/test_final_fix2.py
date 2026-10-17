@@ -16,6 +16,7 @@ def test_n4_only_changed_insight_concept_is_outdated(ready):
     store.new_revision('concepts', [dict(id=r['id'], insight_revision=1,
         context_ids=r['context_ids'], outdated=False) for r in rows], by='test', message=None)
     rows[0]['context_ids'] = ['CL0-P0-C1']
+    rows[0]['flow'] = [dict(context_id='CL0-P0-C1', text='불편하다')]
     assert edit(ready, {'items': rows})['ok']
     concepts = store.read('concepts')['items']
     assert [r['id'] for r in concepts if r['outdated']] == ['I1']

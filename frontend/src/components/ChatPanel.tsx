@@ -31,6 +31,7 @@ interface Message {
 }
 interface ChatPanelProps {
   initialMessage: string;
+  suggestions?: string[];
   onSend: (msg: string, novel: boolean) => Promise<ChatReply>;
   sid?: string | null;
   version?: string;
@@ -38,12 +39,13 @@ interface ChatPanelProps {
   known?: KnownInsight[];
   onKnownAdded?: (item: KnownInsight) => void;
 }
-export default function ChatPanel({ initialMessage, onSend, sid, version, readonly = false, known = [], onKnownAdded }: ChatPanelProps) {
+export default function ChatPanel({ initialMessage, onSend, sid, version, readonly = false, known = [], onKnownAdded, suggestions }: ChatPanelProps) {
   const [messages, setMessages] = useState<Message[]>([{ role: "bot", text: initialMessage }]);
   const [input, setInput] = useState("");
   const [novel, setNovel] = useState(true);
   const [loading, setLoading] = useState(false);
   const lock = useRef(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
 
@@ -86,9 +88,10 @@ export default function ChatPanel({ initialMessage, onSend, sid, version, readon
       <div ref={bottomRef} />
     </div>
     <form className="border-t border-line p-3 space-y-3" onSubmit={e => {e.preventDefault();void send();}}>
+      {!!suggestions?.length && <div className="insight-suggestions">{suggestions.map(suggestion => <button type="button" className="insight-hit" key={suggestion} disabled={readonly || loading} onClick={() => {setInput(suggestion);inputRef.current?.focus();}}>{suggestion}</button>)}</div>}
       {sid && <Switch label="새 발견 찾기" checked={novel} disabled={loading} onChange={setNovel} />}
-      <div className="flex gap-2"><input disabled={readonly} aria-label="메시지" className="min-w-0 flex-1 border border-line rounded-input px-3 py-2 bg-paper" placeholder="메시지를 입력하세요..." value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => {if(e.key === "Enter" && e.nativeEvent.isComposing) e.preventDefault();}} />
-        <Button type="submit" disabled={readonly || loading || !input.trim()}>전송</Button></div>
+      <div className="flex gap-2"><input ref={inputRef} disabled={readonly || (!!suggestions && loading)} aria-label="메시지" className="min-w-0 flex-1 border border-line rounded-input px-3 py-2 bg-paper" placeholder="메시지를 입력하세요..." value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => {if(e.key === "Enter" && e.nativeEvent.isComposing) e.preventDefault();}} />
+        <Button type="submit" className={suggestions ? "insight-hit" : undefined} disabled={readonly || loading || !input.trim()}>{suggestions && loading ? "처리 중…" : "전송"}</Button></div>
     </form>
   </div>;
 }

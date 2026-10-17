@@ -172,7 +172,12 @@ def _responses(package, block, selected=None, concept_edit=False):
     # Prefer the first Persona's Contexts so concept citations have one namespace.
     all_ids = [c.context_id for b in package.personas for c in b.context_evidence]
     items = [dict(id=f'I{n+1}', title=f'냉방 조절 경험 개선 {n+1}', pain_point='냉방을 조절할 때 번거로움을 겪는다.',
-                  context_ids=[all_ids[n % len(all_ids)]], known_ki_id=None) for n in range(3)]
+                  context_ids=[all_ids[n % len(all_ids)]], known_ki_id=None,
+                  headline=f'냉방 조절 경험 개선 {n+1}',
+                  statements=['편안한 냉방을 원한다', '냉방을 조절할 때 번거로움을 겪는다.'],
+                  hashtags=['냉방', '조절'],
+                  flow=[dict(context_id=all_ids[n % len(all_ids)],
+                             text='냉방을 조절할 때 번거로움을 겪는다.')]) for n in range(3)]
     concept = dict(persona_profile='편안한 실내 생활을 원하는 합성 사용자',
         pain_points=list(refs)[:3], journey=[dict(context_id=cids[0], action='온도를 조절한다',
             feeling='번거롭다', service='예약 조절 안내', service_action='예약 방법을 안내한다', cx_4d='시스템')],

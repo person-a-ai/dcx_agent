@@ -47,7 +47,7 @@ it('links insight sidebar and reports completion at 8/9', () => {
  expect(renderToStaticMarkup(createElement(StepBar,{currentStep:'insight',session:{completion:{insightDone:true}}}))).toContain('href="/pipeline/insights"');
 });
 
-import { ConceptDetail } from './InsightScreen';
+import { ConceptDetail } from './InsightConcept';
 import { addSuggestedKnownInsight } from '@/lib/api/insight';
 it('renders synthetic persona, quoted evidence location, journey and all four CX dimensions', () => {
  const html = renderToStaticMarkup(createElement(ConceptDetail,{concept:{outdated:false,persona_profile:{text:'프로필'},basis:'근거 45건',pain_points:[{quote:'실제 인용',channel:'cafe',location:{field:'body',idx:1},context_id:'C1'}],journey:[{context_id:'C1',action:'행동',feeling:'불편',service:'서비스',service_action:'변화',cx_4d:'정신적'}],constraint_check:[{constraint:'예산',verdict:'review',reason:'확인 필요'}]}}));
@@ -76,4 +76,16 @@ it('Q2 pain point sources localize real hydrated locations without raw offsets',
  expect(html).toContain('유튜브 · 제목 · Context CL0-P0-C1');
  expect(html).toContain('네이버 블로그 · 댓글 3 · Context CL0-P0-C2');
  for(const raw of ['naver_cafe','시작:','끝:','번호:','위치 항목:']) expect(html).not.toContain(raw);
+});
+
+it('chat sends focus_id only for insights target', async () => {
+ const {api,actions} = setup(true);
+ await actions.chat('insights','m','I2');
+ expect(api.chatInsight).toHaveBeenLastCalledWith('sid',{target:'insights',message:'m',focus_id:'I2'},'v2');
+ await actions.chat('concept:I2','m','I2');
+ expect(api.chatInsight).toHaveBeenLastCalledWith('sid',{target:'concept:I2',message:'m'},'v2');
+ await actions.chat('insight:I2','m','I2');
+ expect(api.chatInsight).toHaveBeenLastCalledWith('sid',{target:'insight:I2',message:'m'},'v2');
+ await actions.chat('insights','m');
+ expect(api.chatInsight).toHaveBeenLastCalledWith('sid',{target:'insights',message:'m'},'v2');
 });

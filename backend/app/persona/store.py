@@ -19,7 +19,8 @@ _NAMES = frozenset(('cards', 'map', 'tree', 'insights', 'concepts', 'stage_8'))
 
 def _concept_identity(row):
     # Relative ranks and session aggregates are not concept source identity.
-    return {key: row.get(key) for key in ('id', 'title', 'pain_point', 'context_ids')} if row else None
+    return {key: row.get(key) for key in ('id', 'title', 'pain_point', 'context_ids',
+                                            'headline', 'statements', 'flow')} if row else None
 
 
 class PersonaStore:

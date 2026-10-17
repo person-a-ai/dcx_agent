@@ -23,7 +23,7 @@ from app.work import runner
 
 router = APIRouter(route_class=LabelRoute)
 Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
-Target = Annotated[str, StringConstraints(pattern=r'^(insights|concept:.+)$')]
+Target = Annotated[str, StringConstraints(pattern=r'^(insights|concept:.+|insight:.+)$')]
 
 
 class Body(BaseModel):
@@ -40,11 +40,13 @@ class Retry(Body):
 
 
 class InsightRun(Body):
+    fresh: bool = False
     mode: Literal['derive', 'concept']
     target: Text | None = None
 
 
 class Chat(Body):
+    focus_id: Text | None = None
     target: Target
     message: Text
 
@@ -245,6 +247,15 @@ def get_insights(sid: str, version: str | None = None):
     data, store = _open(sid, version)
     docs = {name: store.read(name) or dict(revision=0, items=[], history=[])
             for name in ('insights', 'concepts')}
+    try:
+        package = load_package(sid, data['version'])
+    except PackageMissing:
+        package = None
+    cards = store.read('cards')
+    for revision in [docs['insights'], *docs['insights'].get('history', [])]:
+        for item in revision.get('items', []):
+            if 'contexts' not in item:
+                item['contexts'] = insights.context_view(package, cards, item, axes_by_cid=None)
     items = docs['insights']['items']
     bars = None
     radar = None
@@ -253,7 +264,8 @@ def get_insights(sid: str, version: str | None = None):
                     mean=items[0].get('opportunity_mean'),
                     targets=[row['id'] for row in items if row.get('default_target')])
         radar = {row['id']: row['radar'] for row in items if 'radar' in row}
-    return {**docs, 'bars': bars, 'radar': radar, 'worker': _insight_worker(sid, data)}
+    return {**docs, 'bars': bars, 'radar': radar, 'worker': _insight_worker(sid, data),
+            'summary': insights.summary(package, items)}
 
 
 @router.post('/insight/{sid}/concept/{item_id}')
@@ -264,7 +276,7 @@ def create_concept(sid: str, item_id: str, version: str | None = None):
 @router.post('/insight/{sid}/chat')
 def edit_insight(sid: str, body: Chat, version: str | None = None):
     data, _ = _open(sid, version, writable=True)
-    return chat.edit(sid, data['version'], body.target, body.message)
+    return chat.edit(sid, data['version'], body.target, body.message, focus_id=body.focus_id)
 
 
 @router.post('/insight/{sid}/revert')
@@ -287,6 +299,7 @@ def _insight_worker(sid, data):
     reason = state.get('reason')
     run_id = state.get('run')
     mode, target = state.get('mode'), state.get('target')
+    fresh = bool(state.get('fresh', False))
     # A reset removes the pipeline run; old terminal supervisor rows are history.
     if work and ((run_id and work.get('runId') == run_id) or work['state'] in ('running', 'paused')):
         same = work.get('runId') == run_id
@@ -297,6 +310,7 @@ def _insight_worker(sid, data):
         reason = reason if same else None
         if not same:
             mode, target = None, None
+            fresh = False
         from app.work.status import database_path, transaction
         if database_path(sid).exists():
             with transaction(sid) as db:
@@ -304,6 +318,7 @@ def _insight_worker(sid, data):
             if row:
                 args = json.loads(row[0])
                 mode, target = args.get('mode'), args.get('target')
+                fresh = bool(args.get('fresh', False))
     if status == 'paused':
         status = 'running'
     if status not in ('idle', 'running', 'done', 'failed', 'interrupted'):
@@ -312,4 +327,4 @@ def _insight_worker(sid, data):
         reason = (insights.CONCEPT_FAILURE_COPY if mode == 'concept' else insights.FAILURE_COPY) if status == 'failed' else '작업이 중단되었습니다. 이어서 진행하세요.'
     if status in ('idle', 'running', 'done'):
         reason = None
-    return dict(status=status, reason=reason, runId=run_id, mode=mode, target=target)
+    return dict(status=status, reason=reason, runId=run_id, mode=mode, target=target, fresh=fresh)

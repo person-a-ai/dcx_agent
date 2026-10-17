@@ -130,7 +130,7 @@ def test_worker_contract(ready, monkeypatch, status):
                              'run': 'work', 'mode': 'concept', 'target': 'I1'}})
     monkeypatch.setattr(stage8.runner, 'status', lambda sid: [])
     assert stage8.get_insights(session.sid)['worker'] == dict(status=status, reason='실패 사유',
-                                           runId='work', mode='concept', target='I1')
+                                           runId='work', mode='concept', target='I1', fresh=False)
 
 
 def test_card_package_fields():
@@ -308,6 +308,7 @@ def test_completion_reconciles_changed_confirmations(setup):
 def test_concept_revert_cannot_restore_obsolete_source(ready):
     concept(ready)
     ready[2][0]['context_ids'] = ['CL0-P0-C1']
+    ready[2][0]['flow'] = [dict(context_id='CL0-P0-C1', text='불편하다')]
     assert edit(ready, {'items': ready[2]})['ok']
     session = ready[0]
     chat.revert(session.sid, session.version, 'concept:I1', 1)
@@ -359,7 +360,7 @@ def test_worker_contract_uses_durable_supervisor(ready, status):
             time.time(), time.time(), 'durable failure' if status != 'running' else None))
     result = stage8.get_insights(sid)['worker']
     assert result == dict(status=status, reason=(insights.CONCEPT_FAILURE_COPY if status == 'failed' else '작업이 중단되었습니다. 이어서 진행하세요.') if status != 'running' else None,
-                         runId='durable', mode='concept', target='I2')
+                         runId='durable', mode='concept', target='I2', fresh=False)
 
 
 def test_failed_chat_never_appends_to_old_version(ready):

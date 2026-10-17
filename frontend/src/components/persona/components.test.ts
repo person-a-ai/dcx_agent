@@ -99,9 +99,9 @@ it('renders cluster shapes, hollow counters, stars, baselines and toggling legen
 });
 it('renders hierarchy sizes, radar raw and percentile, bars mean, journey distribution and revisions', () => {
   expect(html(createElement(HierarchyTree, { root: { id:'product', name:'제품', doc_count:10, children:[{id:'CL1',name:'Cluster',doc_count:4}] } }))).toContain('문서 10건');
-  const radar = html(createElement(Radar, { values: { Computed:{raw:.4,percentile:80}, Connected:{raw:.3,percentile:50}, Shared:{raw:.2,percentile:10} } }));
-  for (const word of ['맞춤형 서비스가 필요해','실시간으로 직접 보고 싶어','함께 즐기고 싶어','0.40','80']) expect(radar).toContain(word);
-  expect(html(createElement(OpportunityBars, { bars:[{id:'I1',label:'인사이트',value:2}], mean:1 }))).toContain('평균 1');
+  const radar = html(createElement(Radar, { mean:null, label:'Insight 1', values: { Computed:{raw:.4,percentile:80}, Connected:{raw:.3,percentile:50}, Shared:{raw:.2,percentile:10} } }));
+  for (const word of ['Computed','Connected','Shared','0.40','80']) expect(radar).toContain(word);
+  expect(html(createElement(OpportunityBars, { rows:[{contextId:'C1',short:'C1',label:'인사이트',value:2}], mean:1 }))).toContain('평균 1');
   const journey = html(createElement(JourneyTable, { rows:[{context_id:'C1',action:'행동',feeling:'감정',service:'서비스',service_action:'처방행동',cx_4d:'정신적'}] }));
   for (const word of ['AS-IS','TO-BE','⚪','처방','정신적 1','물리적 0','문화적 0','시스템 0']) expect(journey).toContain(word);
   const onView=vi.fn(), onRevert=vi.fn(); const tree=RevisionList({ revisions:[{revision:1,message:'초안'}], currentRevision:2,onView,onRevert });
@@ -153,7 +153,7 @@ it('sorts every Context column using the shared sorter without mutating input', 
   expect(JSON.stringify(rows)).toBe(original);
 });
 it('renders empty charts and missing metrics without invalid coordinates', () => {
-  const outputs=[html(draw(OpportunityMap,{map:map([])})),html(createElement(OpportunityBars,{bars:[],mean:null})),html(createElement(Radar,{values:{Computed:{raw:null,percentile:null},Connected:{raw:0,percentile:0},Shared:{raw:1,percentile:100}}})),html(createElement(JourneyTable,{rows:[]}))];
+  const outputs=[html(draw(OpportunityMap,{map:map([])})),html(createElement(OpportunityBars,{rows:[],mean:null})),html(createElement(Radar,{mean:null,label:'Insight 1',values:{Computed:{raw:null,percentile:null},Connected:{raw:0,percentile:0},Shared:{raw:1,percentile:100}}})),html(createElement(JourneyTable,{rows:[]}))];
   outputs.forEach(out=>expect(out).not.toMatch(/NaN|Infinity/));
 });
 it('keeps ten journey Contexts in fixed-width rows and shows all four distribution buckets', () => {
@@ -187,30 +187,36 @@ it('folds long journeys into two tables while preserving mockup rows and all fou
   expect(html(tree)).toContain('정신적 10');
 });
 
-it('ranks opportunity bars without changing inputs and labels the mean independently of color', () => {
-  const bars = [{id:'low',label:'낮음',value:.5},{id:'high',label:'높음',value:2}];
-  const tree = OpportunityBars({bars,mean:1});
+it('keeps Context order without changing inputs and labels the mean independently of color', () => {
+  const rows = [{contextId:'low',short:'C1',label:'낮음',value:.5},{contextId:'high',short:'C2',label:'높음',value:2}];
+  const original = JSON.stringify(rows);
+  const tree = OpportunityBars({rows,mean:1});
   const out = html(tree);
-  expect(out.indexOf('높음')).toBeLessThan(out.indexOf('낮음'));
-  expect(bars[0].id).toBe('low');
+  expect(out.indexOf('낮음')).toBeLessThan(out.indexOf('높음'));
+  expect(JSON.stringify(rows)).toBe(original);
   expect(nodes(tree,e=>e.type==='svg')).toHaveLength(0);
-  const rows = nodes(tree,e=>e.props.className==='opportunity-row');
-  expect(rows).toHaveLength(2);
-  rows.forEach(row => {
-    expect(nodes(row.props.children as ReactNode,e=>e.type==='div')).toHaveLength(1);
-    expect((row.props.children as ReactNode[])).toHaveLength(4);
-    const area = nodes(row,e=>e.props.className==='opportunity-bar-area')[0];
-    expect(nodes(area,e=>e.props['data-mean']===1)).toHaveLength(1);
+  const columns = nodes(tree,e=>e.props.className==='insight-bars-column');
+  expect(columns).toHaveLength(2);
+  columns.forEach(column => {
+    expect(nodes(column,e=>e.props.className==='insight-bar-slot')).toHaveLength(1);
+    expect(nodes(column,e=>e.props.className==='insight-bar-label')).toHaveLength(1);
   });
-  expect(html(OpportunityBars({bars:[],mean:null}))).toContain('기회 정보가 없습니다.');
+  const average = nodes(tree,e=>e.props.className==='insight-bars-mean');
+  expect(average).toHaveLength(1);
+  expect(nodes(tree,e=>e.type==='figcaption').map(html).join('')).toContain('평균 1.0');
+  expect(out).toContain('평균 1.0');
+  expect(html(OpportunityBars({rows:[],mean:null}))).toContain('이 인사이트의 Context에 ODI 값이 없습니다');
 });
 
-it('keeps exact radar axes, missing values, and distinct raw/percentile encodings', () => {
-  const tree = Radar({values:{Computed:{raw:.4,percentile:80},Connected:{raw:null,percentile:null},Shared:{raw:0,percentile:0}}});
+it('keeps exact radar axes, missing values, and distinct raw/mean encodings', () => {
+  const tree = Radar({mean:{Computed:.3,Connected:.2,Shared:.1},label:'Insight 1',values:{Computed:{raw:.4,percentile:80},Connected:{raw:null,percentile:null},Shared:{raw:0,percentile:0}}});
   const out = html(tree);
-  for (const label of ['맞춤형 서비스가 필요해','실시간으로 직접 보고 싶어','함께 즐기고 싶어','원값 —','실선 · 원값 / 점선 · 백분위']) expect(out).toContain(label);
+  for (const label of ['Computed','Connected','Shared','원값 —','백분위 80','— Insight 1','평균(전체 인사이트)']) expect(out).toContain(label);
   expect(nodes(tree,e=>e.type==='svg')[0].props.role).toBe('img');
-  expect(out).not.toContain('NaN'); expect(out).toContain('stroke-dasharray="4 4"');
+  expect(out).not.toMatch(/NaN|Infinity/);
+  const polygons = nodes(tree,e=>e.type==='polygon');
+  expect(polygons.filter(e=>e.props.strokeDasharray)).toHaveLength(1);
+  expect(polygons.find(e=>e.props.stroke==='var(--action)')?.props.strokeDasharray).toBeUndefined();
 });
 
 it('disables revision actions while busy and prevents reverting the current revision', () => {
@@ -415,18 +421,23 @@ it('keeps only the root open without a selection and handles zero document total
 });
 it('keeps wrapping sentences in their own grid cell and omits absent mean lines', () => {
   const label='긴 문장'.repeat(100);
-  const tree=OpportunityBars({bars:[{id:'null',label,value:null},{id:'zero',label:'영',value:0}],mean:null});
-  expect(nodes(tree,e=>e.props.className==='opportunity-sentence')[1].props.children).toBe(label);
-  expect(nodes(tree,e=>e.props['data-mean']!==undefined)).toHaveLength(0);
-  const fills=nodes(tree,e=>e.props.className==='opportunity-bar');
+  const tree=OpportunityBars({rows:[{contextId:'null',short:'C1',label,value:null},{contextId:'zero',short:'C2',label:'영',value:0}],mean:null});
+  const labels=nodes(tree,e=>e.props.className==='insight-bar-label');
+  expect(html(labels[0])).toContain(label);
+  expect(nodes(labels[0],e=>e.type==='span')[1].props.children).toBe(label);
+  expect(nodes(tree,e=>e.props.className==='insight-bars-mean')).toHaveLength(0);
+  const fills=nodes(tree,e=>e.props.className==='insight-bar');
   expect(fills).toHaveLength(1);
-  expect(fills[0].props.style).toEqual({width:'0%'});
-  expect(html(tree)).toContain('—');
+  expect(fills[0].props.style).toEqual({height:'0%'});
+  expect(html(labels[0])).toContain('값 없음');
+  expect(html(labels[1])).not.toContain('값 없음');
   expect(html(tree)).not.toMatch(/NaN|Infinity/);
-  const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
-  expect(css).toMatch(/\.opportunity-row\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:/);
-  expect(css).toMatch(/\.opportunity-sentence\s*\{[^}]*overflow-wrap:\s*anywhere/);
-  expect(css).toMatch(/\.hierarchy-toggle\s*\{[^}]*min-height:\s*44px/);
+  const css=readFileSync(new URL('./insight.css',import.meta.url),'utf8');
+  expect(css).toMatch(/\.insight-bars-grid\s*\{[^}]*display:\s*grid/);
+  expect(nodes(tree,e=>e.props.className==='insight-bars-grid')[0].props.style).toMatchObject({gridTemplateColumns:'repeat(2, minmax(72px, 1fr))'});
+  expect(css).toMatch(/\.insight-bar-label\s*\{[^}]*overflow-wrap:\s*anywhere/);
+  const personaCss=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
+  expect(personaCss).toMatch(/\.hierarchy-toggle\s*\{[^}]*min-height:\s*44px/);
 });
 
 it('RV2 separates nearby focused labels deterministically',()=>{

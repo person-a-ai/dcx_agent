@@ -6,8 +6,8 @@ type Api = Pick<typeof client, 'chatInsight' | 'getInsights' | 'revertInsight' |
 export function createInsightActions(sid: string, version: string | undefined, api: Api, publish: (data: InsightResponse) => void, confirmed: (ids: string[]) => void) {
  const reload = async () => {const result = await api.getInsights(sid, version); publish(result); confirmed(result.confirmed ?? []);};
  return {
-  async chat(target: InsightTarget, message: string) {
-   try { const result = await api.chatInsight(sid,{target,message},version); if (!result.ok) return CHAT_FAILURE; await reload(); return `판 ${result.revision}에 반영했습니다.`; } catch (cause) { return cause instanceof ApiError && cause.kind === 'stale' ? displayError(cause) : CHAT_FAILURE; }
+  async chat(target: InsightTarget, message: string, focusId?: string) {
+   try { const result = await api.chatInsight(sid,{target,message,...(target === 'insights' && focusId ? {focus_id:focusId} : {})},version); if (!result.ok) return CHAT_FAILURE; await reload(); return `판 ${result.revision}에 반영했습니다.`; } catch (cause) { return cause instanceof ApiError && cause.kind === 'stale' ? displayError(cause) : CHAT_FAILURE; }
   },
   async revert(target: InsightTarget, revision: number) { await api.revertInsight(sid,{target,revision},version); await reload(); },
   async confirm(ids: string[]) { const result = await api.confirmInsights(sid,{ids},version); confirmed(result.confirmed); },

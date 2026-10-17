@@ -4,6 +4,7 @@ Calculated fields live on each item (radar, odi, opportunity_mean,
 default_target, known_badge) so revision/revert retains a coherent snapshot.
 """
 import json
+from copy import deepcopy
 from contextlib import closing
 from pathlib import Path
 import sqlite3
@@ -16,7 +17,7 @@ from app.context import store as sessions
 from app.context.versions import version_dir
 from app.llm import registry
 from app.llm.base import Attachment, LLMTask
-from app.persona.package import load_package
+from app.persona.package import ContextEvidence, Package, load_package
 from app.persona.params import INSIGHT_RANGE, RADAR_AXES
 from app.persona.radar import embed_axes, radar, session_percentiles
 from app.persona.store import PersonaStore
@@ -24,6 +25,12 @@ from app.persona.store import PersonaStore
 CONCEPT_FAILURE_COPY = '컨셉을 만들지 못했습니다. 다시 시도하세요.'
 FAILURE_COPY = '인사이트를 만들지 못했습니다. 다시 시도하세요.'
 Text = Annotated[str, Field(min_length=1)]
+
+
+class FlowStep(BaseModel):
+    model_config = ConfigDict(extra='ignore', strict=True, str_strip_whitespace=True)
+    context_id: Text
+    text: Text = Field(max_length=80)
 
 
 class InsightItem(BaseModel):
@@ -34,12 +41,80 @@ class InsightItem(BaseModel):
     pain_point: Text
     context_ids: list[Text] = Field(min_length=1)
     known_ki_id: Text | None
+    headline: Text
+    statements: list[Text] = Field(min_length=2, max_length=2)
+    hashtags: list[Text] = Field(min_length=2, max_length=4)
+    flow: list[FlowStep] = Field(min_length=1)
 
 
 class DeriveOut(BaseModel):
     model_config = ConfigDict(extra='ignore', strict=True)
     # Business range is checked outside the schema to bound regeneration to one.
     items: list[InsightItem]
+
+
+class EditItem(InsightItem):
+    headline: Text | None = None
+    statements: list[Text] | None = Field(default=None, min_length=2, max_length=2)
+    hashtags: list[Text] | None = Field(default=None, min_length=2, max_length=4)
+    flow: list[FlowStep] | None = Field(default=None, min_length=1)
+
+
+class EditOut(BaseModel):
+    model_config = ConfigDict(extra='ignore', strict=True)
+    items: list[EditItem]
+
+
+_NEW_FIELDS = ('headline', 'statements', 'hashtags', 'flow')
+
+
+def validate_items(items: list[dict], available: set[str], *, require_new: bool = True,
+                   previous: list[dict] | None = None) -> list[dict]:
+    """Validate text and references, returning a cleaned independent snapshot."""
+    if not INSIGHT_RANGE[0] <= len(items) <= INSIGHT_RANGE[1]:
+        raise ValueError('Invalid insight count')
+    cleaned = deepcopy(items)
+    prior = {row['id']: row for row in previous or []}
+    ids = set()
+    for row in cleaned:
+        present = [row.get(key) is not None for key in _NEW_FIELDS]
+        if (require_new and not all(present)) or (any(present) and not all(present)):
+            raise ValueError('New insight fields must be all present or all absent')
+        old = prior.get(row.get('id'), {})
+        if any(old.get(key) is not None for key in _NEW_FIELDS) and not all(present):
+            raise ValueError('New insight fields cannot be removed')
+        # Check types before normalizing so malformed input raises ValueError.
+        (InsightItem if all(present) else EditItem).model_validate(row)
+        if all(present):
+            row['headline'] = row['headline'].strip().strip('"“”\'').strip()
+            row['hashtags'] = [tag.strip().lstrip('#').strip() for tag in row['hashtags']]
+        else:
+            for key in _NEW_FIELDS:
+                row.pop(key, None)
+        # Validate structure without dropping code-owned fields from stored revisions.
+        parsed = (InsightItem if all(present) else EditItem).model_validate(row)
+        for key, value in parsed.model_dump(exclude_none=False).items():
+            if key not in _NEW_FIELDS or all(present):
+                row[key] = value
+        if row['id'] in ids:
+            raise ValueError('Duplicate insight ID')
+        ids.add(row['id'])
+        contexts = row['context_ids']
+        if not set(contexts) <= set(available) or len(set(contexts)) != len(contexts):
+            raise ValueError('Invalid Context IDs')
+        if not all(present):
+            continue
+        if not 1 <= len(row['headline']) <= 30:
+            raise ValueError('headline must contain 1~30 characters')
+        if any(not 1 <= len(text) <= 70 for text in row['statements']):
+            raise ValueError('statements must contain 1~70 characters each')
+        if len(set(row['hashtags'])) != len(row['hashtags']):
+            raise ValueError('Duplicate hashtags')
+        flow_ids = [step['context_id'] for step in row['flow']]
+        if (not set(flow_ids) <= set(contexts) or len(set(flow_ids)) != len(flow_ids)
+                or not min(2, len(contexts)) <= len(flow_ids) <= len(contexts)):
+            raise ValueError('Invalid flow Context IDs or count')
+    return cleaned
 
 
 class InsightError(RuntimeError):
@@ -58,6 +133,68 @@ def opportunity_bars(insights, odi_by_context) -> dict:
     return {'bars': bars, 'mean': mean,
             'targets': [bar['id'] for bar in bars
                         if bar['odi'] is not None and mean is not None and bar['odi'] >= mean]}
+
+
+_DIMENSIONS = ('Sense', 'Feel', 'Think', 'Act', 'Relate', 'Outcome')
+
+
+def dominant_dim(context: ContextEvidence) -> str | None:
+    """Count recognized dimensions in support evidence, with stable tie order."""
+    counts = {dim.lower(): 0 for dim in _DIMENSIONS}
+    for evidence in context.evidence:
+        if not isinstance(evidence.tags, list):
+            continue
+        for tag in evidence.tags:
+            if isinstance(tag, str) and tag in counts:
+                counts[tag] += 1
+    winner = max(_DIMENSIONS, key=lambda dim: counts[dim.lower()])
+    return winner if counts[winner.lower()] else None
+
+
+def context_axis(centroid: np.ndarray, axes: np.ndarray) -> str | None:
+    raw = radar({'context': centroid}, {'context': 1}, axes)['raw']
+    winner = max(RADAR_AXES, key=raw.__getitem__)
+    return winner if raw[winner] > 0 else None
+
+
+def context_view(package: Package | None, cards: dict | None, item: dict,
+                 axes_by_cid: dict[str, str | None] | None = None) -> list[dict]:
+    """Project Context rows in item order without loading data or embedding."""
+    contexts = {c.context_id: (block.persona_evidence, c)
+                for block in package.personas for c in block.context_evidence} if package else {}
+    personas = (cards or {}).get('personas', {})
+    rows = []
+    for cid in item['context_ids']:
+        row = dict(context_id=cid, short=cid.rsplit('-', 1)[-1], persona_id=None,
+                   persona_name=None, context_name=None, odi=None, axis=None,
+                   dim=None, counter=False, pain_point=None)
+        if cid in contexts:
+            persona, context = contexts[cid]
+            card = personas.get(persona.persona_id, {}).get('card') or {}
+            card_context = next((c for c in card.get('contexts', [])
+                                 if c.get('context_id') == cid), {})
+            pain_points = card_context.get('pain_points') or []
+            row.update(persona_id=persona.persona_id, persona_name=persona.persona_name,
+                       context_name=context.context_name, odi=context.metrics.odi,
+                       axis=(axes_by_cid or {}).get(cid), dim=dominant_dim(context),
+                       counter='counter_context' in context.flags,
+                       pain_point=pain_points[0].get('text') if pain_points else None)
+        rows.append(row)
+    return rows
+
+
+def summary(package: Package | None, items: list[dict]) -> dict:
+    values = [c.metrics.odi for block in package.personas for c in block.context_evidence
+              if c.metrics.odi is not None] if package else []
+    raw = [item['radar']['raw'] for item in items if item.get('radar', {}).get('raw')]
+    radar_mean = None
+    if raw:
+        radar_mean = {}
+        for axis in RADAR_AXES:
+            scores = [row[axis] for row in raw if row.get(axis) is not None]
+            radar_mean[axis] = float(np.mean(scores)) if scores else None
+    return {'context_odi_mean': float(np.mean(values)) if values else None,
+            'radar_mean': radar_mean}
 
 
 def _centroids(sid, version, ids):
@@ -83,7 +220,7 @@ def derive(sid, version, *, run_task=None, embedder, before_publish=None) -> int
     known = session.get('knownInsights', session.get('projectContext', {}).get('knownInsights', []))
     payload = {'cards': cards, 'known_insights': known,
                'contexts': [{'context_id': cid, 'odi': c.metrics.odi} for cid, c in contexts.items()]}
-    prompt = (Path(__file__).with_name('prompts') / 'derive.v1.md').read_text(encoding='utf-8')
+    prompt = (Path(__file__).with_name('prompts') / 'derive.v2.md').read_text(encoding='utf-8')
     run_task = registry.run_task if run_task is None else run_task
     items = None
     for _ in range(2):
@@ -96,16 +233,16 @@ def derive(sid, version, *, run_task=None, embedder, before_publish=None) -> int
             raise
         except Exception as exc:
             raise InsightError() from exc
-        if not result.ok or not isinstance(result.data, DeriveOut):
+        if not result.ok and (result.error is None or result.error.kind != 'schema'):
             raise InsightError()
-        candidates = [item.model_dump() for item in result.data.items]
-        if (INSIGHT_RANGE[0] <= len(candidates) <= INSIGHT_RANGE[1] and
-                len({item['id'] for item in candidates}) == len(candidates) and
-                all(set(item['context_ids']) <= contexts.keys() and
-                    len(set(item['context_ids'])) == len(item['context_ids']) for item in candidates)):
-            items = candidates
+        try:
+            if not result.ok or not isinstance(result.data, DeriveOut):
+                raise ValueError('Invalid derive output schema')
+            candidates = [item.model_dump() for item in result.data.items]
+            items = validate_items(candidates, set(contexts))
             break
-        payload['retry'] = '인사이트를 3~8개 생성하고 고유 ID와 입력에 있는 Context ID만 사용하세요.'
+        except ValueError:
+            payload['retry'] = '인사이트를 3~8개 생성하고 고유 ID와 입력에 있는 Context ID만 사용하세요. headline은 30자 이하, statements는 정확히 2개이며 각 70자 이하, hashtags는 2~4개, flow는 그 인사이트 context_ids 안에서 고르세요.'
     if items is None:
         raise InsightError()
     recompute(sid, version, items, package=package, embedder=embedder)
@@ -130,8 +267,11 @@ def recompute(sid, version, items, *, package=None, embedder):
         axes = embed_axes(embedder)
         if axes.ndim != 2 or any(v.shape != (axes.shape[1],) for v in centroids.values()):
             raise InsightError('Preparation embedding dimension does not match Context centroids')
+        axes_by_cid = {cid: context_axis(vector, axes) for cid, vector in centroids.items()}
+        cards = PersonaStore.open(sid, version).read('cards')
         weights = {cid: c.metrics.doc_count for cid, c in contexts.items()}
         for item in items:
+            item['contexts'] = context_view(package, cards, item, axes_by_cid)
             item['radar'] = radar({cid: centroids[cid] for cid in item['context_ids']}, weights, axes)
         for axis in RADAR_AXES:
             ranks = session_percentiles([item['radar']['raw'][axis] for item in items])
