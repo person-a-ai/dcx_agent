@@ -1,0 +1,109 @@
+{
+  "verdict": "PASS",
+  "head": "2012741b3bfa1240499b11d7b0de3fcbc0088ec4",
+  "fingerprint": "e277df62b42ecf354afe8249aec920a03834ac1b5508b04f0cffd95817fdb76f",
+  "commands": [
+    {
+      "command": "gstack /qa-only (Claude built-in browser) on http://localhost:3412/pipeline/insights, data copy /private/tmp/dcx-qa-insight",
+      "exitCode": 0
+    }
+  ],
+  "findings": [],
+  "scenarios": [
+    {
+      "id": "Q1",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/screenshots/q1-legacy-1280.jpg"
+    },
+    {
+      "id": "Q2",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/screenshots/q2-rederived-1280.jpg"
+    },
+    {
+      "id": "Q3",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/qa-report-localhost-2026-10-16.md#scenario-results"
+    },
+    {
+      "id": "Q4",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/screenshots/q2-rederived-1280.jpg"
+    },
+    {
+      "id": "Q5",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/qa-report-localhost-2026-10-16.md#scenario-results"
+    },
+    {
+      "id": "Q6",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/qa-report-localhost-2026-10-16.md#scenario-results"
+    },
+    {
+      "id": "Q7",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/qa-report-localhost-2026-10-16.md#scenario-results"
+    },
+    {
+      "id": "Q8",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/screenshots/q8-768.jpg"
+    },
+    {
+      "id": "Q9",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/screenshots/q9-revisions.jpg"
+    },
+    {
+      "id": "ISSUE-001-recheck",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/screenshots/recheck-issue-001-dialog-centered.jpg"
+    },
+    {
+      "id": "ISSUE-002-recheck",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/screenshots/recheck-issue-002-768.jpg"
+    },
+    {
+      "id": "ISSUE-004-ARROW-recheck",
+      "url": "http://localhost:3412/pipeline/insights",
+      "result": "PASS",
+      "evidence": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/screenshots/recheck-issue-004-arrow-trail.jpg"
+    }
+  ],
+  "report": "docs/development/stage8-insight-redesign/qa/run-20261016T132612Z/qa-report-localhost-2026-10-16.md",
+  "resolved": [
+    {
+      "id": "ISSUE-001",
+      "status": "fixed and re-checked in browser"
+    },
+    {
+      "id": "ISSUE-002",
+      "status": "fixed and re-checked in browser"
+    },
+    {
+      "id": "ISSUE-003",
+      "status": "fixed and re-checked in browser"
+    },
+    {
+      "id": "ISSUE-004",
+      "status": "fixed and re-checked in browser"
+    },
+    {
+      "id": "ARROW-TRAIL",
+      "status": "fixed and re-checked in browser"
+    }
+  ]
+}
