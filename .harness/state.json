@@ -2,11 +2,12 @@
   "version": 1,
   "workflowVersion": 2,
   "id": "dcx-step07-11",
-  "phase": "worktree",
+  "phase": "transferred",
   "evidence": {
     "brainstorm": "docs/development/dcx-step07-11/01-brainstorm.md#sha256=45e823300ba4ae1e825003ee11b6d97038bddfb7e01a0350ffe0a3a27c654307",
     "design": "docs/development/dcx-step07-11/design-bundle.json#sha256=baefafca67d842213b652853b4e4f37a88c56348a042a0419d81a69852de61cc",
-    "plan": "docs/development/dcx-step07-11/plan-bundle.json#sha256=8af30356b6d9a8963fcbc8d097450811440b54fc12c5511efd8db8ed1cfa7265"
+    "plan": "docs/development/dcx-step07-11/plan-bundle.json#sha256=8af30356b6d9a8963fcbc8d097450811440b54fc12c5511efd8db8ed1cfa7265",
+    "worktree": "git worktree /Users/yunho/Documents/dcx_agent/.worktrees/dcx-step07-11"
   },
   "history": [
     {
@@ -18,7 +19,7 @@
     {
       "phase": "product-gate",
       "action": "approve",
-      "reference": "사용자 승인 2026-09-18 — '승인할게' (선결 조건 P0 포함 범위 확정)",
+      "reference": "\uc0ac\uc6a9\uc790 \uc2b9\uc778 2026-09-18 \u2014 '\uc2b9\uc778\ud560\uac8c' (\uc120\uacb0 \uc870\uac74 P0 \ud3ec\ud568 \ubc94\uc704 \ud655\uc815)",
       "at": "2026-09-18T13:26:12.126Z"
     },
     {
@@ -30,7 +31,7 @@
     {
       "phase": "design-gate",
       "action": "approve",
-      "reference": "사용자 승인 2026-09-18 — 설계(목업 15화면 + 데이터 계약 + Person A 시스템)",
+      "reference": "\uc0ac\uc6a9\uc790 \uc2b9\uc778 2026-09-18 \u2014 \uc124\uacc4(\ubaa9\uc5c5 15\ud654\uba74 + \ub370\uc774\ud130 \uacc4\uc57d + Person A \uc2dc\uc2a4\ud15c)",
       "at": "2026-09-18T13:27:32.051Z"
     },
     {
@@ -42,8 +43,14 @@
     {
       "phase": "plan-gate",
       "action": "approve",
-      "reference": "사용자 승인 2026-09-18 — 실행 계획 13 Task + QA 계획 46 시나리오 (QA handoff 승인 포함)",
+      "reference": "\uc0ac\uc6a9\uc790 \uc2b9\uc778 2026-09-18 \u2014 \uc2e4\ud589 \uacc4\ud68d 13 Task + QA \uacc4\ud68d 46 \uc2dc\ub098\ub9ac\uc624 (QA handoff \uc2b9\uc778 \ud3ec\ud568)",
       "at": "2026-09-18T13:29:51.599Z"
+    },
+    {
+      "phase": "worktree",
+      "action": "complete",
+      "reference": "git worktree /Users/yunho/Documents/dcx_agent-wt/dcx-step07-11",
+      "at": "2026-09-18T13:33:43.943Z"
     }
   ],
   "root": "/Users/yunho/Documents/dcx_agent",
@@ -104,5 +111,6 @@
       "docs/development/dcx-step07-11/03-plan.md": "8971ecb4bb533abe155a88178fabfaac320612e9e541474386c7ad1f573ceb8a",
       "docs/development/dcx-step07-11/QA_PLAN-dcx-step07-11.md": "e8786e341897a64823380809e23fd2ef1ad51653e467ef740ad1161271207d40"
     }
-  }
+  },
+  "worktree": "/Users/yunho/Documents/dcx_agent-wt/dcx-step07-11"
 }
