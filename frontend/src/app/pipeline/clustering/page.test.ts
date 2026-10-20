@@ -7,7 +7,7 @@ vi.mock('react', async () => ({...await vi.importActual('react'),
  useCallback:(fn:any,deps:any[])=>{const i=hooks.cursor++;const old=hooks.slots[i];if(!old||deps.some((d,j)=>d!==old.deps[j]))hooks.slots[i]={deps,fn};return hooks.slots[i].fn;},
  useEffect:(fn:any,deps:any[])=>{const i=hooks.cursor++;const old=hooks.slots[i];if(!old||deps.some((d,j)=>d!==old.deps[j]))hooks.effects.push(()=>{old?.cleanup?.();hooks.slots[i]={deps,cleanup:fn()};});},
 }));
-const state=vi.hoisted(()=>({session:{sid:'s',sd:{prep:{derivedRef:{prepKey:'p'},status:'done'}}} as any,poll:null as any,pollOptions:null as any,view:{readonly:false,version:'v1',refreshSessionAfterStage:vi.fn().mockResolvedValue(undefined)}}));
+const state=vi.hoisted(()=>({session:{sid:'s',sd:{prep:{derivedRef:{prepKey:'p'},status:'done'}}} as any,poll:null as any,pollOptions:null as any,view:{readonly:false,version:'v1',session:null as Record<string, unknown> | null | undefined,refreshSessionAfterStage:vi.fn().mockResolvedValue(undefined)}}));
 const dirty = vi.hoisted(() => ({register: vi.fn(), confirmNavigation: vi.fn(() => true)}));
 vi.mock('@/components/DirtyProvider', () => ({useDirty: () => dirty}));
 vi.mock('next/navigation',()=>({useRouter:()=>({push:vi.fn()})}));
@@ -35,7 +35,24 @@ const persona={...row,id:'P1',clusterId:'CL0',authors:10,desireDraft:'바람',de
 const context={...row,id:'C1',personaId:'P1',actionDraft:'행동',action:null,dominantConstraint:null,dimsSummary:{},flags:['counter_context','granularity_exceeded']};
 const status={run:'r1',status:'review',step:'drafts',progress:1,confirm:{clusters:'3/5',personas:'0/12',contexts:'0/31'}};
 const base={disabled:false,edits:{},onEdit:vi.fn(),onConfirm:vi.fn()};
-afterEach(()=>{hooks.slots.forEach(slot=>slot?.cleanup?.());vi.useRealTimers();vi.unstubAllGlobals();hooks.slots=[];hooks.effects=[];state.poll=null;state.pollOptions=null;state.view.readonly=false;state.session.sd={prep:{derivedRef:{prepKey:'p'},status:'done'}};vi.clearAllMocks();});
+afterEach(()=>{hooks.slots.forEach(slot=>slot?.cleanup?.());vi.useRealTimers();vi.unstubAllGlobals();hooks.slots=[];hooks.effects=[];state.poll=null;state.pollOptions=null;state.view.readonly=false;state.view.session=null;state.session.sd={prep:{derivedRef:{prepKey:'p'},status:'done'}};vi.clearAllMocks();});
+it('opens the selected done session when the store session is stale',()=>{
+ state.session.sd={schemaVersion:2,prep:{derivedRef:{prepKey:'p'},status:'stale'}};
+ state.view.session={schemaVersion:2,prep:{derivedRef:{prepKey:'p'},status:'done'}};
+ expect(Page().type).toBe(SegmentScreen);
+});
+it('gates the selected running session when the store session is done',()=>{
+ state.session.sd={schemaVersion:2,prep:{derivedRef:{prepKey:'p'},status:'done'}};
+ state.view.session={schemaVersion:2,prep:{derivedRef:{prepKey:'p'},status:'running'}};
+ expect(Page()).toMatchObject({type:LaterStageBanner,props:{gate:'needs-prep',stage:'클러스터링'}});
+});
+it.each([null,undefined])('falls back to the store session when view.session is %s',(session)=>{
+ state.view.session=session;
+ state.session.sd={schemaVersion:2,prep:{derivedRef:{prepKey:'p'},status:'done'}};
+ expect(Page().type).toBe(SegmentScreen);
+ state.session.sd={schemaVersion:2,prep:{derivedRef:{prepKey:'p'},status:'stale'}};
+ expect(Page()).toMatchObject({type:LaterStageBanner,props:{gate:'needs-prep',stage:'클러스터링'}});
+});
 it('routes derived sessions to SegmentScreen and others to a gate banner without v1 calls',()=>{
  expect(nodes(Page()).some(n=>n.type===SegmentScreen)).toBe(true);
  state.session.sd={schemaVersion:2};

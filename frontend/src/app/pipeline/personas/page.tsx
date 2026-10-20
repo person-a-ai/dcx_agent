@@ -8,7 +8,8 @@ import { laterStageGate } from "@/lib/logic/laterStageGate";
 export default function PersonasPage() {
   const {sid, sd} = useSessionStore();
   const view = useVersion();
-  const gate = laterStageGate(sid, sd as Record<string, unknown> | null | undefined);
+  const session = view.session ?? sd;
+  const gate = laterStageGate(sid, session as Record<string, unknown> | null | undefined);
   if (gate !== 'open') return <LaterStageBanner gate={gate} stage="페르소나" />;
   return <PersonaScreen key={`${sid}:${view.version ?? ''}`} sid={sid!} version={view.version} readonly={view.readonly || !!view.conflict} />;
 }

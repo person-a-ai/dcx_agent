@@ -9,7 +9,8 @@ import type { SegmentDraft } from "@/lib/types";
 export default function ClusteringPage() {
   const {sid, sd} = useSessionStore();
   const view = useVersion();
-  const gate = laterStageGate(sid, sd as Record<string, unknown> | null | undefined);
+  const session = view.session ?? sd;
+  const gate = laterStageGate(sid, session as Record<string, unknown> | null | undefined);
   if (gate !== 'open') return <LaterStageBanner gate={gate} stage="클러스터링" />;
   return <SegmentScreen key={`${sid}:${view.version ?? ''}`} sid={sid!} version={view.version} readonly={view.readonly || !!view.conflict} draft={sd?.drafts?.segment as SegmentDraft | undefined} />;
 }
