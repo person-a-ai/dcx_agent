@@ -1,0 +1,102 @@
+{
+  "task": "T3",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": false,
+  "dispatch": "codex:codex-rescue --wait --fresh",
+  "base_commit": "d8df6561a23530b8382af886b1b4fd533183690b",
+  "review_commit": "ec0939e5da48ee6351aac7da2d76fad35ac9ab94",
+  "verdict": "PASS",
+  "commands": [
+    {
+      "command": "git status --short; git diff --stat d8df6561a23530b8382af886b1b4fd533183690b..c1a9a0ef30c2b7877e53d2c15cfe1da62a081d89; git rev-parse HEAD",
+      "exitCode": 0,
+      "summary": "Initial worktree clean; HEAD equals review_commit; exact diff adds only captions.py (106 lines) and test_captions.py (141 lines). Read complete diff and numbered source plus specified plan/design sections.",
+      "round": 0
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTEST_ADDOPTS='-p no:cacheprovider' env -u VOYAGE_API_KEY backend/.venv/bin/python -m pytest backend/tests/crawl/test_captions.py backend/tests/crawl -q",
+      "exitCode": 0,
+      "summary": "498 passed, 1 pre-existing Pydantic deprecation warning in 58.05s. Disabled bytecode and pytest cache writes to keep repository files read-only; pytest temporary files use the system temporary directory.",
+      "round": 0
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=backend env -u VOYAGE_API_KEY backend/.venv/bin/python -",
+      "exitCode": 0,
+      "summary": "Inline edge/performance probes: parse_json3 accepted final Cue(180000,180000,last); None and constant embeddings dropped last, while vectors [[1,0],[1,0],[0,1]] for cues at 0,60000,180000 raised IndexError. Positive final durations 1/100/1000ms preserved last. Crossing/overlapping cues and sparse windows preserved text once. 450 seeded positive-duration cases passed cue conservation, determinism, integer boundary and max_s assertions. At 3600s/180 windows/720 cues, 30-run median/max were 1.346/1.408ms (constant) and 1.366/1.537ms (structured embeddings); structured run exercised split_long at maximum recursion depth 3.",
+      "round": 0
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=backend backend/.venv/bin/python -",
+      "exitCode": 0,
+      "summary": "Inline subprocess determinism probes used PYTHONHASHSEED 0,1,42,999. Competing equal-depth boundaries at 100/160/220s with min_s=90 consistently yielded [(0,100),(100,220),(220,320)], including identical text and method; fixed-spacing embedding output was also identical across seeds.",
+      "round": 0
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=backend backend/.venv/bin/python - <<'PY'\nfrom app.crawl.captions import parse_json3, segment\ncues = parse_json3({'events': [\n    {'tStartMs': 0, 'dDurationMs': 1000, 'segs': [{'utf8': 'first'}]},\n    {'tStartMs': 180000, 'segs': [{'utf8': 'last'}]},\n]})\nresult, method = segment(cues, None)\nassert 'last' in ' '.join(s.text for s in result), (cues, result, method)\nPY",
+      "exitCode": 1,
+      "summary": "Reproduced missing essential regression: AssertionError with parsed cues [Cue(0,1000,'first'), Cue(180000,180000,'last')] and result ([Segment(0,90,'first')], 'fixed').",
+      "round": 0
+    },
+    {
+      "command": "git status --short; git diff --exit-code; git diff --name-only d8df6561a23530b8382af886b1b4fd533183690b..c1a9a0ef30c2b7877e53d2c15cfe1da62a081d89",
+      "exitCode": 0,
+      "summary": "Final status shows only the untracked review artifact T3.json; tracked worktree diff is empty; review commit range still contains exactly the two requested files.",
+      "round": 0
+    },
+    {
+      "round": 1,
+      "command": "git status --short; git rev-parse HEAD; git diff --stat d8df6561a23530b8382af886b1b4fd533183690b..ec0939e5da48ee6351aac7da2d76fad35ac9ab94 -- backend/; git diff d8df6561a23530b8382af886b1b4fd533183690b..ec0939e5da48ee6351aac7da2d76fad35ac9ab94 -- backend/; nl -ba backend/app/crawl/captions.py; nl -ba backend/tests/crawl/test_captions.py",
+      "exitCode": 0,
+      "summary": "Initial worktree clean; HEAD matches review_commit. Re-read the complete cumulative backend diff: only captions.py (114 lines) and test_captions.py (179 lines). No unresolved or newly introduced must-fix issue found."
+    },
+    {
+      "round": 1,
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTEST_ADDOPTS='-p no:cacheprovider' env -u VOYAGE_API_KEY backend/.venv/bin/python -m pytest backend/tests/crawl/test_captions.py backend/tests/crawl -q",
+      "exitCode": 0,
+      "summary": "507 passed, 1 warning in 57.70s. The only warning is the existing Pydantic class-based config deprecation at backend/app/config.py:12. Bytecode and pytest cache writes disabled; test temporary files remain outside the repository."
+    },
+    {
+      "round": 1,
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=backend env -u VOYAGE_API_KEY backend/.venv/bin/python -",
+      "exitCode": 0,
+      "summary": "Reran inline probes: missing/null/zero final duration at 180000ms retained exactly once with None, constant vectors and [[1,0],[1,0],[0,1]]; fixed output [(0,90,first middle),(180,181,last)], both embedding outputs [(0,181,first middle last)]. No exceptions. Final 0/1/100/1000ms durations all preserved; fractional 181100ms end still yields 182s. Crossing/overlapping cues and sparse windows passed. 450 seeded positive-duration cases passed conservation/determinism/max_s and matched pre-fix c1a9a0e output exactly (old module loaded in memory via read-only git show). Another 450 mixed zero-duration cases passed conservation/determinism/exclusive-end checks. One-hour/180-window/720-cue constant median/max 1.434/9.867ms, structured median/max 1.458/1.816ms over 30 runs; structured result 36 segments and maximum recursion depth 3. Equal-depth ties yielded [(0,100),(100,220),(220,320)] identically across PYTHONHASHSEED 0,1,42,999."
+    }
+  ],
+  "findings": [],
+  "notes": [
+    "Review-fix round 1: original P2 is resolved; no outstanding findings in the cumulative backend diff.",
+    "Session provenance: this is a re-review in the same conversation that performed the fix, not a fresh independent reviewer session; freshSession is therefore false. Original review evidence is preserved in history and round-0 commands.",
+    "Retention: captions.py:64-68 ensures the final exclusive whole-second bound exceeds every cue start. The unchanged half-open assignment at captions.py:50 places every nonnegative-start cue in exactly one interval. Regression tests at test_captions.py:144-162 cover missing/null/zero final duration in fixed and constant embedding modes.",
+    "Final-gap safety: captions.py:91 rejects any gap equal to either outer bound before neighbor indexing at line 97. A gap strictly between the minimum and maximum bounds necessarily has both neighbors in the sorted trial. Combined with the new end bound, the reported end-gap IndexError cannot occur. Topic-change regressions at test_captions.py:165-179 and the direct vector probe pass.",
+    "Fractional-end behavior: captions.py:66 still uses ceil(max_end_ms/1000). For positive-duration integer-millisecond cues, ceil(end_ms/1000) is already at least start_ms//1000+1, so the new term does not change their final bound. Existing test_captions.py:128-141 and the rerun probe preserve exactly [(0,90),(90,180),(180,182)].",
+    "No observed regression: 450 positive-duration cases matched old output exactly; 450 additional cases containing zero-duration cues conserved each unique cue token and were deterministic. Empty/short/single, invalid embeddings, parsing, depth minimums and fixed splitting remain covered by the passing suite.",
+    "Determinism and performance: sorted window keys at captions.py:72, sorted bound set at line 95, and time tie-breakers at lines 90 and 108 remain deterministic. Four hash-seed probes passed. At the specified one-hour scale, depth computation and recursive splitting showed no practical performance or stack issue; timings exclude embedding/network work.",
+    "Scope: only this review JSON is modified in this round. No implementation files, report files, Git index, commits or branches were changed."
+  ],
+  "history": [
+    {
+      "severity": "P2",
+      "file": "backend/app/crawl/captions.py:63",
+      "issue": "The final exclusive bound can equal an accepted cue's start, silently losing that cue or crashing segmentation. parse_json3 at line 39 defaults missing/null/zero duration to 0. If the final such cue starts at an exact second, end_s equals start_ms/1000 and _cut's strict comparison at line 50 excludes it. Observed: events at 0ms (duration 1000ms) and 180000ms (duration omitted) produce only 'first' in fixed mode. Constant embeddings also drop it. With an additional cue at 60000ms and vectors [[1,0],[1,0],[0,1]], the final gap equals end_s; trial[k+1] at line 90 raises IndexError. Current tests at test_captions.py:128 exercise a positive fractional duration and miss this parser-supported case.",
+      "fix": "Ensure the final whole-second exclusive bound is strictly greater than every retained cue start (for example, include max(start_ms)+1ms when deriving the ceiling), and only consider gaps strictly inside the current outer bounds. Add regression tests for a final whole-second cue with missing/zero duration in fixed and embedding modes, including the final-gap topic-change case; assert every cue appears exactly once and no exception occurs.",
+      "review_commit": "c1a9a0ef30c2b7877e53d2c15cfe1da62a081d89",
+      "resolved": true,
+      "resolved_in": "ec0939e5da48ee6351aac7da2d76fad35ac9ab94",
+      "resolution": "captions.py:64-68 makes end_s strictly greater than every cue start; captions.py:91-92 rejects outer-boundary gaps before trial neighbor access at line 97; captions.py:104 restricts recursive candidates to the interior. Tests at test_captions.py:144-179 and rerun terminal probes cover missing/null/zero duration in fixed and embedding modes and the final-gap topic change. All preserve each cue exactly once without exceptions.",
+      "original_review_notes": [
+        "Scope: independent review of the exact two-file diff; no implementation or Git mutations. The only repository file created by this review is this JSON report.",
+        "Spec: 03-plan.md:490 defines T3 and its tuple return contract; 03-plan.md:30 adds single; 02-design.md:65 specifies the segmentation algorithm. Implementation matches the explicit T3 sample, but the observed data-loss/crash defect still requires correction.",
+        "Parsing: captions.py:30-40 strips short bracketed markers, normalizes whitespace, skips empty/missing-start events and sorts by (start_ms,end_ms), preserving input order for equal keys. Covered by test_captions.py:32,82,97.",
+        "Return/fallback: captions.py:60-78 implements empty/short/one-window single, None/raising embedder fixed, and wrong-shape/non-finite/zero-row-norm fixed. Tests at test_captions.py:65,72,78,102,122 assert methods and concrete output. A one-window long cue deliberately returns single per the plan.",
+        "Boundaries: captions.py:85-101 enforces min_s on depth-based splits and chooses deepest eligible interior boundaries, breaking ties by earlier time; without positive interior depth it uses fixed spacing. Fixed tails can be shorter than min_s as allowed by the specified fallback. The structured one-hour probe exercised recursive splitting; existing test_captions.py:58 covers only its fixed-spacing branch.",
+        "Determinism: captions.py:67 sorts window keys; line 88 sorts the set immediately, so set iteration cannot affect bounds. Lines 85 and 100 include time in their sort keys. Identical numeric inputs have a fixed reduction order; four-process hash-seed probes confirmed equal-depth selection and output. No claim of cross-platform floating-point bit identity is needed or made.",
+        "Cue assignment: captions.py:50,66 assigns by start time, so a crossing cue stays in its starting window/segment and a cue starting exactly on an interior boundary goes to the later one. Overlap does not duplicate cues. Positive-duration probes, including 450 randomized cases, conserved all cue labels. The terminal zero-duration exception is the finding above.",
+        "Empty windows: captions.py:64-67 omits unoccupied windows; parse_json3 line 37 filters blank cues, so normal parser output does not send empty strings to the embedder. Sparse-window probe observed only the four occupied window texts, with no lost cues.",
+        "Rounding: captions.py:63 rounds the final positive fractional end upward (181100ms becomes 182s); test_captions.py:128-141 explicitly requires this. This differs from the general floor wording at 02-design.md:71 but follows the more specific T3 plan implementation at 03-plan.md:653 and protects fractional terminal cues. All produced boundaries were integers.",
+        "Performance: captions.py:81 is O(n^2) in occupied windows, and _cut scans cues for each interval. At the specified 3600s/180-window scale, measured local segmentation stayed below 1.6ms in these probes, excluding embedder/network time. Recursive splits at lines 93-101 shrink by at least min_s on both sides, bounding the default one-hour path depth below roughly 81; observed depth was 3. No must-fix performance or recursion issue at the supported scale.",
+        "Test quality: concrete boundary, text, method and invalid-embedding assertions meaningfully exercise the new module and would not pass without its implementation. The missing essential regression is final missing/zero-duration cue retention and the associated end-boundary crash. Dedicated committed tests for competing equal-depth ties and positive-depth split_long would improve coverage; independent probes found no additional defect in those paths."
+      ]
+    }
+  ]
+}

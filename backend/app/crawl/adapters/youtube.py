@@ -54,6 +54,22 @@ def _blocked(error: BaseException) -> bool:
     return False
 
 
+def extract_info(url: str, **options) -> dict:
+    yt_dlp = importlib.import_module('yt_dlp')
+    try:
+        # Each lease owns its extractor; adapters can be called concurrently.
+        with yt_dlp.YoutubeDL(dict(quiet=True, no_warnings=True, skip_download=True,
+                                  **options)) as extractor:
+            result = extractor.extract_info(url, download=False)
+    except yt_dlp.utils.DownloadError as exc:
+        if _blocked(exc):
+            raise AdapterBlocked('YouTube blocked the request') from exc
+        raise
+    if not isinstance(result, dict):
+        raise ValueError('Expected a yt-dlp information dictionary')
+    return result
+
+
 class YoutubeAdapter:
     source = 'youtube'
 
@@ -76,19 +92,7 @@ class YoutubeAdapter:
         return True
 
     def _extract(self, url: str, **options) -> dict:
-        yt_dlp = importlib.import_module('yt_dlp')
-        try:
-            # Each lease owns its extractor; adapters can be called concurrently.
-            with yt_dlp.YoutubeDL(dict(quiet=True, no_warnings=True, skip_download=True,
-                                      **options)) as extractor:
-                result = extractor.extract_info(url, download=False)
-        except yt_dlp.utils.DownloadError as exc:
-            if _blocked(exc):
-                raise AdapterBlocked('YouTube blocked the request') from exc
-            raise
-        if not isinstance(result, dict):
-            raise ValueError('Expected a yt-dlp information dictionary')
-        return result
+        return extract_info(url, **options)
 
     def list_page(self, kw: str, cursor: str | None, *, videos_per_keyword: int | None = None) -> ListPage:
         if cursor is not None:

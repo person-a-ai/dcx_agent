@@ -1,0 +1,45 @@
+{
+  "matrix": {
+    "에어컨": {
+      "fixture": {
+        "listed": 2000,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 2000,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 2000,
+        "urls_listed": 2000,
+        "urls_done": 2000
+      }
+    }
+  },
+  "channels": {
+    "fixture": {
+      "skipped": 0,
+      "skip_reason": null,
+      "docs": 2000,
+      "urls_done": 2000,
+      "share": 1.0,
+      "status": "done",
+      "errors_top": [],
+      "skip_reasons": {}
+    }
+  },
+  "totals": {
+    "done": 2000,
+    "total": 2000,
+    "urls_listed": 2000,
+    "urls_done": 2000,
+    "doc_count": 2000
+  },
+  "counts": {
+    "에어컨": {
+      "fixture": 2000
+    }
+  },
+  "snapshot_id": "2c925785c1d74d55ac1c752bf39f4d24",
+  "started_at": 1792488381.3131342,
+  "finished_at": 1792488384.941061,
+  "throughput_per_min": 33076.74210081235
+}

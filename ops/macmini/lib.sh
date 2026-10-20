@@ -170,6 +170,7 @@ build_release() { # sha
                 else
                     "$pip" install -r "$requirements"
                 fi
+                status=$?; [[ $status -eq 0 ]] || exit $status; [[ -n "${DCX_PIP_CMD:-}" ]] || "$1/bin/crawl4ai-setup" >&2 || echo "crawl4ai-setup failed; Threads stays unavailable" >&2
             ' "$venv" "$release_dir"; then
                 rm -rf "$venv" "$release_dir"
                 return 1

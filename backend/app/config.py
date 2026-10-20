@@ -30,6 +30,11 @@ class Settings(BaseSettings):
     searchad_secret: str = ""
     searchad_customer_id: str = ""
     youtube_api_key: str = ""
+    caption_window_s: int = 20
+    caption_min_segment_s: int = 45
+    caption_max_segment_s: int = 300
+    caption_fixed_segment_s: int = 90
+    threads_render_timeout_s: int = 30
     fixture_corpus_path: str = ""
     enable_fixture_channel: bool = False
     real_channels_enabled: bool = True

@@ -1,0 +1,96 @@
+{
+  "verdict": "PASS",
+  "head": "6955ba0256d60043b1410871a3f56445e578c6b2",
+  "fingerprint": "81efe86f6f470305c619e5329ed332c63d05f044ee4f5ba70a9ddd86df1b7b84",
+  "executor": "codex",
+  "role": "code-review",
+  "dispatch": "codex:codex-rescue --wait --fresh (whole-branch review round 5: QA-driven delta 8d99f53..6955ba0 on top of the round-4 whole-branch PASS)",
+  "freshSession": true,
+  "base_commit": "56c1387031986d6a48a16ee08656f534b030814e",
+  "review_commit": "6955ba0256d60043b1410871a3f56445e578c6b2",
+  "previous_findings": [
+    {"id": "WB-R1", "resolved": true},
+    {"id": "WB-R3-1", "resolved": true},
+    {"id": "WB-R3-2", "resolved": true}
+  ],
+  "history": [
+    {"round": 2, "review_commit": "c597b2a678231016e51b0d3644f3d6df921810c2", "verdict": "PASS"},
+    {"round": 3, "review_commit": "99606c7b8501a9da55a13299969e4a2fbf63e214", "verdict": "FAIL", "record": "reviews/final-review-3.json"},
+    {"round": 4, "review_commit": "8d99f5323e800a0860f363751c783a4551b69714", "verdict": "PASS", "record": "reviews/final-review-4.json"}
+  ],
+  "commands": [
+    {
+      "command": "pwd && rg --files -g AGENTS.md -g '!frontend/node_modules' -g '!backend/.venv'",
+      "exitCode": 1,
+      "result": "No matching repository AGENTS.md; the initial chained inspection stopped at rg and the Git inspections were then run separately. No applicable ancestor AGENTS.md was found."
+    },
+    {
+      "command": "git diff --stat 8d99f5323e800a0860f363751c783a4551b69714..6955ba0256d60043b1410871a3f56445e578c6b2; git diff --name-status 8d99f5323e800a0860f363751c783a4551b69714..6955ba0256d60043b1410871a3f56445e578c6b2; git diff 8d99f5323e800a0860f363751c783a4551b69714..6955ba0256d60043b1410871a3f56445e578c6b2",
+      "exitCode": 0,
+      "result": "Reviewed the entire ten-file delta: 292 insertions, 26 deletions. Exactly the two backend implementation files, one backend test, five frontend implementation files and two frontend tests specified in notes changed."
+    },
+    {
+      "command": "git diff --check 8d99f5323e800a0860f363751c783a4551b69714..6955ba0256d60043b1410871a3f56445e578c6b2; git log --format='%H %s' 8d99f5323e800a0860f363751c783a4551b69714..6955ba0256d60043b1410871a3f56445e578c6b2",
+      "exitCode": 0,
+      "result": "Whitespace check passed. One commit follows the round-4 PASS: 6955ba0256d60043b1410871a3f56445e578c6b2."
+    },
+    {
+      "command": "SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive 6955ba0256d60043b1410871a3f56445e578c6b2 | tar -x -C \"$SNAP\" && ln -s /Users/yunho/Documents/dcx_agent-channels-build/frontend/node_modules \"$SNAP/frontend/node_modules\" && printf \"%s\\n\" \"$SNAP\" && cd \"$SNAP\" && npm --prefix frontend test && npm --prefix frontend run lint",
+      "exitCode": 0,
+      "result": "Retained snapshot /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.DdCUGTr35Y. All 78 test files / 974 tests passed; ESLint passed."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.DdCUGTr35Y && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl backend/tests/context backend/tests/keywords -q -p no:cacheprovider",
+      "exitCode": 0,
+      "result": "4447 passed in 201.40s. Two existing/environment warnings: Pydantic class-based config deprecation and joblib physical-core detection fallback."
+    },
+    {
+      "command": "Snapshot: env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python - <<'PY' (inline display_form/_keyword_display timing and cache assertions)",
+      "exitCode": 0,
+      "result": "First Korean label including lazy Kiwi initialization: 3.762633s. Next 100 distinct synthetic Korean keywords: 0.012871s total. Repeated 100-keyword response projection: mean 0.055988ms over 1000 iterations; 100000 cache hits and zero additional misses. Cache maxsize=4096."
+    },
+    {
+      "command": "Snapshot: env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python - <<'PY' (inline TestClient historical-report validation and no-side-effect probe)",
+      "exitCode": 0,
+      "result": "Selected v1 report remained isolated from active v2 and its running-worker marker while load_session, locks, writes and ReadQueue were forbidden. Eight malformed/traversal version strings returned 400 invalid_version; invalid session identifiers returned 400 invalid_session_id; missing session/version returned 404 version_not_found; seven malformed collection values returned 409 no_collection. Fixture bytes and mtimes were unchanged by requests. Retained fixture: snapshot/review-probe-50ff6r4o. This used a worker-state marker, not an actual launched worker."
+    },
+    {
+      "command": "git --no-optional-locks status --short; git rev-parse HEAD; git diff --exit-code; git diff --cached --exit-code; git diff --name-only 8d99f5323e800a0860f363751c783a4551b69714..6955ba0256d60043b1410871a3f56445e578c6b2; test ! -e docs/development/channel-expansion/review.json",
+      "exitCode": 0,
+      "result": "Before report creation, HEAD remained the requested commit, tracked worktree and index were clean, and review.json did not exist. The committed delta still contained exactly ten files. Existing and concurrent untracked QA artifacts were left untouched."
+    }
+  ],
+  "findings": [
+    {
+      "id": "WB-R5-1",
+      "severity": "P3",
+      "must_fix": false,
+      "file": "frontend/src/components/crawl/Progress.tsx:19",
+      "issue": "The keyword bar lists indirectly use the display label in their React keys, so the requested raw-key identity convention is not preserved in those two lists.",
+      "evidence": [
+        "keywordCounts converts each raw kw into an item containing only the translated label and value; the raw kw is dropped before both BarList calls.",
+        "The unchanged BarList implementation at frontend/src/components/ds/BarList.tsx:4 constructs keys as `${item.label}-${index}`. These keys now contain spaced display text.",
+        "Gate Fragment keys, expansion state, measurements, exclusions and result-matrix row keys correctly retain raw kw. BarList rows are currently stateless divs, the index prevents duplicate sibling keys, and display_form preserves the original non-whitespace characters. No realistic data-loss or incorrect-result defect was found; this is a nonblocking identity-contract cleanup."
+      ],
+      "fix": "Preserve raw kw as an explicit item identity and let BarList use that identity for React keys, retaining its existing fallback for other callers. Keep label exclusively for visible text and add a focused assertion that changing a display label does not change keyword-row identity."
+    }
+  ],
+  "notes": [
+    "This brand-new independent code-review session took no part in implementing or reviewing any task of this branch. It had no participation in the earlier implementation or review rounds. Historical review and QA records were read only as evidence for this independent delta review. No sub-agents were used.",
+    "The unchanged branch carries forward the supplied round-4 whole-branch PASS. This session independently reviewed the full delta 8d99f5323e800a0860f363751c783a4551b69714..6955ba0256d60043b1410871a3f56445e578c6b2 and relevant callers/invariants; it did not repeat a whole-branch review of unchanged implementation. No must-fix defect was identified.",
+    "Exactly ten committed files changed since 8d99f5323e800a0860f363751c783a4551b69714: backend/app/crawl/control.py; backend/app/routers/crawl_v2.py; backend/tests/crawl/test_crawl_display_history.py; frontend/src/app/pipeline/crawling/page.tsx; frontend/src/components/crawl/GateTable.tsx; frontend/src/components/crawl/Progress.tsx; frontend/src/components/versions/StageVersion.test.ts; frontend/src/components/versions/StageVersion.tsx; frontend/src/lib/api/crawl.ts; frontend/src/lib/logic/crawlDisplayHistory.test.ts. No other committed files changed in that range. QA_PLAN-channel-expansion.md is unchanged.",
+    "keywordDisplay covers session keywords, collection ancestry keywords, gate rows and report matrix/counts. The gate row button, exclusion checkbox accessible name, result matrix and both upper/lower keyword bars use display labels with raw fallback. Remaining crawl UI shows keyword counts or channel labels rather than individual keyword names. HistoricalCrawl renders aggregate summary/distribution without individual keyword labels, so its unused keywordDisplay response does not leave an unspaced keyword label.",
+    "Gate checkbox handlers, bulk exclusion, expanded Set, measured-row identities, raw Fragment keys, save/draft payloads and backend norm_key comparisons remain unchanged. Display projections neither modify session/report objects nor enter collection creation, adapters, stored keywords or search queries. No search/storage/normalization implementation changed. The bar-key P3 is explicitly separated from these correctly preserved identities.",
+    "Polling cost is acceptable for ordinary working sets within the existing 4096-entry LRU. Deduplication occurs before display_form calls, repeated labels hit the same cache used by the keywords API, and Kiwi is initialized lazily once in ordinary sequential use. The independently measured first cold call took 3.76s and can delay the first response after process start; it is not a recurring three-second cost. The frontend schedules the next poll after the previous request completes. Concurrent first misses can duplicate initialization because the pre-existing helper has no initialization lock, and workloads exceeding cache capacity can cause churn; those are hardening considerations rather than demonstrated failures in this delta. The measurements are a local microbenchmark, not a load-test guarantee.",
+    "saved_report uses versions._data(sid, version), whose version_dir validates v[1-9][0-9]* and root_dir validates the session identifier. _collection_dir validates that collectionId is a string matching c[1-9][0-9]*. The path is formed from the validated request sid and the selected snapshot's collectionId, not activeVersion, the active symlink or a body-supplied path. Query values are URL-encoded by the frontend. Traversal and malformed identifiers were independently exercised.",
+    "The report endpoint reads only the selected version session.json and its referenced collection report.json. It neither follows collection ancestry nor substitutes the currently active collection. It does not open queues, acquire locks, regenerate a missing report, inspect worker processes or mutate sessions. Shared completed collections are intentional in the existing version model; report creation is atomic and already-finalized reports are immutable. A simultaneous worker on another collection cannot redirect this endpoint. Local filesystem symlink tampering is not an input path introduced by this API.",
+    "Error contracts are consistent with the existing route wrapper: required version absent => 422 invalid_request; invalid version => 400 invalid_version; invalid sid => 400 invalid_session_id; absent snapshot => 404 version_not_found, including a nonexistent session with a syntactically valid version; absent/invalid collection => 409 no_collection; absent saved report => 404 report_not_found; OSError => 500 storage_error. The endpoint intentionally does not synthesize reports or distinguish a missing session from a missing version after _data lookup.",
+    "HistoricalCrawl issues only getCrawlReport for the selected sid/version and supplies no mutation callbacks or live status/polling component. Results render above the existing saved settings. The effect cancellation flag rejects late responses; render-time sid/version checks prevent a previous selection's report from appearing under another selection. VersionContent also remounts content on version changes. The existing readonly fieldset and StageVersionAction behavior remain in force.",
+    "A missing report leaves saved settings visible and no result section; loading and all request failures currently share that quiet fallback. The committed regression verifies missing-report rendering and late-response cancellation. No live progress, pause, restart, resume or collection action is introduced in the report section. The shared CrawlReportSummary preserves counts, skip-reason fallback, vlog video-versus-segment counts and distribution behavior.",
+    "Active and historical results use the same CrawlReportSummary and therefore the exact same skip-table region: crawl-channel-scroll, role=region, descriptive aria-label, tabIndex=0 and the existing accessible table name. The mobile-only 600px minimum, normal cell wrapping and desktop behavior from round 4 are unchanged. The new tests assert rendered region markup. No browser run was performed in this code-review session: all executable checks were confined to the exported snapshot, and the running servers were neither used for mutations nor started/stopped. Actual browser geometry and native keyboard scrolling remain browser-QA evidence, not claims of this review.",
+    "Tests meaningfully cover response label sources, unchanged raw values/storage, selected-version isolation, absence of lock/write/live-state calls, error contracts, gate exclusion/expansion callbacks, rendered display fallback, historical result ordering, missing-report fallback and late responses. Frontend hook mocks and static rendering do not establish real DOM keyboard behavior, and they do not catch the BarList identity convention; those limitations are reflected in the P3 finding and accessibility note.",
+    "WB-R1 remains resolved: report.py aggregates unique completed URLs by source, and the extracted CrawlReportSummary consumes report.channels.youtube_vlog.urls_done rather than summing per-keyword attribution. WB-R3-1 and WB-R3-2 remain resolved: the shared scroll wrapper/CSS keeps the channel-table minimum mobile-only and preserves explicit normal cell wrapping. Existing regression suites passed.",
+    "Only docs/development/channel-expansion/review.json was created in the repository by this session. Product sources, repository tests, Git refs and staged content were not changed. All executable checks and reviewer fixtures ran in the retained fresh exported snapshot. No rm command was run, no temporary directory was removed, and no server was started or stopped.",
+    "Initial untracked artifacts were build.json, qa-attempt2/, qa-attempt3-orphan/, qa-attempt3-stopped/, qa-attempt4/, reviews/final-review-3.json and reviews/final-review-4.json under docs/development/channel-expansion. Concurrent qa.json and qa/ appeared before the final integrity check. This session did not create or modify those artifacts. The supplied fingerprint is recorded as requested; the review is pinned to the full immutable commit SHA."
+  ]
+}

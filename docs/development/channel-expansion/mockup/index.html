@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>채널 확장 목업 — 2단계 크롤링</title>
+<!-- 실제 앱 CSS 복사본(app.css). 아래 mock-* 스타일은 목업 전환 도구 전용이며 제품에 들어가지 않는다. -->
+<link rel="stylesheet" href="app.css">
+<style>
+body{margin:0;background:var(--soft);font-family:var(--font);color:var(--ink-strong)}
+.mock-bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 16px;background:#1c1e22;color:#fff;font-size:13px}
+.mock-bar b{margin-right:4px}
+.mock-bar button{border:1px solid #555;background:#2a2d33;color:#fff;border-radius:8px;padding:4px 10px;cursor:pointer;font:inherit}
+.mock-bar button[aria-pressed=true]{background:#0a73b5;border-color:#0a73b5}
+.mock-sep{width:1px;height:20px;background:#555;margin:0 6px}
+.mock-frame{margin:24px auto;max-width:1200px;padding:0 16px}
+.mock-frame.mobile{max-width:375px;border:1px dashed var(--line-strong);background:var(--paper);padding:12px}
+.screen{display:none}.screen.on{display:block}
+.crawl-screen>*+*{margin-top:16px}
+.new{margin-left:6px}
+.state-only{display:none}
+.mock-note{font-size:12px;color:var(--sub);border-left:3px solid var(--line);padding-left:8px;margin:8px 0}
+.mock-skel{height:14px;border-radius:6px;background:var(--sunken);margin:8px 0}
+.mobile .crawl-columns{display:block}.mobile .crawl-columns>*+*{margin-top:12px}
+.mobile .ds-tbl{font-size:12px}
+.scroll-x{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="mock-bar" role="toolbar" aria-label="목업 전환">
+  <b>화면</b>
+  <button data-screen="setup" aria-pressed="true">① 설정</button>
+  <button data-screen="gate" aria-pressed="false">② 게이트</button>
+  <button data-screen="running" aria-pressed="false">③ 수집 중</button>
+  <button data-screen="report" aria-pressed="false">④ 결과</button>
+  <span class="mock-sep"></span><b>상태</b>
+  <button data-state="normal" aria-pressed="true">정상</button>
+  <button data-state="loading" aria-pressed="false">로딩</button>
+  <button data-state="empty" aria-pressed="false">빈 결과</button>
+  <button data-state="error" aria-pressed="false">오류·차단</button>
+  <button data-state="readonly" aria-pressed="false">읽기 전용</button>
+  <span class="mock-sep"></span><b>폭</b>
+  <button data-width="desktop" aria-pressed="true">데스크톱</button>
+  <button data-width="mobile" aria-pressed="false">모바일 375</button>
+</div>
+
+<main class="mock-frame" id="frame">
+
+<!-- 공통: 상태 배너 -->
+<div class="state-only" data-show="loading"><p role="status">처리 중…</p><div class="mock-skel"></div><div class="mock-skel" style="width:70%"></div><div class="mock-skel" style="width:85%"></div></div>
+<div class="state-only" data-show="readonly"><div class="ds-note info" role="status"><span class="ds-ic">ⓘ</span><div>과거 버전은 열람만 할 수 있습니다. 바꾸려면 이 버전에서 새 버전을 만드세요.</div></div></div>
+<div class="state-only" data-show="error" data-screens="setup gate report"><div class="ds-note danger" role="alert"><span class="ds-ic">!</span><div>수집 상태를 불러오지 못했습니다. 다시 확인하세요.</div><div class="ds-actions"><button class="ds-btn ds-secondary">다시 확인하기</button></div></div></div>
+
+<!-- ① 설정 -->
+<section class="screen crawl-screen on" id="setup" data-body>
+  <header><div class="ds-eyebrow">2단계 · 크롤링</div><h1 class="ds-t-screen">확정 키워드 42개로 목록을 수집합니다</h1><p>먼저 채널별 글 목록(URL)만 모읍니다. 수집 효율을 확인한 뒤 본문·댓글 수집을 시작합니다. 검색어에는 제품명을 붙이지 않습니다.</p></header>
+  <div class="crawl-columns"><div>
+  <div class="ds-card"><h2 class="ds-t-card">채널</h2><div class="scroll-x"><table class="ds-tbl" aria-label="수집 채널"><thead><tr><th>채널</th><th>수집 방식</th><th>사용</th></tr></thead><tbody>
+    <tr><td>네이버 카페</td><td>검색 결과 화면 · 본문 (회원 전용 글은 제외)</td><td><div class="ds-toggle"><button class="ds-sw" role="switch" aria-checked="true" data-lock></button><span class="ds-t-label">사용하기</span></div></td></tr>
+    <tr><td>네이버 블로그</td><td>검색 결과 화면 · 본문</td><td><div class="ds-toggle"><button class="ds-sw" role="switch" aria-checked="true" data-lock></button><span class="ds-t-label">사용하기</span></div></td></tr>
+    <tr><td>유튜브 댓글</td><td>영상 검색 · 댓글 스레드</td><td><div class="ds-toggle"><button class="ds-sw" role="switch" aria-checked="false" data-lock></button><span class="ds-t-label">사용하기</span></div></td></tr>
+    <tr><td>유튜브 브이로그<span class="ds-badge ds-info new">새 채널</span></td><td>"키워드 브이로그" 영상 검색 · 한국어 자막을 화제 단위로 나눠 문서화</td><td><div class="ds-toggle"><button class="ds-sw" role="switch" aria-checked="true" data-lock></button><span class="ds-t-label">사용하기</span></div></td></tr>
+    <tr id="row-threads"><td>Threads<span class="ds-badge ds-info new">새 채널</span> <span class="ds-badge state-only" data-show="error">사용 불가</span></td><td>검색 화면(로그인 없음) · 글 본문 · 키워드당 약 20~60건<p class="ds-t-caption state-only" data-show="error">Crawl4AI 브라우저가 설치돼 있지 않아 사용할 수 없습니다.</p></td><td><div class="ds-toggle"><button class="ds-sw" role="switch" aria-checked="true" data-lock data-off-on-error></button><span class="ds-t-label">사용하기</span></div></td></tr>
+    <tr><td>지식iN<span class="ds-badge ds-info new">새 채널</span></td><td>질문 검색 · 질문 제목과 본문 (답변 제외)</td><td><div class="ds-toggle"><button class="ds-sw" role="switch" aria-checked="true" data-lock></button><span class="ds-t-label">사용하기</span></div></td></tr>
+    <tr><td>82쿡<span class="ds-badge ds-info new">새 채널</span></td><td>자유게시판 검색 · 본문 · 댓글</td><td><div class="ds-toggle"><button class="ds-sw" role="switch" aria-checked="true" data-lock></button><span class="ds-t-label">사용하기</span></div></td></tr>
+    <tr><td>뽐뿌</td><td>사이트 검색 · 본문 · 댓글</td><td><div class="ds-toggle"><button class="ds-sw" role="switch" aria-checked="false" data-lock></button><span class="ds-t-label">사용하기</span></div></td></tr>
+    <tr><td>클리앙</td><td>사이트 검색 · 본문 · 댓글</td><td><div class="ds-toggle"><button class="ds-sw" role="switch" aria-checked="false" data-lock></button><span class="ds-t-label">사용하기</span></div></td></tr>
+  </tbody></table></div></div>
+
+  <div class="ds-card"><h2 class="ds-t-card">범위 · 필터</h2><p class="ds-t-caption">(기존과 같음 — 시작일 · 종료일 · 목표 문서 수 · 광고어 · 제외/포함 소스 · 제품명 필터)</p>
+  <details open><summary>고급 설정 펼치기 · 채널별 동시성 · 요청 간격 · 상한</summary>
+    <h3 class="ds-t-label">Threads</h3>
+    <div class="crawl-fields"><label class="ds-field"><span class="ds-t-label">동시성</span><input class="ds-inp" type="number" value="1" data-lock></label><label class="ds-field"><span class="ds-t-label">요청 간격(초)</span><input class="ds-inp" type="number" value="2" step="0.1" data-lock></label><label class="ds-field"><span class="ds-t-label">키워드당 상한</span><input class="ds-inp" type="number" value="1000" data-lock></label></div>
+    <h3 class="ds-t-label">유튜브 브이로그</h3>
+    <div class="crawl-fields"><label class="ds-field"><span class="ds-t-label">키워드당 영상 수</span><input class="ds-inp" type="number" value="20" min="1" data-lock></label><label class="ds-field"><span class="ds-t-label">최소 길이(분)</span><input class="ds-inp" type="number" value="1" min="0" data-lock></label><label class="ds-field"><span class="ds-t-label">최대 길이(분)</span><input class="ds-inp" type="number" value="60" min="1" data-lock></label></div>
+    <p class="ds-t-caption">1분 미만 쇼츠와 60분이 넘는 영상은 목록에서 뺍니다. 한국어 자막이 없는 영상은 건너뛰고 결과에 건수를 남깁니다.</p>
+    <p class="ds-t-caption">(지식iN · 82쿡 · 기존 채널의 동시성 · 간격 · 상한 칸은 기존과 같은 형태)</p>
+  </details></div>
+  </div>
+  <div class="ds-card"><h2 class="ds-t-card">확정 키워드</h2><dl><div class="crawl-between"><dt>물리</dt><dd>14</dd></div><div class="crawl-between"><dt>심리</dt><dd>15</dd></div><div class="crawl-between"><dt>행동</dt><dd>13</dd></div></dl><p>합계 42개</p><p class="ds-t-caption">검색어에는 제품명을 붙이지 않습니다. 유튜브 브이로그는 검색어 뒤에 "브이로그"를 붙입니다.</p></div>
+  </div>
+  <div class="crawl-actions"><button class="ds-btn ds-secondary" data-lock>임시 저장</button><button class="ds-btn ds-secondary" data-lock>저장</button><button class="ds-btn ds-primary" data-lock>목록 수집 시작</button></div>
+  <p class="mock-note">변경점: 채널 표에 새 채널 4행(배지 "새 채널"), 고급 설정에 "유튜브 브이로그" 블록, 확정 키워드 카드에 브이로그 검색어 안내 1줄. "오류·차단" 상태에서 Threads 행이 "사용 불가"로 바뀌고 스위치가 꺼진다.</p>
+</section>
+
+<!-- ② 게이트 -->
+<section class="screen crawl-screen" id="gate" data-body>
+  <header><div class="ds-eyebrow">2단계 · 크롤링</div><h1 class="ds-t-section">본문 수집 전에 키워드를 정리합니다</h1></header>
+  <div class="ds-note info" role="status"><span class="ds-ic">ⓘ</span><div>Threads는 로그인 없이 볼 수 있는 결과만 모아 키워드당 수십 건입니다. Threads 때문에 "저수율" 배지가 붙은 키워드는 다른 채널 수치를 함께 보고 판단하세요.</div></div>
+  <div class="crawl-columns">
+    <div class="ds-insight"><div class="ds-eyebrow">목록 신호</div><p class="ds-t-insight"><span data-empty-text="수집된 목록이 없습니다">키워드 6개를 검토하세요</span></p><p class="ds-t-body" data-empty-text="날짜 범위와 채널을 확인하고 목록을 다시 수집하세요.">0건 · 저수율 · 고유 기여 낮음 배지를 확인하고 제외할 키워드를 선택하세요.</p></div>
+    <div class="ds-card"><h2 class="ds-t-card">상세 수집 예상</h2><div class="ds-stats"><div class="ds-stat"><span class="ds-t-label">대상 URL</span><span class="ds-v" data-empty-text="0">8,412</span></div><div class="ds-stat"><span class="ds-t-label">예상 소요</span><span class="ds-v" data-empty-text="—">약 214분</span></div></div><p class="ds-t-caption">유튜브 브이로그는 영상마다 자막 구간을 나누므로 영상 1개가 문서 여러 건이 됩니다.</p></div>
+  </div>
+  <div class="scroll-x"><table class="ds-tbl" aria-label="키워드별 목록 검토"><thead><tr><th>제외</th><th>키워드</th><th>축 · 하위</th><th>목록 → 필터 후</th><th>고유 기여</th><th>채널별 목록</th><th>상태</th></tr></thead><tbody data-gate-rows>
+    <tr><td><input type="checkbox" data-lock></td><th scope="row">에어컨 냄새</th><td>물리 · 위생</td><td>612 → 540</td><td>71%</td><td class="ds-t-caption">카페 210 · 블로그 230 · 브이로그 영상 18 · Threads 41 · 지식iN 60 · 82쿡 53</td><td><span class="ds-badge">정상</span></td></tr>
+    <tr><td><input type="checkbox" data-lock></td><th scope="row">제습 전기세</th><td>심리 · 비용</td><td>488 → 431</td><td>64%</td><td class="ds-t-caption">카페 160 · 블로그 190 · 브이로그 영상 11 · Threads 52 · 지식iN 45 · 82쿡 30</td><td><span class="ds-badge">정상</span></td></tr>
+    <tr><td><input type="checkbox" data-lock></td><th scope="row">실외기 소음 민원</th><td>행동 · 이웃</td><td>9 → 8</td><td>88%</td><td class="ds-t-caption">카페 4 · 블로그 0 · 브이로그 영상 0 · Threads 3 · 지식iN 2 · 82쿡 0</td><td><span class="ds-badge ds-warning">저수율</span></td></tr>
+  </tbody></table></div>
+  <div class="crawl-actions"><button class="ds-btn ds-secondary" data-lock>저장</button><button class="ds-btn ds-primary" data-lock>상세 수집 시작</button></div>
+  <p class="mock-note">변경점: Threads 수집량 안내 배너 1개, 상세 수집 예상 카드 아래 브이로그 문서 수 안내 1줄. 표 구조는 그대로이고 새 채널이 채널별 막대(목업에서는 숫자로 표시)에 더해진다. 브이로그의 목록 단위는 "영상"이다.</p>
+</section>
+
+<!-- ③ 수집 중 (P3) -->
+<section class="screen crawl-screen" id="running" data-body>
+  <header><div class="ds-eyebrow">2단계 · 크롤링</div><h1 class="ds-t-screen">본문과 댓글을 수집합니다</h1></header>
+  <div class="state-only" data-show="error"><div class="ds-note warning" role="status"><span class="ds-ic">⚠</span><div>수집이 멈췄습니다. 완료된 결과는 저장되어 있습니다. 이어서 진행하세요. 채널 차단 또는 파싱 오류로 멈췄습니다.<div><span class="ds-badge">Threads</span></div><p>Threads가 로그인 화면을 보여 주어 멈췄습니다. 로그인은 시도하지 않습니다. 간격을 늘리고 재개하거나 여기까지로 마치세요.</p></div><div class="ds-actions"><button class="ds-btn ds-secondary">이어서 진행</button> <button class="ds-btn ds-secondary">간격을 늘리고 재개</button> <button class="ds-btn ds-secondary">여기까지로 마치기</button></div></div></div>
+  <div class="ds-card" aria-live="polite"><h2 class="ds-t-card">P3 상세 수집</h2><p class="ds-t-caption">실행 중 3초마다 갱신 · 화면을 닫아도 수집은 계속됩니다</p><div class="ds-progress" role="progressbar" aria-label="상세 수집 진행" aria-valuenow="3120" aria-valuemax="8412"><div style="width:37%"></div></div>
+    <div class="ds-stats"><div class="ds-stat"><span class="ds-t-label">완료 / 대상 URL</span><span class="ds-v">3,120 / 8,412</span></div><div class="ds-stat"><span class="ds-t-label">원문 확보</span><span class="ds-v">91.2%</span></div><div class="ds-stat"><span class="ds-t-label">분당 처리량</span><span class="ds-v">39</span></div><div class="ds-stat"><span class="ds-t-label">남은 시간</span><span class="ds-v">약 136분</span></div></div></div>
+  <div class="scroll-x"><table class="ds-tbl"><thead><tr><th>채널</th><th>상태</th><th>시도</th><th>차단</th><th>파싱 오류</th><th>건너뜀</th></tr></thead><tbody>
+    <tr><th scope="row">네이버 카페</th><td><span class="ds-badge">처리 중…</span></td><td>1,204</td><td>0</td><td>2</td><td>—</td></tr>
+    <tr><th scope="row">유튜브 브이로그</th><td><span class="ds-badge">처리 중…</span></td><td>96</td><td>0</td><td>0</td><td>11 (자막 없음)</td></tr>
+    <tr><th scope="row">Threads</th><td><span class="ds-badge" data-error-badge="차단으로 멈춤">완료</span></td><td>42</td><td data-error-text="20">0</td><td>0</td><td>—</td></tr>
+    <tr><th scope="row">지식iN</th><td><span class="ds-badge">처리 중…</span></td><td>388</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><th scope="row">82쿡</th><td><span class="ds-badge">처리 중…</span></td><td>301</td><td>0</td><td>1</td><td>—</td></tr>
+  </tbody></table></div>
+  <div class="crawl-actions"><button class="ds-btn ds-secondary" data-lock>일시 정지하기</button></div>
+  <p class="mock-note">변경점: 채널 상태 표에 "건너뜀" 열 추가(사유 괄호 표기). Threads 차단 시 기존 멈춤 배너에 "로그인 화면 · 로그인 시도 안 함" 문장 1줄. Threads는 목록에 본문이 있어 상세 단계가 바로 끝난다.</p>
+</section>
+
+<!-- ④ 결과 (P5) -->
+<section class="screen crawl-screen" id="report" data-body>
+  <header><div class="ds-eyebrow">2단계 · 크롤링</div><h1 class="ds-t-screen">수집 결과를 확인합니다</h1></header>
+  <div class="ds-card"><div class="ds-stats"><div class="ds-stat"><span class="ds-t-label">수집 문서</span><span class="ds-v" data-empty-text="0">14,860</span></div><div class="ds-stat"><span class="ds-t-label">채널</span><span class="ds-v">6</span></div><div class="ds-stat"><span class="ds-t-label">목록 URL</span><span class="ds-v">8,412</span></div><div class="ds-stat"><span class="ds-t-label">완료 URL</span><span class="ds-v">8,301</span></div></div>
+    <h2 class="ds-t-card">건너뛴 항목</h2>
+    <table class="ds-tbl" aria-label="채널별 건너뛴 사유"><thead><tr><th>채널</th><th>사유</th><th>건수</th></tr></thead><tbody data-skip-rows>
+      <tr><td>유튜브 브이로그</td><td>한국어 자막 없음</td><td>37개 영상</td></tr>
+      <tr><td>네이버 카페</td><td>회원 전용 · 폐쇄 카페(제외)</td><td>212건</td></tr>
+      <tr class="state-only" data-show="error"><td>Threads</td><td>차단으로 여기까지 마침</td><td>9건</td></tr>
+    </tbody></table>
+    <p class="ds-t-caption state-only" data-show="empty">건너뛴 항목이 없습니다.</p>
+    <h2 class="ds-t-card">채널 분포</h2>
+    <div class="ds-bars">
+      <div class="ds-bar"><span class="ds-t-label">네이버 블로그</span><span class="ds-track"><span style="width:100%"></span></span><span>4,820 · 32.4%</span></div>
+      <div class="ds-bar"><span class="ds-t-label">네이버 카페</span><span class="ds-track"><span style="width:82%"></span></span><span>3,960 · 26.6%</span></div>
+      <div class="ds-bar"><span class="ds-t-label">유튜브 브이로그</span><span class="ds-track"><span style="width:52%"></span></span><span>2,510 · 16.9% (영상 412개 → 구간 2,510)</span></div>
+      <div class="ds-bar"><span class="ds-t-label">지식iN</span><span class="ds-track"><span style="width:37%"></span></span><span>1,790 · 12.0%</span></div>
+      <div class="ds-bar"><span class="ds-t-label">82쿡</span><span class="ds-track"><span style="width:25%"></span></span><span>1,210 · 8.1%</span></div>
+      <div class="ds-bar"><span class="ds-t-label">Threads</span><span class="ds-track"><span style="width:12%"></span></span><span>570 · 3.8%</span></div>
+    </div></div>
+  <div class="crawl-actions"><button class="ds-btn ds-primary">전처리로 이동하기</button></div>
+  <p class="mock-note">변경점: 기존 "건너뜀 요약 문장"을 채널 × 사유 표로 바꾼다(사유가 여러 개일 수 있음). 브이로그 분포 줄에 "영상 수 → 구간 문서 수"를 덧붙인다. 키워드별 표 · 상위/하위 카드는 기존과 같다.</p>
+</section>
+</main>
+
+<script>
+(function(){
+  const frame=document.getElementById('frame');
+  let screen='setup', state='normal';
+  const press=(attr,val)=>document.querySelectorAll('[data-'+attr+']').forEach(b=>{if(b.tagName==='BUTTON'&&b.closest('.mock-bar'))b.setAttribute('aria-pressed',String(b.dataset[attr]===val));});
+  function render(){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===screen&&state!=='loading'));
+    document.querySelectorAll('.state-only').forEach(el=>{
+      const screens=(el.dataset.screens||'').split(' ').filter(Boolean);
+      const shown=el.dataset.show===state&&(!screens.length||screens.includes(screen));
+      el.style.display=shown?({TR:'table-row',SPAN:'inline-flex',P:'block'}[el.tagName]||'block'):'none';
+    });
+    document.querySelectorAll('[data-lock]').forEach(el=>{el.disabled=state==='readonly';});
+    document.querySelectorAll('[data-off-on-error]').forEach(el=>{el.setAttribute('aria-checked',state==='error'?'false':'true');el.disabled=state==='error'||state==='readonly';});
+    document.querySelectorAll('[data-error-badge]').forEach(el=>{el.textContent=state==='error'?el.dataset.errorBadge:'완료';el.className='ds-badge'+(state==='error'?' ds-warning':' ds-success');});
+    document.querySelectorAll('[data-error-text]').forEach(el=>{el.textContent=state==='error'?el.dataset.errorText:'0';});
+    document.querySelectorAll('[data-empty-text]').forEach(el=>{if(!el.dataset.orig)el.dataset.orig=el.textContent;el.textContent=state==='empty'?el.dataset.emptyText:el.dataset.orig;});
+    document.querySelectorAll('[data-gate-rows] tr, [data-skip-rows] tr:not(.state-only)').forEach(tr=>{tr.style.display=state==='empty'?'none':'';});
+  }
+  document.querySelectorAll('.mock-bar button').forEach(b=>b.addEventListener('click',()=>{
+    if(b.dataset.screen){screen=b.dataset.screen;press('screen',screen);}
+    if(b.dataset.state){state=b.dataset.state;press('state',state);}
+    if(b.dataset.width){frame.classList.toggle('mobile',b.dataset.width==='mobile');press('width',b.dataset.width);}
+    render();
+  }));
+  document.querySelectorAll('.ds-sw').forEach(sw=>sw.addEventListener('click',()=>{if(!sw.disabled)sw.setAttribute('aria-checked',String(sw.getAttribute('aria-checked')!=='true'));}));
+  render();
+})();
+</script>
+</body>
+</html>

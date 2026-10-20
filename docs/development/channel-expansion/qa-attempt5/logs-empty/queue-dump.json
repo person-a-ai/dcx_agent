@@ -1,0 +1,130 @@
+{
+  "time": "2026-10-20T13:29:19.079999+00:00",
+  "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-r5main/crawl/sfc5150dec7464c06bee7d8e779a63ff1/collections/c1",
+  "schemas": [
+    [
+      "runs",
+      "CREATE TABLE runs (\n run_id TEXT PRIMARY KEY, sid TEXT NOT NULL, kind TEXT NOT NULL CHECK(kind IN ('list','detail')),\n pid INTEGER NOT NULL, status TEXT NOT NULL, started_at REAL NOT NULL,\n heartbeat_at REAL NOT NULL, config_json TEXT NOT NULL\n)"
+    ],
+    [
+      "list_tasks",
+      "CREATE TABLE list_tasks (\n kw TEXT NOT NULL, source TEXT NOT NULL, cursor TEXT NOT NULL DEFAULT '',\n status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','running','done','failed')),\n fetched INTEGER NOT NULL DEFAULT 0, total_hint INTEGER,\n attempts INTEGER NOT NULL DEFAULT 0, last_error TEXT, lease_run_id TEXT,\n PRIMARY KEY(kw, source, cursor)\n)"
+    ],
+    [
+      "keyword_meta",
+      "CREATE TABLE keyword_meta (\n kw TEXT PRIMARY KEY, kw_axis TEXT NOT NULL, kw_sub TEXT NOT NULL, kw_order INTEGER NOT NULL\n)"
+    ],
+    [
+      "urls",
+      "CREATE TABLE urls (\n url_norm TEXT NOT NULL, source TEXT NOT NULL, kw TEXT NOT NULL,\n kw_axis TEXT NOT NULL, kw_sub TEXT NOT NULL, snippet TEXT NOT NULL, title TEXT NOT NULL,\n date TEXT, src_meta_json TEXT NOT NULL,\n status TEXT NOT NULL DEFAULT 'pending'\n CHECK(status IN ('pending','leased','done','failed','excluded','filtered','skipped')),\n lease_until REAL, lease_run_id TEXT, lease_snapshot_id TEXT, attempts INTEGER NOT NULL DEFAULT 0,\n last_error TEXT, doc_count INTEGER NOT NULL DEFAULT 0, first_seen_kw_order INTEGER NOT NULL,\n fetch_level TEXT, access TEXT, retry_at REAL, filter_rule TEXT,\n exhausted INTEGER NOT NULL DEFAULT 0, max_attempts INTEGER NOT NULL DEFAULT 3,\n UNIQUE(url_norm, source)\n)"
+    ],
+    [
+      "url_hits",
+      "CREATE TABLE url_hits (\n url_norm TEXT NOT NULL, source TEXT NOT NULL, kw TEXT NOT NULL,\n kw_axis TEXT NOT NULL, kw_sub TEXT NOT NULL, kw_order INTEGER NOT NULL,\n PRIMARY KEY(url_norm, source, kw)\n)"
+    ],
+    [
+      "snapshots",
+      "CREATE TABLE snapshots (\n snapshot_id TEXT PRIMARY KEY, created_at REAL NOT NULL, url_count INTEGER NOT NULL, hash TEXT NOT NULL,\n exclusion_version INTEGER NOT NULL DEFAULT 0, swept_version INTEGER NOT NULL DEFAULT 0\n)"
+    ],
+    [
+      "snapshot_urls",
+      "CREATE TABLE snapshot_urls (\n snapshot_id TEXT NOT NULL, url_norm TEXT NOT NULL, source TEXT NOT NULL,\n PRIMARY KEY(snapshot_id, url_norm, source)\n)"
+    ],
+    [
+      "excluded_keywords",
+      "CREATE TABLE excluded_keywords (\n snapshot_id TEXT NOT NULL, kw TEXT NOT NULL, PRIMARY KEY(snapshot_id, kw)\n)"
+    ]
+  ],
+  "data": {
+    "runs": [
+      [
+        "df7d8200b36c419a94e2e7599d76626f",
+        "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-r5main/crawl/sfc5150dec7464c06bee7d8e779a63ff1/collections/c1",
+        "list",
+        37949,
+        "starting",
+        1792502583.074826,
+        1792502583.074826,
+        "{}"
+      ],
+      [
+        "ff9737abf6ff4a009db609691f75d79d",
+        "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-r5main/crawl/sfc5150dec7464c06bee7d8e779a63ff1/collections/c1",
+        "list",
+        37949,
+        "done",
+        1792502583.702446,
+        1792502583.716016,
+        "{}"
+      ]
+    ],
+    "list_tasks": [
+      [
+        "qa-empty",
+        "youtube_vlog",
+        "",
+        "done",
+        0,
+        null,
+        1,
+        null,
+        null
+      ],
+      [
+        "qa-empty",
+        "threads",
+        "",
+        "done",
+        0,
+        null,
+        1,
+        null,
+        null
+      ],
+      [
+        "qa-empty",
+        "naver_kin",
+        "",
+        "done",
+        0,
+        null,
+        1,
+        null,
+        null
+      ],
+      [
+        "qa-empty",
+        "cook82",
+        "",
+        "done",
+        0,
+        null,
+        1,
+        null,
+        null
+      ]
+    ],
+    "keyword_meta": [
+      [
+        "qa-empty",
+        "physical",
+        "product_physical",
+        0
+      ]
+    ],
+    "urls": [],
+    "url_hits": [],
+    "snapshots": [
+      [
+        "a26a2b88da1d461299995e8570fc8c2c",
+        1792502583.7156138,
+        0,
+        "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        0,
+        0
+      ]
+    ],
+    "snapshot_urls": [],
+    "excluded_keywords": []
+  }
+}

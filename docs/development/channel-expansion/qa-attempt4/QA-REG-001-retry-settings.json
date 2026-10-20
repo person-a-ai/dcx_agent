@@ -1,0 +1,3 @@
+{
+  "raw": "### Error\nTimeoutError: locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'QA 샘플 일치 열기', exact: true })\n"
+}

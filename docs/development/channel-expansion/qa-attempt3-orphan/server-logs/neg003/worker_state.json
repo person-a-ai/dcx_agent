@@ -1,0 +1,16 @@
+{
+  "sid": "s3db7f3a5f68c422094288eab1893554e",
+  "kind": "detail",
+  "run_id": "534a71d701f94c58965a1f81832dcb61",
+  "snapshot_id": "9a6893353ac342e5a91dc90a1934d28a",
+  "channels": {
+    "threads": {
+      "status": "done",
+      "attempts": 20,
+      "parse_errors": 0,
+      "blocked": 20
+    }
+  },
+  "paused_channels": [],
+  "stopReason": "partial_finished"
+}

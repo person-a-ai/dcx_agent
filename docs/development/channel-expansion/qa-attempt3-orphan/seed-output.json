@@ -1,0 +1,4036 @@
+{
+  "time": "2026-10-20T07:40:50.761Z",
+  "sessions": {
+    "main": {
+      "QA 채널 확장": {
+        "sid": "s022667b4b6674eef9f3c2747db878043",
+        "requestedKeywords": [
+          "에어컨 청소",
+          "제습기",
+          "qa-empty"
+        ],
+        "keywords": [
+          {
+            "id": "manual-1e04cd44cb7d4313b9494a53f74bba4c",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "manual-28b60ec8156e405c9ce39766c6541b31",
+            "kw": "제습기",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "manual-79b3383dea834f7f85501adf1659b1dc",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          }
+        ],
+        "channels": [
+          "youtube_vlog",
+          "threads",
+          "naver_kin",
+          "cook82"
+        ]
+      },
+      "QA 빈 결과": {
+        "sid": "sc9d9fd0c1eaf4733a883deac400537f5",
+        "requestedKeywords": [
+          "qa-empty"
+        ],
+        "keywords": [
+          {
+            "id": "manual-b21a0ad2663c40588c65d310aab5eec5",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          }
+        ],
+        "channels": [
+          "youtube_vlog",
+          "threads",
+          "naver_kin",
+          "cook82"
+        ]
+      },
+      "QA 샘플": {
+        "sid": "s96621a86a802455cbe2cc63726cc5f3b",
+        "requestedKeywords": [
+          "에어컨 청소"
+        ],
+        "keywords": [
+          {
+            "id": "manual-1743389613424d4da54794ebb880a67d",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          }
+        ],
+        "channels": [
+          "fixture"
+        ]
+      }
+    },
+    "unavailable": {
+      "QA 채널 확장": {
+        "sid": "s2fd7a06592aa45878a7358e670779be6",
+        "requestedKeywords": [
+          "에어컨 청소",
+          "제습기",
+          "qa-empty"
+        ],
+        "keywords": [
+          {
+            "id": "manual-ed8bcd704bc54159b32ab264005b0452",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "manual-a098b12bd14641d0a3916f57a6aa71aa",
+            "kw": "제습기",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "manual-772d7dc0ff8f46b6a8ed00895e861051",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          }
+        ],
+        "channels": [
+          "youtube_vlog",
+          "naver_kin",
+          "cook82"
+        ]
+      },
+      "QA 빈 결과": {
+        "sid": "s1d98e3527e474d30a3ad93986b54d7cc",
+        "requestedKeywords": [
+          "qa-empty"
+        ],
+        "keywords": [
+          {
+            "id": "manual-1f545bbf03424ffa8f897e0dbd9de5d0",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          }
+        ],
+        "channels": [
+          "youtube_vlog",
+          "naver_kin",
+          "cook82"
+        ]
+      },
+      "QA 샘플": {
+        "sid": "se512546d3c99416e987ba504cdcc7f6d",
+        "requestedKeywords": [
+          "에어컨 청소"
+        ],
+        "keywords": [
+          {
+            "id": "manual-f8f382c84ef24290b54e3a3543f3223c",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          }
+        ],
+        "channels": [
+          "fixture"
+        ]
+      }
+    },
+    "blocked": {
+      "QA 채널 확장": {
+        "sid": "s3db7f3a5f68c422094288eab1893554e",
+        "requestedKeywords": [
+          "에어컨 청소",
+          "제습기",
+          "qa-empty"
+        ],
+        "keywords": [
+          {
+            "id": "manual-9395aaef89484b5ca32d818c2e105f5a",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "manual-b3c99fd8c9c84c478171dbdae46b7bed",
+            "kw": "제습기",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "manual-27675fd591a549d68f221b0dd955dd52",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          }
+        ],
+        "channels": [
+          "threads"
+        ]
+      },
+      "QA 빈 결과": {
+        "sid": "s80f37f45630841c4ae533a1ff4157ec3",
+        "requestedKeywords": [
+          "qa-empty"
+        ],
+        "keywords": [
+          {
+            "id": "manual-130b8346a52a4f55881004b1b0d0ed7d",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          }
+        ],
+        "channels": [
+          "youtube_vlog",
+          "threads",
+          "naver_kin",
+          "cook82"
+        ]
+      },
+      "QA 샘플": {
+        "sid": "s8dd2afdbb8844e9988dc0ec8d864b1ff",
+        "requestedKeywords": [
+          "에어컨 청소"
+        ],
+        "keywords": [
+          {
+            "id": "manual-2956a1b482ce462c92f33125c902d3ab",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          }
+        ],
+        "channels": [
+          "fixture"
+        ]
+      }
+    }
+  },
+  "calls": [
+    {
+      "time": "2026-10-20T07:40:46.046Z",
+      "env": "main",
+      "method": "POST",
+      "path": "/context",
+      "status": 201,
+      "body": {
+        "sid": "s022667b4b6674eef9f3c2747db878043"
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.771Z",
+      "env": "main",
+      "method": "POST",
+      "path": "/keywords/s022667b4b6674eef9f3c2747db878043/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-1e04cd44cb7d4313b9494a53f74bba4c",
+        "kw": "에어컨청소",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-1e04cd44cb7d4313b9494a53f74bba4c",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "에어컨 청소"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.779Z",
+      "env": "main",
+      "method": "POST",
+      "path": "/keywords/s022667b4b6674eef9f3c2747db878043/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-28b60ec8156e405c9ce39766c6541b31",
+        "kw": "제습기",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-28b60ec8156e405c9ce39766c6541b31",
+            "kw": "제습기",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "제습기"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.783Z",
+      "env": "main",
+      "method": "POST",
+      "path": "/keywords/s022667b4b6674eef9f3c2747db878043/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-79b3383dea834f7f85501adf1659b1dc",
+        "kw": "qa-empty",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-79b3383dea834f7f85501adf1659b1dc",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "qa-empty"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.893Z",
+      "env": "main",
+      "method": "PUT",
+      "path": "/crawl/s022667b4b6674eef9f3c2747db878043/config",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "crawlConfig": {
+          "channels": [
+            "youtube_vlog",
+            "threads",
+            "naver_kin",
+            "cook82"
+          ],
+          "dateFrom": "2025-10-20",
+          "dateTo": "2026-10-20",
+          "adWords": [
+            "협찬",
+            "광고",
+            "제공받",
+            "원고료",
+            "체험단",
+            "서포터즈",
+            "중고",
+            "판매",
+            "거래",
+            "체험단",
+            "협찬",
+            "원고료",
+            "소정의",
+            "제공받아",
+            "서포터즈"
+          ],
+          "excludeSources": [
+            "중고나라",
+            "번개장터",
+            "당근",
+            "세컨웨어",
+            "헬로마켓",
+            "중고",
+            "장터",
+            "부동산",
+            "판매",
+            "팝니다",
+            "삽니다",
+            "택배",
+            "무료배송",
+            "할인코드",
+            "쿠폰",
+            "홍보",
+            "광고",
+            "업체",
+            "시공",
+            "인테리어업체",
+            "이사",
+            "용달",
+            "대출",
+            "보험설계사",
+            "설계사모집",
+            "모집"
+          ],
+          "includeSources": [],
+          "product_name_filter": false,
+          "perChannel": {},
+          "youtube": {
+            "videos_per_keyword": 20,
+            "max_comments": 500
+          },
+          "youtube_vlog": {
+            "videos_per_keyword": 20,
+            "min_duration_s": 60,
+            "max_duration_s": 3600
+          },
+          "target_total": null
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.897Z",
+      "env": "main",
+      "method": "PATCH",
+      "path": "/session/s022667b4b6674eef9f3c2747db878043",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s022667b4b6674eef9f3c2747db878043",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 채널 확장",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:47.895599+00:00",
+          "keywords": [
+            {
+              "id": "manual-1e04cd44cb7d4313b9494a53f74bba4c",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-28b60ec8156e405c9ce39766c6541b31",
+              "kw": "제습기",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-79b3383dea834f7f85501adf1659b1dc",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.899Z",
+      "env": "main",
+      "method": "GET",
+      "path": "/session/s022667b4b6674eef9f3c2747db878043",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s022667b4b6674eef9f3c2747db878043",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 채널 확장",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:47.895599+00:00",
+          "keywords": [
+            {
+              "id": "manual-1e04cd44cb7d4313b9494a53f74bba4c",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-28b60ec8156e405c9ce39766c6541b31",
+              "kw": "제습기",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-79b3383dea834f7f85501adf1659b1dc",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          },
+          "completion": {
+            "crawlDone": false,
+            "prepDone": false,
+            "labelingDone": false,
+            "exportDone": false,
+            "clustersDone": false,
+            "segmentDone": false,
+            "personaDone": false,
+            "insightDone": false,
+            "evidenceDone": false
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.906Z",
+      "env": "main",
+      "method": "POST",
+      "path": "/context",
+      "status": 201,
+      "body": {
+        "sid": "sc9d9fd0c1eaf4733a883deac400537f5"
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.910Z",
+      "env": "main",
+      "method": "POST",
+      "path": "/keywords/sc9d9fd0c1eaf4733a883deac400537f5/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-b21a0ad2663c40588c65d310aab5eec5",
+        "kw": "qa-empty",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-b21a0ad2663c40588c65d310aab5eec5",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "qa-empty"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.914Z",
+      "env": "main",
+      "method": "PUT",
+      "path": "/crawl/sc9d9fd0c1eaf4733a883deac400537f5/config",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "crawlConfig": {
+          "channels": [
+            "youtube_vlog",
+            "threads",
+            "naver_kin",
+            "cook82"
+          ],
+          "dateFrom": "2025-10-20",
+          "dateTo": "2026-10-20",
+          "adWords": [
+            "협찬",
+            "광고",
+            "제공받",
+            "원고료",
+            "체험단",
+            "서포터즈",
+            "중고",
+            "판매",
+            "거래",
+            "체험단",
+            "협찬",
+            "원고료",
+            "소정의",
+            "제공받아",
+            "서포터즈"
+          ],
+          "excludeSources": [
+            "중고나라",
+            "번개장터",
+            "당근",
+            "세컨웨어",
+            "헬로마켓",
+            "중고",
+            "장터",
+            "부동산",
+            "판매",
+            "팝니다",
+            "삽니다",
+            "택배",
+            "무료배송",
+            "할인코드",
+            "쿠폰",
+            "홍보",
+            "광고",
+            "업체",
+            "시공",
+            "인테리어업체",
+            "이사",
+            "용달",
+            "대출",
+            "보험설계사",
+            "설계사모집",
+            "모집"
+          ],
+          "includeSources": [],
+          "product_name_filter": false,
+          "perChannel": {},
+          "youtube": {
+            "videos_per_keyword": 20,
+            "max_comments": 500
+          },
+          "youtube_vlog": {
+            "videos_per_keyword": 20,
+            "min_duration_s": 60,
+            "max_duration_s": 3600
+          },
+          "target_total": null
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.921Z",
+      "env": "main",
+      "method": "PATCH",
+      "path": "/session/sc9d9fd0c1eaf4733a883deac400537f5",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "sc9d9fd0c1eaf4733a883deac400537f5",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 빈 결과",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:47.918872+00:00",
+          "keywords": [
+            {
+              "id": "manual-b21a0ad2663c40588c65d310aab5eec5",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.925Z",
+      "env": "main",
+      "method": "GET",
+      "path": "/session/sc9d9fd0c1eaf4733a883deac400537f5",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "sc9d9fd0c1eaf4733a883deac400537f5",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 빈 결과",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:47.918872+00:00",
+          "keywords": [
+            {
+              "id": "manual-b21a0ad2663c40588c65d310aab5eec5",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          },
+          "completion": {
+            "crawlDone": false,
+            "prepDone": false,
+            "labelingDone": false,
+            "exportDone": false,
+            "clustersDone": false,
+            "segmentDone": false,
+            "personaDone": false,
+            "insightDone": false,
+            "evidenceDone": false
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.933Z",
+      "env": "main",
+      "method": "POST",
+      "path": "/context",
+      "status": 201,
+      "body": {
+        "sid": "s96621a86a802455cbe2cc63726cc5f3b"
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.941Z",
+      "env": "main",
+      "method": "POST",
+      "path": "/keywords/s96621a86a802455cbe2cc63726cc5f3b/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-1743389613424d4da54794ebb880a67d",
+        "kw": "에어컨청소",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-1743389613424d4da54794ebb880a67d",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "에어컨 청소"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.946Z",
+      "env": "main",
+      "method": "PUT",
+      "path": "/crawl/s96621a86a802455cbe2cc63726cc5f3b/config",
+      "status": 422,
+      "body": {
+        "status": "error",
+        "error": {
+          "kind": "validation",
+          "code": "sources_unavailable",
+          "message": "Sources are unavailable"
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.949Z",
+      "env": "main",
+      "method": "PATCH",
+      "path": "/session/s96621a86a802455cbe2cc63726cc5f3b",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s96621a86a802455cbe2cc63726cc5f3b",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 샘플",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "fixture"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:47.948676+00:00",
+          "keywords": [
+            {
+              "id": "manual-1743389613424d4da54794ebb880a67d",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:47.951Z",
+      "env": "main",
+      "method": "GET",
+      "path": "/session/s96621a86a802455cbe2cc63726cc5f3b",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s96621a86a802455cbe2cc63726cc5f3b",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 샘플",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "fixture"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:47.948676+00:00",
+          "keywords": [
+            {
+              "id": "manual-1743389613424d4da54794ebb880a67d",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "completion": {
+            "crawlDone": false,
+            "prepDone": false,
+            "labelingDone": false,
+            "exportDone": false,
+            "clustersDone": false,
+            "segmentDone": false,
+            "personaDone": false,
+            "insightDone": false,
+            "evidenceDone": false
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:48.012Z",
+      "env": "unavailable",
+      "method": "POST",
+      "path": "/context",
+      "status": 201,
+      "body": {
+        "sid": "s2fd7a06592aa45878a7358e670779be6"
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.286Z",
+      "env": "unavailable",
+      "method": "POST",
+      "path": "/keywords/s2fd7a06592aa45878a7358e670779be6/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-ed8bcd704bc54159b32ab264005b0452",
+        "kw": "에어컨청소",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-ed8bcd704bc54159b32ab264005b0452",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "에어컨 청소"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.293Z",
+      "env": "unavailable",
+      "method": "POST",
+      "path": "/keywords/s2fd7a06592aa45878a7358e670779be6/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-a098b12bd14641d0a3916f57a6aa71aa",
+        "kw": "제습기",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-a098b12bd14641d0a3916f57a6aa71aa",
+            "kw": "제습기",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "제습기"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.296Z",
+      "env": "unavailable",
+      "method": "POST",
+      "path": "/keywords/s2fd7a06592aa45878a7358e670779be6/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-772d7dc0ff8f46b6a8ed00895e861051",
+        "kw": "qa-empty",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-772d7dc0ff8f46b6a8ed00895e861051",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "qa-empty"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.374Z",
+      "env": "unavailable",
+      "method": "PUT",
+      "path": "/crawl/s2fd7a06592aa45878a7358e670779be6/config",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "crawlConfig": {
+          "channels": [
+            "youtube_vlog",
+            "naver_kin",
+            "cook82"
+          ],
+          "dateFrom": "2025-10-20",
+          "dateTo": "2026-10-20",
+          "adWords": [
+            "협찬",
+            "광고",
+            "제공받",
+            "원고료",
+            "체험단",
+            "서포터즈",
+            "중고",
+            "판매",
+            "거래",
+            "체험단",
+            "협찬",
+            "원고료",
+            "소정의",
+            "제공받아",
+            "서포터즈"
+          ],
+          "excludeSources": [
+            "중고나라",
+            "번개장터",
+            "당근",
+            "세컨웨어",
+            "헬로마켓",
+            "중고",
+            "장터",
+            "부동산",
+            "판매",
+            "팝니다",
+            "삽니다",
+            "택배",
+            "무료배송",
+            "할인코드",
+            "쿠폰",
+            "홍보",
+            "광고",
+            "업체",
+            "시공",
+            "인테리어업체",
+            "이사",
+            "용달",
+            "대출",
+            "보험설계사",
+            "설계사모집",
+            "모집"
+          ],
+          "includeSources": [],
+          "product_name_filter": false,
+          "perChannel": {},
+          "youtube": {
+            "videos_per_keyword": 20,
+            "max_comments": 500
+          },
+          "youtube_vlog": {
+            "videos_per_keyword": 20,
+            "min_duration_s": 60,
+            "max_duration_s": 3600
+          },
+          "target_total": null
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.378Z",
+      "env": "unavailable",
+      "method": "PATCH",
+      "path": "/session/s2fd7a06592aa45878a7358e670779be6",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s2fd7a06592aa45878a7358e670779be6",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 채널 확장",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "youtube_vlog",
+              "naver_kin",
+              "cook82"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:49.376905+00:00",
+          "keywords": [
+            {
+              "id": "manual-ed8bcd704bc54159b32ab264005b0452",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-a098b12bd14641d0a3916f57a6aa71aa",
+              "kw": "제습기",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-772d7dc0ff8f46b6a8ed00895e861051",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "youtube_vlog",
+              "naver_kin",
+              "cook82"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.386Z",
+      "env": "unavailable",
+      "method": "GET",
+      "path": "/session/s2fd7a06592aa45878a7358e670779be6",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s2fd7a06592aa45878a7358e670779be6",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 채널 확장",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "youtube_vlog",
+              "naver_kin",
+              "cook82"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:49.376905+00:00",
+          "keywords": [
+            {
+              "id": "manual-ed8bcd704bc54159b32ab264005b0452",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-a098b12bd14641d0a3916f57a6aa71aa",
+              "kw": "제습기",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-772d7dc0ff8f46b6a8ed00895e861051",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "youtube_vlog",
+              "naver_kin",
+              "cook82"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          },
+          "completion": {
+            "crawlDone": false,
+            "prepDone": false,
+            "labelingDone": false,
+            "exportDone": false,
+            "clustersDone": false,
+            "segmentDone": false,
+            "personaDone": false,
+            "insightDone": false,
+            "evidenceDone": false
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.395Z",
+      "env": "unavailable",
+      "method": "POST",
+      "path": "/context",
+      "status": 201,
+      "body": {
+        "sid": "s1d98e3527e474d30a3ad93986b54d7cc"
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.400Z",
+      "env": "unavailable",
+      "method": "POST",
+      "path": "/keywords/s1d98e3527e474d30a3ad93986b54d7cc/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-1f545bbf03424ffa8f897e0dbd9de5d0",
+        "kw": "qa-empty",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-1f545bbf03424ffa8f897e0dbd9de5d0",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "qa-empty"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.402Z",
+      "env": "unavailable",
+      "method": "PUT",
+      "path": "/crawl/s1d98e3527e474d30a3ad93986b54d7cc/config",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "crawlConfig": {
+          "channels": [
+            "youtube_vlog",
+            "naver_kin",
+            "cook82"
+          ],
+          "dateFrom": "2025-10-20",
+          "dateTo": "2026-10-20",
+          "adWords": [
+            "협찬",
+            "광고",
+            "제공받",
+            "원고료",
+            "체험단",
+            "서포터즈",
+            "중고",
+            "판매",
+            "거래",
+            "체험단",
+            "협찬",
+            "원고료",
+            "소정의",
+            "제공받아",
+            "서포터즈"
+          ],
+          "excludeSources": [
+            "중고나라",
+            "번개장터",
+            "당근",
+            "세컨웨어",
+            "헬로마켓",
+            "중고",
+            "장터",
+            "부동산",
+            "판매",
+            "팝니다",
+            "삽니다",
+            "택배",
+            "무료배송",
+            "할인코드",
+            "쿠폰",
+            "홍보",
+            "광고",
+            "업체",
+            "시공",
+            "인테리어업체",
+            "이사",
+            "용달",
+            "대출",
+            "보험설계사",
+            "설계사모집",
+            "모집"
+          ],
+          "includeSources": [],
+          "product_name_filter": false,
+          "perChannel": {},
+          "youtube": {
+            "videos_per_keyword": 20,
+            "max_comments": 500
+          },
+          "youtube_vlog": {
+            "videos_per_keyword": 20,
+            "min_duration_s": 60,
+            "max_duration_s": 3600
+          },
+          "target_total": null
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.404Z",
+      "env": "unavailable",
+      "method": "PATCH",
+      "path": "/session/s1d98e3527e474d30a3ad93986b54d7cc",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s1d98e3527e474d30a3ad93986b54d7cc",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 빈 결과",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "youtube_vlog",
+              "naver_kin",
+              "cook82"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:49.403774+00:00",
+          "keywords": [
+            {
+              "id": "manual-1f545bbf03424ffa8f897e0dbd9de5d0",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "youtube_vlog",
+              "naver_kin",
+              "cook82"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.406Z",
+      "env": "unavailable",
+      "method": "GET",
+      "path": "/session/s1d98e3527e474d30a3ad93986b54d7cc",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s1d98e3527e474d30a3ad93986b54d7cc",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 빈 결과",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "youtube_vlog",
+              "naver_kin",
+              "cook82"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:49.403774+00:00",
+          "keywords": [
+            {
+              "id": "manual-1f545bbf03424ffa8f897e0dbd9de5d0",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "youtube_vlog",
+              "naver_kin",
+              "cook82"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          },
+          "completion": {
+            "crawlDone": false,
+            "prepDone": false,
+            "labelingDone": false,
+            "exportDone": false,
+            "clustersDone": false,
+            "segmentDone": false,
+            "personaDone": false,
+            "insightDone": false,
+            "evidenceDone": false
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.411Z",
+      "env": "unavailable",
+      "method": "POST",
+      "path": "/context",
+      "status": 201,
+      "body": {
+        "sid": "se512546d3c99416e987ba504cdcc7f6d"
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.419Z",
+      "env": "unavailable",
+      "method": "POST",
+      "path": "/keywords/se512546d3c99416e987ba504cdcc7f6d/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-f8f382c84ef24290b54e3a3543f3223c",
+        "kw": "에어컨청소",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-f8f382c84ef24290b54e3a3543f3223c",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "에어컨 청소"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.426Z",
+      "env": "unavailable",
+      "method": "PUT",
+      "path": "/crawl/se512546d3c99416e987ba504cdcc7f6d/config",
+      "status": 422,
+      "body": {
+        "status": "error",
+        "error": {
+          "kind": "validation",
+          "code": "sources_unavailable",
+          "message": "Sources are unavailable"
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.429Z",
+      "env": "unavailable",
+      "method": "PATCH",
+      "path": "/session/se512546d3c99416e987ba504cdcc7f6d",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "se512546d3c99416e987ba504cdcc7f6d",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 샘플",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "fixture"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:49.428036+00:00",
+          "keywords": [
+            {
+              "id": "manual-f8f382c84ef24290b54e3a3543f3223c",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.431Z",
+      "env": "unavailable",
+      "method": "GET",
+      "path": "/session/se512546d3c99416e987ba504cdcc7f6d",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "se512546d3c99416e987ba504cdcc7f6d",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 샘플",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "fixture"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:49.428036+00:00",
+          "keywords": [
+            {
+              "id": "manual-f8f382c84ef24290b54e3a3543f3223c",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "completion": {
+            "crawlDone": false,
+            "prepDone": false,
+            "labelingDone": false,
+            "exportDone": false,
+            "clustersDone": false,
+            "segmentDone": false,
+            "personaDone": false,
+            "insightDone": false,
+            "evidenceDone": false
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:49.469Z",
+      "env": "blocked",
+      "method": "POST",
+      "path": "/context",
+      "status": 201,
+      "body": {
+        "sid": "s3db7f3a5f68c422094288eab1893554e"
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.685Z",
+      "env": "blocked",
+      "method": "POST",
+      "path": "/keywords/s3db7f3a5f68c422094288eab1893554e/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-9395aaef89484b5ca32d818c2e105f5a",
+        "kw": "에어컨청소",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-9395aaef89484b5ca32d818c2e105f5a",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "에어컨 청소"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.689Z",
+      "env": "blocked",
+      "method": "POST",
+      "path": "/keywords/s3db7f3a5f68c422094288eab1893554e/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-b3c99fd8c9c84c478171dbdae46b7bed",
+        "kw": "제습기",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-b3c99fd8c9c84c478171dbdae46b7bed",
+            "kw": "제습기",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "제습기"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.693Z",
+      "env": "blocked",
+      "method": "POST",
+      "path": "/keywords/s3db7f3a5f68c422094288eab1893554e/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-27675fd591a549d68f221b0dd955dd52",
+        "kw": "qa-empty",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-27675fd591a549d68f221b0dd955dd52",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "qa-empty"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.732Z",
+      "env": "blocked",
+      "method": "PUT",
+      "path": "/crawl/s3db7f3a5f68c422094288eab1893554e/config",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "crawlConfig": {
+          "channels": [
+            "threads"
+          ],
+          "dateFrom": "2025-10-20",
+          "dateTo": "2026-10-20",
+          "adWords": [
+            "협찬",
+            "광고",
+            "제공받",
+            "원고료",
+            "체험단",
+            "서포터즈",
+            "중고",
+            "판매",
+            "거래",
+            "체험단",
+            "협찬",
+            "원고료",
+            "소정의",
+            "제공받아",
+            "서포터즈"
+          ],
+          "excludeSources": [
+            "중고나라",
+            "번개장터",
+            "당근",
+            "세컨웨어",
+            "헬로마켓",
+            "중고",
+            "장터",
+            "부동산",
+            "판매",
+            "팝니다",
+            "삽니다",
+            "택배",
+            "무료배송",
+            "할인코드",
+            "쿠폰",
+            "홍보",
+            "광고",
+            "업체",
+            "시공",
+            "인테리어업체",
+            "이사",
+            "용달",
+            "대출",
+            "보험설계사",
+            "설계사모집",
+            "모집"
+          ],
+          "includeSources": [],
+          "product_name_filter": false,
+          "perChannel": {},
+          "youtube": {
+            "videos_per_keyword": 20,
+            "max_comments": 500
+          },
+          "youtube_vlog": {
+            "videos_per_keyword": 20,
+            "min_duration_s": 60,
+            "max_duration_s": 3600
+          },
+          "target_total": null
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.735Z",
+      "env": "blocked",
+      "method": "PATCH",
+      "path": "/session/s3db7f3a5f68c422094288eab1893554e",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s3db7f3a5f68c422094288eab1893554e",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 채널 확장",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "threads"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:50.733981+00:00",
+          "keywords": [
+            {
+              "id": "manual-9395aaef89484b5ca32d818c2e105f5a",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-b3c99fd8c9c84c478171dbdae46b7bed",
+              "kw": "제습기",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-27675fd591a549d68f221b0dd955dd52",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "threads"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.737Z",
+      "env": "blocked",
+      "method": "GET",
+      "path": "/session/s3db7f3a5f68c422094288eab1893554e",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s3db7f3a5f68c422094288eab1893554e",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 채널 확장",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "threads"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:50.733981+00:00",
+          "keywords": [
+            {
+              "id": "manual-9395aaef89484b5ca32d818c2e105f5a",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-b3c99fd8c9c84c478171dbdae46b7bed",
+              "kw": "제습기",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            },
+            {
+              "id": "manual-27675fd591a549d68f221b0dd955dd52",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "threads"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          },
+          "completion": {
+            "crawlDone": false,
+            "prepDone": false,
+            "labelingDone": false,
+            "exportDone": false,
+            "clustersDone": false,
+            "segmentDone": false,
+            "personaDone": false,
+            "insightDone": false,
+            "evidenceDone": false
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.740Z",
+      "env": "blocked",
+      "method": "POST",
+      "path": "/context",
+      "status": 201,
+      "body": {
+        "sid": "s80f37f45630841c4ae533a1ff4157ec3"
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.743Z",
+      "env": "blocked",
+      "method": "POST",
+      "path": "/keywords/s80f37f45630841c4ae533a1ff4157ec3/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-130b8346a52a4f55881004b1b0d0ed7d",
+        "kw": "qa-empty",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-130b8346a52a4f55881004b1b0d0ed7d",
+            "kw": "qa-empty",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "qa-empty"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.745Z",
+      "env": "blocked",
+      "method": "PUT",
+      "path": "/crawl/s80f37f45630841c4ae533a1ff4157ec3/config",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "crawlConfig": {
+          "channels": [
+            "youtube_vlog",
+            "threads",
+            "naver_kin",
+            "cook82"
+          ],
+          "dateFrom": "2025-10-20",
+          "dateTo": "2026-10-20",
+          "adWords": [
+            "협찬",
+            "광고",
+            "제공받",
+            "원고료",
+            "체험단",
+            "서포터즈",
+            "중고",
+            "판매",
+            "거래",
+            "체험단",
+            "협찬",
+            "원고료",
+            "소정의",
+            "제공받아",
+            "서포터즈"
+          ],
+          "excludeSources": [
+            "중고나라",
+            "번개장터",
+            "당근",
+            "세컨웨어",
+            "헬로마켓",
+            "중고",
+            "장터",
+            "부동산",
+            "판매",
+            "팝니다",
+            "삽니다",
+            "택배",
+            "무료배송",
+            "할인코드",
+            "쿠폰",
+            "홍보",
+            "광고",
+            "업체",
+            "시공",
+            "인테리어업체",
+            "이사",
+            "용달",
+            "대출",
+            "보험설계사",
+            "설계사모집",
+            "모집"
+          ],
+          "includeSources": [],
+          "product_name_filter": false,
+          "perChannel": {},
+          "youtube": {
+            "videos_per_keyword": 20,
+            "max_comments": 500
+          },
+          "youtube_vlog": {
+            "videos_per_keyword": 20,
+            "min_duration_s": 60,
+            "max_duration_s": 3600
+          },
+          "target_total": null
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.747Z",
+      "env": "blocked",
+      "method": "PATCH",
+      "path": "/session/s80f37f45630841c4ae533a1ff4157ec3",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s80f37f45630841c4ae533a1ff4157ec3",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 빈 결과",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:50.746708+00:00",
+          "keywords": [
+            {
+              "id": "manual-130b8346a52a4f55881004b1b0d0ed7d",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.749Z",
+      "env": "blocked",
+      "method": "GET",
+      "path": "/session/s80f37f45630841c4ae533a1ff4157ec3",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s80f37f45630841c4ae533a1ff4157ec3",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 빈 결과",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:50.746708+00:00",
+          "keywords": [
+            {
+              "id": "manual-130b8346a52a4f55881004b1b0d0ed7d",
+              "kw": "qa-empty",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "crawlConfig": {
+            "channels": [
+              "youtube_vlog",
+              "threads",
+              "naver_kin",
+              "cook82"
+            ],
+            "dateFrom": "2025-10-20",
+            "dateTo": "2026-10-20",
+            "adWords": [
+              "협찬",
+              "광고",
+              "제공받",
+              "원고료",
+              "체험단",
+              "서포터즈",
+              "중고",
+              "판매",
+              "거래",
+              "체험단",
+              "협찬",
+              "원고료",
+              "소정의",
+              "제공받아",
+              "서포터즈"
+            ],
+            "excludeSources": [
+              "중고나라",
+              "번개장터",
+              "당근",
+              "세컨웨어",
+              "헬로마켓",
+              "중고",
+              "장터",
+              "부동산",
+              "판매",
+              "팝니다",
+              "삽니다",
+              "택배",
+              "무료배송",
+              "할인코드",
+              "쿠폰",
+              "홍보",
+              "광고",
+              "업체",
+              "시공",
+              "인테리어업체",
+              "이사",
+              "용달",
+              "대출",
+              "보험설계사",
+              "설계사모집",
+              "모집"
+            ],
+            "includeSources": [],
+            "product_name_filter": false,
+            "perChannel": {},
+            "youtube": {
+              "videos_per_keyword": 20,
+              "max_comments": 500
+            },
+            "youtube_vlog": {
+              "videos_per_keyword": 20,
+              "min_duration_s": 60,
+              "max_duration_s": 3600
+            },
+            "target_total": null
+          },
+          "completion": {
+            "crawlDone": false,
+            "prepDone": false,
+            "labelingDone": false,
+            "exportDone": false,
+            "clustersDone": false,
+            "segmentDone": false,
+            "personaDone": false,
+            "insightDone": false,
+            "evidenceDone": false
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.752Z",
+      "env": "blocked",
+      "method": "POST",
+      "path": "/context",
+      "status": 201,
+      "body": {
+        "sid": "s8dd2afdbb8844e9988dc0ec8d864b1ff"
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.755Z",
+      "env": "blocked",
+      "method": "POST",
+      "path": "/keywords/s8dd2afdbb8844e9988dc0ec8d864b1ff/manual",
+      "status": 200,
+      "body": {
+        "id": "manual-2956a1b482ce462c92f33125c902d3ab",
+        "kw": "에어컨청소",
+        "axis": "physical",
+        "sub": "product_physical",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "keywords": [
+          {
+            "id": "manual-2956a1b482ce462c92f33125c902d3ab",
+            "kw": "에어컨청소",
+            "axis": "physical",
+            "sub": "product_physical",
+            "round": 1,
+            "origin": "manual",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": [],
+            "display": "에어컨 청소"
+          }
+        ]
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.757Z",
+      "env": "blocked",
+      "method": "PUT",
+      "path": "/crawl/s8dd2afdbb8844e9988dc0ec8d864b1ff/config",
+      "status": 422,
+      "body": {
+        "status": "error",
+        "error": {
+          "kind": "validation",
+          "code": "sources_unavailable",
+          "message": "Sources are unavailable"
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.760Z",
+      "env": "blocked",
+      "method": "PATCH",
+      "path": "/session/s8dd2afdbb8844e9988dc0ec8d864b1ff",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s8dd2afdbb8844e9988dc0ec8d864b1ff",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 샘플",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "fixture"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:50.759019+00:00",
+          "keywords": [
+            {
+              "id": "manual-2956a1b482ce462c92f33125c902d3ab",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T07:40:50.761Z",
+      "env": "blocked",
+      "method": "GET",
+      "path": "/session/s8dd2afdbb8844e9988dc0ec8d864b1ff",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "data": {
+          "schemaVersion": 2,
+          "sid": "s8dd2afdbb8844e9988dc0ec8d864b1ff",
+          "step": "crawling",
+          "drafts": {},
+          "projectContext": {
+            "bk": "QA 샘플",
+            "oneLiner": "생활 가전 사용 경험을 조사하는 QA 프로젝트",
+            "researchQuestion": {
+              "text": "생활 가전을 사용하는 경험은 어떠한가?",
+              "template": null
+            },
+            "projectType": {
+              "choice": "new",
+              "note": ""
+            },
+            "taskMode": "explore",
+            "analysisGoal": null,
+            "keyMetrics": [],
+            "constraints": [],
+            "positioning": {
+              "price": null,
+              "market": null,
+              "priceText": "",
+              "marketText": ""
+            },
+            "personaSeeds": null,
+            "channels": [
+              "fixture"
+            ],
+            "knownInsights": [],
+            "productCategory": {
+              "l1": "생활가전",
+              "l2": null,
+              "l3": null,
+              "source": "user"
+            },
+            "targetScope": null,
+            "futureCustomer": null,
+            "schemaVersion": 1
+          },
+          "knownInsights": [],
+          "version": "v1",
+          "updatedAt": "2026-10-20T07:40:50.759019+00:00",
+          "keywords": [
+            {
+              "id": "manual-2956a1b482ce462c92f33125c902d3ab",
+              "kw": "에어컨청소",
+              "axis": "physical",
+              "sub": "product_physical",
+              "round": 1,
+              "origin": "manual",
+              "status": "approved",
+              "reject": null,
+              "volume": {
+                "monthly": null,
+                "source": "unconnected",
+                "at": null
+              },
+              "badges": []
+            }
+          ],
+          "completion": {
+            "crawlDone": false,
+            "prepDone": false,
+            "labelingDone": false,
+            "exportDone": false,
+            "clustersDone": false,
+            "segmentDone": false,
+            "personaDone": false,
+            "insightDone": false,
+            "evidenceDone": false
+          }
+        }
+      }
+    }
+  ]
+}

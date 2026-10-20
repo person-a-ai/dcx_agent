@@ -23,6 +23,7 @@ def test_integration_dependencies(monkeypatch):
 
 
 def test_cheap_availability_and_offline_flag(monkeypatch):
+    monkeypatch.setattr('app.crawl.render.RenderBridge.available', classmethod(lambda cls: True))
     def forbidden(*args, **kwargs):
         pytest.fail('availability constructed an HTTP client')
     monkeypatch.setattr(httpx, 'Client', forbidden)
@@ -34,7 +35,7 @@ def test_cheap_availability_and_offline_flag(monkeypatch):
                 adapters.PpomppuAdapter, YoutubeAdapter):
         assert not cls.is_available()
     monkeypatch.setattr(settings, 'real_channels_enabled', True)
-    assert len(adapters.available_sources()) == 6
+    assert len(adapters.available_sources()) == 10
 
 
 @pytest.mark.parametrize('date_text,expected', [('2026. 9. 2.', '2026-09-02'), ('3일 전', '2026-09-26'), ('', None)])

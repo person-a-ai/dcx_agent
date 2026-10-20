@@ -1,0 +1,10 @@
+{
+  "time": "2026-10-20T09:37:22.248337+00:00",
+  "scenario_reports": 17,
+  "preflight_exists": true,
+  "all_links_exist": true,
+  "screenshots": 63,
+  "head_matches": true,
+  "fingerprint_matches": true,
+  "tracked_product_diff_empty": true
+}

@@ -1,0 +1,122 @@
+{
+  "verdict": "FAIL",
+  "head": "99606c7b8501a9da55a13299969e4a2fbf63e214",
+  "fingerprint": "62e956bf42696bff97263fdaad8481743bfc7129c2d2cc9df13bf7786f57aef7",
+  "executor": "codex",
+  "role": "code-review",
+  "dispatch": "codex:codex-rescue --wait --fresh (whole-branch review round 3: delta c597b2a..99606c7 on top of the round-2 whole-branch PASS)",
+  "freshSession": true,
+  "base_commit": "56c1387031986d6a48a16ee08656f534b030814e",
+  "review_commit": "99606c7b8501a9da55a13299969e4a2fbf63e214",
+  "previous_findings": [
+    {
+      "id": "WB-R1",
+      "resolved": true
+    }
+  ],
+  "history": [
+    {
+      "round": 2,
+      "review_commit": "c597b2a678231016e51b0d3644f3d6df921810c2",
+      "verdict": "PASS"
+    }
+  ],
+  "commands": [
+    {
+      "command": "cat docs/development/channel-expansion/review.json",
+      "exitCode": 0,
+      "result": "Read first, before other review work. Previous independent round-2 whole-branch PASS names c597b2a678231016e51b0d3644f3d6df921810c2 and resolves WB-R1."
+    },
+    {
+      "command": "cat docs/development/channel-expansion/reviews/final-review-1.json && cat docs/development/channel-expansion/qa-attempt2/QA-EDGE-003.md",
+      "exitCode": 0,
+      "result": "Read original WB-R1 reproduction and exact 375px browser-QA failure criteria."
+    },
+    {
+      "command": "git diff c597b2a678231016e51b0d3644f3d6df921810c2..99606c7b8501a9da55a13299969e4a2fbf63e214",
+      "exitCode": 0,
+      "result": "Exactly Progress.tsx, Settings.tsx, crawl.css, channelExpansion.test.ts: 29 insertions and 4 deletions. Reviewed complete delta and surrounding layout, table, switch and typography CSS."
+    },
+    {
+      "command": "git show -s --format=\"%H %P\" 99606c7b8501a9da55a13299969e4a2fbf63e214",
+      "exitCode": 0,
+      "result": "Requested head has the previous PASS commit as its sole direct parent; no intervening commits."
+    },
+    {
+      "command": "SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive 99606c7b8501a9da55a13299969e4a2fbf63e214 | tar -x -C \"$SNAP\" && ln -s /Users/yunho/Documents/dcx_agent-channels-build/frontend/node_modules \"$SNAP/frontend/node_modules\"",
+      "exitCode": 0,
+      "result": "Fresh snapshot retained at /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.mopFSiyBJB. No snapshot removed."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.mopFSiyBJB && npm --prefix frontend test && npm --prefix frontend run lint",
+      "exitCode": 0,
+      "result": "77 files / 967 tests passed; ESLint passed. Committed suite completed before reviewer-only export test was created."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.mopFSiyBJB && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+      "exitCode": 0,
+      "result": "3792 passed, 1 existing Pydantic deprecation warning, 86.06 seconds."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.mopFSiyBJB && npm --prefix frontend test -- src/lib/logic/reviewerLayout.test.ts",
+      "exitCode": 0,
+      "result": "One reviewer-only test exported actual Settings and Progress static markup for an isolated layout probe. It is an export harness, not evidence of browser layout success."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.mopFSiyBJB && /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_layout.py",
+      "exitCode": 1,
+      "result": "Browser probe blocked before rendering: Chromium MachPortRendezvousServer bootstrap_check_in permission denied under sandbox. No browser width, keyboard-scroll or visual PASS claimed; no attempt to bypass sandbox permissions."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.mopFSiyBJB && python3 [inline wrapper-normalization comparison and CSS width calculation]",
+      "exitCode": 0,
+      "result": "Removing only the added wrappers makes both components byte-identical to the previous PASS. Settings inner-width upper bounds from committed CSS: 375 -> 221px; 1024 -> 838px; 1101 -> 476px; 1200 -> 542px; 1280 -> 595.33px; 1440 -> 702px. Existing scrollbar space, if any, reduces available width further. These are source calculations, not browser measurements."
+    },
+    {
+      "command": "git diff --name-status c597b2a678231016e51b0d3644f3d6df921810c2..99606c7b8501a9da55a13299969e4a2fbf63e214 && git diff --check c597b2a678231016e51b0d3644f3d6df921810c2..99606c7b8501a9da55a13299969e4a2fbf63e214 && git diff --exit-code && git diff --cached --exit-code && git status --short && git rev-parse HEAD",
+      "exitCode": 0,
+      "result": "Exactly four committed changes; whitespace check passed; no tracked worktree or index differences; HEAD unchanged. Untracked QA artifacts are described in notes."
+    }
+  ],
+  "findings": [
+    {
+      "id": "WB-R3-1",
+      "severity": "P2",
+      "must_fix": true,
+      "file": "frontend/src/components/crawl/Settings.tsx:25",
+      "issue": "The new settings scroll wrapper applies an unconditional 600px table minimum inside the desktop two-column layout, introducing avoidable horizontal scrolling at ordinary desktop widths above 1100px.",
+      "evidence": [
+        "The new crawl-status-scroll ancestor activates crawl.css:5 (.crawl-status-scroll .ds-tbl { min-width:600px }) for the settings table at every viewport width.",
+        "crawl.css:1 uses 2fr/1fr columns with a 24px gap above 1100px. tokens.css defines the default sidebar as 224px; globals.css:36 adds 64px horizontal main padding; ds.css:14 gives the card 48px padding plus 2px border. PipelineShell initially expands the sidebar, and the crawling route does not automatically collapse it.",
+        "At 1200px with the ordinary expanded sidebar and closed chat, settings inner width is at most ((1200 - 224 - 64 - 24) * 2/3) - 50 = 542px. The table must therefore scroll by at least 58px. At 1101px it has only 476px, requiring at least 124px of horizontal travel. The rightmost usage controls/labels move into a horizontal scroll region despite this being desktop. The previous fixed-layout table fitted the card using cell wrapping.",
+        "At 1024px the single-column breakpoint provides 838px, and at 1440px the desktop settings card provides 702px, so checking only those two endpoints misses the regression. It occurs approximately from 1101px through 1286px with the normal sidebar.",
+        "This violates the requested desktop no-needless-horizontal-scroll criterion. The new tests pass because they assert class names and CSS strings without evaluating available component width."
+      ],
+      "fix": "Keep the 600px scroll treatment for narrow screens, but make the desktop settings layout provide enough table width or scope/reset the settings-table minimum at desktop breakpoints so the table fits its card. Preserve the existing progress-table behavior. Verify 375px and desktop widths around the 1100px breakpoint, especially 1200px with the expanded sidebar."
+    },
+    {
+      "id": "WB-R3-2",
+      "severity": "P3",
+      "must_fix": false,
+      "file": "frontend/src/components/crawl/crawl.css:6",
+      "issue": "The new table-level nowrap declaration does not make table cell contents nowrap, and its regression assertion does not establish the intended computed style.",
+      "evidence": [
+        "ds.css:170 explicitly sets .ds-tbl td,.ds-tbl th { white-space:normal; overflow-wrap:anywhere } and .ds-tbl { table-layout:fixed }.",
+        "white-space:nowrap on the ancestor table is inherited only when a cell has no explicit value; even a more specific ancestor selector cannot override the explicit normal value on the cells. Long Korean descriptions therefore continue to wrap within fixed-width columns.",
+        "channelExpansion.test.ts:154 checks only that the nowrap source declaration exists. It cannot detect this cascade interaction. The 600px minimum still creates mobile horizontal scrolling, so this observation alone is not a release blocker."
+      ],
+      "fix": "If nonwrapping cell content is required, target the relevant cells at the intended narrow breakpoint and verify computed styles and text visibility. Account for long Korean descriptions and fixed table layout; do not apply unbounded nowrap globally on desktop."
+    }
+  ],
+  "notes": [
+    "This brand-new independent code-review session took no part in implementing or reviewing any task of this branch. No sub-agents were used. Historical reviews were read as evidence for this delta review.",
+    "The unchanged portion of the branch carries forward the round-2 whole-branch PASS. Exactly one direct-child commit changes the four authorized frontend files. WB-R1 remains resolved: backend report distribution still counts unique done URLs by source, and Progress still consumes report.channels.youtube_vlog.urls_done with the legacy fallback. Existing overlapping-keyword regression tests passed. The whole-head verdict is FAIL solely because of WB-R3-1 in this delta.",
+    "Previous review provenance: review.json was untracked at the beginning of this session, and git cat-file confirmed it is not in the c597b2a tree. Its contents explicitly identify that commit as the reviewed head. The report was read before overwrite; it is not represented here as a committed blob. reviews/final-review-1.json supplies the earlier WB-R1 evidence.",
+    "Mobile source assessment: minmax(0,...) grid tracks, min-width:0 on the stack/card/scroll region, and overflow-x:auto contain the 600px tables at 375px instead of enlarging the document. Both new regions should scroll internally; the skipped-items region is full-width inside its card. Actual document.scrollWidth equality and keyboard scrolling were not measured because the isolated browser launch was blocked. The provided historical QA record is pre-fix evidence only.",
+    "Accessibility markup is correct and consistent with the existing channel-status table: each wrapper has role=region, a distinct aria-label and tabIndex=0, while the nested table keeps its own accessible name. Existing focus-visible styling applies. No keyboard trapping or handler interception was introduced. Native keyboard scrolling was not live-verified.",
+    "Copy and application behavior are unchanged: after removing the two new wrappers, both components are byte-identical to the previous PASS. Empty skip state, switches, disabled/unavailable states, callbacks, counts and table content are preserved. The shared new class is applied only to the two intended tables.",
+    "The two added test cases meaningfully protect named focusable wrappers and CSS hooks, but do not establish rendered geometry or computed cell styles. Full frontend suite/lint and the requested backend crawl suite passed; this does not override the deterministic desktop-width defect.",
+    "Only docs/development/channel-expansion/review.json was written in the repository by this session. All reviewer harness files were created in the retained exported snapshot. Product files, repository tests, index and Git refs were untouched. No server was started or stopped, and no rm command was run.",
+    "Initial untracked entries were build.json, qa-attempt2/ and review.json. Later status also showed .playwright-mcp/ and docs/development/channel-expansion/qa/ created concurrently; this session did not create, modify or remove them. Tracked worktree and index remained clean before report write."
+  ]
+}

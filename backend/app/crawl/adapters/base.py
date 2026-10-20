@@ -42,6 +42,14 @@ class AdapterBlocked(Exception):
         self.host = host
 
 
+class AdapterSkipped(Exception):
+    """The item intentionally yields no document (not a failure), e.g. no Korean captions."""
+
+    def __init__(self, reason: str):
+        super().__init__(reason)
+        self.reason = reason
+
+
 class ChannelAdapter(Protocol):
     source: str
 

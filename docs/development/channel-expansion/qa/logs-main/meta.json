@@ -1,0 +1,59 @@
+{
+  "id": "c1",
+  "parent": null,
+  "createdAt": "2026-10-20T13:39:56.685565+00:00",
+  "keywords": [
+    {
+      "id": "manual-58eef5f4d9d849c8b6def7747df2eb8d",
+      "kw": "에어컨청소",
+      "axis": "physical",
+      "sub": "product_physical",
+      "round": 1,
+      "origin": "manual",
+      "status": "approved",
+      "reject": null,
+      "volume": {
+        "monthly": null,
+        "source": "unconnected",
+        "at": null
+      },
+      "badges": [],
+      "crawlExcluded": false
+    },
+    {
+      "id": "manual-e4dbc70d2ce14de188ed99a6f29afd62",
+      "kw": "제습기",
+      "axis": "physical",
+      "sub": "product_physical",
+      "round": 1,
+      "origin": "manual",
+      "status": "approved",
+      "reject": null,
+      "volume": {
+        "monthly": null,
+        "source": "unconnected",
+        "at": null
+      },
+      "badges": [],
+      "crawlExcluded": false
+    },
+    {
+      "id": "manual-df740a672de64ddca13d15af19dfcc9f",
+      "kw": "qa-empty",
+      "axis": "physical",
+      "sub": "product_physical",
+      "round": 1,
+      "origin": "manual",
+      "status": "approved",
+      "reject": null,
+      "volume": {
+        "monthly": null,
+        "source": "unconnected",
+        "at": null
+      },
+      "badges": [],
+      "crawlExcluded": false
+    }
+  ],
+  "status": "done"
+}

@@ -18,7 +18,9 @@ ERROR_CODES = {
     'Session not found': 'session_not_found',
     'Invalid session id': 'invalid_session_id',
     'Invalid version': 'invalid_version',
+    'Version not found': 'version_not_found',
     'No crawl collection': 'no_collection',
+    'Crawl report not found': 'report_not_found',
     'Another crawl phase is running': 'worker_running',
     'A crawl worker is running': 'worker_running',
     'Worker is already running': 'worker_running',
@@ -76,6 +78,19 @@ class Youtube(BaseModel):
     max_comments: int = Field(default=500, ge=0)
 
 
+class YoutubeVlog(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    videos_per_keyword: int = Field(default=20, ge=1)
+    min_duration_s: int = Field(default=60, ge=0)
+    max_duration_s: int = Field(default=3600, ge=1)
+
+    @model_validator(mode='after')
+    def ordered(self):
+        if self.min_duration_s >= self.max_duration_s:
+            raise ValueError('min_duration_s must be below max_duration_s')
+        return self
+
+
 class Config(BaseModel):
     model_config = ConfigDict(extra='forbid')
     channels: list[str] = Field(validation_alias=AliasChoices('channels', 'sources'), min_length=1)
@@ -87,6 +102,7 @@ class Config(BaseModel):
     product_name_filter: bool = Field(default=False, validation_alias=AliasChoices('product_name_filter', 'productNameFilter'))
     perChannel: dict[str, Limits] = Field(default_factory=dict)
     youtube: Youtube = Field(default_factory=Youtube)
+    youtube_vlog: YoutubeVlog = Field(default_factory=YoutubeVlog)
     target_total: int | None = Field(default=None, ge=1)
     @model_validator(mode='after')
     def dates(self):
@@ -132,6 +148,11 @@ def detail(sid: str, body: Detail, version: str | None = None):
 @router.get('/{sid}/status')
 def status(sid: str):
     return control.status(sid)
+
+
+@router.get('/{sid}/report')
+def saved_report(sid: str, version: str):
+    return control.saved_report(sid, version)
 
 
 class Resume(BaseModel):

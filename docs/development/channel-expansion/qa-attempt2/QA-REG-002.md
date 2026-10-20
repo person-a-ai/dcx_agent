@@ -1,0 +1,50 @@
+# QA-REG-002 — PASS
+
+URL: http://localhost:3000/pipeline/crawling
+
+Tested commit: c597b2a678231016e51b0d3644f3d6df921810c2; observed HEAD: c597b2a678231016e51b0d3644f3d6df921810c2.
+
+## Approved scenario (unchanged)
+
+```text
+QA-REG-002
+Priority: P1
+Type: Regression
+Given: 설정 화면
+When: "유튜브 댓글"을 켜고 고급 설정을 연다
+Then:
+  - "키워드당 영상 수", "영상당 최대 댓글" 칸이 기존대로 보인다
+  - 기존 채널(네이버 카페 · 블로그 · 뽐뿌 · 클리앙)의 동시성 · 요청 간격 기본값이 바뀌지 않았다(블로그 1 · 0.5)
+```
+
+## Executed steps
+
+1. 기존 5채널 스위치 on
+2. 고급 설정의 기존 필드 및 기본값 DOM 확인
+3. 저장하지 않은 변경을 새로고침으로 폐기
+
+## Actual / verdict
+
+유튜브 댓글 영상 수20/댓글500 필드 유지. 네이버 카페·블로그·뽐뿌·클리앙 동시성1/간격0.5초; 블로그 요구 기본값과 일치.
+
+
+
+## Timestamped DOM / API evidence
+
+```json
+{
+  "time": "2026-10-20T06:55:34.386Z",
+  "url": "http://localhost:3000/pipeline/crawling",
+  "dom": "- main:\n  - group:\n    - button \"이 단계부터 다시\"\n    - text: 2단계 · 크롤링\n    - heading \"확정 키워드 3개로 목록을 수집합니다\" [level=1]\n    - paragraph: 먼저 채널별 글 목록(URL)만 모읍니다. 수집 효율을 확인한 뒤 본문·댓글 수집을 시작합니다. 검색어에는 제품명을 붙이지 않습니다.\n    - status: 저장했습니다. 수집 시작 버튼을 누르면 수집합니다.\n    - heading \"채널\" [level=2]\n    - paragraph: 0-A 수집 채널에서 가져왔습니다\n    - table \"수집 채널\":\n      - rowgroup:\n        - row \"채널 목록 · 본문 연결 내부용 사용\":\n          - columnheader \"채널\"\n          - columnheader \"목록 · 본문\"\n          - columnheader \"연결 내부용\"\n          - columnheader \"사용\"\n      - rowgroup:\n        - row \"네이버 카페 검색 결과 화면 · 본문 (회원 전용 글은 제외) 사용 가능 네이버 카페 사용하기\":\n          - cell \"네이버 카페\"\n          - cell \"검색 결과 화면 · 본문 (회원 전용 글은 제외)\"\n          - cell \"사용 가능\"\n          - cell \"네이버 카페 사용하기\":\n            - switch \"네이버 카페 사용하기\" [checked]\n            - text: 네이버 카페 사용하기\n        - row \"네이버 블로그 검색 결과 화면 · 본문 사용 가능 네이버 블로그 사용하기\":\n          - cell \"네이버 블로그\"\n          - cell \"검색 결과 화면 · 본문\"\n          - cell \"사용 가능\"\n          - cell \"네이버 블로그 사용하기\":\n            - switch \"네이버 블로그 사용하기\" [checked]\n            - text: 네이버 블로그 사용하기\n        - row \"유튜브 댓글 영상 검색 · 댓글 스레드 사용 가능 유튜브 댓글 사용하기\":\n          - cell \"유튜브 댓글\"\n          - cell \"영상 검색 · 댓글 스레드\"\n          - cell \"사용 가능\"\n          - cell \"유튜브 댓글 사용하기\":\n            - switch \"유튜브 댓글 사용하기\" [checked]\n            - text: 유튜브 댓글 사용하기\n        - row \"유튜브 브이로그 새 채널 \\\"키워드 브이로그\\\" 영상 검색 · 한국어 자막을 화제 단위로 나눠 문서화 사용 가능 유튜브 브이로그 사용하기\":\n          - cell \"유튜브 브이로그 새 채널\"\n          - cell \"\\\"키워드 브이로그\\\" 영상 검색 · 한국어 자막을 화제 단위로 나눠 문서화\"\n          - cell \"사용 가능\"\n          - cell \"유튜브 브이로그 사용하기\":\n            - switch \"유튜브 브이로그 사용하기\" [checked]\n            - text: 유튜브 브이로그 사용하기\n        - row \"Threads 새 채널 검색 화면(로그인 없음) · 글 본문 · 키워드당 약 20건 사용 가능 Threads 사용하기\":\n          - cell \"Threads 새 채널\"\n          - cell \"검색 화면(로그인 없음) · 글 본문 · 키워드당 약 20건\"\n          - cell \"사용 가능\"\n          - cell \"Threads 사용하기\":\n            - switch \"Threads 사용하기\" [checked]\n            - text: Threads 사용하기\n        - row \"지식iN 새 채널 질문 검색 · 질문 제목과 본문 (답변 제외) 사용 가능 지식iN 사용하기\":\n          - cell \"지식iN 새 채널\"\n          - cell \"질문 검색 · 질문 제목과 본문 (답변 제외)\"\n          - cell \"사용 가능\"\n          - cell \"지식iN 사용하기\":\n            - switch \"지식iN 사용하기\" [checked]\n            - text: 지식iN 사용하기\n        - row \"82쿡 새 채널 자유게시판 검색 · 본문 · 댓글 사용 가능 82쿡 사용하기\":\n          - cell \"82쿡 새 채널\"\n          - cell \"자유게시판 검색 · 본문 · 댓글\"\n          - cell \"사용 가능\"\n          - cell \"82쿡 사용하기\":\n            - switch \"82쿡 사용하기\" [checked]\n            - text: 82쿡 사용하기\n        - row \"뽐뿌 사이트 검색 · 본문 · 댓글 사용 가능 뽐뿌 사용하기\":\n          - cell \"뽐뿌\"\n          - cell \"사이트 검색 · 본문 · 댓글\"\n          - cell \"사용 가능\"\n          - cell \"뽐뿌 사용하기\":\n            - switch \"뽐뿌 사용하기\" [checked]\n            - text: 뽐뿌 사용하기\n        - row \"클리앙 사이트 검색 · 본문 · 댓글 사용 가능 클리앙 사용하기\":\n          - cell \"클리앙\"\n          - cell \"사이트 검색 · 본문 · 댓글\"\n          - cell \"사용 가능\"\n          - cell \"클리앙 사용하기\":\n            - switch \"클리앙 사용하기\" [checked]\n            - text: 클리앙 사용하기\n    - heading \"범위 · 필터\" [level=2]\n    - group:\n      - text: 시작일\n      - textbox \"시작일\": 2025-10-20\n      - text: 종료일\n      - textbox \"종료일\": 2026-10-20\n      - text: 목표 문서 수\n      - spinbutton \"목표 문서 수\"\n      - text: 도달하면 상세 수집을 정상 종료합니다. 광고어\n      - textbox \"광고어\": 협찬,광고,제공받,원고료,체험단,서포터즈,중고,판매,거래,체험단,협찬,원고료,소정의,제공받아,서포터즈\n      - text: 쉼표로 구분합니다. 포함 소스를 비우면 전체를 수집합니다. 제외 소스\n      - textbox \"제외 소스\": 중고나라,번개장터,당근,세컨웨어,헬로마켓,중고,장터,부동산,판매,팝니다,삽니다,택배,무료배송,할인코드,쿠폰,홍보,광고,업체,시공,인테리어업체,이사,용달,대출,보험설계사,설계사모집,모집\n      - text: 쉼표로 구분합니다. 포함 소스를 비우면 전체를 수집합니다. 포함 소스\n      - textbox \"포함 소스\"\n      - text: 쉼표로 구분합니다. 포함 소스를 비우면 전체를 수집합니다.\n      - switch \"제품명 포함 글만 남기기\"\n      - text: 제품명 포함 글만 남기기\n      - paragraph: 꺼 두는 것을 권장합니다. 켜면 제품명이 없는 글이 빠집니다. 제품 밖 경험을 놓칠 수 있습니다.\n      - group:\n        - text: 고급 설정 펼치기 · 채널별 동시성 · 요청 간격 · 상한\n        - heading \"Threads\" [level=3]\n        - text: 동시성\n        - spinbutton \"동시성\": \"1\"\n        - text: 요청 간격(초)\n        - spinbutton \"요청 간격(초)\": \"2\"\n        - text: 키워드당 상한\n        - spinbutton \"키워드당 상한\": \"1000\"\n        - heading \"지식iN\" [level=3]\n        - text: 동시성\n        - spinbutton \"동시성\": \"1\"\n        - text: 요청 간격(초)\n        - spinbutton \"요청 간격(초)\": \"0.5\"\n        - text: 키워드당 상한\n        - spinbutton \"키워드당 상한\": \"1000\"\n        - heading \"82쿡\" [level=3]\n        - text: 동시성\n        - spinbutton \"동시성\": \"1\"\n        - text: 요청 간격(초)\n        - spinbutton \"요청 간격(초)\": \"0.5\"\n        - text: 키워드당 상한\n        - spinbutton \"키워드당 상한\": \"1000\"\n        - heading \"유튜브 브이로그\" [level=3]\n        - text: 동시성\n        - spinbutton \"동시성\": \"2\"\n        - text: 요청 간격(초)\n        - spinbutton \"요청 간격(초)\": \"0\"\n        - text: 키워드당 상한\n        - spinbutton \"키워드당 상한\": \"1000\"\n        - heading \"네이버 카페\" [level=3]\n        - text: 동시성\n        - spinbutton \"동시성\": \"1\"\n        - text: 요청 간격(초)\n        - spinbutton \"요청 간격(초)\": \"0.5\"\n        - text: 키워드당 상한\n        - spinbutton \"키워드당 상한\": \"1000\"\n        - heading \"네이버 블로그\" [level=3]\n        - text: 동시성\n        - spinbutton \"동시성\": \"1\"\n        - text: 요청 간격(초)\n        - spinbutton \"요청 간격(초)\": \"0.5\"\n        - text: 키워드당 상한\n        - spinbutton \"키워드당 상한\": \"1000\"\n        - heading \"유튜브 댓글\" [level=3]\n        - text: 동시성\n        - spinbutton \"동시성\": \"2\"\n        - text: 요청 간격(초)\n        - spinbutton \"요청 간격(초)\": \"0\"\n        - text: 키워드당 상한\n        - spinbutton \"키워드당 상한\": \"1000\"\n        - heading \"뽐뿌\" [level=3]\n        - text: 동시성\n        - spinbutton \"동시성\": \"1\"\n        - text: 요청 간격(초)\n        - spinbutton \"요청 간격(초)\": \"0.5\"\n        - text: 키워드당 상한\n        - spinbutton \"키워드당 상한\": \"1000\"\n        - heading \"클리앙\" [level=3]\n        - text: 동시성\n        - spinbutton \"동시성\": \"1\"\n        - text: 요청 간격(초)\n        - spinbutton \"요청 간격(초)\": \"0.5\"\n        - text: 키워드당 상한\n        - spinbutton \"키워드당 상한\": \"1000\"\n        - heading \"유튜브 댓글\" [level=3]\n        - text: 키워드당 영상 수\n        - spinbutton \"키워드당 영상 수\": \"20\"\n        - text: 영상당 최대 댓글\n        - spinbutton \"영상당 최대 댓글\": \"500\"\n        - group \"유튜브 브이로그 설정\":\n          - heading \"유튜브 브이로그\" [level=3]\n          - text: 키워드당 영상 수\n          - spinbutton \"키워드당 영상 수\": \"5\"\n          - text: 최소 길이(분)\n          - spinbutton \"최소 길이(분)\": \"2\"\n          - text: 최대 길이(분)\n          - spinbutton \"최대 길이(분)\": \"30\"\n          - paragraph: 1분 미만 쇼츠와 60분이 넘는 영상은 목록에서 뺍니다. 한국어 자막이 없는 영상은 건너뛰고 결과에 건수를 남깁니다.\n    - heading \"확정 키워드\" [level=2]\n    - term: 물리\n    - definition: \"3\"\n    - paragraph: 합계 3개\n    - paragraph: 검색어에는 제품명을 붙이지 않습니다. 예상 소요 시간은 목록 수집 후 표시합니다. 유튜브 브이로그는 검색어 뒤에 \"브이로그\"를 붙입니다.\n    - region \"저장 작업\":\n      - status: 저장되지 않은 변경 있음\n      - button \"임시 저장\"\n      - button \"저장\"\n      - button \"목록 수집 시작\" [disabled]\n    - paragraph: 설정과 제외 선택을 저장한 다음 수집을 시작하세요."
+}
+```
+
+## Evidence files
+
+- [settings-results-retry.json](settings-results-retry.json)
+
+Screenshots were saved using explicit absolute paths and inspected for relevant states:
+
+- [QA-REG-002.png](QA-REG-002.png) — `/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-REG-002.png`
+
+Shared main browser console/network: [console-main.log](console-main.log), [network-main.log](network-main.log). Main console: no errors; logo aspect-ratio warning. Scenario-specific API responses and variant network records are in the JSON above or linked raw evidence. Screenshots supplement DOM/API evidence, not replace it.

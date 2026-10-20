@@ -1,0 +1,39 @@
+{
+  "time": "2026-10-20T13:31:04.207020+00:00",
+  "before_head": "6955ba0256d60043b1410871a3f56445e578c6b2",
+  "after_head": "ff4d4d163021e0c476897be0abecdb440f3996f1",
+  "before_fingerprint": "81efe86f6f470305c619e5329ed332c63d05f044ee4f5ba70a9ddd86df1b7b84",
+  "after_fingerprint": "3e73f4f996f1e1ad1b2152feacc356506d51ba32d37cd722e73f060fd931c86f",
+  "git_tracked_diff": "",
+  "changed_paths": [
+    "frontend/src/components/crawl/Progress.tsx",
+    "frontend/src/lib/logic/crawlDisplayHistory.test.ts"
+  ],
+  "controller_frontend_copies": [
+    {
+      "path": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/fe-r5main/src/components/crawl/Progress.tsx",
+      "exists": true,
+      "matches_tested_commit": true,
+      "sha256": "e5b9c55d1b7a235169370c66b0861c9fa4f962e2718372e49c7c2cbb110a4120"
+    },
+    {
+      "path": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/fe-r5neg002/src/components/crawl/Progress.tsx",
+      "exists": true,
+      "matches_tested_commit": true,
+      "sha256": "e5b9c55d1b7a235169370c66b0861c9fa4f962e2718372e49c7c2cbb110a4120"
+    },
+    {
+      "path": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/fe-r5neg003/src/components/crawl/Progress.tsx",
+      "exists": true,
+      "matches_tested_commit": true,
+      "sha256": "e5b9c55d1b7a235169370c66b0861c9fa4f962e2718372e49c7c2cbb110a4120"
+    },
+    {
+      "path": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/fe-r5reg001/src/components/crawl/Progress.tsx",
+      "exists": true,
+      "matches_tested_commit": true,
+      "sha256": "e5b9c55d1b7a235169370c66b0861c9fa4f962e2718372e49c7c2cbb110a4120"
+    }
+  ],
+  "agent_product_or_git_writes": false
+}

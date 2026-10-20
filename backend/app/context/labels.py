@@ -39,6 +39,10 @@ LABELS: dict[str, dict[str, str]] = {
         "ppomppu": "뽐뿌",
         "clien": "클리앙",
         "fixture": "개발용 샘플",
+        "youtube_vlog": "유튜브 브이로그",
+        "threads": "Threads",
+        "naver_kin": "지식iN",
+        "cook82": "82쿡",
     },
     "source": {
         "shopping": "쇼핑 분류",

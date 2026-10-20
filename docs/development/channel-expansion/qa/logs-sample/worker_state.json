@@ -1,0 +1,15 @@
+{
+  "sid": "s6448b0fd3ffa4054a2b2a5e242005012",
+  "kind": "detail",
+  "run_id": "06d9919df43b41a495d53a5efcc70089",
+  "snapshot_id": "d8f44e2337ce4ebe974f1b34d011cf74",
+  "channels": {
+    "fixture": {
+      "status": "done",
+      "attempts": 2000,
+      "parse_errors": 0,
+      "blocked": 0
+    }
+  },
+  "paused_channels": []
+}

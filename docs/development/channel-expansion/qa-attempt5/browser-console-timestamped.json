@@ -1,0 +1,182 @@
+[
+  {
+    "time": "2026-10-20T13:13:19.230Z",
+    "type": "log",
+    "text": "[Fast Refresh] rebuilding"
+  },
+  {
+    "time": "2026-10-20T13:13:19.692Z",
+    "type": "log",
+    "text": "[Fast Refresh] done in 467ms"
+  },
+  {
+    "time": "2026-10-20T13:13:20.464Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:13:20.522Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  },
+  {
+    "time": "2026-10-20T13:13:20.566Z",
+    "type": "warning",
+    "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+  },
+  {
+    "time": "2026-10-20T13:15:39.260Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:15:39.311Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  },
+  {
+    "time": "2026-10-20T13:15:39.338Z",
+    "type": "warning",
+    "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+  },
+  {
+    "time": "2026-10-20T13:18:26.704Z",
+    "type": "log",
+    "text": "[Fast Refresh] rebuilding"
+  },
+  {
+    "time": "2026-10-20T13:18:27.115Z",
+    "type": "log",
+    "text": "[Fast Refresh] done in 413ms"
+  },
+  {
+    "time": "2026-10-20T13:19:43.121Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:19:43.205Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  },
+  {
+    "time": "2026-10-20T13:19:43.254Z",
+    "type": "warning",
+    "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+  },
+  {
+    "time": "2026-10-20T13:20:05.414Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:20:05.450Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  },
+  {
+    "time": "2026-10-20T13:20:05.475Z",
+    "type": "warning",
+    "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+  },
+  {
+    "time": "2026-10-20T13:20:20.825Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:20:20.859Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  },
+  {
+    "time": "2026-10-20T13:20:20.885Z",
+    "type": "warning",
+    "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+  },
+  {
+    "time": "2026-10-20T13:21:16.103Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:21:16.138Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  },
+  {
+    "time": "2026-10-20T13:23:02.453Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:23:02.500Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  },
+  {
+    "time": "2026-10-20T13:23:32.560Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:23:32.614Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  },
+  {
+    "time": "2026-10-20T13:23:32.643Z",
+    "type": "warning",
+    "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+  },
+  {
+    "time": "2026-10-20T13:23:52.416Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:23:52.463Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  },
+  {
+    "time": "2026-10-20T13:23:52.489Z",
+    "type": "warning",
+    "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+  },
+  {
+    "time": "2026-10-20T13:26:36.884Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:26:36.931Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  },
+  {
+    "time": "2026-10-20T13:26:36.957Z",
+    "type": "warning",
+    "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+  },
+  {
+    "time": "2026-10-20T13:27:20.328Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:27:20.377Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  },
+  {
+    "time": "2026-10-20T13:28:34.161Z",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "time": "2026-10-20T13:28:34.205Z",
+    "type": "log",
+    "text": "[HMR] connected"
+  }
+]

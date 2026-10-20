@@ -1,0 +1,3296 @@
+{
+  "time": "2026-10-20T09:19:39.040Z",
+  "url": "http://localhost:3010/pipeline/crawling",
+  "path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-004-progress.png",
+  "snapshot": "- alert\n- complementary \"파이프라인\":\n  - button \"사이드바 펴기\"\n  - navigation \"파이프라인 단계\":\n    - link \"1. 시작\":\n      - /url: /pipeline/start\n    - link \"2. 키워드\":\n      - /url: /pipeline/keywords\n    - link \"3. 크롤링\":\n      - /url: /pipeline/crawling\n    - link \"4. 전처리\":\n      - /url: /pipeline/preprocess\n    - link \"5. 라벨링\":\n      - /url: /pipeline/labeling\n    - link \"6. 학습\":\n      - /url: /pipeline/training\n    - link \"7. 클러스터링\":\n      - /url: /pipeline/clustering\n    - link \"8. 근거 탐색\" [disabled]\n    - link \"9. 페르소나\":\n      - /url: /pipeline/personas\n    - link \"10. 인사이트\":\n      - /url: /pipeline/insights\n  - button \"v1 · 활성 버전 목록 열기\"\n  - text: 검토 대기\n  - button \"Known Insight · 0\"\n  - button \"외부 API · 0/2 연결 열기\"\n- main:\n  - group:\n    - button \"이 단계부터 다시\" [disabled]\n    - text: 2단계 · 크롤링\n    - heading \"본문과 댓글을 수집합니다\" [level=1]\n    - checkbox \"크롤링이 끝나면 전처리 · 라벨링(GPT, 블로그 · 카페 먼저)까지 자동으로 시작\" [disabled]\n    - text: 크롤링이 끝나면 전처리 · 라벨링(GPT, 블로그 · 카페 먼저)까지 자동으로 시작\n    - heading \"P3 상세 수집\" [level=2]\n    - paragraph: 실행 중 3초마다 갱신 · 화면을 닫아도 수집은 계속됩니다\n    - progressbar \"상세 수집 진행\"\n    - term: 완료 / 대상 URL\n    - definition: 0 / 86\n    - term: 원문 확보\n    - definition: —\n    - term: 분당 처리량\n    - definition: \"0\"\n    - term: 남은 시간\n    - definition: 계산 불가\n    - paragraph: 스니펫 — · 제한글 —\n    - region \"채널별 수집 상태 스크롤\":\n      - table \"채널별 수집 상태\":\n        - rowgroup:\n          - row \"채널 상태 시도 차단 파싱 오류 건너뜀\":\n            - columnheader \"채널\"\n            - columnheader \"상태\"\n            - columnheader \"시도\"\n            - columnheader \"차단\"\n            - columnheader \"파싱 오류\"\n            - columnheader \"건너뜀\"\n        - rowgroup:\n          - row \"유튜브 브이로그 완료 3 0 0 —\":\n            - rowheader \"유튜브 브이로그\"\n            - cell \"완료\"\n            - cell \"3\"\n            - cell \"0\"\n            - cell \"0\"\n            - cell \"—\"\n          - row \"Threads 완료 3 0 0 —\":\n            - rowheader \"Threads\"\n            - cell \"완료\"\n            - cell \"3\"\n            - cell \"0\"\n            - cell \"0\"\n            - cell \"—\"\n          - row \"지식iN 완료 3 0 0 —\":\n            - rowheader \"지식iN\"\n            - cell \"완료\"\n            - cell \"3\"\n            - cell \"0\"\n            - cell \"0\"\n            - cell \"—\"\n          - row \"82쿡 완료 3 0 0 —\":\n            - rowheader \"82쿡\"\n            - cell \"완료\"\n            - cell \"3\"\n            - cell \"0\"\n            - cell \"0\"\n            - cell \"—\"\n    - paragraph: 내부용 스냅샷 fc9776f45b15407da812af4bf3b8d55a\n    - button \"일시 정지하기\"\n- button \"챗봇 열기\"",
+  "events": [
+    {
+      "time": "2026-10-20T09:12:41.464Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:12:41.567Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:12:51.388Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:12:51.408Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:01.406Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:01.444Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:11.064Z",
+      "type": "request",
+      "method": "POST",
+      "url": "http://localhost:8010/context"
+    },
+    {
+      "time": "2026-10-20T09:13:11.364Z",
+      "type": "response",
+      "status": 201,
+      "url": "http://localhost:8010/context"
+    },
+    {
+      "time": "2026-10-20T09:13:11.385Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:11.385Z",
+      "type": "request",
+      "method": "PATCH",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:13:11.415Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:11.502Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:13:11.503Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:13:11.523Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:13:11.631Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:11.631Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:13:11.631Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:13:11.631Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:11.631Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:11.631Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:13:11.631Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:13:11.631Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/image?url=%2Fperson-a-logo.png&w=128&q=75"
+    },
+    {
+      "time": "2026-10-20T09:13:11.734Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:12.235Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:13:12.252Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:12.253Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:12.253Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:13:12.278Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:12.288Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:13:12.297Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:12.348Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:12.348Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/context/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:12.388Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:12.388Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:12.396Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:12.397Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/context/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:12.442Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:12.449Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:12.450Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:12.450Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:12.451Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/context/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:12.476Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:12.488Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:12.490Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/context/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:21.597Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:21.628Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:22.345Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:22.345Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:22.358Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:22.358Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:22.358Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:22.362Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:31.599Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:31.617Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:32.348Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:32.349Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:32.357Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:32.357Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:32.365Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:32.377Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:41.601Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:42.350Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:42.350Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:43.333Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:43.336Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:43.340Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:43.344Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:43.385Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:51.625Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:51.648Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:52.344Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:52.344Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:13:52.352Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:13:52.354Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:52.363Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:13:52.408Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:01.607Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:01.658Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:02.354Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:02.355Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:02.405Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:02.413Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:02.429Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:02.467Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:11.596Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:11.642Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:12.347Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:12.347Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:12.357Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:12.358Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:12.365Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:12.457Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:20.749Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/pipeline/start"
+    },
+    {
+      "time": "2026-10-20T09:14:21.719Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/image?url=%2Fperson-a-logo.png&w=128&q=75"
+    },
+    {
+      "time": "2026-10-20T09:14:21.719Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/css/app/layout.css?v=1792487661147"
+    },
+    {
+      "time": "2026-10-20T09:14:21.719Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/css/app/pipeline/layout.css?v=1792487661147"
+    },
+    {
+      "time": "2026-10-20T09:14:21.719Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/chunks/webpack.js?v=1792487661147"
+    },
+    {
+      "time": "2026-10-20T09:14:21.719Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/chunks/main-app.js?v=1792487661147"
+    },
+    {
+      "time": "2026-10-20T09:14:21.719Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/chunks/app-pages-internals.js"
+    },
+    {
+      "time": "2026-10-20T09:14:21.719Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/chunks/app/pipeline/layout.js"
+    },
+    {
+      "time": "2026-10-20T09:14:21.720Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/chunks/app/pipeline/start/page.js"
+    },
+    {
+      "time": "2026-10-20T09:14:21.731Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/fonts/Pretendard-Bold.otf"
+    },
+    {
+      "time": "2026-10-20T09:14:21.731Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/fonts/Pretendard-Regular.otf"
+    },
+    {
+      "time": "2026-10-20T09:14:21.731Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/fonts/Pretendard-SemiBold.otf"
+    },
+    {
+      "time": "2026-10-20T09:14:23.309Z",
+      "type": "console",
+      "level": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+    },
+    {
+      "time": "2026-10-20T09:14:23.445Z",
+      "type": "console",
+      "level": "log",
+      "text": "[HMR] connected"
+    },
+    {
+      "time": "2026-10-20T09:14:23.488Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/favicon.ico?603d046c9a6fdfbb"
+    },
+    {
+      "time": "2026-10-20T09:14:23.717Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:23.775Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:14:23.775Z",
+      "type": "console",
+      "level": "warning",
+      "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+    },
+    {
+      "time": "2026-10-20T09:14:23.910Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:23.923Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:14:23.957Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:23.957Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:23.957Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:14:23.957Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:23.960Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:23.960Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:23.960Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:14:23.985Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:14:23.986Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:23.986Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:23.997Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:24.015Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79"
+    },
+    {
+      "time": "2026-10-20T09:14:24.026Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:24.126Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:24.299Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/context/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:24.299Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:24.299Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:24.299Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:24.299Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/context/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:24.299Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:24.305Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/fonts/Pretendard-ExtraBold.otf"
+    },
+    {
+      "time": "2026-10-20T09:14:24.305Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:24.305Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/context/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:24.305Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:24.305Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:24.305Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s34aa9438fe6e422680df508378cc6b79/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:24.306Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/context/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:24.306Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:24.306Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:24.309Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s34aa9438fe6e422680df508378cc6b79?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:24.949Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:14:25.135Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:14:25.135Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.135Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:25.138Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:14:25.139Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.139Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.139Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:25.139Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:14:25.140Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/pipeline/crawling?_rsc=fni1s"
+    },
+    {
+      "time": "2026-10-20T09:14:25.153Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:14:25.458Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:25.458Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.458Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:25.458Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.458Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:14:25.459Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:25.459Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.459Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/context/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:25.459Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:25.459Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.459Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.459Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/context/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:25.459Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.459Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.459Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.459Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:25.465Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:25.474Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/context/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:25.498Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:25.630Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/__nextjs_font/geist-latin.woff2"
+    },
+    {
+      "time": "2026-10-20T09:14:25.630Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:25.630Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/context/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:25.753Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/pipeline/crawling?_rsc=fni1s"
+    },
+    {
+      "time": "2026-10-20T09:14:26.544Z",
+      "type": "console",
+      "level": "log",
+      "text": "[Fast Refresh] rebuilding"
+    },
+    {
+      "time": "2026-10-20T09:14:31.684Z",
+      "type": "console",
+      "level": "log",
+      "text": "[Fast Refresh] done in 5129ms"
+    },
+    {
+      "time": "2026-10-20T09:14:32.586Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/chunks/app/pipeline/crawling/page.js"
+    },
+    {
+      "time": "2026-10-20T09:14:32.586Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413"
+    },
+    {
+      "time": "2026-10-20T09:14:32.694Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672663"
+    },
+    {
+      "time": "2026-10-20T09:14:33.065Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:33.065Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:33.065Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:14:33.065Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:33.065Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:33.065Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:14:33.065Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/favicon.ico?603d046c9a6fdfbb"
+    },
+    {
+      "time": "2026-10-20T09:14:33.091Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:33.100Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:33.103Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:14:33.116Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:14:33.116Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:33.121Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:33.131Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:14:33.131Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:33.149Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:33.162Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:35.073Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:35.080Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:35.320Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:35.338Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:35.339Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:35.343Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:38.352Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:14:43.242Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:14:43.265Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:14:45.061Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:45.085Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:45.318Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:45.325Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:45.325Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:45.331Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:48.337Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:14:53.278Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:14:53.293Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:14:55.056Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:55.063Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:14:55.317Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:55.321Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:14:55.321Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:55.327Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:14:58.332Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:15:03.311Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:03.332Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:05.059Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:05.066Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:05.317Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:05.319Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:05.320Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:05.321Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:08.323Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:15:13.342Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:13.354Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:15.066Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:15.077Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:15.318Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:15.322Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:15.323Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:15.326Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:18.330Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:15:23.363Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:23.392Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:25.065Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:25.072Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:25.317Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:25.321Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:25.322Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:25.341Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:28.340Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:15:33.462Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:33.621Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:35.059Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:35.071Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:35.321Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:35.325Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:35.325Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:35.330Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:35.977Z",
+      "type": "request",
+      "method": "PUT",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/config?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:36.016Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/config?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:36.025Z",
+      "type": "request",
+      "method": "PATCH",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:36.181Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:36.182Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:36.193Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:39.193Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:15:43.571Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:43.576Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:45.057Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:45.064Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:45.317Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:45.320Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:45.320Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:45.323Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:48.326Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:15:53.583Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:53.592Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:15:55.057Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:55.063Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:15:55.318Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:55.323Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:15:55.324Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:55.328Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:15:58.332Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:16:03.596Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:03.603Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:05.055Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:05.061Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:05.318Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:05.323Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:05.324Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:05.328Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:08.331Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:16:13.607Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:13.615Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:15.057Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:15.067Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:15.317Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:15.320Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:15.320Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:15.322Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:18.325Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:16:23.618Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:23.621Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:25.057Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:25.067Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:25.316Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:25.323Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:25.323Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:25.327Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:28.330Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:16:33.627Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:33.634Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:35.058Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:35.071Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:35.318Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:35.323Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:35.323Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:35.328Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:46.500Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/pipeline/crawling"
+    },
+    {
+      "time": "2026-10-20T09:16:46.501Z",
+      "type": "console",
+      "level": "warning",
+      "text": "The resource http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487672413 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "time": "2026-10-20T09:16:46.505Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:46.505Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:46.505Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:46.513Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:46.514Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:46.515Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:46.527Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:46.527Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:46.753Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/image?url=%2Fperson-a-logo.png&w=128&q=75"
+    },
+    {
+      "time": "2026-10-20T09:16:46.753Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/css/app/layout.css?v=1792487806556"
+    },
+    {
+      "time": "2026-10-20T09:16:46.753Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/css/app/pipeline/layout.css?v=1792487806556"
+    },
+    {
+      "time": "2026-10-20T09:16:46.753Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/chunks/webpack.js?v=1792487806556"
+    },
+    {
+      "time": "2026-10-20T09:16:46.753Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/chunks/main-app.js?v=1792487806556"
+    },
+    {
+      "time": "2026-10-20T09:16:46.753Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/chunks/app-pages-internals.js"
+    },
+    {
+      "time": "2026-10-20T09:16:46.753Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/chunks/app/pipeline/layout.js"
+    },
+    {
+      "time": "2026-10-20T09:16:46.753Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/chunks/app/pipeline/crawling/page.js"
+    },
+    {
+      "time": "2026-10-20T09:16:46.753Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/_next/static/css/app/pipeline/crawling/page.css?v=1792487806556"
+    },
+    {
+      "time": "2026-10-20T09:16:46.757Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/fonts/Pretendard-Bold.otf"
+    },
+    {
+      "time": "2026-10-20T09:16:46.757Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/fonts/Pretendard-Regular.otf"
+    },
+    {
+      "time": "2026-10-20T09:16:46.757Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/fonts/Pretendard-SemiBold.otf"
+    },
+    {
+      "time": "2026-10-20T09:16:47.213Z",
+      "type": "console",
+      "level": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+    },
+    {
+      "time": "2026-10-20T09:16:47.279Z",
+      "type": "console",
+      "level": "log",
+      "text": "[HMR] connected"
+    },
+    {
+      "time": "2026-10-20T09:16:47.282Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/__nextjs_font/geist-latin.woff2"
+    },
+    {
+      "time": "2026-10-20T09:16:47.289Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/favicon.ico?603d046c9a6fdfbb"
+    },
+    {
+      "time": "2026-10-20T09:16:47.324Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:16:47.324Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:16:47.325Z",
+      "type": "console",
+      "level": "warning",
+      "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+    },
+    {
+      "time": "2026-10-20T09:16:47.335Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:16:47.335Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:16:47.360Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:47.362Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:16:47.364Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:16:47.364Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:47.364Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:47.365Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:16:47.365Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:16:47.371Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:16:47.375Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:16:47.377Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:16:47.381Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:47.381Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104"
+    },
+    {
+      "time": "2026-10-20T09:16:47.381Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:47.382Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.390Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.391Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:47.430Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.432Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:16:47.432Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:47.432Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.432Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:47.432Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.432Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:16:47.432Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:47.433Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:3010/fonts/Pretendard-ExtraBold.otf"
+    },
+    {
+      "time": "2026-10-20T09:16:47.435Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.436Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:16:47.439Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/known/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.439Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/integrations"
+    },
+    {
+      "time": "2026-10-20T09:16:47.439Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:47.439Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.439Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:47.440Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.440Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.447Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:47.447Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.447Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.448Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:47.456Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:57.384Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:57.398Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:16:57.423Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:57.426Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:16:57.426Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:57.429Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:16:57.490Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:16:57.494Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:07.366Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:07.392Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:07.426Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:07.440Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:07.440Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:07.444Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:07.496Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:07.499Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:17.360Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:17.370Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:17.424Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:17.426Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:17.426Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:17.427Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:17.502Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:17.505Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:27.358Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:27.362Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:27.423Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:27.425Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:27.425Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:27.426Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:27.506Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:27.508Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:37.359Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:37.362Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:37.424Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:37.426Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:37.426Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:37.428Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:37.510Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:37.513Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:47.360Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:47.363Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:47.424Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:47.426Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:47.426Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:47.428Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:47.517Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:47.519Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:57.360Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:57.364Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:17:57.423Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:57.425Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:17:57.426Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:57.427Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:17:57.522Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:17:57.524Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:07.364Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:07.375Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:07.424Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:07.427Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:07.427Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:07.430Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:07.527Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:07.532Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:17.362Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:17.374Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:17.426Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:17.432Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:17.432Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:17.437Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:17.536Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:17.541Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:27.362Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:27.376Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:27.425Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:27.430Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:27.430Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:27.435Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:27.545Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:27.551Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:32.648Z",
+      "type": "request",
+      "method": "PUT",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/config?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:32.672Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/config?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:32.673Z",
+      "type": "request",
+      "method": "PATCH",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:32.678Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:32.680Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:32.686Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:37.360Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:37.363Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:37.423Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:37.425Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:37.425Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:37.427Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:37.554Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:37.557Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:47.361Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:47.371Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:47.424Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:47.427Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:47.427Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:47.429Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:47.561Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:47.565Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:52.083Z",
+      "type": "request",
+      "method": "PUT",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/config?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:52.105Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/config?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:52.105Z",
+      "type": "request",
+      "method": "PATCH",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:52.112Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:52.112Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:52.119Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:57.359Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:57.373Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:18:57.426Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:57.430Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:18:57.431Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:57.435Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:18:57.567Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:18:57.573Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:07.362Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:19:07.373Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:19:07.425Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:19:07.431Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:19:07.431Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:07.436Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:07.578Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:07.584Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:17.358Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:19:17.362Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:19:17.422Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:19:17.424Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:19:17.424Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:17.425Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:17.586Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:17.589Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:19.612Z",
+      "type": "request",
+      "method": "POST",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/list?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:19.658Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/list?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:19.659Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:19.666Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:19.666Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:19.669Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:27.361Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:19:27.373Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:19:27.424Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:19:27.428Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:19:27.428Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:27.434Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:27.593Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:27.619Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:27.620Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:27.623Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:37.363Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:19:37.380Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions"
+    },
+    {
+      "time": "2026-10-20T09:19:37.424Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:19:37.426Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/sessions/s33a213de835b40fb8085e04e41d7e104/versions"
+    },
+    {
+      "time": "2026-10-20T09:19:37.426Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:37.431Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/session/s33a213de835b40fb8085e04e41d7e104?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:37.627Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:37.638Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:38.778Z",
+      "type": "request",
+      "method": "POST",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/detail?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:38.803Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/detail?version=v1"
+    },
+    {
+      "time": "2026-10-20T09:19:38.805Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    },
+    {
+      "time": "2026-10-20T09:19:38.811Z",
+      "type": "response",
+      "status": 200,
+      "url": "http://localhost:8010/crawl/s33a213de835b40fb8085e04e41d7e104/status"
+    }
+  ]
+}

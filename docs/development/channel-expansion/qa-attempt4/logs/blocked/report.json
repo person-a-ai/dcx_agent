@@ -1,0 +1,84 @@
+{
+  "matrix": {
+    "qa-empty": {
+      "threads": {
+        "listed": 0,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 0,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 0,
+        "urls_listed": 0,
+        "urls_done": 0
+      }
+    },
+    "에어컨청소": {
+      "threads": {
+        "listed": 25,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 0,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 25,
+        "urls_listed": 25,
+        "urls_done": 0
+      }
+    },
+    "제습기": {
+      "threads": {
+        "listed": 25,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 0,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 25,
+        "urls_listed": 25,
+        "urls_done": 0
+      }
+    }
+  },
+  "channels": {
+    "threads": {
+      "skipped": 50,
+      "skip_reason": "blocked",
+      "docs": 0,
+      "urls_done": 0,
+      "share": 0,
+      "status": "done",
+      "errors_top": [
+        {
+          "error": "crawl_error",
+          "count": 50
+        }
+      ],
+      "skip_reasons": {
+        "blocked": 50
+      }
+    }
+  },
+  "totals": {
+    "skipped": 50,
+    "total": 50,
+    "urls_listed": 50,
+    "urls_done": 0,
+    "doc_count": 0
+  },
+  "counts": {
+    "qa-empty": {
+      "threads": 0
+    },
+    "에어컨청소": {
+      "threads": 0
+    },
+    "제습기": {
+      "threads": 0
+    }
+  },
+  "snapshot_id": "ee6564c4b6b54bac86fae145ddf135b6",
+  "started_at": 1792488075.573992,
+  "finished_at": 1792488189.0326989,
+  "throughput_per_min": 0.0
+}

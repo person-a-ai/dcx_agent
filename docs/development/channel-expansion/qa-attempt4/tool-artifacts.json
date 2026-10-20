@@ -1,0 +1,17 @@
+[
+  {
+    "source": "/Users/yunho/Documents/dcx_agent-channels-build/.playwright-mcp/console-2026-10-20T09-11-32-089Z.log",
+    "copy": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/tool-artifacts/console-2026-10-20T09-11-32-089Z.log",
+    "bytes": 22747
+  },
+  {
+    "source": "/Users/yunho/Documents/dcx_agent-channels-build/.playwright-mcp/console-2026-10-20T09-29-22-299Z.log",
+    "copy": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/tool-artifacts/console-2026-10-20T09-29-22-299Z.log",
+    "bytes": 2994
+  },
+  {
+    "source": "/Users/yunho/Documents/dcx_agent-channels-build/.playwright-mcp/page-2026-10-20T09-11-41-442Z.yml",
+    "copy": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/tool-artifacts/page-2026-10-20T09-11-41-442Z.yml",
+    "bytes": 18320
+  }
+]

@@ -56,6 +56,7 @@ def test_youtube_trackers_are_preserved_for_other_sources(source):
 @pytest.mark.parametrize("source,prefix", [
     ("naver_cafe", "nc"), ("naver_blog", "nb"), ("youtube", "yt"),
     ("ppomppu", "pp"), ("clien", "cl"), ("fixture", "fx"),
+    ("youtube_vlog", "yv"), ("threads", "th"), ("naver_kin", "kn"), ("cook82", "c8"),
 ])
 def test_doc_id_deterministic_and_prefixed(source, prefix):
     url = "https://example.com/post/1"

@@ -1,0 +1,12 @@
+{
+  "time": "2026-10-20T09:27:42.254Z",
+  "browser": "155.0.8059.85",
+  "pages": [
+    "http://localhost:3013/pipeline/crawling"
+  ],
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+}

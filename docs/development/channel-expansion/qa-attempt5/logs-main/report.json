@@ -1,0 +1,230 @@
+{
+  "matrix": {
+    "qa-empty": {
+      "cook82": {
+        "listed": 0,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 0,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 0,
+        "urls_listed": 0,
+        "urls_done": 0
+      },
+      "naver_kin": {
+        "listed": 0,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 0,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 0,
+        "urls_listed": 0,
+        "urls_done": 0
+      },
+      "threads": {
+        "listed": 0,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 0,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 0,
+        "urls_listed": 0,
+        "urls_done": 0
+      },
+      "youtube_vlog": {
+        "listed": 0,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 0,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 0,
+        "urls_listed": 0,
+        "urls_done": 0
+      }
+    },
+    "에어컨청소": {
+      "cook82": {
+        "listed": 8,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 8,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 8,
+        "urls_listed": 8,
+        "urls_done": 8
+      },
+      "naver_kin": {
+        "listed": 5,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 4,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 5,
+        "urls_listed": 5,
+        "urls_done": 4
+      },
+      "threads": {
+        "listed": 25,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 25,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 25,
+        "urls_listed": 25,
+        "urls_done": 25
+      },
+      "youtube_vlog": {
+        "listed": 5,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 8,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 5,
+        "urls_listed": 5,
+        "urls_done": 4
+      }
+    },
+    "제습기": {
+      "cook82": {
+        "listed": 8,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 8,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 8,
+        "urls_listed": 8,
+        "urls_done": 8
+      },
+      "naver_kin": {
+        "listed": 5,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 4,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 5,
+        "urls_listed": 5,
+        "urls_done": 4
+      },
+      "threads": {
+        "listed": 25,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 25,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 25,
+        "urls_listed": 25,
+        "urls_done": 25
+      },
+      "youtube_vlog": {
+        "listed": 5,
+        "filtered": 0,
+        "excluded": 0,
+        "full": 8,
+        "snippet": 0,
+        "restricted": 0,
+        "unique": 5,
+        "urls_listed": 5,
+        "urls_done": 4
+      }
+    }
+  },
+  "channels": {
+    "cook82": {
+      "skipped": 0,
+      "skip_reason": null,
+      "docs": 16,
+      "urls_done": 16,
+      "share": 0.17777777777777778,
+      "status": "done",
+      "errors_top": [],
+      "skip_reasons": {}
+    },
+    "naver_kin": {
+      "skipped": 2,
+      "skip_reason": "deleted",
+      "docs": 8,
+      "urls_done": 8,
+      "share": 0.08888888888888889,
+      "status": "done",
+      "errors_top": [
+        {
+          "error": "crawl_error",
+          "count": 2
+        }
+      ],
+      "skip_reasons": {
+        "deleted": 2
+      }
+    },
+    "threads": {
+      "skipped": 0,
+      "skip_reason": null,
+      "docs": 50,
+      "urls_done": 50,
+      "share": 0.5555555555555556,
+      "status": "done",
+      "errors_top": [],
+      "skip_reasons": {}
+    },
+    "youtube_vlog": {
+      "skipped": 2,
+      "skip_reason": "no_ko_captions",
+      "docs": 16,
+      "urls_done": 8,
+      "share": 0.17777777777777778,
+      "status": "done",
+      "errors_top": [
+        {
+          "error": "crawl_error",
+          "count": 2
+        }
+      ],
+      "skip_reasons": {
+        "no_ko_captions": 2
+      }
+    }
+  },
+  "totals": {
+    "done": 82,
+    "skipped": 4,
+    "total": 86,
+    "urls_listed": 86,
+    "urls_done": 82,
+    "doc_count": 90
+  },
+  "counts": {
+    "qa-empty": {
+      "cook82": 0,
+      "naver_kin": 0,
+      "threads": 0,
+      "youtube_vlog": 0
+    },
+    "에어컨청소": {
+      "cook82": 8,
+      "naver_kin": 4,
+      "threads": 25,
+      "youtube_vlog": 8
+    },
+    "제습기": {
+      "cook82": 8,
+      "naver_kin": 4,
+      "threads": 25,
+      "youtube_vlog": 8
+    }
+  },
+  "snapshot_id": "48feca0a678f441a9bfd8b6c7ade24f6",
+  "started_at": 1792502194.879563,
+  "finished_at": 1792502290.822145,
+  "throughput_per_min": 51.280671240822116
+}

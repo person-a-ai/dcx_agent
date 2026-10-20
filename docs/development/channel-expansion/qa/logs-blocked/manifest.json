@@ -1,0 +1,182 @@
+{
+  "id": "c1",
+  "parent": null,
+  "createdAt": "2026-10-20T13:45:50.185621+00:00",
+  "keywords": [
+    {
+      "id": "manual-16f4361cd3144713a9a6671541cfc7a4",
+      "kw": "에어컨청소",
+      "axis": "physical",
+      "sub": "product_physical",
+      "round": 1,
+      "origin": "manual",
+      "status": "approved",
+      "reject": null,
+      "volume": {
+        "monthly": null,
+        "source": "unconnected",
+        "at": null
+      },
+      "badges": [],
+      "crawlExcluded": false
+    },
+    {
+      "id": "manual-5cec0b2b5d564717bed3cc2c96b572c6",
+      "kw": "제습기",
+      "axis": "physical",
+      "sub": "product_physical",
+      "round": 1,
+      "origin": "manual",
+      "status": "approved",
+      "reject": null,
+      "volume": {
+        "monthly": null,
+        "source": "unconnected",
+        "at": null
+      },
+      "badges": [],
+      "crawlExcluded": false
+    },
+    {
+      "id": "manual-7e732e8a0f9942d1887a45646b0de7f9",
+      "kw": "qa-empty",
+      "axis": "physical",
+      "sub": "product_physical",
+      "round": 1,
+      "origin": "manual",
+      "status": "approved",
+      "reject": null,
+      "volume": {
+        "monthly": null,
+        "source": "unconnected",
+        "at": null
+      },
+      "badges": [],
+      "crawlExcluded": false
+    }
+  ],
+  "status": "done",
+  "channels": [
+    "threads"
+  ],
+  "config": {
+    "channels": [
+      "threads"
+    ],
+    "dateFrom": "2025-10-20",
+    "dateTo": "2026-10-20",
+    "adWords": [
+      "협찬",
+      "광고",
+      "제공받",
+      "원고료",
+      "체험단",
+      "서포터즈",
+      "중고",
+      "판매",
+      "거래",
+      "체험단",
+      "협찬",
+      "원고료",
+      "소정의",
+      "제공받아",
+      "서포터즈"
+    ],
+    "excludeSources": [
+      "중고나라",
+      "번개장터",
+      "당근",
+      "세컨웨어",
+      "헬로마켓",
+      "중고",
+      "장터",
+      "부동산",
+      "판매",
+      "팝니다",
+      "삽니다",
+      "택배",
+      "무료배송",
+      "할인코드",
+      "쿠폰",
+      "홍보",
+      "광고",
+      "업체",
+      "시공",
+      "인테리어업체",
+      "이사",
+      "용달",
+      "대출",
+      "보험설계사",
+      "설계사모집",
+      "모집"
+    ],
+    "includeSources": [],
+    "product_name_filter": false,
+    "perChannel": {},
+    "youtube": {
+      "videos_per_keyword": 20,
+      "max_comments": 500
+    },
+    "youtube_vlog": {
+      "videos_per_keyword": 20,
+      "min_duration_s": 60,
+      "max_duration_s": 3600
+    },
+    "target_total": null,
+    "gateExclusions": [],
+    "filters": {
+      "date_from": "2025-10-20",
+      "date_to": "2026-10-20",
+      "ad_words": [
+        "협찬",
+        "광고",
+        "제공받",
+        "원고료",
+        "체험단",
+        "서포터즈",
+        "중고",
+        "판매",
+        "거래",
+        "체험단",
+        "협찬",
+        "원고료",
+        "소정의",
+        "제공받아",
+        "서포터즈"
+      ],
+      "exclude_sources": [
+        "중고나라",
+        "번개장터",
+        "당근",
+        "세컨웨어",
+        "헬로마켓",
+        "중고",
+        "장터",
+        "부동산",
+        "판매",
+        "팝니다",
+        "삽니다",
+        "택배",
+        "무료배송",
+        "할인코드",
+        "쿠폰",
+        "홍보",
+        "광고",
+        "업체",
+        "시공",
+        "인테리어업체",
+        "이사",
+        "용달",
+        "대출",
+        "보험설계사",
+        "설계사모집",
+        "모집"
+      ],
+      "include_sources": [],
+      "product_name_filter": false,
+      "bk": "QA 채널 확장"
+    },
+    "channel_limits": {}
+  },
+  "snapshotId": "03e110dd88ca4f8eaaf24b9ebab39e2b"
+}

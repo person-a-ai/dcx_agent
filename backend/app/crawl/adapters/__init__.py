@@ -6,6 +6,7 @@ from contextlib import contextmanager
 from app.config import settings
 from app.crawl.adapters.base import (
     AdapterBlocked,
+    AdapterSkipped,
     ChannelAdapter,
     FetchedDoc,
     ListItem,
@@ -13,17 +14,25 @@ from app.crawl.adapters.base import (
 )
 from app.crawl.adapters.fixture import FixtureAdapter
 from app.crawl.adapters.youtube import YoutubeAdapter
+from app.crawl.adapters.youtube_vlog import YoutubeVlogAdapter
 from app.crawl.adapters.clien import ClienAdapter
 from app.crawl.adapters.ppomppu import PpomppuAdapter
 from app.crawl.adapters.naver_blog import NaverBlogAdapter
 from app.crawl.adapters.naver_cafe import NaverCafeAdapter
+from app.crawl.adapters.naver_kin import NaverKinAdapter
+from app.crawl.adapters.cook82 import Cook82Adapter
+from app.crawl.adapters.threads import ThreadsAdapter
 
 
 REGISTRY: dict[str, Callable[[], ChannelAdapter]] = {
     "naver_blog": NaverBlogAdapter,
     "naver_cafe": NaverCafeAdapter,
+    "naver_kin": NaverKinAdapter,
+    "cook82": Cook82Adapter,
+    "threads": ThreadsAdapter,
     "fixture": lambda: FixtureAdapter(settings.fixture_corpus_path),
     "youtube": YoutubeAdapter,
+    "youtube_vlog": YoutubeVlogAdapter,
     "clien": ClienAdapter,
     "ppomppu": PpomppuAdapter,
 }
@@ -56,6 +65,6 @@ def available_sources() -> list[str]:
 
 
 __all__ = [
-    "AdapterBlocked", "ChannelAdapter", "FetchedDoc", "ListItem", "ListPage",
+    "AdapterBlocked", "AdapterSkipped", "ChannelAdapter", "FetchedDoc", "ListItem", "ListPage",
     "REGISTRY", "available_sources",
 ]

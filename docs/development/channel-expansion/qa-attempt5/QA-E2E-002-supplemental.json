@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\"time\":\"2026-10-20T13:30:18.267Z\",\"note\":\"Supplemental screenshot of saved values inherited into v2; initial v1 refresh assertion is in QA-E2E-002-browser.json\",\"values\":[\"5\",\"2\",\"30\"]}\n### Ran Playwright code\n```js\nawait (async(page)=>{await page.getByRole('button',{name:'v2 열기',exact:true}).click();await page.getByText('고급 설정 펼치기 · 채널별 동시성 · 요청 간격 · 상한',{exact:true}).waitFor();await page.getByText('고급 설정 펼치기 · 채널별 동시성 · 요청 간격 · 상한',{exact:true}).click();const input=page.getByLabel('최소 길이(분)',{exact:true});await input.scrollIntoViewIfNeeded();await page.screenshot({path:page.qaDir+'QA-E2E-002-supplemental-v2-values.png'});return {time:new Date().toISOString(),note:'Supplemental screenshot of saved values inherited into v2; initial v1 refresh assertion is in QA-E2E-002-browser.json',values:await Promise.all([page.getByLabel('키워드당 영상 수',{exact:true}).last().inputValue(),input.inputValue(),page.getByLabel('최대 길이(분)',{exact:true}).inputValue()])};})(page);\n```"
+    }
+  ]
+}

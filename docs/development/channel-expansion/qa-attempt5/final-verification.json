@@ -1,0 +1,9 @@
+{
+  "time": "2026-10-20T13:32:45.649252+00:00",
+  "head": "ff4d4d163021e0c476897be0abecdb440f3996f1",
+  "fingerprint": "3e73f4f996f1e1ad1b2152feacc356506d51ba32d37cd722e73f060fd931c86f",
+  "status": "?? docs/development/channel-expansion/build.json\n?? docs/development/channel-expansion/qa-attempt2/\n?? docs/development/channel-expansion/qa-attempt3-orphan/\n?? docs/development/channel-expansion/qa-attempt3-stopped/\n?? docs/development/channel-expansion/qa-attempt4/\n?? docs/development/channel-expansion/qa.json\n?? docs/development/channel-expansion/qa/\n?? docs/development/channel-expansion/review.json\n?? docs/development/channel-expansion/reviews/final-review-3.json\n?? docs/development/channel-expansion/reviews/final-review-4.json\n?? docs/development/channel-expansion/reviews/final-review-5.json\n",
+  "tracked_diff": "",
+  "own_browser_closed": true,
+  "controller_servers_left_running": true
+}

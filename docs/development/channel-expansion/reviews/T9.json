@@ -1,0 +1,73 @@
+{
+  "task": "T9",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh (independent reviewer; not the T9 implementer)",
+  "base_commit": "192386be79663c13647c17a45b7b277e47c457f3",
+  "review_commit": "4b1ef2a9f09e62867c67bcd2b460f39b7c92bef0",
+  "verdict": "PASS",
+  "commands": [
+    {
+      "command": "git rev-parse 192386b 4b1ef2a HEAD",
+      "result": "Resolved the full base and review SHAs; HEAD initially matched the review commit."
+    },
+    {
+      "command": "git diff 192386be79663c13647c17a45b7b277e47c457f3..4b1ef2a9f09e62867c67bcd2b460f39b7c92bef0",
+      "result": "Exactly three added test-side files: backend/tests/crawl/test_channel_expansion_flow.py, backend/tests/crawl/test_qa_hook.py, backend/tests/qa_hooks/channel_expansion_qa.py. No product changes."
+    },
+    {
+      "command": "cat .harness/scope-T9.json; read docs/development/channel-expansion/03-plan.md Global Constraints and Task T9; read docs/development/channel-expansion/QA_PLAN-channel-expansion.md sections 4–8",
+      "result": "Compared the complete diff to the scope, worker-only registration requirement, exact QA data, and requested scenarios. The optional manual report is a Controller responsibility."
+    },
+    {
+      "command": "SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive 4b1ef2a9f09e62867c67bcd2b460f39b7c92bef0 backend | tar -x -C \"$SNAP\"; cd \"$SNAP\" && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+      "result": "3782 passed, 1 failed in 71.69s. The sole failure was existing test_channel_defaults_parity.py: the prescribed backend-only export omits frontend/src/lib/logic/crawlConfig.ts. It was a snapshot dependency failure, not a T9 regression.",
+      "snapshot": "/var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.DQhnQYMmjs"
+    },
+    {
+      "command": "git archive 4b1ef2a9f09e62867c67bcd2b460f39b7c92bef0 frontend/src/lib/logic/crawlConfig.ts | tar -x -C /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.DQhnQYMmjs",
+      "result": "Added only the exact committed parity-test dependency to the temporary export."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.DQhnQYMmjs && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider -p no:randomly -x",
+      "result": "3783 passed in one process, 71.12s. One pre-existing Pydantic deprecation warning. Reviewer-only probe files were added after this run's collection and were not included in this count."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.DQhnQYMmjs && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl/test_qa_hook.py backend/tests/crawl/test_reviewer_t9.py backend/tests/crawl/test_adapter_wiring.py -q -s -p no:cacheprovider -p no:randomly -x",
+      "result": "33 passed, 7.06s. Temporary reviewer probes exercised gate/report data, default preprocessing, finish_partial, empty data, subprocess hook loading, API availability isolation, and five in-memory mutations."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.DQhnQYMmjs && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl/test_qa_hook.py backend/tests/crawl/test_reviewer_t9.py backend/tests/crawl/test_adapter_wiring.py -q -s -p no:cacheprovider -p no:randomly -p reviewer_order -x",
+      "result": "Final reverse-order run: 33 passed, 7.12s. Temporary reviewer_order plugin reversed collected items and asserted original REGISTRY identity mappings and absence of channel_expansion_qa after every teardown (33 checks). An earlier attempt failed because the reviewer's newly extended API probe omitted sid from its synthetic session; only that temporary probe setup was corrected."
+    },
+    {
+      "command": "Temporary test_subprocess_api_isolation_and_worker_loader launched sys.executable -c from the exported backend with DCX_TEST_ADAPTER_MODULE=channel_expansion_qa, PYTHONPATH=<snapshot>/backend/tests/qa_hooks, STORAGE=local, LOCAL_DATA_DIR=<temporary>/data, AUTHOR_SALT_PATH=<temporary>/salt, EMBED_BACKEND=fake, ENABLE_FIXTURE_CHANNEL=true, REAL_CHANNELS_ENABLED=true, CORS_ORIGINS=http://localhost:3000, PLAYWRIGHT_BROWSERS_PATH=<empty temporary directory>, and VOYAGE_API_KEY removed",
+      "result": "Passed. An audit hook rejected socket.connect, socket.getaddrinfo, and socket.bind. Importing app.main did not load the QA module or replace real classes. Real availability and status settings excluded Threads; saving a Threads config raised 422 Sources are unavailable. Subsequent worker.run_list/run_detail loaded the QA module through the actual loader and wrote 45 documents for one nonempty keyword. No servers or network requests."
+    },
+    {
+      "command": "Inspected installed pytest distributions with importlib.metadata; git diff --check 192386be79663c13647c17a45b7b277e47c457f3..4b1ef2a9f09e62867c67bcd2b460f39b7c92bef0; git status --short",
+      "result": "pytest-randomly is not installed; explicit forward and reverse orders were tested. Diff whitespace check passed. Initial repository status was clean; later status showed concurrent modifications to backend/app/crawl/render.py and backend/tests/crawl/test_render.py, which this reviewer did not create, edit, or revert."
+    }
+  ],
+  "findings": [],
+  "notes": [
+    "This fresh, independent review session did not implement T9. No agents were delegated implementation work. The only repository file created by this session is this T9.json review. Tests, reviewer probe files, and all mutations ran only in the exported temporary snapshot; no Git index or ref changes and no rm commands were performed.",
+    "Review target is the immutable full-SHA diff, including the committed product code used to evaluate its tests. Concurrent working-tree changes observed near the end do not change this verdict's target.",
+    "Hook isolation: backend/tests/qa_hooks/channel_expansion_qa.py:67-69 registers only when DCX_TEST_ADAPTER_MODULE equals its module name. Explicit imports with the variable absent or selecting another module leave REGISTRY unchanged. No product module imports channel_expansion_qa. app/crawl/worker.py:49-52 loads the selected module only when run_list or run_detail executes; control._spawn launches separate worker processes with inherited environment.",
+    "Offline behavior and exact data: the hook uses local deterministic construction and urllib.parse only. Per nonempty keyword it returns youtube_vlog=6, threads=25, naver_kin=5, cook82=8; vlog positions 3 and 6 skip no_ko_captions, Kin position 5 skips deleted; qa-empty returns zero for all four. URL-encoded keyword queries survive normalization on qa.invalid and keep distinct keywords from collapsing into the same URLs. QA_THREADS_MODE=blocked affects only Threads detail fetch and raises AdapterBlocked with host threads.com.",
+    "Worker contract: list_page accepts keyword, cursor, and **options, including videos_per_keyword/min_duration_s/max_duration_s. The fixed QA inventory is intentional; the worker still applies configured caps. fetch accepts a ListItem. FetchedDoc is constructed with named fields matching the real dataclass, including public access, author_raw, and thread_key. Vlog emits distinct 0-90 and 90-180 thread keys and segmenter=embedding. All 90 full documents survived the worker's Doc validation, writer/readback, explicit Doc.model_validate, and preprocessing; authors were hashed.",
+    "API availability / QA-NEG-002: the subprocess probe imported app.main under the QA environment and verified REGISTRY['threads'] remained ThreadsAdapter, the QA module was absent, and an empty PLAYWRIGHT_BROWSERS_PATH removed Threads from real available_sources and status settings. Config save rejected Threads with 422. app/routers/crawl_v2.py:31 and its error handler map this rejection to sources_unavailable. The hook's intentionally minimal worker adapters do not interfere with API class availability.",
+    "Registry restoration: test_qa_hook.py:35-41 records all originals with monkeypatch before import-time registration, removes the cached module, and lets fixture teardown restore the originals. The complete crawl suite passed in one process. Forward hook-before-real-adapter tests passed, and a reversed 33-test run explicitly verified the full original REGISTRY and cleared hook module after every teardown.",
+    "Flow assertions: test_channel_expansion_flow.py:77-93 checks per-source document counts, expected ID prefix set, full fetch levels, preprocessing retention and desc/link compatibility, exact 1032-dimensional input, zero values in the five legacy channel indicator columns, detail state, and exclusion of intentional skips from attempt counts.",
+    "Five independent in-memory mutation probes were killed by the unchanged flow test: changing Threads prefix from th to xx; dropping desc; dropping link; counting AdapterSkipped as an attempt; and adding Threads to a legacy channel one-hot position. Mutations were monkeypatched in the temporary test process and restored after each case. This establishes sensitivity to the requested regression classes, not merely successful execution.",
+    "QA-E2E-003: executable; no hook/data blocker found. Real gate computation yielded 44 URLs for each nonempty keyword and a qa-empty zero row with zero/low badges. Each populated row contains all four source keys; total estimate is 88 URLs. crawling/page.tsx renders the Threads and vlog notices from enabled channels and selects the gate view after a done list run.",
+    "QA-E2E-004: executable; no hook/data blocker found. Real detail run completed Threads and reported progress.skipped.youtube_vlog.no_ko_captions=4 and naver_kin.deleted=2. Progress.tsx renders the skip column and '(자막 없음)' annotation; the same channel table remains present after completion, so fast QA data does not make the completed values inaccessible.",
+    "QA-E2E-005: executable; no hook/data blocker found. Real report totals were urls_listed=88, urls_done=82, doc_count=90, skipped=6. Channel document counts were vlog=16, Threads=50, Kin=8, 82cook=16. Report skip reasons supply vlog 4 and Kin 2; vlog matrix has 8 completed videos, producing '영상 8개 → 구간 16'. Progress.tsx/finishPartial.ts map those reasons and distribution rows; crawling/page.tsx shows the preprocessing button when a report exists.",
+    "QA-E2E-006: executable; no hook/data blocker found. A reviewer probe ran the real run_prep pipeline with default PrepConfig and the fake embedder against the finished collection. It completed with original=90 and after=90, matching the collection report. frontend/src/components/prep/prep.ts:12-13 includes all four channel choices and PrepSettings.tsx renders them.",
+    "QA-NEG-003: executable; no hook/data blocker found. A Threads-only hook run in blocked mode paused after 20 consecutive blocked outcomes, with zero documents. Calling the real control.finish_partial finalized all 25 outstanding URLs as skipped with reason blocked and produced report.channels.threads.skip_reasons.blocked=25. The UI's paused-channel banner, Threads message, finish eligibility, and blocked reason label align with these states. No login address is requested.",
+    "QA-EDGE-001: executable; no hook/data blocker found. A qa-empty-only run finished listing successfully, retained a gate row with all four zero-valued sources and zero/low badges, and estimated zero URLs. crawling/page.tsx selects its '수집된 목록이 없습니다' interpretation when every gate row has listed=0.",
+    "None of QA-E2E-003, QA-E2E-004, QA-E2E-005, QA-E2E-006, QA-NEG-003, or QA-EDGE-001 is expected to fail because of this hook under the documented environment. These conclusions combine executed backend scenarios and frontend source inspection; they are not claims of an actual browser QA run. No servers were started and no external services were contacted.",
+    "No must-fix issues found. The initial missing frontend parity dependency and the corrected reviewer-only sid setup error do not constitute findings against the reviewed change."
+  ]
+}

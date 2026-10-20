@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 from app.context.labels import LABELS
+from app.crawl.channels import COLLOQUIAL_CHANNELS
 from app.llm.base import Attachment, LLMTask
 
 from .models import Keyword
@@ -115,7 +116,7 @@ def build_round_task(sid: str, n: Literal[1, 2, 3, 4], state: RoundInputs) -> LL
         LABELS["channels"].get(ch, ch) for ch in state.channels
     ) or "지정 없음"
     channel_rules = f"채널별 검색 문법을 따른다. 수집 채널: {channels}."
-    if set(state.channels) & {"youtube", "naver_cafe", "ppomppu", "clien", "community"}:
+    if set(state.channels) & COLLOQUIAL_CHANNELS:
         channel_rules += " 구어 · 줄임말 표현도 허용."
     desired_direction = _listing(
         [f"{kw.kw} ({kw.axis}/{kw.sub})" for kw in state.approved

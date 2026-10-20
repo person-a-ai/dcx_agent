@@ -664,6 +664,7 @@ def real_sources():
 
 
 def test_registered_sources_status_and_project_defaults(real_sources, env, monkeypatch):
+    monkeypatch.setattr('app.crawl.render.RenderBridge.available', classmethod(lambda cls: True))
     monkeypatch.setattr(control, 'available_sources', real_sources)
     monkeypatch.setattr(settings, 'enable_fixture_channel', False)
     sources = ['naver_blog', 'naver_cafe', 'youtube', 'clien', 'ppomppu']
@@ -674,7 +675,7 @@ def test_registered_sources_status_and_project_defaults(real_sources, env, monke
     store.write_json(store.session_dir('S') / 'session.json', session)
     status = env.client.get('/crawl/S/status')
     assert status.status_code == 200
-    assert set(status.json()['available_sources']) == {'naver_blog', 'naver_cafe', 'youtube', 'clien', 'ppomppu'}
+    assert set(status.json()['available_sources']) == {'naver_blog', 'naver_cafe', 'naver_kin', 'cook82', 'threads', 'youtube', 'youtube_vlog', 'clien', 'ppomppu'}
     control.start_list('S')
     manifest = store.read_json(control.collection_dir('S') / 'manifest.json')
     assert manifest['channels'] == sources

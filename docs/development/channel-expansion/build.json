@@ -1,0 +1,379 @@
+{
+  "verdict": "PASS",
+  "head": "ff4d4d163021e0c476897be0abecdb440f3996f1",
+  "fingerprint": "3e73f4f996f1e1ad1b2152feacc356506d51ba32d37cd722e73f060fd931c86f",
+  "commands": [
+    {
+      "command": "env -u VOYAGE_API_KEY backend/.venv/bin/python -m pytest backend/tests -q -p no:cacheprovider",
+      "exitCode": 0,
+      "summary": "6194 passed at ad4f8a5 (controller)"
+    },
+    {
+      "command": "env -u VOYAGE_API_KEY backend/.venv/bin/python -m pytest backend/tests/crawl backend/tests/context backend/tests/keywords -q -p no:cacheprovider",
+      "exitCode": 0,
+      "summary": "4447 passed at 6955ba0 (controller)"
+    },
+    {
+      "command": "npm --prefix frontend test",
+      "exitCode": 0,
+      "summary": "975 passed at ff4d4d1"
+    },
+    {
+      "command": "npm --prefix frontend run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "npm --prefix frontend run build",
+      "exitCode": 0
+    }
+  ],
+  "findings": [],
+  "tasks": [
+    {
+      "id": "T1",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "f883cfec75757e849835f4e381da4ddd5229ec42",
+      "commit": {
+        "sha": "8cfe1f9668b601e4309c8d58b1eb8ecd291864a5",
+        "message": "feat(crawl): 의도적 건너뜀(AdapterSkipped) 상태와 사유별 집계"
+      },
+      "review_commit": "8cfe1f9668b601e4309c8d58b1eb8ecd291864a5",
+      "review_verdict": "PASS",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue --wait --fresh (native Agent tool; implementer sessions separate from reviewer sessions)",
+      "red": "E   ImportError: cannot import name 'AdapterSkipped' from 'app.crawl.adapters.base' (/Users/yunho/Documents/dcx_agent-channels-build/backend/app/crawl/adapters/base.py)",
+      "green": "env -u VOYAGE_API_KEY backend/.venv/bin/python -m pytest backend/tests/crawl/test_skipped.py backend/tests/crawl -q: 446 passed (worker report)",
+      "review": "docs/development/channel-expansion/reviews/T1.json",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "codex:codex-rescue --wait --fresh (independent reviewer; review file records executor codex, freshSession true)",
+        "freshSession": true
+      },
+      "history": []
+    },
+    {
+      "id": "T2",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "9370c7c6b514fd043c84ee719606ffd1b86e3e14",
+      "commit": {
+        "sha": "ec7d54a7710bcdc21c897f0f67fb2d31b7dd48bd",
+        "message": "feat(crawl): 새 채널 4개 식별자 · URL 정규화 · 기본 한도 · 브이로그 설정"
+      },
+      "review_commit": "ec7d54a7710bcdc21c897f0f67fb2d31b7dd48bd",
+      "review_verdict": "PASS",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue --wait --fresh (native Agent tool; implementer sessions separate from reviewer sessions)",
+      "red": "E   ModuleNotFoundError: No module named 'app.crawl.channels'",
+      "green": "env -u VOYAGE_API_KEY backend/.venv/bin/python -m pytest backend/tests/crawl backend/tests/context backend/tests/keywords backend/tests/prep -q && npm --prefix frontend test: 2104 passed (worker report)",
+      "review": "docs/development/channel-expansion/reviews/T2.json",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "codex:codex-rescue --wait --fresh (independent reviewer; not the T2 implementer)",
+        "freshSession": true
+      },
+      "history": []
+    },
+    {
+      "id": "T3",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "88726fb2a51531e54da26ee8dcbf0b35b689e60f",
+      "commit": {
+        "sha": "ec0939e5da48ee6351aac7da2d76fad35ac9ab94",
+        "message": "fix(crawl): 마지막 길이 0 자막이 구간에서 빠지던 문제"
+      },
+      "review_commit": "ec0939e5da48ee6351aac7da2d76fad35ac9ab94",
+      "review_verdict": "PASS",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue --wait --fresh (native Agent tool; implementer sessions separate from reviewer sessions)",
+      "red": "Before the implementation fix: 9 failed, 23 passed, 1 warning in 0.15s. Six missing/null/zero-duration cases across fixed and constant embedding modes failed with ['first'] != ['first', 'last'] at test_captions.py:160. Three final-gap topic-change cases raised IndexError at captions.py:90.",
+      "green": "507 passed, 1 warning in 57.18s; includes all nine new regression cases and the existing fractional-end round-up test.",
+      "review": "docs/development/channel-expansion/reviews/T3-rereview.json",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "codex:codex-rescue --wait --fresh (new session, independent re-review)",
+        "freshSession": true
+      },
+      "history": [
+        {
+          "commit": {
+            "sha": "c1a9a0ef30c2b7877e53d2c15cfe1da62a081d89",
+            "message": "feat(crawl): 자막 json3 파싱과 임베딩 기반 화제 분할"
+          },
+          "base_commit": "d8df6561a23530b8382af886b1b4fd533183690b"
+        }
+      ]
+    },
+    {
+      "id": "T4",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "b2d0dc30d57496af60ea1cbc5616e2b6d1c475f9",
+      "commit": {
+        "sha": "2955470f96887a713d9ed3801527789532cd455f",
+        "message": "feat(crawl): 유튜브 브이로그 채널 — 한국어 자막 화제 구간 문서"
+      },
+      "review_commit": "2955470f96887a713d9ed3801527789532cd455f",
+      "review_verdict": "PASS",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue --wait --fresh (native Agent tool; implementer sessions separate from reviewer sessions)",
+      "red": "13 failed, 1 warning in 0.49s. All 13 failed before implementation with ModuleNotFoundError: No module named 'app.crawl.adapters.youtube_vlog'.",
+      "green": "520 passed, 1 warning in 57.43s. Full crawl suite passed after the controller-approved updates to three exact channel set/count expectations.",
+      "review": "docs/development/channel-expansion/reviews/T4.json",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "codex:codex-rescue --wait --fresh",
+        "freshSession": true
+      },
+      "history": []
+    },
+    {
+      "id": "T5",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "65e79d461b7d3c6c63b7ff9ceb7262a43d5063c9",
+      "commit": {
+        "sha": "ddbb89e1123e94881d9bb0485630d2a550a574ca",
+        "message": "fix(crawl): 지식iN 녹화본 최소화 · 허용 목록 개인정보 검사"
+      },
+      "review_commit": "ddbb89e1123e94881d9bb0485630d2a550a574ca",
+      "review_verdict": "PASS",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue --wait --fresh (native Agent tool; implementer sessions separate from reviewer sessions)",
+      "red": "Implementer: 8 failed, 555 passed before minimization (allowlist checker rejected all eight previous HTML fixtures).",
+      "green": "Controller run on the T5-only tree (T6 files set aside): 1339 passed, 1 warning in 58.78s. Targeted test_naver_kin.py: 819 passed. Combined T5+T6 tree also passed 1520.",
+      "review": "docs/development/channel-expansion/reviews/T5-rereview3.json",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "codex:codex-rescue --wait --fresh (new session, independent re-review round 3)",
+        "freshSession": true
+      },
+      "history": [
+        {
+          "commit": {
+            "sha": "3bf797a3dfdffd8850fffc512b34a513bca886fa",
+            "message": "feat(crawl): 지식iN 채널 — 질문 제목 · 본문만 수집"
+          },
+          "base_commit": "02d0a9ce9855fae949389cd52cf6a52318f69f24"
+        },
+        {
+          "commit": {
+            "sha": "155a8a4187bfb663c388e6da766574ce3b653db9",
+            "message": "fix(crawl): 지식iN 녹화본 식별자 가림 · 반복 페이지에서 넘김 중단"
+          },
+          "base_commit": "8c095bdf461a67d237fe33f8b0947e97ab6f3dd9"
+        },
+        {
+          "commit": {
+            "sha": "dbcd2b482e6b15580f92bcaed929a4a4c1abf3c4",
+            "message": "fix(crawl): 지식iN 녹화본 프로필 문구 가림 · 식별자 검사 강화"
+          },
+          "base_commit": "1f9bd04792f4c5bc0247a089fd33677bba4494a4"
+        }
+      ]
+    },
+    {
+      "id": "T6",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "fbaf3cbf4716851eeeeab823a382f466d1d54e64",
+      "commit": {
+        "sha": "b9562931048d63c054e11c050533a16a5753526d",
+        "message": "fix(crawl): 82쿡 개인정보 검사 — 원문 토큰 · 필드 단위 검증"
+      },
+      "review_commit": "b9562931048d63c054e11c050533a16a5753526d",
+      "review_verdict": "PASS",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue --wait --fresh (native Agent tool; implementer sessions separate from reviewer sessions)",
+      "red": "Implementer: 378 new regression cases failed against the previous checker; 373 existing passed.",
+      "green": "Controller run on the T6-only tree (T7/T8 work set aside): 3227 passed, 1 warning in 65.56s (0:01:05). Combined tree with T7 fix and T8: 3765 passed.",
+      "review": "docs/development/channel-expansion/reviews/T6-rereview2.json",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "codex:codex-rescue --wait --fresh (new session, independent re-review round 2)",
+        "freshSession": true
+      },
+      "history": [
+        {
+          "commit": {
+            "sha": "d43e7934bedd752866d3ae898a84962a94d11718",
+            "message": "feat(crawl): 82쿡 채널 — 자유게시판 본문 · 댓글, IP 미저장"
+          },
+          "base_commit": "ddbb89e1123e94881d9bb0485630d2a550a574ca"
+        },
+        {
+          "commit": {
+            "sha": "31ac6ec109381d0eb0b8ae24e7ba239704339224",
+            "message": "fix(crawl): 82쿡 개인정보 검사 — 중복 JSON 키 거부 · CDATA 검사"
+          },
+          "base_commit": "f67536839b8902d3118e37ec0c8d691f60a9cbc9"
+        }
+      ]
+    },
+    {
+      "id": "T7",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "4e34cc477b97b2000233e718ff732b5a198527ce",
+      "commit": {
+        "sha": "ad4f8a5af47819058b23b890658c7919bf67850b",
+        "message": "fix(test): Threads 렌더링 테스트 파일 이름 충돌 해소 (test_render_bridge.py)"
+      },
+      "review_commit": "ad4f8a5af47819058b23b890658c7919bf67850b",
+      "review_verdict": "PASS",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue --wait --fresh (native Agent tool; implementer sessions separate from reviewer sessions)",
+      "red": "Before the move: import file mismatch for tests/crawl/test_render.py; whole suite interrupted at collection (controller full run and implementer).",
+      "green": "Controller run: 4045 passed, 1 warning in 73.74s (0:01:13). Full collection: 6194 tests collected, 0 errors.",
+      "review": "docs/development/channel-expansion/reviews/T7-rereview3.json",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "codex:codex-rescue --wait --fresh (new session, independent re-review round 3)",
+        "freshSession": true
+      },
+      "history": [
+        {
+          "commit": {
+            "sha": "369b686a23bff366ae47fb4f8bdeb094fdd16a6c",
+            "message": "feat(crawl): Threads 채널 — 로그인 없는 검색 화면(Crawl4AI), API 교체 경계"
+          },
+          "base_commit": "31ac6ec109381d0eb0b8ae24e7ba239704339224"
+        },
+        {
+          "commit": {
+            "sha": "04aad8212541d002b96980add32bc9ebbd8077e5",
+            "message": "fix(crawl): Threads 렌더링 — 시작 취소 정리 · 오류 변환, 개인정보 검사 강화"
+          },
+          "base_commit": "b9562931048d63c054e11c050533a16a5753526d"
+        },
+        {
+          "commit": {
+            "sha": "cc260751782be7b9aed29f4ca5f4c24345f8644e",
+            "message": "fix(crawl): Threads 렌더링 — 종료 정리 시간 제한 · 남은 작업 정리"
+          },
+          "base_commit": "5d33294ed3cf719e69e468ce0436fb1e8d79e802"
+        }
+      ]
+    },
+    {
+      "id": "T8",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "6955ba0256d60043b1410871a3f56445e578c6b2",
+      "commit": {
+        "sha": "ff4d4d163021e0c476897be0abecdb440f3996f1",
+        "message": "fix(ui): 키워드 막대 목록의 React 키를 저장 키워드로"
+      },
+      "review_commit": "ff4d4d163021e0c476897be0abecdb440f3996f1",
+      "review_verdict": "PASS",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue --wait --fresh (native Agent tool; implementer sessions separate from reviewer sessions)",
+      "red": "Implementer: regression test failed on display-label-based keys.",
+      "green": "Controller run: 975 passed; lint exit 0.",
+      "review": "docs/development/channel-expansion/review.json",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "codex:codex-rescue --wait --fresh (whole-branch re-review round 2; not an implementer or task reviewer)",
+        "freshSession": true
+      },
+      "history": [
+        {
+          "commit": {
+            "sha": "3835a66eeaee9a95420802c42fd2d0c498377c44",
+            "message": "feat(ui): 크롤링 화면 — 새 채널 4개, 브이로그 설정, 건너뜀 사유 표"
+          },
+          "base_commit": "04aad8212541d002b96980add32bc9ebbd8077e5"
+        },
+        {
+          "commit": {
+            "sha": "c597b2a678231016e51b0d3644f3d6df921810c2",
+            "message": "fix(crawl): 브이로그 영상 수를 채널별 고유 완료 URL로 계산"
+          },
+          "base_commit": "cffbb091b33357d788f613e6f4fa3d397e975fd6"
+        },
+        {
+          "commit": {
+            "sha": "99606c7b8501a9da55a13299969e4a2fbf63e214",
+            "message": "fix(ui): 좁은 화면에서 채널 설정 · 건너뛴 항목 표를 가로 스크롤로"
+          },
+          "base_commit": "c597b2a678231016e51b0d3644f3d6df921810c2"
+        },
+        {
+          "commit": {
+            "sha": "8d99f5323e800a0860f363751c783a4551b69714",
+            "message": "fix(ui): 표 가로 스크롤을 좁은 화면에만 적용"
+          },
+          "base_commit": "99606c7b8501a9da55a13299969e4a2fbf63e214"
+        },
+        {
+          "commit": {
+            "sha": "6955ba0256d60043b1410871a3f56445e578c6b2",
+            "message": "fix(crawl): 크롤링 화면 키워드 표시형 · 과거 버전 수집 결과 보기"
+          },
+          "base_commit": "8d99f5323e800a0860f363751c783a4551b69714"
+        }
+      ]
+    },
+    {
+      "id": "T9",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "192386be79663c13647c17a45b7b277e47c457f3",
+      "commit": {
+        "sha": "4b1ef2a9f09e62867c67bcd2b460f39b7c92bef0",
+        "message": "test(crawl): 새 채널 통합 흐름 확인 · 브라우저 QA 훅"
+      },
+      "review_commit": "4b1ef2a9f09e62867c67bcd2b460f39b7c92bef0",
+      "review_verdict": "PASS",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue --wait --fresh (native Agent tool; implementer sessions separate from reviewer sessions)",
+      "red": "Implementer first run: 2 failed, 1 passed, 15 errors (ModuleNotFoundError for the unimplemented hook); the integration flow passed on first run, as the plan expects once T1–T7 are done.",
+      "green": "Controller run: 3783 passed, 1 warning in 71.28s (0:01:11). Targeted hook + flow: 18 passed.",
+      "review": "docs/development/channel-expansion/reviews/T9.json",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "codex:codex-rescue --wait --fresh (independent reviewer; not the T9 implementer)",
+        "freshSession": true
+      },
+      "history": []
+    }
+  ],
+  "notes": [
+    "Process deviation: tasks overlapped (e.g. T6/T7 implementation started before T5's review PASS) to save time; every task commit was still gated individually by repository-gate and reviewed on its own fixed range by a fresh Codex reviewer before build completion.",
+    "T7-R4 (wiring test location) overruled by the controller: plan T7 Step 1 places the test in test_adapter_wiring.py.",
+    "Non-independent T3/T5 re-reviews (resumed implementer thread) were discarded and redone by fresh sessions; see reviews/T3-rereview.json, T5-rereview*.json.",
+    "Whole-branch review round 1 FAIL (reviews/final-review-1.json, WB-R1) fixed in c597b2a; round 2 PASS (review.json).",
+    "Browser QA attempt 2 failed QA-EDGE-003 (mobile tables); fixed in 99606c7, whose desktop side effect (WB-R3-1, reviews/final-review-3.json) was fixed in 8d99f53; review round 4 PASS (review.json).",
+    "Browser QA attempt 4 (qa-attempt4/) failed QA-E2E-003 and QA-EDGE-002 on pre-existing behaviour; user decided (2026-10-20) to fix both in the product; fixed in 6955ba0; review round 5 PASS (review.json).",
+    "Review round 5 P3 WB-R5-1 fixed in ff4d4d1; review round 6 PASS with no findings (review.json)."
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "task": "T5",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh (new session, independent re-review round 2)",
+  "base_commit": "02d0a9ce9855fae949389cd52cf6a52318f69f24",
+  "review_commit": "dbcd2b482e6b15580f92bcaed929a4a4c1abf3c4",
+  "verdict": "FAIL",
+  "previous_findings": [
+    {
+      "id": "T5-P2-fixture-identifiers",
+      "resolved": false
+    },
+    {
+      "id": "T5-P2-repeated-pages",
+      "resolved": true
+    }
+  ],
+  "commands": [
+    "git rev-parse dbcd2b4",
+    "git diff --name-status 02d0a9ce9855fae949389cd52cf6a52318f69f24..dbcd2b4 -- backend/",
+    "git diff --stat 02d0a9ce9855fae949389cd52cf6a52318f69f24..dbcd2b4 -- backend/",
+    "git diff --check 02d0a9ce9855fae949389cd52cf6a52318f69f24..dbcd2b4 -- backend/",
+    "git diff 02d0a9ce9855fae949389cd52cf6a52318f69f24..dbcd2b4 -- backend/app backend/tests/crawl",
+    "git diff 155a8a4..dbcd2b4 -- backend/tests/fixtures/http/naver_kin/",
+    "git diff 155a8a4..dbcd2b4 -- backend/app/",
+    "Read 03-plan.md Global Constraints, Task T5 and Plan Eng Review item 1; 02-design.md section 3.3; reports/T0.md T5 correction; reviews/T5.json and T5-rereview.json.",
+    "SNAP=$(mktemp -d \"$TMPDIR/t5snap-rereview2.XXXXXX\") && git archive dbcd2b4 backend | tar -x -C \"$SNAP\"",
+    "cd \"$SNAP\" && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+    "/Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python /tmp/t5_rereview2_audit.py (independent fixed-point decoding of all nine snapshot fixtures; inspect visible text, identity fields, contact patterns, 180 unique URLs and 33 image attribute sets)",
+    "/Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python /tmp/t5_rereview2_mutations.py (AST-load committed privacy assertion and helpers; call against memory-backed fixture objects; 200 encoded category mutations plus 13 whitelist boundary probes)",
+    "cd \"$SNAP\" && env -u VOYAGE_API_KEY PYTHONPATH=backend /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python /tmp/t5_rereview2_behavior.py",
+    "Read snapshot fixture line numbers with nl; independently inspect all visible text and account/URL/embedded-identity candidates; probe plain and encoded analytics keys and an unquoted member-ID assignment in memory.",
+    "Write and JSON-validate only docs/development/channel-expansion/reviews/T5-rereview2.json in the repository."
+  ],
+  "findings": [
+    {
+      "id": "T5-P2-fixture-identifiers",
+      "severity": "P2",
+      "file": "backend/tests/fixtures/http/naver_kin/list-1.html:618",
+      "issue": "Fixture anonymization remains incomplete. Search-result answerer labels retain captured display names, including identifying business names, before the synthetic parenthesized user IDs. There are 13 occurrences across the two list fixtures. All three question fixtures also retain a captured question-author analytics identifier in baQuestionUserKey. The privacy assertion accepts every current fixture because its name checks omit search-result dd.txt_block text and its embedded-identity checks omit these JavaScript user-key assignments. This violates T5 nickname masking and the requested removal of real account/business identifiers.",
+      "evidence": [
+        "Remaining answerer display labels: backend/tests/fixtures/http/naver_kin/list-1.html:618, :648, :675, :702, :759; backend/tests/fixtures/http/naver_kin/list-2.html:497, :527, :557, :594, :655, :709, :736, :763. Values are intentionally not reproduced.",
+        "Captured baQuestionUserKey assignments: backend/tests/fixtures/http/naver_kin/question-1.html:4975, question-2.html:5167, question-3.html:4946. Each is a non-synthetic opaque author key passed to the following analytics scene-enter helper. Values are intentionally not reproduced.",
+        "backend/tests/crawl/adapters/test_naver_kin.py:306 restricts visible-name coverage to profile/career/introduction/expert-card selectors; it never checks the list answerer text. The embedded-identity regex at :287 only recognizes selected quoted property names and does not cover baQuestionUserKey assignments.",
+        "The exact committed test_fixture_identifiers_are_synthetic assertion passes all nine fixtures. Independent in-memory list-name and list-business insertions pass incorrectly in all eight tested encodings: raw, HTML entities, percent, double percent, Unicode escapes, mixed hex/Unicode escapes, escaped slashes and nested encodings (16 missed mutations).",
+        "Additional plain and encoded synthetic mutations of baQuestionUserKey, and an unquoted member-ID assignment, also pass incorrectly. No real identifier was used in the report or mutation payloads."
+      ],
+      "fix": "Replace every remaining list answerer display name/business label and captured question-author analytics key with consistent synthetic values while retaining markup. Extend the privacy assertion to list answerer labels and identity-bearing JavaScript assignments/user-key fields, with encoded mutation regressions for these exact locations. Re-run the decoded audit across every fixture, not only profile cards."
+    },
+    {
+      "id": "T5-P2-privacy-whitelist-boundaries",
+      "severity": "P2",
+      "file": "backend/tests/crawl/adapters/test_naver_kin.py:236",
+      "issue": "The requested narrow-exemption property is not satisfied. A matching help-panel text row causes the complete li HTML, including attributes, to be removed from contact scanning. Adding an email or phone in an attribute of that row therefore passes the privacy assertion. Separately, the store/product identifier regex accepts an allowed template prefix without consuming trailing identifier text, so a whitelisted template followed by an account suffix is accepted.",
+      "evidence": [
+        "Independent boundary probes preserve the exact allowed help-row text and add a synthetic email or phone in data-contact. Both return no violations because :238 removes node.html wholesale.",
+        "At backend/tests/crawl/adapters/test_naver_kin.py:273, the template alternative stops at the closing braces. A storeId value containing the allowed product.storeId template followed immediately by a synthetic account suffix returns no violations; the suffix is outside the captured identifier.",
+        "Of 13 whitelist boundary probes, these three fail. The remaining probes correctly preserve complete SE UUID IDs and exact templates, reject nearby malformed IDs and non-whitelisted template expressions, reject extra help-row contact text and help numbers outside the panel, and reject a rank label placed in name/career fields."
+      ],
+      "fix": "Exempt only the verified public-service number text while continuing to scan attributes and other content. Parse the entire identifier value and require an exact template match with no trailing material. Add regression mutations for both boundaries."
+    }
+  ],
+  "notes": [
+    "This is a brand-new independent review session. This session did not participate in implementing T5 or in any earlier review of T5. Prior review artifacts were read only as review input.",
+    "All product/test/fixture inspection used the committed range or an exported snapshot of review_commit. No tests were run against the concurrent working tree. The only repository file created by this session is docs/development/channel-expansion/reviews/T5-rereview2.json; no other repository files, index entries or Git refs were modified.",
+    "The supplied rm -rf snapshot setup was rejected by the command safety guard before execution. A fresh mktemp directory was used instead: /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/t5snap-rereview2.Hs8FbD. Temporary audit scripts/output were written only outside the repository. No excluded salt, .env or other secret file was needed or copied.",
+    "Snapshot crawl suite: 593 passed, one existing Pydantic class-config deprecation warning, 57.42 seconds, exit code 0. VOYAGE_API_KEY was removed with env -u and pytest cache was disabled.",
+    "Scope passes: exactly the approved 16 backend files across the cumulative range, including the approved source-set/count changes in test_crawl_api.py, test_final_w4.py and test_fixture_adapter.py. git diff --check passes.",
+    "The prior profile-career business/contact leak at question-2.html:1375 is now synthetic. Previously identified blog/profile/store/product URL and avatar replacements remain synthetic. The broader fixture-identifiers finding stays unresolved because of the remaining names and author keys described above.",
+    "Independent decoding repeatedly applied HTML entities, percent encoding, escaped slashes, Unicode and hex escapes until stable. The audit included all nine files, visible text, raw/decoded attributes and scripts, emails, mobile/legacy/landline/internet/international/service phone patterns, contact hashtags, starred IDs, blog/influencer/expert/store/product/profile/member/user-key data, profile careers/introduction text, business labels and image URLs. No additional contact or starred-account leak was identified; telephone candidates were site-help boilerplate or UUID fragments. Profile/account thumbnails examined were synthetic or site-default assets; retained question-media URLs were distinguished from account avatars.",
+    "Privacy mutation coverage: 184 of 200 category/encoding mutations are rejected by the actual committed assertion. The 16 misses are list-visible names and business labels; additional analytics/member assignment probes and three whitelist probes also expose gaps. The checker is meaningful for email, tested Korean phone forms, contact hashtags, starred accounts, encoded blog/influencer/expert/store/product/profile/member JSON, profile names/careers/introduction/business text and account-image categories, but it is not sufficient for this acceptance requirement.",
+    "Repeated-page behavior is resolved and unchanged from 155a8a4. Independent MockTransport probes confirm repeated later pages terminate; original-cursor and terminal-cursor retries preserve their respective behavior; interleaved keywords stay independent; restarting page 1 works. The committed suite also tests the 256-keyword history bound.",
+    "No silent empty-page regression found: absent result rows without a known no-result marker, missing result links and missing either question ID raise ValueError. Explicit no-result markers terminate with an empty page. The actual no-result fixture respects the T0 correction.",
+    "Independent head-only deletion probes for all three recognized deletion phrases raise AdapterSkipped with reason deleted. For all three question captures, replacing answer bodies with a sentinel leaves fetched question text free of the sentinel and comments empty. Dates equal the question 작성일 rather than the supplied search date. Removing the 작성일 label yields date=None, without borrowing an answer/search date. Captured question and answer text lengths satisfy the 80-character limit.",
+    "No implementation change was made in response to these findings. The FAIL verdict is for the fixture privacy requirement and its regression-test exemptions; adapter behavior and approved file scope passed."
+  ]
+}

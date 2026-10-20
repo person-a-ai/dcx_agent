@@ -1,0 +1,72 @@
+[
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-main/crawl/s022667b4b6674eef9f3c2747db878043/collections/c1/list.log",
+    "copy": "docs/development/channel-expansion/qa/server-logs/main/list.log",
+    "bytes": 33
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-main/crawl/s022667b4b6674eef9f3c2747db878043/collections/c1/detail.log",
+    "copy": "docs/development/channel-expansion/qa/server-logs/main/detail.log",
+    "bytes": 0
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-main/crawl/s022667b4b6674eef9f3c2747db878043/collections/c1/report.json",
+    "copy": "docs/development/channel-expansion/qa/server-logs/main/report.json",
+    "bytes": 4710
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-main/crawl/s022667b4b6674eef9f3c2747db878043/collections/c1/worker_state.json",
+    "copy": "docs/development/channel-expansion/qa/server-logs/main/worker_state.json",
+    "bytes": 674
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-main/crawl/s022667b4b6674eef9f3c2747db878043/collections/c1/queue.sqlite",
+    "copy": "docs/development/channel-expansion/qa/server-logs/main/queue.sqlite",
+    "bytes": 159744
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-neg003/crawl/s3db7f3a5f68c422094288eab1893554e/collections/c1/list.log",
+    "copy": "docs/development/channel-expansion/qa/server-logs/neg003/list.log",
+    "bytes": 33
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-neg003/crawl/s3db7f3a5f68c422094288eab1893554e/collections/c1/detail.log",
+    "copy": "docs/development/channel-expansion/qa/server-logs/neg003/detail.log",
+    "bytes": 0
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-neg003/crawl/s3db7f3a5f68c422094288eab1893554e/collections/c1/report.json",
+    "copy": "docs/development/channel-expansion/qa/server-logs/neg003/report.json",
+    "bytes": 1568
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-neg003/crawl/s3db7f3a5f68c422094288eab1893554e/collections/c1/worker_state.json",
+    "copy": "docs/development/channel-expansion/qa/server-logs/neg003/worker_state.json",
+    "bytes": 365
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-neg003/crawl/s3db7f3a5f68c422094288eab1893554e/collections/c1/queue.sqlite",
+    "copy": "docs/development/channel-expansion/qa/server-logs/neg003/queue.sqlite",
+    "bytes": 131072
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-sample/crawl/s82ed119fadc940a6b6a4c787518a6aed/collections/c1/list.log",
+    "exists": false
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-sample/crawl/s82ed119fadc940a6b6a4c787518a6aed/collections/c1/detail.log",
+    "exists": false
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-sample/crawl/s82ed119fadc940a6b6a4c787518a6aed/collections/c1/report.json",
+    "exists": false
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-sample/crawl/s82ed119fadc940a6b6a4c787518a6aed/collections/c1/worker_state.json",
+    "exists": false
+  },
+  {
+    "source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-sample/crawl/s82ed119fadc940a6b6a4c787518a6aed/collections/c1/queue.sqlite",
+    "exists": false
+  }
+]

@@ -4,10 +4,13 @@ import type { PrepConfig, PrepStatus } from '../../lib/types';
 export const DEFAULT_BOILERPLATE: Record<string, string[]> = {
   naver_cafe: ['카페 회원이 되시면 전체 내용을 볼 수 있습니다.', '카페 가입하기'],
   naver_blog: ['공감', '이웃추가'], clien: [], ppomppu: [], youtube: [],
+  youtube_vlog: [], threads: [], naver_kin: [], cook82: [],
 };
 export const CHANNELS = [
   ['naver_cafe', '네이버 카페'], ['naver_blog', '네이버 블로그'],
   ['youtube', '유튜브'], ['ppomppu', '뽐뿌'], ['clien', '클리앙'],
+  ['youtube_vlog', '유튜브 브이로그'], ['threads', 'Threads'],
+  ['naver_kin', '지식iN'], ['cook82', '82쿡'],
 ] as const;
 export type PrepSession = {
   labeling?: { started?: boolean };

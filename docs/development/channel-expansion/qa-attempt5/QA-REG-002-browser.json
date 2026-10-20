@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\"time\":\"2026-10-20T13:22:44.063Z\",\"url\":\"http://localhost:3010/pipeline/crawling\",\"groups\":[{\"group\":\"유튜브 브이로그\\n동시성\\n요청 간격(초)\\n키워드당 상한\",\"values\":[\"2\",\"0\",\"1000\"]},{\"group\":\"Threads\\n동시성\\n요청 간격(초)\\n키워드당 상한\",\"values\":[\"1\",\"2\",\"1000\"]},{\"group\":\"지식iN\\n동시성\\n요청 간격(초)\\n키워드당 상한\",\"values\":[\"1\",\"0.5\",\"1000\"]},{\"group\":\"82쿡\\n동시성\\n요청 간격(초)\\n키워드당 상한\",\"values\":[\"1\",\"0.5\",\"1000\"]},{\"group\":\"유튜브 댓글\\n동시성\\n요청 간격(초)\\n키워드당 상한\",\"values\":[\"2\",\"0\",\"1000\"]},{\"group\":\"네이버 카페\\n동시성\\n요청 간격(초)\\n키워드당 상한\",\"values\":[\"1\",\"0.5\",\"1000\"]},{\"group\":\"네이버 블로그\\n동시성\\n요청 간격(초)\\n키워드당 상한\",\"values\":[\"1\",\"0.5\",\"1000\"]},{\"group\":\"뽐뿌\\n동시성\\n요청 간격(초)\\n키워드당 상한\",\"values\":[\"1\",\"0.5\",\"1000\"]},{\"group\":\"클리앙\\n동시성\\n요청 간격(초)\\n키워드당 상한\",\"values\":[\"1\",\"0.5\",\"1000\"]}],\"youtube\":{\"videos\":\"20\",\"comments\":\"500\"}}\n### Ran Playwright code\n```js\nawait (async(page)=>{const groups=await page.getByLabel('동시성',{exact:true}).evaluateAll(es=>es.map(e=>({group:e.parentElement.parentElement.parentElement.innerText,values:[...e.parentElement.parentElement.querySelectorAll('input')].map(i=>i.value)})));const youtube={videos:await page.getByLabel('키워드당 영상 수',{exact:true}).first().inputValue(),comments:await page.getByLabel('영상당 최대 댓글',{exact:true}).inputValue()};await page.getByLabel('영상당 최대 댓글',{exact:true}).scrollIntoViewIfNeeded();await page.screenshot({path:page.qaDir+'QA-REG-002.png'});return {time:new Date().toISOString(),url:page.url(),groups,youtube};})(page);\n```"
+    }
+  ]
+}

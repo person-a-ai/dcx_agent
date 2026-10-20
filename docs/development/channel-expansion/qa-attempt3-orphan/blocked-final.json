@@ -1,0 +1,1053 @@
+{
+  "requests": [
+    {
+      "time": "2026-10-20T07:42:47.700Z",
+      "method": "GET",
+      "url": "http://localhost:3002/"
+    },
+    {
+      "time": "2026-10-20T07:42:48.248Z",
+      "method": "GET",
+      "url": "http://localhost:3002/pipeline/start"
+    },
+    {
+      "time": "2026-10-20T07:42:48.664Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/image?url=%2Fperson-a-logo.png&w=256&q=75"
+    },
+    {
+      "time": "2026-10-20T07:42:48.664Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/css/app/layout.css?v=1792482168582"
+    },
+    {
+      "time": "2026-10-20T07:42:48.664Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/css/app/pipeline/layout.css?v=1792482168582"
+    },
+    {
+      "time": "2026-10-20T07:42:48.664Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/chunks/webpack.js?v=1792482168582"
+    },
+    {
+      "time": "2026-10-20T07:42:48.664Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/chunks/main-app.js?v=1792482168582"
+    },
+    {
+      "time": "2026-10-20T07:42:48.664Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/chunks/app-pages-internals.js"
+    },
+    {
+      "time": "2026-10-20T07:42:48.664Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/chunks/app/pipeline/layout.js"
+    },
+    {
+      "time": "2026-10-20T07:42:48.664Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/chunks/app/pipeline/start/page.js"
+    },
+    {
+      "time": "2026-10-20T07:42:48.751Z",
+      "method": "GET",
+      "url": "http://localhost:3002/fonts/Pretendard-Bold.otf"
+    },
+    {
+      "time": "2026-10-20T07:42:48.751Z",
+      "method": "GET",
+      "url": "http://localhost:3002/fonts/Pretendard-Regular.otf"
+    },
+    {
+      "time": "2026-10-20T07:42:48.751Z",
+      "method": "GET",
+      "url": "http://localhost:3002/fonts/Pretendard-SemiBold.otf"
+    },
+    {
+      "time": "2026-10-20T07:42:49.175Z",
+      "method": "GET",
+      "url": "http://localhost:3002/favicon.ico?603d046c9a6fdfbb"
+    },
+    {
+      "time": "2026-10-20T07:42:49.182Z",
+      "method": "GET",
+      "url": "http://localhost:3002/pipeline/crawling"
+    },
+    {
+      "time": "2026-10-20T07:42:49.198Z",
+      "method": "GET",
+      "url": "http://localhost:8002/integrations"
+    },
+    {
+      "time": "2026-10-20T07:42:49.199Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e"
+    },
+    {
+      "time": "2026-10-20T07:42:49.226Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:42:49.226Z",
+      "method": "GET",
+      "url": "http://localhost:8002/integrations"
+    },
+    {
+      "time": "2026-10-20T07:42:49.226Z",
+      "method": "GET",
+      "url": "http://localhost:8002/known/s3db7f3a5f68c422094288eab1893554e"
+    },
+    {
+      "time": "2026-10-20T07:42:49.226Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions/s3db7f3a5f68c422094288eab1893554e/versions"
+    },
+    {
+      "time": "2026-10-20T07:42:49.228Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:42:49.228Z",
+      "method": "GET",
+      "url": "http://localhost:8002/integrations"
+    },
+    {
+      "time": "2026-10-20T07:42:49.228Z",
+      "method": "GET",
+      "url": "http://localhost:8002/known/s3db7f3a5f68c422094288eab1893554e"
+    },
+    {
+      "time": "2026-10-20T07:42:49.352Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.384Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:42:49.384Z",
+      "method": "GET",
+      "url": "http://localhost:8002/context/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.384Z",
+      "method": "GET",
+      "url": "http://localhost:8002/known/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.384Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions/s3db7f3a5f68c422094288eab1893554e/versions"
+    },
+    {
+      "time": "2026-10-20T07:42:49.384Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:42:49.384Z",
+      "method": "GET",
+      "url": "http://localhost:8002/context/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.395Z",
+      "method": "GET",
+      "url": "http://localhost:3002/fonts/Pretendard-ExtraBold.otf"
+    },
+    {
+      "time": "2026-10-20T07:42:49.397Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.519Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/image?url=%2Fperson-a-logo.png&w=256&q=75"
+    },
+    {
+      "time": "2026-10-20T07:42:49.521Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/css/app/layout.css?v=1792482169428"
+    },
+    {
+      "time": "2026-10-20T07:42:49.521Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/css/app/pipeline/layout.css?v=1792482169428"
+    },
+    {
+      "time": "2026-10-20T07:42:49.521Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/chunks/webpack.js?v=1792482169428"
+    },
+    {
+      "time": "2026-10-20T07:42:49.521Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/chunks/main-app.js?v=1792482169428"
+    },
+    {
+      "time": "2026-10-20T07:42:49.521Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/chunks/app-pages-internals.js"
+    },
+    {
+      "time": "2026-10-20T07:42:49.521Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/chunks/app/pipeline/layout.js"
+    },
+    {
+      "time": "2026-10-20T07:42:49.521Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/chunks/app/pipeline/crawling/page.js"
+    },
+    {
+      "time": "2026-10-20T07:42:49.521Z",
+      "method": "GET",
+      "url": "http://localhost:3002/_next/static/css/app/pipeline/crawling/page.css?v=1792482169428"
+    },
+    {
+      "time": "2026-10-20T07:42:49.521Z",
+      "method": "GET",
+      "url": "http://localhost:3002/fonts/Pretendard-Bold.otf"
+    },
+    {
+      "time": "2026-10-20T07:42:49.521Z",
+      "method": "GET",
+      "url": "http://localhost:3002/fonts/Pretendard-Regular.otf"
+    },
+    {
+      "time": "2026-10-20T07:42:49.521Z",
+      "method": "GET",
+      "url": "http://localhost:3002/fonts/Pretendard-SemiBold.otf"
+    },
+    {
+      "time": "2026-10-20T07:42:49.882Z",
+      "method": "GET",
+      "url": "http://localhost:3002/favicon.ico?603d046c9a6fdfbb"
+    },
+    {
+      "time": "2026-10-20T07:42:49.896Z",
+      "method": "GET",
+      "url": "http://localhost:8002/integrations"
+    },
+    {
+      "time": "2026-10-20T07:42:49.897Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e"
+    },
+    {
+      "time": "2026-10-20T07:42:49.915Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:42:49.916Z",
+      "method": "GET",
+      "url": "http://localhost:8002/integrations"
+    },
+    {
+      "time": "2026-10-20T07:42:49.916Z",
+      "method": "GET",
+      "url": "http://localhost:8002/known/s3db7f3a5f68c422094288eab1893554e"
+    },
+    {
+      "time": "2026-10-20T07:42:49.916Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions/s3db7f3a5f68c422094288eab1893554e/versions"
+    },
+    {
+      "time": "2026-10-20T07:42:49.916Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:42:49.916Z",
+      "method": "GET",
+      "url": "http://localhost:8002/integrations"
+    },
+    {
+      "time": "2026-10-20T07:42:49.916Z",
+      "method": "GET",
+      "url": "http://localhost:8002/known/s3db7f3a5f68c422094288eab1893554e"
+    },
+    {
+      "time": "2026-10-20T07:42:49.918Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.946Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.946Z",
+      "method": "GET",
+      "url": "http://localhost:8002/integrations"
+    },
+    {
+      "time": "2026-10-20T07:42:49.947Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:42:49.947Z",
+      "method": "GET",
+      "url": "http://localhost:8002/known/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.947Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions/s3db7f3a5f68c422094288eab1893554e/versions"
+    },
+    {
+      "time": "2026-10-20T07:42:49.948Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.948Z",
+      "method": "GET",
+      "url": "http://localhost:8002/integrations"
+    },
+    {
+      "time": "2026-10-20T07:42:49.949Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:42:49.954Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.954Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.954Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:49.961Z",
+      "method": "GET",
+      "url": "http://localhost:3002/fonts/Pretendard-ExtraBold.otf"
+    },
+    {
+      "time": "2026-10-20T07:42:50.073Z",
+      "method": "POST",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/list?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:50.103Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:42:50.113Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:59.917Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:42:59.946Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions/s3db7f3a5f68c422094288eab1893554e/versions"
+    },
+    {
+      "time": "2026-10-20T07:42:59.950Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:42:59.980Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:42:59.992Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:43:00.470Z",
+      "method": "POST",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/detail?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:43:00.495Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:09.917Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:43:09.946Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions/s3db7f3a5f68c422094288eab1893554e/versions"
+    },
+    {
+      "time": "2026-10-20T07:43:09.950Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:43:09.997Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:13.009Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:16.020Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:19.031Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:19.912Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:43:19.946Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions/s3db7f3a5f68c422094288eab1893554e/versions"
+    },
+    {
+      "time": "2026-10-20T07:43:19.949Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:43:22.039Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:25.047Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:28.065Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:29.915Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:43:29.946Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions/s3db7f3a5f68c422094288eab1893554e/versions"
+    },
+    {
+      "time": "2026-10-20T07:43:29.950Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:43:31.084Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:34.096Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:37.131Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:39.912Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:43:39.946Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions/s3db7f3a5f68c422094288eab1893554e/versions"
+    },
+    {
+      "time": "2026-10-20T07:43:39.949Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:43:40.144Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:49.928Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:43:49.947Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions/s3db7f3a5f68c422094288eab1893554e/versions"
+    },
+    {
+      "time": "2026-10-20T07:43:49.964Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:43:50.155Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:43:59.913Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions"
+    },
+    {
+      "time": "2026-10-20T07:43:59.945Z",
+      "method": "GET",
+      "url": "http://localhost:8002/sessions/s3db7f3a5f68c422094288eab1893554e/versions"
+    },
+    {
+      "time": "2026-10-20T07:43:59.947Z",
+      "method": "GET",
+      "url": "http://localhost:8002/session/s3db7f3a5f68c422094288eab1893554e?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:44:00.170Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    },
+    {
+      "time": "2026-10-20T07:44:06.974Z",
+      "method": "POST",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/finish-partial?version=v1"
+    },
+    {
+      "time": "2026-10-20T07:44:07.098Z",
+      "method": "GET",
+      "url": "http://localhost:8002/crawl/s3db7f3a5f68c422094288eab1893554e/status"
+    }
+  ],
+  "console": [
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+    },
+    {
+      "type": "log",
+      "text": "[HMR] connected"
+    },
+    {
+      "type": "warning",
+      "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+    },
+    {
+      "type": "log",
+      "text": "[Fast Refresh] rebuilding"
+    },
+    {
+      "type": "log",
+      "text": "[Fast Refresh] done in 158ms"
+    },
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+    },
+    {
+      "type": "log",
+      "text": "[HMR] connected"
+    },
+    {
+      "type": "warning",
+      "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+    }
+  ],
+  "settings": {
+    "time": "2026-10-20T07:42:49.979Z",
+    "dom": "- main:\n  - group:\n    - button \"이 단계부터 다시\"\n    - text: 2단계 · 크롤링\n    - heading \"확정 키워드 3개로 목록을 수집합니다\" [level=1]\n    - paragraph: 먼저 채널별 글 목록(URL)만 모읍니다. 수집 효율을 확인한 뒤 본문·댓글 수집을 시작합니다. 검색어에는 제품명을 붙이지 않습니다.\n    - heading \"채널\" [level=2]\n    - paragraph: 0-A 수집 채널에서 가져왔습니다\n    - region \"수집 채널 스크롤\":\n      - table \"수집 채널\":\n        - rowgroup:\n          - row \"채널 목록 · 본문 연결 내부용 사용\":\n            - columnheader \"채널\"\n            - columnheader \"목록 · 본문\"\n            - columnheader \"연결 내부용\"\n            - columnheader \"사용\"\n        - rowgroup:\n          - row \"네이버 카페 검색 결과 화면 · 본문 (회원 전용 글은 제외) 사용 가능 네이버 카페 사용하기\":\n            - cell \"네이버 카페\"\n            - cell \"검색 결과 화면 · 본문 (회원 전용 글은 제외)\"\n            - cell \"사용 가능\"\n            - cell \"네이버 카페 사용하기\":\n              - switch \"네이버 카페 사용하기\"\n              - text: 네이버 카페 사용하기\n          - row \"네이버 블로그 검색 결과 화면 · 본문 사용 가능 네이버 블로그 사용하기\":\n            - cell \"네이버 블로그\"\n            - cell \"검색 결과 화면 · 본문\"\n            - cell \"사용 가능\"\n            - cell \"네이버 블로그 사용하기\":\n              - switch \"네이버 블로그 사용하기\"\n              - text: 네이버 블로그 사용하기\n          - row \"유튜브 댓글 영상 검색 · 댓글 스레드 사용 가능 유튜브 댓글 사용하기\":\n            - cell \"유튜브 댓글\"\n            - cell \"영상 검색 · 댓글 스레드\"\n            - cell \"사용 가능\"\n            - cell \"유튜브 댓글 사용하기\":\n              - switch \"유튜브 댓글 사용하기\"\n              - text: 유튜브 댓글 사용하기\n          - row \"유튜브 브이로그 새 채널 \\\"키워드 브이로그\\\" 영상 검색 · 한국어 자막을 화제 단위로 나눠 문서화 사용 가능 유튜브 브이로그 사용하기\":\n            - cell \"유튜브 브이로그 새 채널\"\n            - cell \"\\\"키워드 브이로그\\\" 영상 검색 · 한국어 자막을 화제 단위로 나눠 문서화\"\n            - cell \"사용 가능\"\n            - cell \"유튜브 브이로그 사용하기\":\n              - switch \"유튜브 브이로그 사용하기\"\n              - text: 유튜브 브이로그 사용하기\n          - row \"Threads 새 채널 검색 화면(로그인 없음) · 글 본문 · 키워드당 약 20건 사용 가능 Threads 사용하기\":\n            - cell \"Threads 새 채널\"\n            - cell \"검색 화면(로그인 없음) · 글 본문 · 키워드당 약 20건\"\n            - cell \"사용 가능\"\n            - cell \"Threads 사용하기\":\n              - switch \"Threads 사용하기\" [checked]\n              - text: Threads 사용하기\n          - row \"지식iN 새 채널 질문 검색 · 질문 제목과 본문 (답변 제외) 사용 가능 지식iN 사용하기\":\n            - cell \"지식iN 새 채널\"\n            - cell \"질문 검색 · 질문 제목과 본문 (답변 제외)\"\n            - cell \"사용 가능\"\n            - cell \"지식iN 사용하기\":\n              - switch \"지식iN 사용하기\"\n              - text: 지식iN 사용하기\n          - row \"82쿡 새 채널 자유게시판 검색 · 본문 · 댓글 사용 가능 82쿡 사용하기\":\n            - cell \"82쿡 새 채널\"\n            - cell \"자유게시판 검색 · 본문 · 댓글\"\n            - cell \"사용 가능\"\n            - cell \"82쿡 사용하기\":\n              - switch \"82쿡 사용하기\"\n              - text: 82쿡 사용하기\n          - row \"뽐뿌 사이트 검색 · 본문 · 댓글 사용 가능 뽐뿌 사용하기\":\n            - cell \"뽐뿌\"\n            - cell \"사이트 검색 · 본문 · 댓글\"\n            - cell \"사용 가능\"\n            - cell \"뽐뿌 사용하기\":\n              - switch \"뽐뿌 사용하기\"\n              - text: 뽐뿌 사용하기\n          - row \"클리앙 사이트 검색 · 본문 · 댓글 사용 가능 클리앙 사용하기\":\n            - cell \"클리앙\"\n            - cell \"사이트 검색 · 본문 · 댓글\"\n            - cell \"사용 가능\"\n            - cell \"클리앙 사용하기\":\n              - switch \"클리앙 사용하기\"\n              - text: 클리앙 사용하기\n    - heading \"범위 · 필터\" [level=2]\n    - group:\n      - text: 시작일\n      - textbox \"시작일\": 2025-10-20\n      - text: 종료일\n      - textbox \"종료일\": 2026-10-20\n      - text: 목표 문서 수\n      - spinbutton \"목표 문서 수\"\n      - text: 도달하면 상세 수집을 정상 종료합니다. 광고어\n      - textbox \"광고어\": 협찬,광고,제공받,원고료,체험단,서포터즈,중고,판매,거래,체험단,협찬,원고료,소정의,제공받아,서포터즈\n      - text: 쉼표로 구분합니다. 포함 소스를 비우면 전체를 수집합니다. 제외 소스\n      - textbox \"제외 소스\": 중고나라,번개장터,당근,세컨웨어,헬로마켓,중고,장터,부동산,판매,팝니다,삽니다,택배,무료배송,할인코드,쿠폰,홍보,광고,업체,시공,인테리어업체,이사,용달,대출,보험설계사,설계사모집,모집\n      - text: 쉼표로 구분합니다. 포함 소스를 비우면 전체를 수집합니다. 포함 소스\n      - textbox \"포함 소스\"\n      - text: 쉼표로 구분합니다. 포함 소스를 비우면 전체를 수집합니다.\n      - switch \"제품명 포함 글만 남기기\"\n      - text: 제품명 포함 글만 남기기\n      - paragraph: 꺼 두는 것을 권장합니다. 켜면 제품명이 없는 글이 빠집니다. 제품 밖 경험을 놓칠 수 있습니다.\n      - group: 고급 설정 펼치기 · 채널별 동시성 · 요청 간격 · 상한\n    - heading \"확정 키워드\" [level=2]\n    - term: 물리\n    - definition: \"3\"\n    - paragraph: 합계 3개\n    - paragraph: 검색어에는 제품명을 붙이지 않습니다. 예상 소요 시간은 목록 수집 후 표시합니다.\n    - region \"저장 작업\":\n      - status: 변경 사항 없음\n      - button \"임시 저장\"\n      - button \"저장\"\n      - button \"목록 수집 시작\"\n    - paragraph: 설정과 제외 선택을 저장한 다음 수집을 시작하세요."
+  },
+  "gate": {
+    "time": "2026-10-20T07:43:00.425Z",
+    "dom": "- main:\n  - group:\n    - button \"이 단계부터 다시\"\n    - text: 2단계 · 크롤링\n    - heading \"본문 수집 전에 키워드를 정리합니다\" [level=1]\n    - status: Threads는 로그인 없이 볼 수 있는 결과만 모아 키워드당 약 20건입니다. Threads 때문에 \"저수율\" 배지가 붙은 키워드는 다른 채널 수치를 함께 보고 판단하세요.\n    - text: 목록 신호\n    - heading \"키워드 1개를 검토하세요\" [level=2]\n    - text: 0건 · 저수율 · 고유 기여 낮음 배지를 확인하고 제외할 키워드를 선택하세요. 키워드 3개\n    - button \"설정으로 돌아가기\"\n    - heading \"상세 수집 예상\" [level=2]\n    - term: 대상 URL\n    - definition: \"50\"\n    - term: 예상 소요\n    - definition: 약 1분\n    - paragraph: 저장된 제외 목록 기준입니다. 중간에 멈춰도 이어서 진행합니다.\n    - button \"배지 있는 행 먼저 보기\" [pressed]\n    - button \"0건 보기\"\n    - button \"저수율 보기\"\n    - button \"고유 기여 낮음 보기\"\n    - button \"배지 행 모두 제외\"\n    - text: 0개 제외 선택\n    - table \"키워드별 목록 검토\":\n      - rowgroup:\n        - row \"제외 키워드 축 · 하위 목록 → 필터 후 고유 기여 채널 상태\":\n          - columnheader \"제외\"\n          - columnheader \"키워드\"\n          - columnheader \"축 · 하위\"\n          - columnheader \"목록 → 필터 후\"\n          - columnheader \"고유 기여\"\n          - columnheader \"채널\"\n          - columnheader \"상태\"\n      - rowgroup:\n        - row \"qa-empty 제외 qa-empty · 펼치기 physical · product_physical 0 → 0 — Threads 0, 0% 0건 저수율\":\n          - cell \"qa-empty 제외\":\n            - checkbox \"qa-empty 제외\"\n          - rowheader \"qa-empty · 펼치기\":\n            - button \"qa-empty · 펼치기\"\n          - cell \"physical · product_physical\"\n          - cell \"0 → 0\"\n          - cell \"—\"\n          - cell \"Threads 0, 0%\"\n          - cell \"0건 저수율\"\n        - row \"에어컨청소 제외 에어컨청소 · 펼치기 physical · product_physical 25 → 25 100% Threads 25, 100% 정상\":\n          - cell \"에어컨청소 제외\":\n            - checkbox \"에어컨청소 제외\"\n          - rowheader \"에어컨청소 · 펼치기\":\n            - button \"에어컨청소 · 펼치기\"\n          - cell \"physical · product_physical\"\n          - cell \"25 → 25\"\n          - cell \"100%\"\n          - cell \"Threads 25, 100%\"\n          - cell \"정상\"\n        - row \"제습기 제외 제습기 · 펼치기 physical · product_physical 25 → 25 100% Threads 25, 100% 정상\":\n          - cell \"제습기 제외\":\n            - checkbox \"제습기 제외\"\n          - rowheader \"제습기 · 펼치기\":\n            - button \"제습기 · 펼치기\"\n          - cell \"physical · product_physical\"\n          - cell \"25 → 25\"\n          - cell \"100%\"\n          - cell \"Threads 25, 100%\"\n          - cell \"정상\"\n    - paragraph: 다른 키워드도 찾은 URL은 유지됩니다. 제외한 키워드는 다음 세션의 과거 0건 키워드 근거로 남습니다.\n    - paragraph: 내부용 스냅샷 9a6893353ac342e5a91dc90a1934d28a\n    - region \"저장 작업\":\n      - status: 변경 사항 없음\n      - button \"임시 저장\"\n      - button \"저장\"\n      - button \"상세 수집 시작\"\n    - paragraph: 설정과 제외 선택을 저장한 다음 수집을 시작하세요."
+  },
+  "error": "TimeoutError: locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: '여기까지로 마치기', exact: true }) to be visible\n",
+  "paused": {
+    "time": "2026-10-20T07:43:49.663Z",
+    "url": "http://localhost:3002/pipeline/crawling",
+    "dom": "- main:\n  - group:\n    - button \"이 단계부터 다시\" [disabled]\n    - text: 2단계 · 크롤링\n    - heading \"본문과 댓글을 수집합니다\" [level=1]\n    - status:\n      - text: 수집이 멈췄습니다. 완료된 결과는 저장되어 있습니다. 이어서 진행하세요. Threads\n      - paragraph: Threads가 로그인 화면을 보여 주어 멈췄습니다. 로그인은 시도하지 않습니다. 간격을 늘리고 재개하거나 여기까지로 마치세요.\n      - paragraph: 간격을 늘리면 멈춘 채널의 요청 간격을 두 배로 늘립니다(최소 1초).\n      - button \"이어서 진행\"\n      - button \"간격을 늘리고 재개\"\n      - button \"여기까지로 마치기\"\n    - checkbox \"크롤링이 끝나면 전처리 · 라벨링(GPT, 블로그 · 카페 먼저)까지 자동으로 시작\"\n    - text: 크롤링이 끝나면 전처리 · 라벨링(GPT, 블로그 · 카페 먼저)까지 자동으로 시작\n    - heading \"P3 상세 수집\" [level=2]\n    - progressbar \"상세 수집 진행\"\n    - term: 완료 / 대상 URL\n    - definition: 0 / 50\n    - term: 원문 확보\n    - definition: —\n    - term: 분당 처리량\n    - definition: \"0\"\n    - term: 남은 시간\n    - definition: 계산 불가\n    - paragraph: 스니펫 — · 제한글 —\n    - region \"채널별 수집 상태 스크롤\":\n      - table \"채널별 수집 상태\":\n        - rowgroup:\n          - row \"채널 상태 시도 차단 파싱 오류 건너뜀\":\n            - columnheader \"채널\"\n            - columnheader \"상태\"\n            - columnheader \"시도\"\n            - columnheader \"차단\"\n            - columnheader \"파싱 오류\"\n            - columnheader \"건너뜀\"\n        - rowgroup:\n          - row \"Threads 차단으로 멈춤 20 20 0 —\":\n            - rowheader \"Threads\"\n            - cell \"차단으로 멈춤\"\n            - cell \"20\"\n            - cell \"20\"\n            - cell \"0\"\n            - cell \"—\"\n    - paragraph: 내부용 스냅샷 9a6893353ac342e5a91dc90a1934d28a",
+    "api": {
+      "defaults": {
+        "adWords": [
+          "협찬",
+          "광고",
+          "제공받",
+          "원고료",
+          "체험단",
+          "서포터즈",
+          "중고",
+          "판매",
+          "거래",
+          "체험단",
+          "협찬",
+          "원고료",
+          "소정의",
+          "제공받아",
+          "서포터즈"
+        ],
+        "excludeSources": [
+          "중고나라",
+          "번개장터",
+          "당근",
+          "세컨웨어",
+          "헬로마켓",
+          "중고",
+          "장터",
+          "부동산",
+          "판매",
+          "팝니다",
+          "삽니다",
+          "택배",
+          "무료배송",
+          "할인코드",
+          "쿠폰",
+          "홍보",
+          "광고",
+          "업체",
+          "시공",
+          "인테리어업체",
+          "이사",
+          "용달",
+          "대출",
+          "보험설계사",
+          "설계사모집",
+          "모집"
+        ]
+      },
+      "available_sources": [
+        "naver_blog",
+        "naver_cafe",
+        "naver_kin",
+        "cook82",
+        "threads",
+        "youtube",
+        "youtube_vlog",
+        "clien",
+        "ppomppu"
+      ],
+      "collection_keywords": [
+        "에어컨청소",
+        "제습기",
+        "qa-empty"
+      ],
+      "collection_channels": [
+        "threads"
+      ],
+      "min_interval_s": {
+        "threads": 2
+      },
+      "added_keywords_count": 0,
+      "status": "interrupted",
+      "resumable": true,
+      "remaining_by_channel": {
+        "threads": 50
+      },
+      "kind": "detail",
+      "collectionId": "c1",
+      "progress": {
+        "done": 0,
+        "target": 50,
+        "full": 0,
+        "snippet": 0,
+        "restricted": 0,
+        "per_minute": 0,
+        "channels": {
+          "threads": {
+            "status": "paused_blocked",
+            "attempts": 20,
+            "parse_errors": 0,
+            "blocked": 20
+          }
+        },
+        "list_tasks": {
+          "threads": {
+            "done": 3,
+            "target": 3
+          }
+        },
+        "skipped": {}
+      },
+      "channels": {
+        "threads": {
+          "status": "paused_blocked",
+          "attempts": 20,
+          "parse_errors": 0,
+          "blocked": 20
+        }
+      },
+      "paused_channels": [
+        "threads"
+      ],
+      "stopReason": "pending_channels",
+      "snapshot_id": "9a6893353ac342e5a91dc90a1934d28a",
+      "gate": [
+        {
+          "kw": "qa-empty",
+          "axis": "physical",
+          "sub": "product_physical",
+          "per_source": {
+            "threads": {
+              "listed": 0,
+              "filtered": 0,
+              "unique": 0
+            }
+          },
+          "listed": 0,
+          "after_filter": 0,
+          "unique_ratio": 0,
+          "badges": [
+            "zero",
+            "low"
+          ],
+          "count_unit": "urls"
+        },
+        {
+          "kw": "에어컨청소",
+          "axis": "physical",
+          "sub": "product_physical",
+          "per_source": {
+            "threads": {
+              "listed": 25,
+              "filtered": 0,
+              "unique": 25
+            }
+          },
+          "listed": 25,
+          "after_filter": 25,
+          "unique_ratio": 1,
+          "badges": [],
+          "count_unit": "urls"
+        },
+        {
+          "kw": "제습기",
+          "axis": "physical",
+          "sub": "product_physical",
+          "per_source": {
+            "threads": {
+              "listed": 25,
+              "filtered": 0,
+              "unique": 25
+            }
+          },
+          "listed": 25,
+          "after_filter": 25,
+          "unique_ratio": 1,
+          "badges": [],
+          "count_unit": "urls"
+        }
+      ],
+      "estimate": {
+        "urls": 50,
+        "minutes": 0.8333333333333334
+      },
+      "report": null,
+      "updatedAt": "2026-10-20T07:43:37.931459+00:00"
+    }
+  },
+  "dialog": {
+    "type": "confirm",
+    "message": "Threads 50건 미수집(차단)\n남은 URL을 건너뛰고 지금까지 모은 결과로 마치시겠습니까?"
+  },
+  "result": {
+    "time": "2026-10-20T07:44:07.174Z",
+    "url": "http://localhost:3002/pipeline/crawling",
+    "dom": "- main:\n  - group:\n    - button \"이 단계부터 다시\"\n    - text: 2단계 · 크롤링\n    - heading \"수집 결과를 확인합니다\" [level=1]\n    - checkbox \"크롤링이 끝나면 전처리 · 라벨링(GPT, 블로그 · 카페 먼저)까지 자동으로 시작\"\n    - text: 크롤링이 끝나면 전처리 · 라벨링(GPT, 블로그 · 카페 먼저)까지 자동으로 시작\n    - heading \"P5 수집 요약\" [level=2]\n    - progressbar \"상세 수집 진행\"\n    - term: 완료 / 대상 URL\n    - definition: 0 / 0\n    - term: 원문 확보\n    - definition: —\n    - term: 분당 처리량\n    - definition: \"0\"\n    - term: 남은 시간\n    - definition: 계산 불가\n    - paragraph: 스니펫 — · 제한글 —\n    - region \"채널별 수집 상태 스크롤\":\n      - table \"채널별 수집 상태\":\n        - rowgroup:\n          - row \"채널 상태 시도 차단 파싱 오류 건너뜀\":\n            - columnheader \"채널\"\n            - columnheader \"상태\"\n            - columnheader \"시도\"\n            - columnheader \"차단\"\n            - columnheader \"파싱 오류\"\n            - columnheader \"건너뜀\"\n        - rowgroup:\n          - row \"Threads 완료 20 20 0 50 (차단으로 여기까지 마침)\":\n            - rowheader \"Threads\"\n            - cell \"완료\"\n            - cell \"20\"\n            - cell \"20\"\n            - cell \"0\"\n            - cell \"50 (차단으로 여기까지 마침)\"\n    - term: 수집 문서\n    - definition: \"0\"\n    - term: 채널\n    - definition: \"1\"\n    - term: 목록 URL\n    - definition: \"50\"\n    - term: 완료 URL\n    - definition: \"0\"\n    - heading \"건너뛴 항목\" [level=2]\n    - region \"채널별 건너뛴 사유 스크롤\":\n      - table \"채널별 건너뛴 사유\":\n        - rowgroup:\n          - row \"채널 사유 건수\":\n            - columnheader \"채널\"\n            - columnheader \"사유\"\n            - columnheader \"건수\"\n        - rowgroup:\n          - row \"Threads 차단으로 여기까지 마침 50건\":\n            - cell \"Threads\"\n            - cell \"차단으로 여기까지 마침\"\n            - cell \"50건\"\n    - heading \"채널 분포\" [level=2]\n    - text: Threads 0 · 0.0%\n    - table \"키워드별 수집 결과\":\n      - rowgroup:\n        - row \"키워드 채널 수집 문서 목록 URL 완료 URL\":\n          - columnheader \"키워드\"\n          - columnheader \"채널\"\n          - columnheader \"수집 문서\"\n          - columnheader \"목록 URL\"\n          - columnheader \"완료 URL\"\n      - rowgroup:\n        - row \"qa-empty Threads 0 0 0\":\n          - cell \"qa-empty\"\n          - cell \"Threads\"\n          - cell \"0\"\n          - cell \"0\"\n          - cell \"0\"\n        - row \"에어컨청소 Threads 0 25 0\":\n          - cell \"에어컨청소\"\n          - cell \"Threads\"\n          - cell \"0\"\n          - cell \"25\"\n          - cell \"0\"\n        - row \"제습기 Threads 0 25 0\":\n          - cell \"제습기\"\n          - cell \"Threads\"\n          - cell \"0\"\n          - cell \"25\"\n          - cell \"0\"\n    - heading \"키워드 상위\" [level=2]\n    - text: qa-empty 0 에어컨청소 0 제습기 0\n    - heading \"키워드 하위\" [level=2]\n    - text: 제습기 0 에어컨청소 0 qa-empty 0\n    - paragraph: 내부용 스냅샷 9a6893353ac342e5a91dc90a1934d28a\n    - button \"전처리로 이동하기\"",
+    "api": {
+      "defaults": {
+        "adWords": [
+          "협찬",
+          "광고",
+          "제공받",
+          "원고료",
+          "체험단",
+          "서포터즈",
+          "중고",
+          "판매",
+          "거래",
+          "체험단",
+          "협찬",
+          "원고료",
+          "소정의",
+          "제공받아",
+          "서포터즈"
+        ],
+        "excludeSources": [
+          "중고나라",
+          "번개장터",
+          "당근",
+          "세컨웨어",
+          "헬로마켓",
+          "중고",
+          "장터",
+          "부동산",
+          "판매",
+          "팝니다",
+          "삽니다",
+          "택배",
+          "무료배송",
+          "할인코드",
+          "쿠폰",
+          "홍보",
+          "광고",
+          "업체",
+          "시공",
+          "인테리어업체",
+          "이사",
+          "용달",
+          "대출",
+          "보험설계사",
+          "설계사모집",
+          "모집"
+        ]
+      },
+      "available_sources": [
+        "naver_blog",
+        "naver_cafe",
+        "naver_kin",
+        "cook82",
+        "threads",
+        "youtube",
+        "youtube_vlog",
+        "clien",
+        "ppomppu"
+      ],
+      "collection_keywords": [
+        "에어컨청소",
+        "제습기",
+        "qa-empty"
+      ],
+      "collection_channels": [
+        "threads"
+      ],
+      "min_interval_s": {
+        "threads": 2
+      },
+      "added_keywords_count": 0,
+      "status": "done",
+      "resumable": false,
+      "remaining_by_channel": {},
+      "kind": "detail",
+      "collectionId": "c1",
+      "progress": {
+        "done": 0,
+        "target": 0,
+        "full": 0,
+        "snippet": 0,
+        "restricted": 0,
+        "per_minute": 0,
+        "channels": {
+          "threads": {
+            "status": "done",
+            "attempts": 20,
+            "parse_errors": 0,
+            "blocked": 20
+          }
+        },
+        "list_tasks": {
+          "threads": {
+            "done": 3,
+            "target": 3
+          }
+        },
+        "skipped": {
+          "threads": {
+            "blocked": 50
+          }
+        }
+      },
+      "channels": {
+        "threads": {
+          "status": "done",
+          "attempts": 20,
+          "parse_errors": 0,
+          "blocked": 20
+        }
+      },
+      "paused_channels": [],
+      "stopReason": "partial_finished",
+      "snapshot_id": "9a6893353ac342e5a91dc90a1934d28a",
+      "gate": [
+        {
+          "kw": "qa-empty",
+          "axis": "physical",
+          "sub": "product_physical",
+          "per_source": {
+            "threads": {
+              "listed": 0,
+              "filtered": 0,
+              "unique": 0
+            }
+          },
+          "listed": 0,
+          "after_filter": 0,
+          "unique_ratio": 0,
+          "badges": [
+            "zero",
+            "low"
+          ],
+          "count_unit": "urls"
+        },
+        {
+          "kw": "에어컨청소",
+          "axis": "physical",
+          "sub": "product_physical",
+          "per_source": {
+            "threads": {
+              "listed": 25,
+              "filtered": 0,
+              "unique": 25
+            }
+          },
+          "listed": 25,
+          "after_filter": 25,
+          "unique_ratio": 1,
+          "badges": [],
+          "count_unit": "urls"
+        },
+        {
+          "kw": "제습기",
+          "axis": "physical",
+          "sub": "product_physical",
+          "per_source": {
+            "threads": {
+              "listed": 25,
+              "filtered": 0,
+              "unique": 25
+            }
+          },
+          "listed": 25,
+          "after_filter": 25,
+          "unique_ratio": 1,
+          "badges": [],
+          "count_unit": "urls"
+        }
+      ],
+      "estimate": {
+        "urls": 50,
+        "minutes": 0.8333333333333334
+      },
+      "report": {
+        "matrix": {
+          "qa-empty": {
+            "threads": {
+              "listed": 0,
+              "filtered": 0,
+              "excluded": 0,
+              "full": 0,
+              "snippet": 0,
+              "restricted": 0,
+              "unique": 0,
+              "urls_listed": 0,
+              "urls_done": 0
+            }
+          },
+          "에어컨청소": {
+            "threads": {
+              "listed": 25,
+              "filtered": 0,
+              "excluded": 0,
+              "full": 0,
+              "snippet": 0,
+              "restricted": 0,
+              "unique": 25,
+              "urls_listed": 25,
+              "urls_done": 0
+            }
+          },
+          "제습기": {
+            "threads": {
+              "listed": 25,
+              "filtered": 0,
+              "excluded": 0,
+              "full": 0,
+              "snippet": 0,
+              "restricted": 0,
+              "unique": 25,
+              "urls_listed": 25,
+              "urls_done": 0
+            }
+          }
+        },
+        "channels": {
+          "threads": {
+            "skipped": 50,
+            "skip_reason": "blocked",
+            "docs": 0,
+            "urls_done": 0,
+            "share": 0,
+            "status": "done",
+            "errors_top": [
+              {
+                "error": "crawl_error",
+                "count": 50
+              }
+            ],
+            "skip_reasons": {
+              "blocked": 50
+            }
+          }
+        },
+        "totals": {
+          "skipped": 50,
+          "total": 50,
+          "urls_listed": 50,
+          "urls_done": 0,
+          "doc_count": 0
+        },
+        "counts": {
+          "qa-empty": {
+            "threads": 0
+          },
+          "에어컨청소": {
+            "threads": 0
+          },
+          "제습기": {
+            "threads": 0
+          }
+        },
+        "snapshot_id": "9a6893353ac342e5a91dc90a1934d28a",
+        "started_at": 1792482180.8748171,
+        "finished_at": 1792482247.0520902,
+        "throughput_per_min": 0
+      },
+      "updatedAt": "2026-10-20T07:44:07.052090+00:00"
+    }
+  }
+}

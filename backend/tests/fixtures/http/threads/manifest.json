@@ -1,0 +1,14 @@
+{
+  "keyword": "에어컨",
+  "list_count": 19,
+  "requests": [
+    {
+      "file": "search.html",
+      "url": "https://www.threads.com/search?q=%EC%97%90%EC%96%B4%EC%BB%A8&serp_type=default"
+    },
+    {
+      "file": "search-empty.html",
+      "url": "https://www.threads.com/search?q=합성검색결과없음&serp_type=default"
+    }
+  ]
+}

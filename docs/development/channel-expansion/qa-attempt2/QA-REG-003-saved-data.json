@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\"time\":\"2026-10-20T07:07:02.176Z\",\"dom\":\"- group \\\"수집 채널\\\":\\n  - button \\\"네이버 카페\\\"\\n  - button \\\"네이버 블로그\\\"\\n  - button \\\"유튜브\\\"\\n  - button \\\"뽐뿌\\\"\\n  - button \\\"클리앙\\\"\\n  - button \\\"개발용 샘플\\\"\\n  - button \\\"유튜브 브이로그\\\"\\n  - button \\\"Threads\\\" [pressed]\\n  - button \\\"지식iN\\\"\\n  - button \\\"82쿡\\\"\",\"channels\":[\"threads\"]}\n### Ran Playwright code\n```js\nawait (async(page)=>{const ctx=await page.context().browser().newContext({viewport:{width:1440,height:1000},storageState:{cookies:[],origins:[{origin:'http://localhost:3000',localStorage:[{name:'dcx_active_session',value:JSON.stringify({sid:'s6932f115fa3c495ca017cac203ca034f',step:'start'})}]}]}});const p=await ctx.newPage();await p.goto('http://localhost:3000/pipeline/start');await p.getByRole('button',{name:'Threads',exact:true}).waitFor();await p.getByRole('group',{name:'수집 채널',exact:true}).scrollIntoViewIfNeeded();await p.screenshot({path:'/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-REG-003-saved-channels.png'});return {time:new Date().toISOString(),dom:await p.getByRole('group',{name:'수집 채널',exact:true}).ariaSnapshot(),channels:(await(await p.request.get('http://localhost:8000/session/s6932f115fa3c495ca017cac203ca034f')).json()).data.projectContext.channels};})(page);\n```"
+    }
+  ]
+}
