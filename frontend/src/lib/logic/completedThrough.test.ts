@@ -44,7 +44,7 @@ it.each([undefined, null, 42, false, {}, []].map(step => [step]))('defaults inva
   expect(stepIndex(step)).toBe(0);
 });
 it.each([undefined, null, 42, false, {}, []].map(step => [step]))('renders invalid step %j using server completion', step => {
-  expect(sidebar(step)).not.toContain('완료');
+  expect(sidebar(step)).not.toMatch(/aria-label="[^"]* 완료"/);
   const html = sidebar(step, { completion: { segmentDone: true } });
   expect(html).toContain('클러스터링 완료');
   expect(html).not.toContain('근거 탐색 완료');
@@ -70,7 +70,7 @@ it('checks cluster results without checking personas', () => {
 });
 it('keeps legacy callers working without session data', () => {
   expect(sidebar('train-check')).toContain('라벨링 완료');
-  expect(sidebar('start')).not.toContain('완료');
+  expect(sidebar('start')).not.toMatch(/aria-label="[^"]* 완료"/);
 });
 
 const completion = { crawlDone: false, prepDone: false, labelingDone: false, exportDone: false, clustersDone: false };
@@ -147,22 +147,32 @@ describe('T15 step keys (R3 critical regression)', () => {
   });
 });
 
-it('renders the ten stages in order with evidence disabled and personas and insights navigable', () => {
+function lockedTag(html: string, name: string) {
+  return html.match(new RegExp(`<([a-z]+)\\b([^>]*aria-label="[^"]*${name}[^"]*"[^>]*)>`));
+}
+
+it('locks clustering, evidence, personas and insights until preprocessing is derived', () => {
   const html = sidebar('start');
   const names = [...html.matchAll(/<span>([^<]+)<\/span>/g)].map(match => match[1]);
   expect(names).toEqual(['시작', '키워드', '크롤링', '전처리', '라벨링', '학습', '클러스터링', '근거 탐색', '페르소나', '인사이트']);
-  expect(html).not.toContain('임베딩');
-  for (const name of ['근거 탐색']) {
-    const tag = html.match(new RegExp(`<([a-z]+)\\b([^>]*aria-label="[^"]*${name}[^"]*"[^>]*)>`));
+  for (const name of ['클러스터링', '근거 탐색', '페르소나', '인사이트']) {
+    const tag = lockedTag(html, name);
     expect(tag).not.toBeNull();
     expect(tag![2]).toContain('aria-disabled="true"');
-    expect(tag![2]).toContain('title="다음 묶음에서 열립니다"');
+    expect(tag![2]).toContain('title="전처리(3단계)를 먼저 완료하세요"');
     expect(tag![2]).not.toMatch(/\bhref=/);
-    expect(tag![2]).not.toMatch(/\btabindex="0"/);
+    expect(tag![2]).not.toMatch(/\btabindex=/);
   }
-  expect(html).toMatch(/<a\b[^>]*aria-label="9\. 페르소나"[^>]*href="\/pipeline\/personas"/);
   expect([...html.matchAll(/\bhref="([^"]+)"/g)].map(match => match[1])).toEqual([
-    '/pipeline/start', '/pipeline/keywords', '/pipeline/crawling', '/pipeline/preprocess',
-    '/pipeline/labeling', '/pipeline/training', '/pipeline/clustering', '/pipeline/personas', '/pipeline/insights',
+    '/pipeline/start', '/pipeline/keywords', '/pipeline/crawling', '/pipeline/preprocess', '/pipeline/labeling', '/pipeline/training',
+  ]);
+});
+
+it('opens every stage once preprocessing is derived', () => {
+  const html = sidebar('start', {schemaVersion: 2, prep: {derivedRef: {prepKey: 'p'}}});
+  expect(html).not.toContain('aria-disabled="true"');
+  expect([...html.matchAll(/\bhref="([^"]+)"/g)].map(match => match[1])).toEqual([
+    '/pipeline/start', '/pipeline/keywords', '/pipeline/crawling', '/pipeline/preprocess', '/pipeline/labeling',
+    '/pipeline/training', '/pipeline/clustering', '/pipeline/evidence', '/pipeline/personas', '/pipeline/insights',
   ]);
 });

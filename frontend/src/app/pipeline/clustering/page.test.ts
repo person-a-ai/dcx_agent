@@ -20,6 +20,7 @@ vi.mock('@/lib/api/segment',()=>Object.fromEntries(['startSegment','getSegmentSt
 vi.mock('@/lib/api/versions',()=>({getVersionSession:vi.fn()}));
 import { getVersionSession } from '@/lib/api/versions';
 import Page from './page';
+import { LaterStageBanner } from '@/components/LaterStageBanner';
 import { SegmentScreen } from '@/components/segment/SegmentScreen';
 import { ClusterLayer } from '@/components/segment/ClusterLayer';
 import { PersonaLayer } from '@/components/segment/PersonaLayer';
@@ -34,8 +35,14 @@ const persona={...row,id:'P1',clusterId:'CL0',authors:10,desireDraft:'바람',de
 const context={...row,id:'C1',personaId:'P1',actionDraft:'행동',action:null,dominantConstraint:null,dimsSummary:{},flags:['counter_context','granularity_exceeded']};
 const status={run:'r1',status:'review',step:'drafts',progress:1,confirm:{clusters:'3/5',personas:'0/12',contexts:'0/31'}};
 const base={disabled:false,edits:{},onEdit:vi.fn(),onConfirm:vi.fn()};
-afterEach(()=>{hooks.slots.forEach(slot=>slot?.cleanup?.());vi.useRealTimers();vi.unstubAllGlobals();hooks.slots=[];hooks.effects=[];state.poll=null;state.view.readonly=false;state.session.sd={prep:{derivedRef:{prepKey:'p'}}};vi.clearAllMocks();});
-it('routes derived sessions to SegmentScreen and retains the legacy screen',()=>{expect(nodes(Page()).some(n=>n.type===SegmentScreen)).toBe(true);state.session.sd={};expect(nodes(Page()).some(n=>n.type===SegmentScreen)).toBe(false);});
+afterEach(()=>{hooks.slots.forEach(slot=>slot?.cleanup?.());vi.useRealTimers();vi.unstubAllGlobals();hooks.slots=[];hooks.effects=[];state.poll=null;state.pollOptions=null;state.view.readonly=false;state.session.sd={prep:{derivedRef:{prepKey:'p'}}};vi.clearAllMocks();});
+it('routes derived sessions to SegmentScreen and others to a gate banner without v1 calls',()=>{
+ expect(nodes(Page()).some(n=>n.type===SegmentScreen)).toBe(true);
+ state.session.sd={schemaVersion:2};
+ let page:any=Page();expect(page.type).toBe(LaterStageBanner);expect(page.props).toEqual({gate:'needs-prep',stage:'클러스터링'});
+ state.session.sd={};
+ page=Page();expect(page.type).toBe(LaterStageBanner);expect(page.props).toEqual({gate:'legacy',stage:'클러스터링'});
+});
 it('shows one primary run action before results and disables evidence',()=>{state.poll={...status,status:'idle',run:null};const tree=render(()=>SegmentScreen({sid:'s'}));expect(nodes(tree).filter(n=>n.props?.variant==='primary')).toHaveLength(1);expect(textOf(tree)).toContain('클러스터링 실행');expect(nodes(tree).find(n=>n.props?.title==='6-C Context를 모두 확정한 뒤 근거 탐색을 실행하세요.')?.props.disabled).toBe(true);});
 it('shows live running steps without enabled run or rerun actions',()=>{state.poll={...status,status:'running',step:'L3',progress:.58};const tree=render(()=>SegmentScreen({sid:'s'}));expect(textOf(tree)).toContain('6단계 · 실행 중');expect(nodes(tree).some(n=>n.props?.['aria-live']==='polite')).toBe(true);expect(nodes(tree).filter(n=>['다시 나누기','클러스터링 실행'].includes(textOf(n))).every(n=>n.props.disabled)).toBe(true);});
 it('locks Persona until every Cluster is confirmed and displays 4/5',()=>{const tree=LayerTabs({value:'6-A',onChange:vi.fn(),confirm:{...status.confirm,clusters:'4/5'}});expect(textOf(tree)).toContain('4/5 확정');expect(nodes(tree).filter(n=>n.type==='button')[1].props['aria-disabled']).toBe(true);});
@@ -94,9 +101,10 @@ it('does not load or write an old draft from another run',async()=>{
 it('does not accept actions from readonly or running screens',async()=>{
  state.poll={...status,status:'running'};screen();await tick();const tree=screen();expect(nodes(tree).some(n=>n.type===ClusterLayer)).toBe(false);expect(api.startSegment).not.toHaveBeenCalled();
 });
-it('retains the legacy results and disables every legacy write action',()=>{
- state.session.sd={step:'cluster-check'};state.poll={status:'done',num_clusters:1,clusters:{'0':{size:7,keywords:['옛 키워드']}}};const legacy=nodes(Page()).find(n=>typeof n.type==='function')!;const tree=render(()=>legacy.type(legacy.props));
- expect(textOf(tree)).toContain('옛 키워드');expect(textOf(tree)).toContain('옛 세션 · 읽기 전용');expect(nodes(tree).find(n=>n.props?.children==='정제 → 페르소나').props.disabled).toBe(true);
+it('shows only the legacy banner even when old clustering results exist',()=>{
+ state.session.sd={step:'cluster-check'};state.poll={status:'done',num_clusters:1,clusters:{'0':{size:7,keywords:['옛 키워드']}}};
+ expect(Page()).toMatchObject({type:LaterStageBanner,props:{gate:'legacy',stage:'클러스터링'}});
+ expect(state.pollOptions).toBeNull();
 });
 it('retains edited input if cleaning the temporary draft fails after confirmation',async()=>{
  let tree=await ready();nodes(tree).find(n=>n.type===ClusterLayer).props.onEdit('CL0',{name:'저장할 이름'});tree=screen();

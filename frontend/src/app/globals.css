@@ -28,6 +28,8 @@ button:not(:disabled) { cursor:pointer; }
 .pipeline-nav .on { background:var(--paper); color:var(--ink-strong); font-weight:700; }
 .pipeline-nav .on .n { background:var(--blue); color:var(--ink-strong); }
 .pipeline-nav small { margin-left:auto; font:400 11px/16px var(--font); color:var(--sub); }
+.pipeline-nav a[aria-disabled="true"] { color:var(--sub); cursor:not-allowed; }
+.pipeline-nav a[aria-disabled="true"] .n { opacity:.6; }
 .pipeline-foot { margin-top:auto; overflow-wrap:anywhere; }
 .pipeline-activity { margin-top:8px; }
 .pipeline-tools { display:flex; flex-wrap:wrap; align-items:center; gap:4px; margin-top:8px; }

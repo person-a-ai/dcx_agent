@@ -36,15 +36,18 @@ it('previous suggestions start collapsed and add only on click', () => {
  const html = renderToStaticMarkup(tree); expect(html).toContain('이전 세션 추천'); expect(html).not.toContain('<details open'); expect(onAdd).not.toHaveBeenCalled();
  const list = tree.props.children[1]; list.props.children[0].props.children[2].props.onClick(); expect(onAdd).toHaveBeenCalledWith(item);
 });
-it('redirects old route and branches new route on derivedRef with legacy screen preserved', () => {
+it('redirects old route and branches new route on derivedRef with a gate banner', () => {
  const old = readFileSync('src/app/insights/page.tsx','utf8'); const route = readFileSync('src/app/pipeline/insights/page.tsx','utf8');
- expect(old).toMatch(/redirect\(['"]\/pipeline\/insights['"]\)/); expect(route).toContain('prep?.derivedRef'); expect(route).toContain('<InsightScreen'); expect(route).toContain('<LegacyInsightsPage');
+ expect(old).toMatch(/redirect\(['"]\/pipeline\/insights['"]\)/); expect(route).toContain('laterStageGate(sid,'); expect(route).toContain('<InsightScreen'); expect(route).toContain('<LaterStageBanner');
+ for (const name of ['clustering', 'personas', 'insights']) {
+  expect(readFileSync(`src/app/pipeline/${name}/page.tsx`, 'utf8')).not.toMatch(/from ['"]@\/lib\/api['"]/);
+ }
 });
 it('links insight sidebar and reports completion at 8/9', () => {
  expect(completedThrough({completion:{personaDone:true,segmentDone:true}})).toBe(8);
  expect(completedThrough({completion:{insightDone:true,personaDone:true}})).toBe(9);
  expect(completedThrough({completion:{personaDone:false,insightDone:false,segmentDone:true}})).toBe(6);
- expect(renderToStaticMarkup(createElement(StepBar,{currentStep:'insight',session:{completion:{insightDone:true}}}))).toContain('href="/pipeline/insights"');
+ expect(renderToStaticMarkup(createElement(StepBar,{currentStep:'insight',session:{prep:{derivedRef:{prepKey:'p'}},completion:{insightDone:true}}}))).toContain('href="/pipeline/insights"');
 });
 
 import { ConceptDetail } from './InsightConcept';
