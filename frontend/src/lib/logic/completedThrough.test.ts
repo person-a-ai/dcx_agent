@@ -168,8 +168,19 @@ it('locks clustering, evidence, personas and insights until preprocessing is der
   ]);
 });
 
+it('keeps clustering, evidence, personas and insights locked while preprocessing is running or stale', () => {
+  for (const status of ['running', 'stale']) {
+    const html = sidebar('start', {schemaVersion: 2, prep: {derivedRef: {prepKey: 'p'}, status}});
+    for (const name of ['클러스터링', '근거 탐색', '페르소나', '인사이트']) {
+      const tag = lockedTag(html, name);
+      expect(tag![2]).toContain('aria-disabled="true"');
+      expect(tag![2]).not.toMatch(/\bhref=/);
+    }
+  }
+});
+
 it('opens every stage once preprocessing is derived', () => {
-  const html = sidebar('start', {schemaVersion: 2, prep: {derivedRef: {prepKey: 'p'}}});
+  const html = sidebar('start', {schemaVersion: 2, prep: {derivedRef: {prepKey: 'p'}, status: 'done'}});
   expect(html).not.toContain('aria-disabled="true"');
   expect([...html.matchAll(/\bhref="([^"]+)"/g)].map(match => match[1])).toEqual([
     '/pipeline/start', '/pipeline/keywords', '/pipeline/crawling', '/pipeline/preprocess', '/pipeline/labeling',

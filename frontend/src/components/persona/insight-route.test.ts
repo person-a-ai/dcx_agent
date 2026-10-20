@@ -1,5 +1,5 @@
 import { expect, it, vi } from 'vitest';
-const state = vi.hoisted(() => ({sid:'s',sd:{schemaVersion:2,prep:{derivedRef:''},insight:{confirmed:['I1']}} as {schemaVersion?:number;prep:{derivedRef:string};insight:{confirmed:string[]}}}));
+const state = vi.hoisted(() => ({sid:'s',sd:{schemaVersion:2,prep:{derivedRef:''},insight:{confirmed:['I1']}} as {schemaVersion?:number;prep:{derivedRef:string;status?:string};insight:{confirmed:string[]}}}));
 const view = vi.hoisted(() => ({version:'v2',readonly:false,conflict:false,session:null}));
 vi.mock('@/stores/useSessionStore', () => ({useSessionStore:() => state}));
 vi.mock('@/components/versions/VersionProvider', () => ({useVersion:() => view}));
@@ -19,6 +19,6 @@ it('shows the prep banner for v2 sessions and the legacy banner for old sessions
 });
 it('passes session, selected version, confirmations and conflict readonly to new screen', () => {
  state.sd={prep:{derivedRef:''},insight:{confirmed:['I1']}};
- state.sd.prep.derivedRef='derived';view.conflict=true;
+ state.sd.prep.derivedRef='derived';state.sd.prep.status='done';view.conflict=true;
  const page = Page();expect(page.type).toBe(InsightScreen);expect(page.props).toMatchObject({sid:'s',version:'v2',readonly:true,initialConfirmed:['I1']});
 });

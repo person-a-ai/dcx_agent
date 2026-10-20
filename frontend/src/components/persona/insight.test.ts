@@ -47,7 +47,7 @@ it('links insight sidebar and reports completion at 8/9', () => {
  expect(completedThrough({completion:{personaDone:true,segmentDone:true}})).toBe(8);
  expect(completedThrough({completion:{insightDone:true,personaDone:true}})).toBe(9);
  expect(completedThrough({completion:{personaDone:false,insightDone:false,segmentDone:true}})).toBe(6);
- expect(renderToStaticMarkup(createElement(StepBar,{currentStep:'insight',session:{prep:{derivedRef:{prepKey:'p'}},completion:{insightDone:true}}}))).toContain('href="/pipeline/insights"');
+ expect(renderToStaticMarkup(createElement(StepBar,{currentStep:'insight',session:{prep:{derivedRef:{prepKey:'p'},status:'done'},completion:{insightDone:true}}}))).toContain('href="/pipeline/insights"');
 });
 
 import { ConceptDetail } from './InsightConcept';

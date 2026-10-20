@@ -19,7 +19,7 @@ describe('personas page gate', () => {
     expect(PersonasPage()).toMatchObject({type: LaterStageBanner, props: {gate: 'legacy', stage: '페르소나'}});
     page.session = {sid: null, sd: null};
     expect(PersonasPage()).toMatchObject({type: LaterStageBanner, props: {gate: 'no-session', stage: '페르소나'}});
-    page.session = {sid: 's', sd: {schemaVersion: 2, prep: {derivedRef: {prepKey: 'p'}}}};
+    page.session = {sid: 's', sd: {schemaVersion: 2, prep: {derivedRef: {prepKey: 'p'}, status: 'done'}}};
     expect(PersonasPage().type).toBe(PersonaScreen);
   });
 });

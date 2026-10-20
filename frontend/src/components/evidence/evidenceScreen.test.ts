@@ -82,10 +82,10 @@ it('renders Unicode quote, source, location and known match', () => {
 it('adds sidebar evidence path and completion 7 while retaining legacy branch', () => {
  expect(completedThrough({completion:{evidenceDone:true,segmentDone:true}})).toBe(7);
  expect(completedThrough({completion:{evidenceDone:false,segmentDone:true}})).toBe(6);
- const html=renderToStaticMarkup(createElement(StepBar,{currentStep:'evidence',session:{prep:{derivedRef:'x'}}})); expect(html).toContain('href="/pipeline/evidence"');
+ const html=renderToStaticMarkup(createElement(StepBar,{currentStep:'evidence',session:{prep:{derivedRef:'x',status:'done'}}})); expect(html).toContain('href="/pipeline/evidence"');
  const legacy=renderToStaticMarkup(createElement(StepBar,{currentStep:'persona',session:{prep:{}}})); expect(legacy).not.toContain('href="/pipeline/evidence"');
  expect(renderToStaticMarkup(createElement(EvidencePage))).toContain('옛 세션');
- session.sd={prep:{derivedRef:'x'}}; expect(EvidencePage().type).not.toBe('div'); session.sd={prep:{}};
+ session.sd={prep:{derivedRef:'x',status:'done'}}; expect(EvidencePage().type).not.toBe('div'); session.sd={prep:{}};
 });
 
 it('provides recovery for a failed run even without failed Context rows', () => {
