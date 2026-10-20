@@ -218,7 +218,7 @@ def test_batch_limit_truncation_and_zero_result_retry(setup):
     assert json.loads((root / 'stage_3.json').read_text())['embed_failed_zero_vector'] == 129
 
 
-def test_version_snapshot_and_compat_output(setup, data_dir):
+def test_version_snapshot_writes_no_compat_output(setup, data_dir):
     setup([doc()])
     current = store.load_session('s')
     store.write_json(data_dir / 'sessions/s/versions/v2/session.json',
@@ -234,8 +234,8 @@ def test_version_snapshot_and_compat_output(setup, data_dir):
     assert store.load_session('s')['prep'].get('status') is None
     saved = store.read_json(data_dir / 'sessions/s/versions/v2/session.json')
     assert saved['prep']['derivedRef'] == {'collectionId': 'c2', 'prepKey': root.name}
-    compat = next((data_dir / 'preprocessed/s').glob('*.jsonl'))
-    assert [json.loads(line) for line in compat.read_text().splitlines()] == rows(root, 'docs')
+    assert not (data_dir / 'preprocessed').exists()
+    assert 'compatRef' not in store.read_json(root / 'manifest.json')
 
 
 def test_pause_and_empty_input(setup):
@@ -371,11 +371,8 @@ def test_doc_and_vector_shard_sizes(setup, monkeypatch):
     assert (root / 'vectors/shard-00001.f16').stat().st_size == 4 * 1024 * 2
 
 
-@pytest.mark.parametrize('entry', ['pipeline', 'legacy_service'])
 @pytest.mark.parametrize('failure_at', ['factory', 'embed'])
-def test_unconnected_exports_before_embedding(setup, monkeypatch, data_dir, entry, failure_at):
-    from app.jobs.manager import job_manager
-    from app.services import preprocessing
+def test_unconnected_keeps_documents_before_embedding(setup, monkeypatch, data_dir, failure_at):
     from app.vectors.embedder import EmbedderUnconnected
 
     setup([doc('one'), doc('two')], {'embedder': 'voyage'})
@@ -384,39 +381,23 @@ def test_unconnected_exports_before_embedding(setup, monkeypatch, data_dir, entr
     identity = Embedder()
     identity.name = 'voyage'
     root = data_dir / 'derived/s/c1' / prep_key('c1', PrepConfig(embedder='voyage'), identity)
-    exported = []
-    original_save = preprocessing.save_jsonl
-
-    def save(path, documents):
-        assert len(rows(root, 'docs')) == len(rows(root, 'tokens')) == 2
-        assert VectorStore(root).count() == 0
-        exported.extend(documents)
-        original_save(path, documents)
-
     def unconnected():
         raise EmbedderUnconnected('not configured')
 
     def embed(texts):
-        assert len(exported) == 2
+        assert len(rows(root, 'docs')) == len(rows(root, 'tokens')) == 2
         raise EmbedderUnconnected('not configured')
 
     identity.embed = embed
-    monkeypatch.setattr(preprocessing, 'save_jsonl', save)
     monkeypatch.setattr(pipeline, 'get_embedder', unconnected if failure_at == 'factory' else lambda: identity)
-    if entry == 'pipeline':
-        with pytest.raises(EmbedderUnconnected):
-            pipeline.run_prep(Context(), 's', 'v1')
-    else:
-        preprocessing.preprocess_data({'sid': 's'})
-        status = job_manager.get('preprocess', 's')
-        assert status['status'] == 'done'
-        assert status['embedding'] == 'unconnected'
-        assert status['original'] == status['filtered'] == 2
-    assert [d['doc_id'] for d in exported] == ['one', 'two']
-    assert all({'desc', 'cafe', 'link'} <= d.keys() for d in exported)
+    with pytest.raises(EmbedderUnconnected):
+        pipeline.run_prep(Context(), 's', 'v1')
+    docs = rows(root, 'docs')
+    assert [d['doc_id'] for d in docs] == ['one', 'two']
+    assert all({'desc', 'cafe', 'link'} <= d.keys() for d in docs)
     manifest = store.read_json(root / 'manifest.json')
-    assert manifest['status'] == 'failed' and manifest['compatWritten']
-    assert (data_dir / manifest['compatRef']).exists()
+    assert manifest['status'] == 'failed' and 'compatRef' not in manifest
+    assert not (data_dir / 'preprocessed').exists()
     assert not list((root / 'vectors').glob('*.f16'))
     assert VectorStore(root).count() == 0
     assert store.load_session('s')['prep'].get('status') != 'done'

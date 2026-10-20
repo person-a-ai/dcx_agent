@@ -36,6 +36,10 @@ KEY_FIELDS = [name for name in type(settings).model_fields
 
 @pytest.fixture
 def offline(data_dir, monkeypatch):
+    for name, value in {'STORAGE': 'local', 'EMBED_BACKEND': 'fake', 'EMBED_MODEL': 'voyage-4',
+                        'EMBED_DIM': '1024', 'VOYAGE_API_KEY': ''}.items():
+        monkeypatch.setenv(name, value)
+    monkeypatch.setattr(settings, 'voyage_api_key', '')
     def no_network(*args, **kwargs):
         raise AssertionError('Network is forbidden')
     monkeypatch.setattr(socket.socket, 'connect', no_network)
@@ -109,15 +113,17 @@ def full_flow(client, offline, default_config=False):
     work()
     status = request('GET', f'/crawl/{sid}/status')
     assert status['report']['totals']['doc_count'] == 200
-    assert request('POST', '/preprocess', json={'sid': sid}) == {'sid': sid, 'status': 'started'}
-    deadline = time.monotonic() + 5
+    request('PUT', f'/prep/{sid}/config', json={'embedder': 'fake'})
+    request('POST', f'/prep/{sid}/run')
+    deadline = time.monotonic() + 30
     while True:
-        status = request('GET', f'/preprocess-status/{sid}')
-        if status['status'] != 'running' or time.monotonic() > deadline:
+        prep_status = request('GET', f'/prep/{sid}/status')
+        if prep_status['status'] in {'done', 'failed', 'interrupted'} or time.monotonic() > deadline:
             break
-        time.sleep(.01)
-    assert status['status'] == 'done', status
-    docs = load_data(f'preprocessed/{sid}/')
+        time.sleep(.05)
+    assert prep_status['status'] == 'done', prep_status
+    ref = store.load_session(sid)['prep']['derivedRef']
+    docs = load_data(f"derived/{sid}/{ref['collectionId']}/{ref['prepKey']}/docs/")
     assert len(docs) == 200
     assert all(d['desc'] == d['body'] + '\n' and d['cafe'] == '개발용 샘플' and d['link'] == d['url'] for d in docs)
     request('GET', f'/context/{sid}')

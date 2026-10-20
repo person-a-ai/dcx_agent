@@ -71,9 +71,8 @@ def test_c3_unfinished_crawl_cannot_start_or_reuse(client, data_dir, monkeypatch
     ref = prep_session(data_dir, monkeypatch)
     if reuse:
         root = data_dir / 'derived/prepcheck/c1' / ref['prepKey']
-        store.write_json(root / 'manifest.json', dict(status='done', compatWritten=True, compatRef='compat.jsonl'))
+        store.write_json(root / 'manifest.json', dict(status='done'))
         store.write_json(root / 'stage_3.json', {})
-        (data_dir / 'compat.jsonl').write_text('')
     response = client.post('/prep/prepcheck/run')
     assert response.status_code == 409
     assert response.json()['error']['message'] == '수집이 끝난 뒤에 전처리를 실행할 수 있습니다.'
@@ -216,9 +215,8 @@ def test_g6_environment_documentation():
 def test_c3_unverified_old_result_not_reused_after_finalization(client, data_dir, monkeypatch):
     ref = prep_session(data_dir, monkeypatch, completed=True)
     root = data_dir / 'derived/prepcheck/c1' / ref['prepKey']
-    store.write_json(root / 'manifest.json', dict(status='done', compatWritten=True, compatRef='compat.jsonl'))
+    store.write_json(root / 'manifest.json', dict(status='done'))
     store.write_json(root / 'stage_3.json', {})
-    (data_dir / 'compat.jsonl').write_text('')
     response = client.post('/prep/prepcheck/run')
     assert response.status_code == 200
     assert response.json()['reused'] is False
@@ -229,10 +227,8 @@ def test_g5_same_ref_reuse_allowed_after_labeling(client, data_dir, monkeypatch,
     ref = prep_session(data_dir, monkeypatch, completed=True, started=True)
     store.update_session('prepcheck', {'prep': {'derivedRef': ref, 'status': 'done'}})
     root = data_dir / 'derived/prepcheck/c1' / ref['prepKey']
-    store.write_json(root / 'manifest.json', dict(status='done', collectionFinalized=True,
-        compatWritten=True, compatRef='compat.jsonl'))
+    store.write_json(root / 'manifest.json', dict(status='done', collectionFinalized=True))
     store.write_json(root / 'stage_3.json', {})
-    (data_dir / 'compat.jsonl').write_text('')
     monkeypatch.setattr('app.routers.preprocessing.threading.Thread', lambda **kw: SimpleNamespace(start=lambda: None))
     response = client.post('/preprocess', json={'sid': 'prepcheck'}) if legacy else client.post('/prep/prepcheck/run')
     assert response.status_code == 200

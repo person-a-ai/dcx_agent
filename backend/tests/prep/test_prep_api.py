@@ -70,6 +70,17 @@ def test_run_then_status_done(collected):
     assert session['knownInsights'] == ['keep']
 
 
+def test_finished_result_reused_without_compat_file(collected, data_dir):
+    configure(collected)
+    assert collected.post('/prep/s/run').status_code == 200
+    first = finished(collected)
+    assert first['status'] == 'done', first
+    assert not (data_dir / 'preprocessed').exists()
+    response = collected.post('/prep/s/run')
+    assert response.status_code == 200, response.text
+    assert response.json()['reused'] is True
+
+
 def test_reuse_returns_done_immediately(collected, monkeypatch):
     configure(collected)
     assert collected.post('/prep/s/run').status_code == 200

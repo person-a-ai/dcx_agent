@@ -111,21 +111,7 @@ def _checkpoint(ctx, done, total):
     return not ctx.should_stop()
 
 
-def _publish_compat(root, manifest):
-    # Publish compatibility output once per result, including recovery after a crash.
-    target = Path(settings.local_data_dir) / manifest['compatRef']
-    if not manifest.get('compatWritten') or not target.exists():
-        from app.services import preprocessing
-        documents = [json.loads(line) for path in sorted((root / 'docs').glob('*.jsonl'))
-                     for line in path.read_text(encoding='utf-8').splitlines() if line.strip()]
-        preprocessing.save_jsonl(manifest['compatRef'], documents)
-        # An interrupted export is overwritten on resume until this marker is durable.
-        manifest['compatWritten'] = True
-        store.write_json(root / 'manifest.json', manifest)
-
-
 def _publish(sid, version, root, cfg, manifest, *, reused=False):
-    _publish_compat(root, manifest)
     with store.locked(sid):
         path = version_dir(sid, version) / 'session.json'
         session = store.read_json(path)
@@ -186,8 +172,7 @@ def run_prep(ctx, sid: str, version: str) -> Path:
         if manifest is None:
             manifest = dict(collectionId=cid, prepKey=key, config=cfg.model_dump(), collectionFinalized=True,
                             embedder=dict(name=embedder.name, model=embedder.model, dim=embedder.dim),
-                            analyzer=analyzer_version(), createdAt=store.now(), counts={}, progress={},
-                            compatRef=f'preprocessed/{sid}/{time.time_ns()}.jsonl')
+                            analyzer=analyzer_version(), createdAt=store.now(), counts={}, progress={})
         manifest['embedderName'] = embedder_name(manifest['embedder'])
         manifest['status'] = 'running'
         store.write_json(root / 'manifest.json', manifest)
@@ -225,7 +210,7 @@ def _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnecte
     filtered, removed = filter_documents(kept, cfg.adFilter, cfg.excludeSources,
                                          cfg.minBodyChars, full_text=True)
     removed['excluded_channel'] = len(cleaned) - len(kept)
-    # Complete document/token preparation and the legacy export before any vectors.
+    # Complete document/token preparation before any vectors.
     for shard, start in enumerate(range(0, len(filtered), SHARD_ROWS), 1):
         batch = filtered[start:start + SHARD_ROWS]
         for offset in range(0, len(batch), DOC_SHARD_ROWS):
@@ -236,7 +221,6 @@ def _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnecte
             _jsonl(root / 'tokens' / filename,
                    [dict(doc_id=d['doc_id'], tokens=tokenize(token_text(_text(d)), cfg.tokenPos)) for d in docs])
     manifest['counts'] = dict(original=len(documents), after=len(filtered))
-    _publish_compat(root, manifest)
     if unconnected is not None:
         raise unconnected
     vectors = VectorStore(root)
