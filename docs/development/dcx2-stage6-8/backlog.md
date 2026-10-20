@@ -10,5 +10,11 @@
 - 원래(1.0)는 경험 차원을 LLM 호출이 아닌 다른 딥러닝 기반 기법으로 계산했다. 현재 2.0은 컨텍스트별 표본을 LLM(OpenAI · Codex)으로 추출해 느리고 표본에 한정된다.
 - 1.0 방식을 다시 도입하거나 대체 기법을 검토(전량 계산 가능 여부, 비용, 품질 비교). 1.0 방식 자료는 사용자에게 확인.
 
+## B-120 사이드바 챗봇이 v2 결과를 읽게 하기 (사용자, 2026-10-19)
+- 현재 `/chat`(파이프라인 사이드바 챗봇, `routers/chat.py`)은 문서 검색만 v2(`app.known.filter.search_docs`)로 하고, 페르소나 · 클러스터 요약은 옛 저장 경로(`personas/{sid}/`, `clusters_refined/{sid}/`, `clusters/{sid}/`)에서 읽는다. 새(v2) 세션은 이 경로가 비어 있어 챗봇이 6 · 8단계 결과 없이 답한다(코드 확인, 실행 확인 전).
+- `/insight-chat`은 `/insights` 화면 전용인데 그 화면이 `/pipeline/insights`로 바로 넘어가 사실상 쓰이지 않는다.
+- 결정(사용자): v1 정리와 dcx-step07-11 이식 범위에서 챗봇은 모두 제외하고 여기 남긴다.
+- 바꿀 방향(검토): `app/segment` · `app/persona` 저장소에서 컨텍스트 · 페르소나 요약을 읽고, `/insight-chat`은 제거하거나 새 8단계 화면에 붙인다.
+
 ## 참고 (2026-10-03 운영 조치)
 - PR #22: 경험 차원 · 이름 초안 동시 처리(`SEGMENT_CONCURRENCY`, 운영 20), 컨텍스트당 표본 100 → 25, 운영은 `LLM_BACKEND_OVERRIDES={"segment.*":"codex_exec"}`.

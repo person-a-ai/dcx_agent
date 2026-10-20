@@ -1,0 +1,187 @@
+{
+ "verdict": "PASS",
+ "head": "c15ea7fa22e3641078939a524f5a5581b2689127",
+ "fingerprint": "a89512faf2eacae1e240d660ab0707ad5043d4e09f028b5a79b7fc68da8044e8",
+ "commands": [
+  {
+   "command": "backend/.venv/bin/python -m pytest backend/tests -q",
+   "exitCode": 0,
+   "result": "2807 passed, 3 deselected (perf) in 810.64s",
+   "log": ".harness/logs/final-pytest-serial.log"
+  },
+  {
+   "command": "npm --prefix frontend run lint",
+   "exitCode": 0,
+   "log": ".harness/logs/final-lint.log"
+  },
+  {
+   "command": "npm --prefix frontend test",
+   "exitCode": 0,
+   "result": "80 files, 962 tests passed",
+   "log": ".harness/logs/final-vitest.log"
+  },
+  {
+   "command": "npm --prefix frontend run build",
+   "exitCode": 0,
+   "log": ".harness/logs/final-build.log"
+  }
+ ],
+ "findings": [],
+ "notes": [
+  "-n auto full run at the same HEAD: 2805 passed, 2 failed (known timing-flaky prep worker tests test_qa_q1_server_default_exposed_and_first_run_succeeds, test_run_then_status_done; fail on base main too under load) — both pass alone (2 passed). Serial run above is the harness.config verification command.",
+  "Approved deviations DV-1..DV-4 (deviations.md; DV-3/DV-4 to be added to the doc before finish): DV-1 legacy test deleted in T1; DV-2 crawl4ai kept (user); DV-3 02-design wrongly assumed banner wrapping, fixed in T5 review-fix 6bcaa30; DV-4 SNAGraph kept (v2 WordNetwork dependency).",
+  "Pre-existing, out of scope: npx tsc --noEmit reports 7 errors in untouched frontend test files (identical at base)."
+ ],
+ "tasks": [
+  {
+   "id": "T1",
+   "executor": "codex",
+   "dispatch": "claude-agent a2ed49a971cba3377 → codex:codex-rescue (--fresh, write)",
+   "red": "backend/.venv/bin/python -m pytest backend/tests/test_v1_boundary.py -q -p no:cacheprovider; backend/.venv/bin/python -m pytest backend/tests/prep/test_documents.py -q -p no:cacheprovider :: Boundary: 1 failed.\n>       assert {k: v for k, v in offenders.items() if v} == {}\nE       AssertionError: assert {'prep/pipeli...r_documents']} == {}\nE         \nE         Left contains 1 more item:\nE         {'prep/pipeline.py': ['app.services.preprocessing',\nE                               'app.services.preprocessing._crawl_docs',\nE                               'app.services.preprocessing.filte",
+   "green": "backend/.venv/bin/python -m pytest backend/tests/test_v1_boundary.py backend/tests/prep backend/tests/crawl/test_final_w5.py backend/tests/test_integration_stage0_2.py -q -p no:cacheprovider :: 96 passed",
+   "review": ".harness/reports/review-T1.json (verdict PASS)",
+   "reviewer": {
+    "executor": "codex",
+    "role": "code-review",
+    "dispatch": "01a15731-3d6e-7571-ba1a-c370f0235702",
+    "freshSession": true
+   },
+   "committer": "controller",
+   "repository_control": {
+    "mode": "controller_managed"
+   },
+   "base_commit": "81e24779dae04b5736542f69523fa6817fe29103",
+   "commit": {
+    "sha": "330dbc9b6519e9ea7a74d47b250dcb272b0cf801",
+    "message": "refactor(prep): 전처리 공용 함수를 app/prep/documents.py로 옮김"
+   },
+   "review_commit": "330dbc9b6519e9ea7a74d47b250dcb272b0cf801",
+   "review_verdict": "PASS"
+  },
+  {
+   "id": "T2",
+   "executor": "codex",
+   "dispatch": "claude-agent a68ad096658aff16f → codex:codex-rescue (--fresh, write)",
+   "red": "backend/.venv/bin/python -m pytest backend/tests/test_v1_boundary.py backend/tests/prep/test_pipeline.py::test_version_snapshot_writes_no_compat_output backend/tests/prep/test_prep_api.py::test_finished_result_reused_without_compat_file -q :: test_prep_package_has_no_nested_v1_import:\n>       assert {k: v for k, v in offenders.items() if v} == {}\nE       AssertionError: assert {'prep/pipeli...eprocessing']} == {}\nE         \nE         Left contains 1 more item:\nE         {'prep/pipeline.py': ['app.services.preprocessing']}\nE         Use -v to get more diff\n\nbackend/tests/test_v1_boundary.py:41: AssertionError\n\ntest_version_snapshot_writ",
+   "green": "backend/.venv/bin/python -m pytest backend/tests/test_v1_boundary.py backend/tests/prep backend/tests/test_review_fix1.py backend/tests/test_integration_stage0_2.py -q -p no:cacheprovider :: 113 passed",
+   "review": ".harness/reports/review-T2.json (verdict PASS)",
+   "reviewer": {
+    "executor": "codex",
+    "role": "code-review",
+    "dispatch": "01a1573e-d24f-7210-a2f9-125fad8cb553",
+    "freshSession": true
+   },
+   "committer": "controller",
+   "repository_control": {
+    "mode": "controller_managed"
+   },
+   "base_commit": "d05881eaa9a85463a58429744bb13f1e68cbea84",
+   "commit": {
+    "sha": "6f20ec0515eb6a9c182fe03ab8baa6213a0f453c",
+    "message": "refactor(prep): 호환 파일 preprocessed/ 쓰기와 재사용 조건에서 제거 (D-065)"
+   },
+   "review_commit": "6f20ec0515eb6a9c182fe03ab8baa6213a0f453c",
+   "review_verdict": "PASS"
+  },
+  {
+   "id": "T3",
+   "executor": "codex",
+   "dispatch": "claude-agent a0565ac0319a0dd02 → codex:codex-rescue (--fresh, write)",
+   "red": "backend/.venv/bin/python -m pytest backend/tests/test_v1_boundary.py -q -p no:cacheprovider -o truncation_limit_lines=0 -o truncation_limit_chars=0 :: =================================== FAILURES ===================================\n_____________________ test_v1_routes_removed_and_chat_kept _____________________\n\n    def test_v1_routes_removed_and_chat_kept():\n        routes = registered()\n>       assert REMOVED & routes == set()\nE       AssertionError: assert {('GET', '/cl.../{sid}'), ...} == set()\nE         \nE         Extra items in the left se",
+   "green": "backend/.venv/bin/python -m pytest backend/tests/test_v1_boundary.py backend/tests/test_integration_stage0_2.py backend/tests/test_integration_stage3_5.py backend/tests/test_review_fix1.py backend/tests/known backend/tests/context backend/tests/model -q -p no:cacheprovider :: 390 passed",
+   "review": ".harness/reports/review-T3.json (verdict PASS)",
+   "reviewer": {
+    "executor": "codex",
+    "role": "code-review",
+    "dispatch": "01a1574c-d07a-7091-92d7-cbb2a14bd85f",
+    "freshSession": true
+   },
+   "committer": "controller",
+   "repository_control": {
+    "mode": "controller_managed"
+   },
+   "base_commit": "6f20ec0515eb6a9c182fe03ab8baa6213a0f453c",
+   "commit": {
+    "sha": "9db84bf6eb986e07f161b3e55d3b4db508d2cf2e",
+    "message": "chore(v1): v1 백엔드 경로·서비스 삭제"
+   },
+   "review_commit": "9db84bf6eb986e07f161b3e55d3b4db508d2cf2e",
+   "review_verdict": "PASS"
+  },
+  {
+   "id": "T4",
+   "executor": "codex",
+   "dispatch": "claude-agent aaeb1ae36e5507d8c → codex:codex-rescue (--fresh, write)",
+   "red": "backend/.venv/bin/python -m pytest backend/tests/ops/test_v1_dependencies.py -q -p no:cacheprovider :: Before deletion: AssertionError: assert not True at backend/tests/ops/test_v1_dependencies.py:7; 1 failed, 1 warning in 0.03s (exit 1).",
+   "green": "backend/.venv/bin/python -m pytest backend/tests/ops/test_v1_dependencies.py -q -p no:cacheprovider :: 1 passed",
+   "review": ".harness/reports/review-T4.json (verdict PASS)",
+   "reviewer": {
+    "executor": "codex",
+    "role": "code-review",
+    "dispatch": "01a15758-919f-78b0-a082-92be598fefd8",
+    "freshSession": true
+   },
+   "committer": "controller",
+   "repository_control": {
+    "mode": "controller_managed"
+   },
+   "base_commit": "9db84bf6eb986e07f161b3e55d3b4db508d2cf2e",
+   "commit": {
+    "sha": "56cae23a6cf2e0355fccc7e80f2fbf4ec6eda945",
+    "message": "chore(v1): 쓰지 않는 Flask 원형 workflow.py 삭제"
+   },
+   "review_commit": "56cae23a6cf2e0355fccc7e80f2fbf4ec6eda945",
+   "review_verdict": "PASS"
+  },
+  {
+   "id": "T5",
+   "executor": "codex",
+   "dispatch": "claude-agent a0d00656bb7cd3ac4 (T5) + a3da772838a26abba (review-fix) → codex:codex-rescue (--fresh, write)",
+   "red": "npm --prefix frontend test -- src/components/LaterStageBanner.test.ts :: 4 tests failed / 3 passed; 5 assertion failures (three wrapper assertions and two CSS assertions). Existing behavior tests passed. Exact assertion failure excerpts:\nFAIL src/components/LaterStageBanner.test.ts > LaterStageBanner > needs-prep has a scoped banner wrapper\nFAIL src/components/LaterStageBanner.test.ts > LaterStageBanner > legacy has a scoped banner wrapper\nAssertionError: expected '<di",
+   "green": "npm --prefix frontend test -- src/components/LaterStageBanner.test.ts src/lib/logic/laterStageGate.test.ts src/app/pipeline/personas/page.test.ts src/app/pipeline/clustering/page.test.ts src/components/persona/insight-route.test.ts :: 63 passed",
+   "review": ".harness/reports/review-T5.json (verdict PASS)",
+   "reviewer": {
+    "executor": "codex",
+    "role": "code-review",
+    "dispatch": "01a15765-7575-7932-9f61-de873ba2ac63",
+    "freshSession": true
+   },
+   "committer": "controller",
+   "repository_control": {
+    "mode": "controller_managed"
+   },
+   "base_commit": "2a1360a328c534c71bf7e1575794d25797236fe7",
+   "commit": {
+    "sha": "6bcaa307a3109cdbfc25a31c30d9887be74cbcf6",
+    "message": "fix(pipeline): 모바일에서 단계 배너 버튼을 다음 줄로 내림"
+   },
+   "review_commit": "6bcaa307a3109cdbfc25a31c30d9887be74cbcf6",
+   "review_verdict": "PASS"
+  },
+  {
+   "id": "T6",
+   "executor": "codex",
+   "dispatch": "claude-agent ae7fa4967778d9dce → codex:codex-rescue (--fresh, write)",
+   "red": "npm --prefix frontend test -- src/lib/api.test.ts ::  FAIL  src/lib/api.test.ts > keeps only the session and chat helpers in the v1 api module\nAssertionError: expected [ 'clusterRefine', …(21) ] to deeply equal [ 'getSession', 'saveSession', …(2) ]\n\n- Expected\n+ Received\n\n  [\n+   \"clusterRefine\",\n+   \"deleteSession\",\n+   \"getClusterStatus\",\n+   \"getCrawlStatus\",\n+   \"getEmbedStatus\",\n+   \"getPersonaStatus\",\n+   \"getPreprocessStatus\",\n+   \"getSNAData",
+   "green": "npm --prefix frontend test -- src/lib/api.test.ts :: 3 passed",
+   "review": ".harness/reports/review-T6.json (verdict PASS)",
+   "reviewer": {
+    "executor": "codex",
+    "role": "code-review",
+    "dispatch": "01a1576b-5094-7921-ac8b-c06fe437cb3f",
+    "freshSession": true
+   },
+   "committer": "controller",
+   "repository_control": {
+    "mode": "controller_managed"
+   },
+   "base_commit": "6bcaa307a3109cdbfc25a31c30d9887be74cbcf6",
+   "commit": {
+    "sha": "c15ea7fa22e3641078939a524f5a5581b2689127",
+    "message": "chore(v1): 고아가 된 v1 화면·컴포넌트·API 함수 삭제"
+   },
+   "review_commit": "c15ea7fa22e3641078939a524f5a5581b2689127",
+   "review_verdict": "PASS"
+  }
+ ]
+}

@@ -91,24 +91,6 @@ def test_prev_session_statements_copied(client, monkeypatch):
     assert all(i.vectorRow is not None for i in items)
 
 
-def test_clustering_reads_store_no_embed_calls(prepared, monkeypatch):
-    from app.services import clustering
-    embed = Mock(side_effect=AssertionError('must reuse vectors'))
-    monkeypatch.setattr(clustering, 'get_embeddings', embed)
-    clustering.run_clustering(dict(sid='s1', num_clusters=1))
-    assert clustering.job_manager.get('cluster', 's1')['status'] == 'done'
-    embed.assert_not_called()
-
-
-def test_clustering_input_is_core_supporting_only(prepared, monkeypatch):
-    from app.services import clustering
-    saved = []
-    monkeypatch.setattr(clustering, 'save_jsonl', lambda key, docs: saved.extend(docs))
-    monkeypatch.setattr(clustering, 'get_embeddings', lambda texts: np.ones((len(texts), 1024)))
-    clustering.run_clustering(dict(sid='s1', num_clusters=1))
-    assert [d['doc_id'] for d in saved] == ['statement', 'doc', 'near', 'new']
-
-
 def test_no_pinecone_import():
     import app.main
     assert 'pinecone' not in sys.modules
@@ -143,20 +125,11 @@ def test_search_reasons_and_query_batch(prepared, search_setup, monkeypatch):
     assert search.search_docs('s1', ['q'], 5).reason == 'no_labels'
 
 
-def test_zero_vectors_and_missing_export(prepared, monkeypatch):
+def test_search_zero_vectors_returns_no_vectors(prepared):
     from app.known.filter import search_docs
-    from app.services import clustering
     for shard in (prepared[0] / 'vectors').glob('*.f16'):
         shard.write_bytes(bytes(shard.stat().st_size))
     assert search_docs('s1', ['q'], 5).reason == 'no_vectors'
-    clustering.run_clustering(dict(sid='s1'))
-    assert clustering.job_manager.get('cluster', 's1')['status'] == 'error'
-    store.update_session('s1', {'training': {'exportRef': None}})
-    fallback = Mock(side_effect=AssertionError('no fallback'))
-    monkeypatch.setattr(clustering, 'load_data', fallback)
-    clustering.run_clustering(dict(sid='s1'))
-    assert clustering.job_manager.get('cluster', 's1')['error'] == '5단계 결과가 없습니다'
-    fallback.assert_not_called()
 
 
 def test_known_api_crud_and_unconnected(client, prepared, monkeypatch):
@@ -200,29 +173,6 @@ def test_callers_novel_and_sources(client, search_setup, monkeypatch):
         assert [d['doc_id'] for d in response['results' if path == '/search' else 'sources']] == ['new']
 
 
-def test_personas_queries_batched(search_setup, monkeypatch):
-    from app.services import personas
-    from app.known.filter import SearchResult
-    search = Mock(return_value=SearchResult([[], []], 'all_known'))
-    monkeypatch.setattr(personas, 'search_docs', search)
-    monkeypatch.setattr(personas, 'load_data', lambda key: [dict(cluster=i, kw=str(i), title='EXCLUDED', desc='EXCLUDED') for i in range(2)])
-    monkeypatch.setattr(personas, 'load_json', lambda key: None)
-    monkeypatch.setattr(personas, 'save_json', lambda *args: None)
-    llm = Mock(return_value='[]')
-    monkeypatch.setattr(personas, 'call_claude', llm)
-    personas.run_persona({'sid': 's1'})
-    search.assert_called_once_with('s1', ['0', '1'], top_k=10, novel=True)
-    assert 'EXCLUDED' not in llm.call_args.args[0]
-
-
-def test_embedding_immediately_done(prepared, monkeypatch):
-    from app.services.embedding import run_embedding
-    from app.jobs.manager import job_manager
-    run_embedding({'sid': 's1'})
-    job = job_manager.get('embed', 's1')
-    assert job['status'] == 'done' and job['message'] == '3단계 벡터 사용'
-
-
 def test_search_uses_preparation_embedder(prepared, monkeypatch):
     from app.known.filter import search_docs
     store.write_json(prepared[0] / 'manifest.json', {'embedder': {'name': 'fake', 'model': 'voyage-4', 'dim': 1024}})
@@ -248,67 +198,6 @@ def test_statement_survives_embedding_failure(prepared, monkeypatch):
     item = known.add('s1', dict(type='statement', text='keep this'))
     assert item.vectorRow is None
     assert known.list_known('s1')[0].text == 'keep this'
-
-
-def test_clustering_follows_inherited_export_ref(prepared, monkeypatch):
-    from app.context import versions
-    from app.services import clustering
-    versions.create_version('s1', 'v1', 'stage6', '')
-    embed = Mock(side_effect=AssertionError('must reuse vectors'))
-    monkeypatch.setattr(clustering, 'get_embeddings', embed)
-    clustering.run_clustering({'sid': 's1', 'num_clusters': 1})
-    assert clustering.job_manager.get('cluster', 's1')['status'] == 'done'
-    embed.assert_not_called()
-
-
-@pytest.fixture
-def persona_prompt(monkeypatch):
-    from app.services import personas
-    monkeypatch.setattr(personas, 'load_json', lambda key: None)
-    monkeypatch.setattr(personas, 'save_json', lambda *args: None)
-    llm = Mock(return_value='[]')
-    monkeypatch.setattr(personas, 'call_claude', llm)
-    return personas, llm
-
-
-@pytest.mark.parametrize('reason', ['no_vectors', 'no_labels', 'embedder_unconnected', 'all_known'])
-def test_persona_fallback_reasons_and_known_exclusion(data_dir, persona_prompt, monkeypatch, reason):
-    from app.known.filter import SearchResult
-    personas, llm = persona_prompt
-    store.update_session('legacy', {'knownInsights': [dict(type='doc', doc_id='known', text='known')]})
-    docs = [dict(cluster=0, kw='query', doc_id='known', title='KNOWN_TITLE')]
-    docs += [dict(cluster=0, kw='query', doc_id=str(i), title=f'EVIDENCE_{i}_END') for i in range(21)]
-    monkeypatch.setattr(personas, 'load_data', lambda key: docs)
-    # The legacy case exercises real search with no derivedRef.
-    if reason != 'no_vectors':
-        monkeypatch.setattr(personas, 'search_docs', Mock(return_value=SearchResult([[]], reason)))
-    personas.run_persona({'sid': 'legacy'})
-    assert personas.job_manager.get('persona', 'legacy')['status'] == 'done'
-    prompt = llm.call_args.args[0]
-    assert ('EVIDENCE_0_END' in prompt) == (reason != 'all_known')
-    assert 'KNOWN_TITLE' not in prompt
-    assert 'EVIDENCE_19_END' not in prompt  # Slice raw cluster to 20 before filtering.
-
-
-@pytest.mark.parametrize('all_empty', [False, True])
-def test_persona_skips_empty_queries(data_dir, persona_prompt, monkeypatch, all_empty):
-    from app.known.filter import SearchResult
-    personas, llm = persona_prompt
-    docs = [dict(cluster=0, title='EMPTY_QUERY_EVIDENCE', kw='  '),
-            dict(cluster=1, title='SECOND_CLUSTER', kw='' if all_empty else 'query')]
-    monkeypatch.setattr(personas, 'load_data', lambda key: docs)
-    search = Mock(return_value=SearchResult([[dict(title='RAG_EVIDENCE')]]))
-    monkeypatch.setattr(personas, 'search_docs', search)
-    personas.run_persona({'sid': 's1'})
-    assert personas.job_manager.get('persona', 's1')['status'] == 'done'
-    prompt = llm.call_args.args[0]
-    assert 'EMPTY_QUERY_EVIDENCE' in prompt
-    if all_empty:
-        search.assert_not_called()
-        assert 'SECOND_CLUSTER' in prompt
-    else:
-        search.assert_called_once_with('s1', ['query'], top_k=10, novel=True)
-        assert 'RAG_EVIDENCE' in prompt.split('### 클러스터 2')[1]
 
 
 def test_search_releases_lock_before_embedding_and_scans(prepared, monkeypatch):

@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Error\nTimeoutError: locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('nav a[href=\"/pipeline/clustering\"]') to be visible\n"
+    }
+  ],
+  "isError": true
+}

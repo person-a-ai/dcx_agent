@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Error\nReferenceError: page.waitForResponse: URL is not defined"
+    }
+  ],
+  "isError": true
+}

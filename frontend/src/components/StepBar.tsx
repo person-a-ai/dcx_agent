@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { Check } from "lucide-react";
 
 import { completedThrough } from "@/lib/logic/completedThrough";
+import { laterStagesOpen, LATER_STAGE_LOCK_TITLE } from "@/lib/logic/laterStageGate";
 
 import { useDirty } from "./DirtyProvider";
 
@@ -66,9 +67,9 @@ export default function StepBar({ currentStep, session }: { currentStep: unknown
       <span>{step.name}</span>
       {i === viewed && <small>진행 중</small>}
     </>;
-    const path = i === 7 && !(session?.prep as {derivedRef?: unknown} | undefined)?.derivedRef ? null : step.path;
+    const path = i >= 6 && !laterStagesOpen(session) ? null : step.path;
     return path === null
-      ? <a key={step.name} {...props} role="link" aria-disabled="true" title="다음 묶음에서 열립니다">{content}</a>
+      ? <a key={step.name} {...props} role="link" aria-disabled="true" title={LATER_STAGE_LOCK_TITLE}>{content}</a>
       : <Link key={step.name} {...props} href={path} onClick={e => {
         if (!confirmNavigation()) e.preventDefault();
       }}>{content}</Link>;

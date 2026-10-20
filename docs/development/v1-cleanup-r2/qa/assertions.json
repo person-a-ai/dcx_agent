@@ -1,0 +1,115 @@
+{
+  "QA-E2E-001": {
+    "four locked": true,
+    "four exact titles": true,
+    "six earlier hrefs": true,
+    "URL unchanged": true
+  },
+  "QA-E2E-002": {
+    "exact banner": true,
+    "no prohibited calls": true,
+    "action destination": true
+  },
+  "QA-E2E-003": {
+    "persona banner": true,
+    "old Start absent": true,
+    "no prohibited calls": true,
+    "step unchanged": true
+  },
+  "QA-E2E-006": {
+    "initial no prep": true,
+    "first status done": true,
+    "no compatibility directory before or after": true,
+    "manifest exists without compatRef": true,
+    "reused true": true,
+    "clustering enabled": true
+  },
+  "QA-E2E-007": {
+    "three pages": true,
+    "three exact banners": true,
+    "three return actions": true,
+    "no prohibited calls": true
+  },
+  "QA-E2E-008": {
+    "insight prep banner": true,
+    "no prohibited calls": true,
+    "insights <= control": true
+  },
+  "QA-E2E-009": {
+    "all ten links on all three pages": true,
+    "clustering execution button": true,
+    "new persona screen without prep gate": true,
+    "new insight screen without legacy gate": true,
+    "zero pageerror": true,
+    "zero 404": true,
+    "only exact allowed console errors": true
+  },
+  "QA-NEG-001": {
+    "all 13 tested": true,
+    "all removed": true,
+    "no Traceback": true
+  },
+  "QA-NEG-002": {
+    "three calls": true,
+    "none 404": true
+  },
+  "QA-NEG-003": {
+    "empty storage": true,
+    "exact banner": true,
+    "action": true,
+    "zero errors": true
+  },
+  "QA-EDGE-001": {
+    "viewport": true,
+    "72px sidebar": true,
+    "text labels hidden": true,
+    "banner in viewport and visually unclipped": true,
+    "button in viewport": true,
+    "button click": true,
+    "no horizontal overflow": true
+  },
+  "QA-EDGE-002": {
+    "running is running": true,
+    "running derivedRef exists yet locked": true,
+    "only locked then unlocked transition": true,
+    "unlock after done": true,
+    "all four unlocked": true,
+    "no page navigation before unlock": true,
+    "reload preserves link": true
+  },
+  "QA-EDGE-003": {
+    "created v2 from stage3": true,
+    "v2 invalid prep": true,
+    "v2 four locked": true,
+    "v2 prep banner": true,
+    "v1 completed": true,
+    "v1 clustering open": true,
+    "v1 personas open": true
+  },
+  "QA-EDGE-004": {
+    "six links": true,
+    "2px visible outlines": true,
+    "locked items skipped": true
+  },
+  "QA-REG-002": {
+    "redirect destination": true,
+    "rendered": true
+  },
+  "QA-REG-003": {
+    "six rows inspected": true,
+    "all keys": true,
+    "desc maximum": true
+  },
+  "QA-REG-004": {
+    "keyword screen": true,
+    "zero console errors": true
+  },
+  "QA-REG-005": {
+    "existing banner": true
+  },
+  "QA-REG-006": {
+    "chat route alive": true,
+    "panel displays response": true,
+    "insight route alive": true
+  }
+}

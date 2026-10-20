@@ -1,0 +1,11 @@
+{
+  "kind": "design",
+  "surface": "web",
+  "document": "docs/development/v1-cleanup/02-design.md",
+  "mockup": {
+    "provider": "Claude (local HTML, inlined app CSS @4444a50)",
+    "invocation": "none: /claude-design not used, reason recorded in 02-design.md",
+    "entry": "docs/development/v1-cleanup/mockup/index.html",
+    "files": ["docs/development/v1-cleanup/mockup/index.html"]
+  }
+}

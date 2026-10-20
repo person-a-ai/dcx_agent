@@ -5,7 +5,7 @@ from app.context import store, versions
 from app.crawl import control, report
 from app.crawl.queue import CrawlQueue, DDL
 from app.crawl.writer import DocWriter
-from app.services import preprocessing
+from app.prep.documents import crawl_docs
 from tests.crawl.test_crawl_api import env, prepared
 
 
@@ -37,7 +37,7 @@ def paused_detail(env, reason='blocked'):
 
 
 @pytest.mark.parametrize('reason', ['blocked', 'parse_error'])
-def test_finish_partial(env, reason, monkeypatch):
+def test_finish_partial(env, reason):
     root = paused_detail(env, reason)
     with closing(DocWriter(root / 'docs')) as writer:
         writer.write({'doc_id': 'collected', 'source': 'fixture', 'body': 'already collected full document', 'fetch_level': 'full'})
@@ -56,28 +56,9 @@ def test_finish_partial(env, reason, monkeypatch):
     resumed = env.client.post('/crawl/S/resume?version=v1')
     assert resumed.status_code == 409, resumed.text
     assert 'No unfinished phase to resume' in resumed.text
-    saved = []
-    monkeypatch.setattr(preprocessing, 'save_jsonl', lambda path, docs: saved.extend(docs))
-    preprocessing.preprocess_data({'sid': 'S'})
-    assert [doc['doc_id'] for doc in saved] == ['collected']
+    assert [doc['doc_id'] for doc in crawl_docs('S', store.load_session('S'))] == ['collected']
     assert versions.create_version('S', 'v1', 'stage3', '') == 'v2'
     assert store.load_session('S')['collectionId'] == 'c1'
-
-
-@pytest.mark.parametrize('excluded', [['JOONG'], ' JOONG , unused '])
-def test_preprocess_excludes_cafe_name_and_slug(monkeypatch, excluded):
-    docs = [
-        {'doc_id': 'name', 'src_meta': {'cafe': 'Joong market'}},
-        {'doc_id': 'slug', 'src_meta': {'cafe': '중고나라', 'cafe_id': 'joonggonara'}},
-        {'doc_id': 'keep', 'src_meta': {'cafe': 'Other', 'cafe_id': 'other', 'note': 'joong'}},
-        {'doc_id': 'no_meta'},
-    ]
-    docs = [{**doc, 'body': 'joong in article content is retained', 'fetch_level': 'full'} for doc in docs]
-    saved = []
-    monkeypatch.setattr(preprocessing, '_crawl_docs', lambda sid: docs)
-    monkeypatch.setattr(preprocessing, 'save_jsonl', lambda path, items: saved.extend(items))
-    preprocessing.preprocess_data({'sid': 'S', 'excludeCafes': excluded})
-    assert [doc['doc_id'] for doc in saved] == ['keep', 'no_meta']
 
 
 @pytest.mark.parametrize('case', ['live', 'no_pause', 'list', 'version'])
