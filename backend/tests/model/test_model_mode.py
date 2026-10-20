@@ -159,24 +159,6 @@ def test_training_rows_alignment_and_truncation(data_dir):
     assert targets.weights.tolist() == [1, 3] and X[:, -1].tolist() == [1, 0]
 
 
-def test_legacy_train_is_readonly(client, data_dir, monkeypatch):
-    from app.routers import training
-    from app.jobs.manager import job_manager
-    sid = 'legacy_model'
-    store.update_session(sid, {'training': {'status': 'done', 'scores': {'LSTM': .8}}})
-    original = (store.session_dir(sid) / 'session.json').read_bytes()
-    class InlineThread:
-        def __init__(self, target, **kw):
-            self.target = target
-        def start(self):
-            self.target()
-    monkeypatch.setattr(training.threading, 'Thread', InlineThread)
-    response = client.post('/train', json={'sid': sid})
-    assert response.status_code == 200
-    assert client.get(f'/train-status/{sid}').json()['scores'] == {'LSTM': .8}
-    assert (store.session_dir(sid) / 'session.json').read_bytes() == original
-
-
 def test_missing_vector_routes_to_human(client, data_dir, monkeypatch):
     sid, docs = prepared(data_dir)
     root = data_dir / f'derived/{sid}/c1/p_123456789abc/docs'

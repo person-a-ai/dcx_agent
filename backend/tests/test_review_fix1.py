@@ -1,5 +1,4 @@
 """R-111 regressions: each test was run red before implementation."""
-import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -13,7 +12,7 @@ from app.label import audit, gpt, judge, route, rule
 from app.label.overview import labels_for, overview
 from app.label.schema import Tags
 from app.model import export, infer, monitor
-from tests.model.test_model_mode import prepared, context
+from tests.model.test_model_mode import prepared
 from tests.model.test_export import seed
 
 
@@ -74,14 +73,6 @@ def test_c3_unfinished_crawl_cannot_start_or_reuse(client, data_dir, monkeypatch
         store.write_json(root / 'manifest.json', dict(status='done'))
         store.write_json(root / 'stage_3.json', {})
     response = client.post('/prep/prepcheck/run')
-    assert response.status_code == 409
-    assert response.json()['error']['message'] == '수집이 끝난 뒤에 전처리를 실행할 수 있습니다.'
-
-
-def test_c3_legacy_endpoint_rejects_unfinished(client, data_dir, monkeypatch):
-    prep_session(data_dir, monkeypatch)
-    monkeypatch.setattr('app.routers.preprocessing.threading.Thread', lambda **kw: SimpleNamespace(start=lambda: None))
-    response = client.post('/preprocess', json={'sid': 'prepcheck'})
     assert response.status_code == 409
     assert response.json()['error']['message'] == '수집이 끝난 뒤에 전처리를 실행할 수 있습니다.'
 
@@ -190,11 +181,9 @@ def test_g4_unknown_channel_zero_hot(doc):
     assert X[0, 1029] == pytest.approx(np.log1p(4))
 
 
-@pytest.mark.parametrize('legacy', [False, True])
-def test_g5_changed_prep_identity_locked(client, data_dir, monkeypatch, legacy):
+def test_g5_changed_prep_identity_locked(client, data_dir, monkeypatch):
     prep_session(data_dir, monkeypatch, started=True, completed=True)
-    monkeypatch.setattr('app.routers.preprocessing.threading.Thread', lambda **kw: SimpleNamespace(start=lambda: None))
-    response = client.post('/preprocess', json={'sid': 'prepcheck'}) if legacy else client.post('/prep/prepcheck/run')
+    response = client.post('/prep/prepcheck/run')
     assert response.status_code == 409
     assert response.json()['error']['message'] == '라벨링을 시작한 뒤에는 이 버전에서 바꿀 수 없습니다. 새 버전에서 다시 하세요.'
 
@@ -222,29 +211,15 @@ def test_c3_unverified_old_result_not_reused_after_finalization(client, data_dir
     assert response.json()['reused'] is False
 
 
-@pytest.mark.parametrize('legacy', [False, True])
-def test_g5_same_ref_reuse_allowed_after_labeling(client, data_dir, monkeypatch, legacy):
+def test_g5_same_ref_reuse_allowed_after_labeling(client, data_dir, monkeypatch):
     ref = prep_session(data_dir, monkeypatch, completed=True, started=True)
     store.update_session('prepcheck', {'prep': {'derivedRef': ref, 'status': 'done'}})
     root = data_dir / 'derived/prepcheck/c1' / ref['prepKey']
     store.write_json(root / 'manifest.json', dict(status='done', collectionFinalized=True))
     store.write_json(root / 'stage_3.json', {})
-    monkeypatch.setattr('app.routers.preprocessing.threading.Thread', lambda **kw: SimpleNamespace(start=lambda: None))
-    response = client.post('/preprocess', json={'sid': 'prepcheck'}) if legacy else client.post('/prep/prepcheck/run')
+    response = client.post('/prep/prepcheck/run')
     assert response.status_code == 200
     assert store.load_session('prepcheck')['prep']['derivedRef'] == ref
-
-
-@pytest.mark.parametrize('guard', ['unfinished', 'labeling'])
-def test_legacy_direct_service_guard(data_dir, monkeypatch, guard):
-    from app.services.preprocessing import preprocess_data
-    from app.jobs.manager import job_manager
-    prep_session(data_dir, monkeypatch, completed=guard == 'labeling', started=guard == 'labeling')
-    preprocess_data({'sid': 'prepcheck'})
-    result = job_manager.get('preprocess', 'prepcheck')
-    assert result['status'] == 'error'
-    assert ('수집이 끝난 뒤에' if guard == 'unfinished' else '새 버전에서 다시 하세요') in result['error']
-    assert not (data_dir / 'derived').exists()
 
 
 @pytest.mark.parametrize('kind', ['judge', 'monitor'])

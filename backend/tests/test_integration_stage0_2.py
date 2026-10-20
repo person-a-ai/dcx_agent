@@ -1,11 +1,9 @@
-"""Offline stage 0–2 and legacy downstream compatibility contracts."""
-from contextlib import closing
+"""Offline stage 0–2, preparation, and v2 export contracts."""
 import importlib.util
 import json
 from pathlib import Path
 import socket
 import time
-from types import SimpleNamespace
 
 import numpy as np
 import httpx
@@ -14,15 +12,11 @@ import pytest
 from app.config import settings
 from app.context import store
 from app.crawl import control, worker
-from app.crawl.writer import DocWriter
-from app.crawl.queue import CrawlQueue
 from app.external import naver_searchad, naver_shopping
 from app.external.base import integration_status
-from app.jobs.manager import job_manager
 from app.keywords import rounds
 from app.keywords.prompts import MIN_COUNT
 from app.llm.fake import FakeBackend
-from app.services.preprocessing import preprocess_data
 from app.services.s3 import load_data, save_jsonl
 
 CTX = dict(bk='에어컨', oneLiner='시원한 공기', researchQuestion={'text': '냉방 경험은?'},
@@ -206,12 +200,11 @@ def test_integrations_never_exposes_configured_secrets(client, offline, monkeypa
     assert all(getattr(settings, name) not in response.text for name in KEY_FIELDS)
 
 
-def test_downstream_clustering_reads_compat_fields(client, offline, monkeypatch):
+def test_downstream_export_preserves_prepared_fields(client, offline, data_dir):
     from app.label import questions, rule
     from app.label.schema import Tags
     from app.label.store import LabelStore
     from app.routers.prep import _root
-    from app.services import clustering
     from app.vectors.store import VectorStore
 
     sid, docs, _ = full_flow(client, offline)
@@ -236,115 +229,19 @@ def test_downstream_clustering_reads_compat_fields(client, offline, monkeypatch)
     assert response.json()['stage5']['model'] is None
     assert store.load_session(sid)['training']['exportRef'] == response.json()['exportRef']
 
-    texts_seen = []
-    fit_transform = clustering.TfidfVectorizer.fit_transform
-    def check_texts(vectorizer, texts):
-        texts_seen.extend(texts)
-        assert len(texts) == len(docs)
-        assert all(d['desc'] in text for d, text in zip(docs, texts))
-        return fit_transform(vectorizer, texts)
-    monkeypatch.setattr(clustering.TfidfVectorizer, 'fit_transform', check_texts)
-    from threadpoolctl import threadpool_limits
-    with threadpool_limits(limits=1):
-        clustering.run_clustering({'sid': sid, 'num_clusters': 3})
-    status = job_manager.get('cluster', sid)
-    assert status['status'] == 'done', status
-    assert status['total'] == 200
-    assert all(s['desc'] and s['cafe'] for c in status['clusters'].values() for s in c['samples'])
-    assert len(texts_seen) == len(docs)
-    assert all(d['desc'] in text for d, text in zip(docs, texts_seen))
-    clustered = {d['doc_id']: d for d in load_data(f'clusters/{sid}/')}
-    assert set(clustered) == {d['doc_id'] for d in docs}
-    assert all(clustered[d['doc_id']][field] == d[field]
+    rows = [json.loads(line) for line in (data_dir / response.json()['exportRef']).read_text().splitlines()]
+    exported = {d['doc_id']: d for d in rows}
+    assert set(exported) == {d['doc_id'] for d in docs}
+    assert all(exported[d['doc_id']][field] == d[field]
                for d in docs for field in ('desc', 'cafe', 'link'))
 
 
-@pytest.mark.parametrize('module,endpoint,service', [
-    ('training', '/train', 'train_models'), ('personas', '/persona', 'run_persona'),
-    ('clustering', '/cluster', 'run_clustering'), ('clustering', '/cluster-refine', 'refine_clusters')])
-def test_downstream_context_fallback(client, monkeypatch, module, endpoint, service):
-    import importlib
-    router = importlib.import_module(f'app.routers.{module}')
-    calls = []
-    monkeypatch.setattr(router, service, lambda config: calls.append(config) or {'status': 'done'})
-    class InlineThread:
-        def __init__(self, target, **kwargs):
-            self.target = target
-        def start(self):
-            self.target()
-    monkeypatch.setattr(router, 'threading', SimpleNamespace(Thread=InlineThread))
-    sid = client.post('/context', json=CTX).json()['sid']
-    assert client.post(endpoint, json={'sid': sid}).status_code == 200
-    assert calls[-1]['bk'] == CTX['bk']
-    assert calls[-1]['problemDef'] == CTX['researchQuestion']['text']
-    if module != 'clustering':
-        client.post(endpoint, json={'sid': sid, 'bk': 'explicit', 'problemDef': 'explicit question'})
-        assert calls[-1]['bk'] == 'explicit' and calls[-1]['problemDef'] == 'explicit question'
-
-
-@pytest.mark.parametrize('module,endpoint,service', [
-    ('training', '/train', 'train_models'), ('personas', '/persona', 'run_persona'),
-    ('clustering', '/cluster', 'run_clustering'), ('clustering', '/cluster-refine', 'refine_clusters')])
-@pytest.mark.parametrize('state', ['null_question', 'null_context', 'missing', 'corrupt'])
-def test_downstream_unavailable_context(client, data_dir, monkeypatch, module, endpoint, service, state):
-    import importlib
-    router = importlib.import_module(f'app.routers.{module}')
-    calls = []
-    monkeypatch.setattr(router, service, lambda config: calls.append(config) or {'status': 'done'})
-    class InlineThread:
-        def __init__(self, target, **kwargs):
-            self.target = target
-        def start(self):
-            self.target()
-    monkeypatch.setattr(router, 'threading', SimpleNamespace(Thread=InlineThread))
-    sid = 'fallback_' + state
-    path = data_dir / 'sessions' / sid / 'session.json'
-    if state == 'null_question':
-        store.write_json(path, {'projectContext': {'bk': 'fallback', 'researchQuestion': None}})
-    elif state == 'null_context':
-        store.write_json(path, {'projectContext': None})
-    elif state == 'corrupt':
-        store.atomic_write(path, '{broken')
-    assert client.post(endpoint, json={'sid': sid}).status_code == 200
-    assert calls[-1].get('bk', '') == ('fallback' if state == 'null_question' else '')
-    assert not calls[-1].get('problemDef')
-
-
-@pytest.mark.parametrize('payload', [None, '{broken', '{"projectContext": {"bk": "fallback", "researchQuestion": 7}}'])
-def test_fallback_unavailable_leaves_config_unchanged(data_dir, caplog, payload):
-    from app.context.compat import fill_bk_problem
-    sid = 'unavailable'
-    if payload is not None:
-        store.atomic_write(data_dir / 'sessions' / sid / 'session.json', payload)
-    config = {'bk': '', 'problemDef': '', 'other': 'preserved'}
-    original = dict(config)
-    fill_bk_problem(config, sid)
-    assert config == original
-    assert sid in caplog.text
-    assert str(data_dir) not in caplog.text
-    assert 'Traceback' not in caplog.text
-
-
-@pytest.mark.parametrize('config', [
-    {'bk': 'explicit', 'problemDef': 'explicit question'},
-    {'bk': 'explicit', 'problemDef': ''},
-    {'bk': '', 'problemDef': 'explicit question'}])
-def test_fallback_preserves_explicit_values(data_dir, config):
-    from app.context.compat import fill_bk_problem
-    store.write_json(data_dir / 'sessions' / 'explicit' / 'session.json', {'projectContext': CTX})
-    original = dict(config)
-    fill_bk_problem(config, 'explicit')
-    assert config == {'bk': original['bk'] or CTX['bk'],
-                      'problemDef': original['problemDef'] or CTX['researchQuestion']['text']}
-
-
-def test_missing_manifest_status_hides_path(client, data_dir):
+def test_missing_manifest_run_hides_path(client, data_dir):
     sid = client.post('/context', json=CTX).json()['sid']
     store.update_session(sid, {'collectionId': 'c2'})
-    preprocess_data({'sid': sid})
-    response = client.get(f'/preprocess-status/{sid}')
-    assert response.status_code == 200
-    assert response.json() == {'status': 'error', 'error': '수집이 끝난 뒤에 전처리를 실행할 수 있습니다.'}
+    response = client.post(f'/prep/{sid}/run')
+    assert response.status_code == 409
+    assert response.json()['error']['message'] == '수집이 끝난 뒤에 전처리를 실행할 수 있습니다.'
     assert str(data_dir) not in response.text
 
 

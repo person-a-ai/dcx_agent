@@ -93,7 +93,7 @@ Claude AI를 활용하여 소비자 인사이트 발굴을 위한 검색 키워�
 ### 관련 파일
 
 - **프론트엔드**: `frontend/src/app/pipeline/keywords/page.tsx`
-- **백엔드 라우터**: `backend/app/routers/keywords.py`
+- **백엔드 라우터**: `backend/app/routers/keywords_v2.py`
 - **서비스 (Claude)**: `backend/app/services/claude.py`
 - **서비스 (Naver)**: `backend/app/services/naver.py`
 - **컴포넌트**: `frontend/src/components/KeywordTag.tsx`
@@ -102,7 +102,7 @@ Claude AI를 활용하여 소비자 인사이트 발굴을 위한 검색 키워�
 
 | Method | Endpoint | 설명 |
 |--------|----------|------|
-| POST | `/generate-keywords` | 키워드 생성 (라운드별) |
+| POST | `/keywords/{sid}/rounds/{n}` | 키워드 생성 (라운드별) |
 
 ### 데이터 저장 경로
 
@@ -173,260 +173,23 @@ Claude AI를 활용하여 소비자 인사이트 발굴을 위한 검색 키워�
 
 ---
 
-## 4단계: 전처리 (Preprocessing)
-
-### 목적
-
-크롤링 데이터의 노이즈 제거, 중복 제거, 품질 필터링.
-
-### 전처리 로직
-
-1. S3에서 크롤링 데이터 로드: `crawl/{sid}/*.jsonl`
-2. **필터링 단계**:
-   - 광고 필터 매칭 제거 (제목 + 설명)
-   - 제외 카페 매칭 제거
-   - 링크 기준 중복 제거
-   - 제목 5자 미만 AND 설명 10자 미만 문서 제거
-3. 각 문서에 `idx` (원본 인덱스) 부여
-
-### 출력 정보
-
-- 원본 건수
-- 필터링 후 건수
-- 제거율(%)
-
-### 관련 파일
-
-- **프론트엔드**: `frontend/src/app/pipeline/preprocess/page.tsx`
-- **백엔드 라우터**: `backend/app/routers/preprocessing.py`
-- **서비스**: `backend/app/services/preprocessing.py`
-- **유틸리티**: `backend/app/utils/text.py`
-
-### API 엔드포인트
-
-| Method | Endpoint | 설명 |
-|--------|----------|------|
-| POST | `/preprocess` | 전처리 시작 |
-| GET | `/preprocess-status/{sid}` | 상태 조회 |
-
-### 데이터 저장 경로
-
-- S3: `preprocessed/{sid}/{timestamp}.jsonl`
-
----
-
-## 5단계: 라벨링 (Labeling)
-
-### 목적
-
-반지도 학습(Semi-supervised Learning)을 위해 전처리 데이터의 2% 샘플에 대해 관련/무관 수동 라벨링.
-
-### 라벨링 프로세스
-
-1. 전처리 데이터의 **2% 랜덤 샘플** 로드
-2. 배치당 최대 **20개 샘플** 표시
-3. 각 샘플에 **관련(1)** 또는 **무관(0)** 라벨 토글
-4. 최소 **5개** 이상 라벨링 필요
-5. 진행률: `라벨링 완료 수 / (전체 × 2%)`
-
-### 라벨 데이터 구조
-
-```json
-{
-  "title": "게시글 제목",
-  "desc": "게시글 설명",
-  "cafe": "카페명",
-  "kw": "검색 키워드",
-  "link": "URL",
-  "label": 1
-}
-```
-
-### 관련 파일
-
-- **프론트엔드**: `frontend/src/app/pipeline/labeling/page.tsx`
-- **백엔드 라우터**: `backend/app/routers/labeling.py`
-
-### API 엔드포인트
-
-| Method | Endpoint | 설명 |
-|--------|----------|------|
-| GET | `/sample/{sid}?percent=2` | 랜덤 샘플 추출 |
-| POST | `/save-session` | 라벨 결과 세션에 저장 |
-
-### 데이터 저장 경로
-
-- S3: `sessions/{sid}/session.json` 내 `labeledData` 배열
-
----
-
-## 6단계: 학습 (Training)
-
-### 목적
-
-라벨링된 소량의 데이터를 기반으로 앙상블 분류 모델을 학습하여, 전체 데이터에 관련성 점수 부여.
-
-### 모델 앙상블
-
-**TensorFlow 사용 가능 시:**
-
-| 모델 | 구조 |
-|------|------|
-| LSTM | Embedding → LSTM(64) → Dense(32) → Sigmoid |
-| CNN | Embedding → Conv1D(64, kernel=5) → GlobalMaxPool → Dense(32) → Sigmoid |
-| GRU | Embedding → GRU(64) → Dense(32) → Sigmoid |
-
-**TensorFlow 불가 시 (Scikit-learn 폴백):**
-
-| 모델 | 구조 |
-|------|------|
-| Logistic Regression | TF-IDF → LogisticRegression |
-| Random Forest | TF-IDF → RandomForestClassifier(100 trees) |
-| Gradient Boosting | TF-IDF → GradientBoostingClassifier(100 trees) |
-
-### 학습 프로세스
-
-1. 텍스트 토큰화 (최대 200단어, vocab 10,000)
-2. 3개 모델 각각 학습
-3. 전체 전처리 데이터에 대해 예측 수행
-4. **앙상블**: 3개 모델의 확률값 평균
-5. **임계값 0.5**: score ≥ 0.5 → 관련 문서
-
-### 관련 파일
-
-- **프론트엔드**: `frontend/src/app/pipeline/training/page.tsx`
-- **백엔드 라우터**: `backend/app/routers/training.py`
-- **서비스**: `backend/app/services/training.py`
-
-### API 엔드포인트
-
-| Method | Endpoint | 설명 |
-|--------|----------|------|
-| POST | `/train` | 학습 시작 (비동기) |
-| GET | `/train-status/{sid}` | 상태 조회 |
-
-### 데이터 저장 경로
-
-- S3: `classified/{sid}/relevant_{timestamp}.jsonl` (relevance_score 포함)
-- S3: `classified/{sid}/irrelevant_{timestamp}.jsonl`
-
----
-
-## 7단계: 클러스터링 (Clustering)
-
-### 목적
-
-관련 문서들을 주제별로 그룹화하고, 사용자가 클러스터를 선택/병합하여 정제.
-
-### 클러스터링 프로세스
-
-1. 관련 문서 로드 (`classified/{sid}/relevant_*.jsonl`)
-2. **Voyage AI 임베딩 생성**:
-   - 모델: `voyage-multilingual-2` (1024차원)
-   - 128건씩 배치 처리
-3. **최적 k 자동 결정**:
-   - 탐색 범위: k = 3 ~ min(15, 데이터수/10)
-   - 실루엣 점수(Silhouette Score) 최대값 선택
-4. **K-means 클러스터링** 수행
-5. **TF-IDF 키워드 추출**:
-   - Max features: 3,000 / N-gram: 1-2
-   - 클러스터당 상위 10개 키워드
-
-### 클러스터 정제
-
-- 체크박스로 유지할 클러스터 선택
-- 병합할 클러스터 지정 (예: "1,3,5" → 클러스터 1로 통합)
-- 정제 후 순차적 재인덱싱
-
-### 관련 파일
-
-- **프론트엔드**: `frontend/src/app/pipeline/clustering/page.tsx`
-- **백엔드 라우터**: `backend/app/routers/clustering.py`
-- **서비스**: `backend/app/services/clustering.py`
-- **임베딩**: `backend/app/services/voyage.py`
-
-### API 엔드포인트
-
-| Method | Endpoint | 설명 |
-|--------|----------|------|
-| POST | `/cluster` | 클러스터링 시작 |
-| GET | `/cluster-status/{sid}` | 상태 조회 |
-| POST | `/cluster-refine` | 클러스터 정제 |
-
-### 데이터 저장 경로
-
-- S3: `clusters/{sid}/cluster_{id}_{timestamp}.jsonl` (초기)
-- S3: `clusters_refined/{sid}/data_{timestamp}.jsonl` (정제 후)
-
----
-
-## 8단계: 페르소나 (Personas)
-
-### 목적
-
-정제된 클러스터 기반으로 Claude AI가 소비자 페르소나를 생성하고, Pinecone에 임베딩하여 RAG 검색 지원.
-
-### 페르소나 생성 프로세스
-
-1. 정제된 클러스터 데이터 로드
-2. 클러스터별 Pinecone RAG 검색 (키워드로 유사 문서 Top 10)
-3. 컨텍스트 구성: 클러스터명, 크기, 키워드 다양성, 샘플 문서
-4. Claude가 클러스터별 페르소나 생성:
-
-| 클러스터 크기 | 페르소나 수 |
-|-------------|-----------|
-| 50건 미만 | 1개 |
-| 50~200건 | 2개 |
-| 200건 이상 | 3개 |
-| 키워드 다양성 높음 | +1개 |
-
-### 페르소나 출력 구조
-
-```json
-[
-  {
-    "cluster_id": 1,
-    "cluster_name": "클러스터 이름",
-    "personas": [
-      {
-        "name": "위트있는 은유적 이름",
-        "situation": "소비자 상황 설명",
-        "pain_point": "핵심 고민",
-        "insight": "마케팅 액셔너블 인사이트"
-      }
-    ]
-  }
-]
-```
-
-### SNA 네트워크 시각화
-
-- D3.js force-directed 그래프
-- 노드 유형: 제품(indigo) → 클러스터(amber) → 페르소나(green)
-- 드래그 가능, 호버 시 pain_point + insight 툴팁
-
-### 관련 파일
-
-- **프론트엔드**: `frontend/src/app/pipeline/personas/page.tsx`
-- **백엔드 라우터**: `backend/app/routers/personas.py`, `backend/app/routers/embedding.py`
-- **서비스**: `backend/app/services/personas.py`, `backend/app/services/embedding.py`
-- **벡터 DB**: `backend/app/services/pinecone_svc.py`, `backend/app/services/voyage.py`
-- **컴포넌트**: `frontend/src/components/PersonaCard.tsx`, `frontend/src/components/SNAGraph.tsx`
-
-### API 엔드포인트
-
-| Method | Endpoint | 설명 |
-|--------|----------|------|
-| POST | `/persona` | 페르소나 생성 시작 |
-| GET | `/persona-status/{sid}` | 상태 조회 |
-| POST | `/embed` | 임베딩 시작 |
-| GET | `/embed-status/{sid}` | 임베딩 상태 조회 |
-| GET | `/sna-data/{sid}` | SNA 그래프 데이터 |
-
-### 데이터 저장 경로
-
-- S3: `personas/{sid}/result_{timestamp}.json`
-- Pinecone: `cx-{sid}` 인덱스 (1024차원, 코사인 메트릭)
+## 전처리 이후 단계 — v2 API
+
+v1 전처리·라벨링·학습·클러스터링·임베딩·페르소나 API는 제거되었다. 현재 단계별 요청은 아래 v2 경로를 사용한다.
+
+| 단계 | API 경로 | 백엔드 라우터 | 프론트엔드 페이지 |
+|------|----------|---------------|------------------|
+| 전처리 | `/prep/{sid}/*` (`POST /prep/{sid}/run`으로 실행) | `backend/app/routers/prep.py` | `frontend/src/app/pipeline/preprocess/page.tsx` |
+| 라벨링·검수 | `/label/{sid}/*` | `backend/app/routers/labeling_v2.py` | `frontend/src/app/pipeline/labeling/page.tsx` |
+| 학습·내보내기 | `/train/{sid}`, `/train/{sid}/*` | `backend/app/routers/training_v2.py` | `frontend/src/app/pipeline/training/page.tsx` |
+| 클러스터링 | `/segment/{sid}/*` | `backend/app/routers/segment.py` | `frontend/src/app/pipeline/clustering/page.tsx` |
+| 근거 탐색 | `/evidence/{sid}/*` | `backend/app/routers/evidence.py` | `frontend/src/app/pipeline/evidence/page.tsx` |
+| 페르소나 | `/persona/{sid}/*` | `backend/app/routers/stage8.py` | `frontend/src/app/pipeline/personas/page.tsx` |
+| 인사이트 | `/insight/{sid}/*` | `backend/app/routers/stage8.py` | `frontend/src/app/pipeline/insights/page.tsx` |
+
+전처리는 `backend/app/prep/documents.py`에서 collection 체인의 문서를 읽고 필터링하며, `backend/app/prep/pipeline.py`에서 실행한다. 결과는 `derived/{sid}/{collectionId}/{prepKey}/`에 저장하고, `desc`·`cafe`·`link`는 내보내기와 검색을 위해 유지한다. 별도의 v1 전처리 호환 파일은 생성하지 않는다.
+
+라벨링→학습→내보내기 결과는 세션의 `training.exportRef`로 찾는다. 기존 `clusters/`, `clusters_refined/`, `personas/` 데이터는 챗봇이 읽으므로 유지한다. `/chat`, `/insight-chat`, `/search`와 세션 API는 그대로 사용한다.
 
 ---
 
@@ -439,16 +202,15 @@ Claude AI를 활용하여 소비자 인사이트 발굴을 위한 검색 키워�
    ↓ sessions/{sid}/session.json → allKw
 [크롤링] Naver Cafe 대량 수집
    ↓ crawl/{sid}/*.jsonl
-[전처리] 노이즈·중복 제거
-   ↓ preprocessed/{sid}/*.jsonl
-[라벨링] 2% 수동 라벨링
-   ↓ sessions/{sid}/session.json → labeledData
-[학습] 3모델 앙상블 분류
-   ↓ classified/{sid}/relevant_*.jsonl
-[클러스터링] Voyage 임베딩 + K-means
-   ↓ clusters_refined/{sid}/data_*.jsonl
-[페르소나] Claude AI 페르소나 생성 + Pinecone 임베딩
-   ↓ personas/{sid}/result_*.json + Pinecone index
+[전처리] 문서 필터링·벡터 준비 — /prep/{sid}/*
+   ↓ derived/{sid}/{collectionId}/{prepKey}/
+[라벨링] 판정·사람 검수 — /label/{sid}/*
+[학습·내보내기] /train/{sid}, /train/{sid}/*
+   ↓ training.exportRef
+[클러스터링] /segment/{sid}/*
+[근거 탐색] /evidence/{sid}/*
+[페르소나] /persona/{sid}/*
+[인사이트] /insight/{sid}/*
 ```
 
 ---
