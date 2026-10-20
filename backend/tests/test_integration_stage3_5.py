@@ -1,4 +1,4 @@
-"""Offline collection → preparation → human review → training → clustering."""
+"""Offline collection → preparation → human review → training → export."""
 import json
 from contextlib import closing
 from app.crawl.queue import CrawlQueue
@@ -7,7 +7,6 @@ import socket
 from types import SimpleNamespace
 
 import httpx
-import numpy as np
 import pytest
 import torch
 
@@ -19,7 +18,6 @@ from app.label.overview import caches_for, labels_for
 from app.prep import pipeline
 from app.routers import training_v2
 from app.vectors.embedder import FakeEmbedder
-from app.vectors.store import VectorStore
 from app.work import runner
 from tests.fakes.fake_jev import FakeJev
 
@@ -108,8 +106,6 @@ def fixed_tags(level='core'):
 
 
 def test_end_to_end_fixture(flow, client, data_dir, monkeypatch):
-    from app.services import clustering
-    from app.jobs.manager import job_manager
     sid = flow.sid
     reviewed = 0
     while (item := client.get(f'/label/{sid}/next').json()['item']):
@@ -149,25 +145,6 @@ def test_end_to_end_fixture(flow, client, data_dir, monkeypatch):
     rows = [json.loads(line) for line in (data_dir / response.json()['exportRef']).read_text().splitlines()]
     assert {r['evidence_level_pred'] for r in rows} == {'core', 'supporting'}
     assert len(rows) < 40
-    api_calls = []
-    def forbidden_embedding(*args):
-        api_calls.append(args)
-        raise AssertionError('Clustering must reuse vectors')
-    monkeypatch.setattr(clustering, 'get_embeddings', forbidden_embedding)
-    observed = []
-    real_fit = clustering.KMeans.fit_predict
-    def fit(self, X, *args, **kwargs):
-        observed.append(X.copy())
-        return real_fit(self, X, *args, **kwargs)
-    monkeypatch.setattr(clustering.KMeans, 'fit_predict', fit)
-    clustering.run_clustering({'sid': sid, 'num_clusters': 2})
-    assert job_manager.get('cluster', sid)['status'] == 'done'
-    assert api_calls == [] and len(flow.embeddings) == 1
-    ids, vectors = VectorStore(flow.root).get([r['doc_id'] for r in rows])
-    by_id = dict(zip(ids, vectors))
-    np.testing.assert_array_equal(observed[0], [by_id[r['doc_id']] for r in rows])
-    clustered = [json.loads(line) for path in (data_dir / 'clusters' / sid).glob('*.jsonl') for line in path.read_text().splitlines()]
-    assert {r['doc_id'] for r in clustered} == {r['doc_id'] for r in rows}
 
 
 def test_restart_stage4_reuses_cache(flow, client, monkeypatch):

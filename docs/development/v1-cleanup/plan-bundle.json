@@ -1,0 +1,6 @@
+{
+  "kind": "plan",
+  "surface": "web",
+  "implementation": "docs/development/v1-cleanup/03-plan.md",
+  "qaPlan": "docs/development/v1-cleanup/QA_PLAN-v1-cleanup.md"
+}

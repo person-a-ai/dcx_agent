@@ -1,0 +1,1346 @@
+{
+  "screens": [
+    {
+      "time": "2026-10-20T07:50:22.143Z",
+      "url": "http://localhost:3411/pipeline/clustering",
+      "body": "이 단계부터 다시\n\n6단계 · 클러스터링\n\nTouch Point를 확정합니다\n\nCluster → Persona → Context 순서로 초안을 확인하고 확정하세요.\n\n잠정\n6-A · Cluster\n클러스터 이름\n0/0 확정\n6-B · Persona\nDesire · Goal\n잠김 · 6-A 확정 후\n6-C · Context\nContext 이름 · 행동\n잠김 · 6-B 확정 후\n\n학습 결과의 Core · Supporting 문서를 나눕니다.\n\n블로그 · 카페로 구조 만들기 (유튜브 댓글은 가까운 Context의 보조 근거)\n클러스터링 실행\n근거 탐색 실행",
+      "nav": [
+        {
+          "text": "시작",
+          "aria": null,
+          "href": "/pipeline/start",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "키워드",
+          "aria": null,
+          "href": "/pipeline/keywords",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "크롤링",
+          "aria": null,
+          "href": "/pipeline/crawling",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "전처리",
+          "aria": null,
+          "href": "/pipeline/preprocess",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "5라벨링",
+          "aria": null,
+          "href": "/pipeline/labeling",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "6학습",
+          "aria": null,
+          "href": "/pipeline/training",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "7클러스터링진행 중",
+          "aria": null,
+          "href": "/pipeline/clustering",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "8근거 탐색",
+          "aria": null,
+          "href": "/pipeline/evidence",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "9페르소나",
+          "aria": null,
+          "href": "/pipeline/personas",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "10인사이트",
+          "aria": null,
+          "href": "/pipeline/insights",
+          "title": null,
+          "tabindex": null
+        }
+      ]
+    },
+    {
+      "time": "2026-10-20T07:50:30.484Z",
+      "url": "http://localhost:3411/pipeline/personas",
+      "body": "8단계 · 페르소나\n\n세션 전체에서 어느 Context가 기회인가\n페르소나 만들기\n앞 층을 모두 확정한 뒤 진행하세요. 다시 불러오기\n페르소나 목록\n전체 맵\nPersona 카드\nOpportunity Map · Context 0개 · 기회 잠정\n0\n0.25\n0.5\n0.75\n1\n0\n0.25\n0.5\n0.75\n1\n중요도\n만족도\nA Exciting\nB Experiencing\nC Competitive\nD Forgiven\nE Dangling\nF At-risk\n\n기회 지도를 만들 Context가 없습니다.\n\n속 빈 모양 · 반례 Context / ★ 몰랐고 기회도 큰 지점 · 겹친 점은 아래 Context 표에서 각각 확인할 수 있습니다.\n\n점을 가리키거나 아래 표에서 Context를 고르세요.\n\nContext 비교 표",
+      "nav": [
+        {
+          "text": "시작",
+          "aria": null,
+          "href": "/pipeline/start",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "키워드",
+          "aria": null,
+          "href": "/pipeline/keywords",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "크롤링",
+          "aria": null,
+          "href": "/pipeline/crawling",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "전처리",
+          "aria": null,
+          "href": "/pipeline/preprocess",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "5라벨링",
+          "aria": null,
+          "href": "/pipeline/labeling",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "6학습",
+          "aria": null,
+          "href": "/pipeline/training",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "7클러스터링",
+          "aria": null,
+          "href": "/pipeline/clustering",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "8근거 탐색",
+          "aria": null,
+          "href": "/pipeline/evidence",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "9페르소나진행 중",
+          "aria": null,
+          "href": "/pipeline/personas",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "10인사이트",
+          "aria": null,
+          "href": "/pipeline/insights",
+          "title": null,
+          "tabindex": null
+        }
+      ]
+    },
+    {
+      "time": "2026-10-20T07:50:48.616Z",
+      "url": "http://localhost:3411/pipeline/insights",
+      "body": "8-E 인사이트 도출 › 인사이트별 Pain Point\n인사이트 0개 · 대화형\n인사이트 도출\n\n페르소나를 바탕으로 인사이트를 도출하세요.",
+      "nav": [
+        {
+          "text": "시작",
+          "aria": null,
+          "href": "/pipeline/start",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "키워드",
+          "aria": null,
+          "href": "/pipeline/keywords",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "크롤링",
+          "aria": null,
+          "href": "/pipeline/crawling",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "전처리",
+          "aria": null,
+          "href": "/pipeline/preprocess",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "5라벨링",
+          "aria": null,
+          "href": "/pipeline/labeling",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "6학습",
+          "aria": null,
+          "href": "/pipeline/training",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "7클러스터링",
+          "aria": null,
+          "href": "/pipeline/clustering",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "8근거 탐색",
+          "aria": null,
+          "href": "/pipeline/evidence",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "9페르소나",
+          "aria": null,
+          "href": "/pipeline/personas",
+          "title": null,
+          "tabindex": null
+        },
+        {
+          "text": "10인사이트진행 중",
+          "aria": null,
+          "href": "/pipeline/insights",
+          "title": null,
+          "tabindex": null
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:05.226Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/pipeline/clustering?_rsc=1w8sq",
+      "post": null
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:05.339Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] rebuilding",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:05.614Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/__nextjs_font/geist-latin.woff2",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:05.615Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/__nextjs_font/geist-latin.woff2"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.493Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/pipeline/clustering?_rsc=1w8sq"
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:06.494Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] done in 1258ms",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:06.497Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_e7388ad9._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:06.497Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/node_modules_18abd9f5._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:06.497Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_clustering_page_tsx_6c34f574._.js",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.508Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_clustering_page_tsx_6c34f574._.js"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.515Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_e7388ad9._.js"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.524Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/node_modules_18abd9f5._.js"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:06.568Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_e7388ad9._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:06.568Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/node_modules_18abd9f5._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:06.568Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_clustering_page_tsx_6c34f574._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:06.568Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:06.573Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:06.573Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:06.573Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:06.573Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.573Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_clustering_page_tsx_6c34f574._.js"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.592Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.600Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_e7388ad9._.js"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.609Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/node_modules_18abd9f5._.js"
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:06.624Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] rebuilding",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:06.656Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] done in 137ms",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.667Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"step\":\"start\",\"drafts\":{\"prep\":null},\"projectContext\":{\"bk\":\"QA 전처리 실행\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\",\"collectionId\":\"c1\",\"prep\":{\"config\":{\"adFilter\":[],\"excludeSources\":[],\"excludeChannels\":[],\"minBodyChars\":10,\"boilerplate\":{\"naver_cafe\":[\"카페 회원이 되시면 전체 내용을 볼 수 있습니다.\",\"카페 가입하기\"],\"naver_blog\":[\"공감\",\"이웃추가\"],\"clien\":[],\"ppomppu\":[],\"youtube\":[]},\"analyzer\":\"kiwi\",\"tokenPos\":[\"NNG\",\"NNP\",\"VV\",\"VA\",\"XR\"],\"embedder\":\"fake\",\"embedModel\":\"voyage-4\",\"embedDim\":1024},\"derivedRef\":{\"collectionId\":\"c1\",\"prepKey\":\"p_8d4420d74b0b\"},\"status\":\"done\",\"savedAt\":\"2026-10-20T07:49:34.574128+00:00\",\"reused\":true,\"runId\":null},\"completion\":{\"crawlDone\":true,\"prepDone\":true,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.685Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"step\":\"start\",\"drafts\":{\"prep\":null},\"projectContext\":{\"bk\":\"QA 전처리 실행\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\",\"collectionId\":\"c1\",\"prep\":{\"config\":{\"adFilter\":[],\"excludeSources\":[],\"excludeChannels\":[],\"minBodyChars\":10,\"boilerplate\":{\"naver_cafe\":[\"카페 회원이 되시면 전체 내용을 볼 수 있습니다.\",\"카페 가입하기\"],\"naver_blog\":[\"공감\",\"이웃추가\"],\"clien\":[],\"ppomppu\":[],\"youtube\":[]},\"analyzer\":\"kiwi\",\"tokenPos\":[\"NNG\",\"NNP\",\"VV\",\"VA\",\"XR\"],\"embedder\":\"fake\",\"embedModel\":\"voyage-4\",\"embedDim\":1024},\"derivedRef\":{\"collectionId\":\"c1\",\"prepKey\":\"p_8d4420d74b0b\"},\"status\":\"done\",\"savedAt\":\"2026-10-20T07:49:34.574128+00:00\",\"reused\":true,\"runId\":null},\"completion\":{\"crawlDone\":true,\"prepDone\":true,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.699Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "body": "{\"run\":null,\"status\":\"none\",\"step\":\"load\",\"progress\":0,\"confirm\":{\"clusters\":\"0/0\",\"personas\":\"0/0\",\"contexts\":\"0/0\"},\"detail\":{}}"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:06.707Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "body": "{\"run\":null,\"status\":\"none\",\"step\":\"load\",\"progress\":0,\"confirm\":{\"clusters\":\"0/0\",\"personas\":\"0/0\",\"contexts\":\"0/0\"},\"detail\":{}}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:15.042Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/sessions",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:15.056Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/sessions",
+      "body": "{\"status\":\"ok\",\"sessions\":[{\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"bk\":\"QA 전처리 실행\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\"},{\"sid\":\"qaold\",\"bk\":\"QA 옛 세션\",\"step\":\"clustering\",\"schemaVersion\":null,\"legacy\":true,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.497362+00:00\"},{\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"bk\":\"QA 전처리 전\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\"}]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:15.073Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:15.075Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions",
+      "body": "{\"activeVersion\":\"v1\",\"versions\":[{\"id\":\"v1\",\"parent\":null,\"restartFrom\":\"stage0\",\"createdAt\":\"2026-10-20T07:16:59.489197+00:00\",\"note\":\"\",\"readonly\":false,\"collectionId\":\"c1\"}]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:15.076Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:15.080Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"step\":\"start\",\"drafts\":{\"prep\":null},\"projectContext\":{\"bk\":\"QA 전처리 실행\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\",\"collectionId\":\"c1\",\"prep\":{\"config\":{\"adFilter\":[],\"excludeSources\":[],\"excludeChannels\":[],\"minBodyChars\":10,\"boilerplate\":{\"naver_cafe\":[\"카페 회원이 되시면 전체 내용을 볼 수 있습니다.\",\"카페 가입하기\"],\"naver_blog\":[\"공감\",\"이웃추가\"],\"clien\":[],\"ppomppu\":[],\"youtube\":[]},\"analyzer\":\"kiwi\",\"tokenPos\":[\"NNG\",\"NNP\",\"VV\",\"VA\",\"XR\"],\"embedder\":\"fake\",\"embedModel\":\"voyage-4\",\"embedDim\":1024},\"derivedRef\":{\"collectionId\":\"c1\",\"prepKey\":\"p_8d4420d74b0b\"},\"status\":\"done\",\"savedAt\":\"2026-10-20T07:49:34.574128+00:00\",\"reused\":true,\"runId\":null},\"completion\":{\"crawlDone\":true,\"prepDone\":true,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:22.308Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/pipeline/personas?_rsc=lxnra",
+      "post": null
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:22.432Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] rebuilding",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:23.691Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/pipeline/personas?_rsc=lxnra"
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:23.698Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] done in 1365ms",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:23.704Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_579b2110._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:23.704Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_personas_page_tsx_6c34f574._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:23.704Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_components_persona_persona_b3de1545.css",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:23.712Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_personas_page_tsx_6c34f574._.js"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:23.718Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_components_persona_persona_b3de1545.css"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:23.734Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_579b2110._.js"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:23.799Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_579b2110._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:23.799Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_personas_page_tsx_6c34f574._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:23.809Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/persona/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:23.810Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/persona/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:23.810Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:23.810Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_personas_page_tsx_6c34f574._.js"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:23.810Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_579b2110._.js"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:23.813Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico"
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:23.822Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] rebuilding",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:23.839Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] done in 117ms",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:23.905Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/persona/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "body": "{\"package\":false,\"evidence_required\":true,\"status\":\"none\",\"run\":null,\"progress\":0,\"personas\":[]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:23.907Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:23.920Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/persona/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "body": "{\"package\":false,\"evidence_required\":true,\"status\":\"none\",\"run\":null,\"progress\":0,\"personas\":[]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:23.920Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:23.933Z",
+      "mark": "QA-E2E-009",
+      "status": 409,
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+      "body": "{\"status\":\"error\",\"error\":{\"kind\":\"locked\",\"code\":\"context_error\",\"message\":\"앞 층을 모두 확정한 뒤 진행하세요.\"}}"
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:23.933Z",
+      "mark": "QA-E2E-009",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "location": {
+        "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:23.940Z",
+      "mark": "QA-E2E-009",
+      "status": 409,
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+      "body": "{\"status\":\"error\",\"error\":{\"kind\":\"locked\",\"code\":\"context_error\",\"message\":\"앞 층을 모두 확정한 뒤 진행하세요.\"}}"
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:23.941Z",
+      "mark": "QA-E2E-009",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "location": {
+        "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:25.038Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/sessions",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:25.056Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/sessions",
+      "body": "{\"status\":\"ok\",\"sessions\":[{\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"bk\":\"QA 전처리 실행\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\"},{\"sid\":\"qaold\",\"bk\":\"QA 옛 세션\",\"step\":\"clustering\",\"schemaVersion\":null,\"legacy\":true,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.497362+00:00\"},{\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"bk\":\"QA 전처리 전\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\"}]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:25.074Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:25.077Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions",
+      "body": "{\"activeVersion\":\"v1\",\"versions\":[{\"id\":\"v1\",\"parent\":null,\"restartFrom\":\"stage0\",\"createdAt\":\"2026-10-20T07:16:59.489197+00:00\",\"note\":\"\",\"readonly\":false,\"collectionId\":\"c1\"}]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:25.078Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:25.086Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"step\":\"start\",\"drafts\":{\"prep\":null},\"projectContext\":{\"bk\":\"QA 전처리 실행\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\",\"collectionId\":\"c1\",\"prep\":{\"config\":{\"adFilter\":[],\"excludeSources\":[],\"excludeChannels\":[],\"minBodyChars\":10,\"boilerplate\":{\"naver_cafe\":[\"카페 회원이 되시면 전체 내용을 볼 수 있습니다.\",\"카페 가입하기\"],\"naver_blog\":[\"공감\",\"이웃추가\"],\"clien\":[],\"ppomppu\":[],\"youtube\":[]},\"analyzer\":\"kiwi\",\"tokenPos\":[\"NNG\",\"NNP\",\"VV\",\"VA\",\"XR\"],\"embedder\":\"fake\",\"embedModel\":\"voyage-4\",\"embedDim\":1024},\"derivedRef\":{\"collectionId\":\"c1\",\"prepKey\":\"p_8d4420d74b0b\"},\"status\":\"done\",\"savedAt\":\"2026-10-20T07:49:34.574128+00:00\",\"reused\":true,\"runId\":null},\"completion\":{\"crawlDone\":true,\"prepDone\":true,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:26.805Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/persona/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:26.812Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/persona/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "body": "{\"package\":false,\"evidence_required\":true,\"status\":\"none\",\"run\":null,\"progress\":0,\"personas\":[]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:26.813Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:26.821Z",
+      "mark": "QA-E2E-009",
+      "status": 409,
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+      "body": "{\"status\":\"error\",\"error\":{\"kind\":\"locked\",\"code\":\"context_error\",\"message\":\"앞 층을 모두 확정한 뒤 진행하세요.\"}}"
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:26.821Z",
+      "mark": "QA-E2E-009",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "location": {
+        "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:29.803Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/persona/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:29.813Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/persona/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1",
+      "body": "{\"package\":false,\"evidence_required\":true,\"status\":\"none\",\"run\":null,\"progress\":0,\"personas\":[]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:29.815Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:29.831Z",
+      "mark": "QA-E2E-009",
+      "status": 409,
+      "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+      "body": "{\"status\":\"error\",\"error\":{\"kind\":\"locked\",\"code\":\"context_error\",\"message\":\"앞 층을 모두 확정한 뒤 진행하세요.\"}}"
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:29.831Z",
+      "mark": "QA-E2E-009",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "location": {
+        "url": "http://localhost:8411/segment/s3bee57561d744ff8a5cf63fc5bff34f9/personas?version=v1",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:30.681Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/pipeline/insights?_rsc=gint2",
+      "post": null
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:30.799Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] rebuilding",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:31.298Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/pipeline/insights?_rsc=gint2"
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:31.306Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] done in 608ms",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:31.309Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_e9306f4a._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:31.309Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_insights_page_tsx_6c34f574._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:31.309Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_components_persona_insight_bc3694eb.css",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:31.341Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_components_persona_insight_bc3694eb.css"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:31.341Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_insights_page_tsx_6c34f574._.js"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:31.349Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_e9306f4a._.js"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:31.390Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_e9306f4a._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:31.390Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_insights_page_tsx_6c34f574._.js",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:31.400Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/insight/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:31.400Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/insight/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "post": null
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:31.401Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:31.402Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_insights_page_tsx_6c34f574._.js"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:31.403Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:31.409Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:3411/_next/static/chunks/src_e9306f4a._.js"
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:31.418Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/insight/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "body": "{\"insights\":{\"revision\":0,\"items\":[],\"history\":[]},\"concepts\":{\"revision\":0,\"items\":[],\"history\":[]},\"bars\":null,\"radar\":null,\"worker\":{\"status\":\"idle\",\"reason\":null,\"runId\":null,\"mode\":null,\"target\":null,\"fresh\":false},\"summary\":{\"context_odi_mean\":null,\"radar_mean\":null}}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:31.419Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:31.431Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/insight/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "body": "{\"insights\":{\"revision\":0,\"items\":[],\"history\":[]},\"concepts\":{\"revision\":0,\"items\":[],\"history\":[]},\"bars\":null,\"radar\":null,\"worker\":{\"status\":\"idle\",\"reason\":null,\"runId\":null,\"mode\":null,\"target\":null,\"fresh\":false},\"summary\":{\"context_odi_mean\":null,\"radar_mean\":null}}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:31.433Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:31.443Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"step\":\"start\",\"drafts\":{\"prep\":null},\"projectContext\":{\"bk\":\"QA 전처리 실행\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\",\"collectionId\":\"c1\",\"prep\":{\"config\":{\"adFilter\":[],\"excludeSources\":[],\"excludeChannels\":[],\"minBodyChars\":10,\"boilerplate\":{\"naver_cafe\":[\"카페 회원이 되시면 전체 내용을 볼 수 있습니다.\",\"카페 가입하기\"],\"naver_blog\":[\"공감\",\"이웃추가\"],\"clien\":[],\"ppomppu\":[],\"youtube\":[]},\"analyzer\":\"kiwi\",\"tokenPos\":[\"NNG\",\"NNP\",\"VV\",\"VA\",\"XR\"],\"embedder\":\"fake\",\"embedModel\":\"voyage-4\",\"embedDim\":1024},\"derivedRef\":{\"collectionId\":\"c1\",\"prepKey\":\"p_8d4420d74b0b\"},\"status\":\"done\",\"savedAt\":\"2026-10-20T07:49:34.574128+00:00\",\"reused\":true,\"runId\":null},\"completion\":{\"crawlDone\":true,\"prepDone\":true,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:31.448Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] rebuilding",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "console",
+      "time": "2026-10-20T07:50:31.455Z",
+      "mark": "QA-E2E-009",
+      "level": "log",
+      "text": "[Fast Refresh] done in 106ms",
+      "location": {
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "line": 2297,
+        "column": 27,
+        "lineNumber": 2297,
+        "columnNumber": 27
+      }
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:31.458Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"step\":\"start\",\"drafts\":{\"prep\":null},\"projectContext\":{\"bk\":\"QA 전처리 실행\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\",\"collectionId\":\"c1\",\"prep\":{\"config\":{\"adFilter\":[],\"excludeSources\":[],\"excludeChannels\":[],\"minBodyChars\":10,\"boilerplate\":{\"naver_cafe\":[\"카페 회원이 되시면 전체 내용을 볼 수 있습니다.\",\"카페 가입하기\"],\"naver_blog\":[\"공감\",\"이웃추가\"],\"clien\":[],\"ppomppu\":[],\"youtube\":[]},\"analyzer\":\"kiwi\",\"tokenPos\":[\"NNG\",\"NNP\",\"VV\",\"VA\",\"XR\"],\"embedder\":\"fake\",\"embedModel\":\"voyage-4\",\"embedDim\":1024},\"derivedRef\":{\"collectionId\":\"c1\",\"prepKey\":\"p_8d4420d74b0b\"},\"status\":\"done\",\"savedAt\":\"2026-10-20T07:49:34.574128+00:00\",\"reused\":true,\"runId\":null},\"completion\":{\"crawlDone\":true,\"prepDone\":true,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:35.046Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/sessions",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:35.058Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/sessions",
+      "body": "{\"status\":\"ok\",\"sessions\":[{\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"bk\":\"QA 전처리 실행\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\"},{\"sid\":\"qaold\",\"bk\":\"QA 옛 세션\",\"step\":\"clustering\",\"schemaVersion\":null,\"legacy\":true,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.497362+00:00\"},{\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"bk\":\"QA 전처리 전\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\"}]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:35.073Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:35.076Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions",
+      "body": "{\"activeVersion\":\"v1\",\"versions\":[{\"id\":\"v1\",\"parent\":null,\"restartFrom\":\"stage0\",\"createdAt\":\"2026-10-20T07:16:59.489197+00:00\",\"note\":\"\",\"readonly\":false,\"collectionId\":\"c1\"}]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:35.077Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:35.083Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"step\":\"start\",\"drafts\":{\"prep\":null},\"projectContext\":{\"bk\":\"QA 전처리 실행\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\",\"collectionId\":\"c1\",\"prep\":{\"config\":{\"adFilter\":[],\"excludeSources\":[],\"excludeChannels\":[],\"minBodyChars\":10,\"boilerplate\":{\"naver_cafe\":[\"카페 회원이 되시면 전체 내용을 볼 수 있습니다.\",\"카페 가입하기\"],\"naver_blog\":[\"공감\",\"이웃추가\"],\"clien\":[],\"ppomppu\":[],\"youtube\":[]},\"analyzer\":\"kiwi\",\"tokenPos\":[\"NNG\",\"NNP\",\"VV\",\"VA\",\"XR\"],\"embedder\":\"fake\",\"embedModel\":\"voyage-4\",\"embedDim\":1024},\"derivedRef\":{\"collectionId\":\"c1\",\"prepKey\":\"p_8d4420d74b0b\"},\"status\":\"done\",\"savedAt\":\"2026-10-20T07:49:34.574128+00:00\",\"reused\":true,\"runId\":null},\"completion\":{\"crawlDone\":true,\"prepDone\":true,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:45.046Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/sessions",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:45.056Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/sessions",
+      "body": "{\"status\":\"ok\",\"sessions\":[{\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"bk\":\"QA 전처리 실행\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\"},{\"sid\":\"qaold\",\"bk\":\"QA 옛 세션\",\"step\":\"clustering\",\"schemaVersion\":null,\"legacy\":true,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.497362+00:00\"},{\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"bk\":\"QA 전처리 전\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\"}]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:45.073Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:45.075Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions",
+      "body": "{\"activeVersion\":\"v1\",\"versions\":[{\"id\":\"v1\",\"parent\":null,\"restartFrom\":\"stage0\",\"createdAt\":\"2026-10-20T07:16:59.489197+00:00\",\"note\":\"\",\"readonly\":false,\"collectionId\":\"c1\"}]}"
+    },
+    {
+      "type": "request",
+      "time": "2026-10-20T07:50:45.076Z",
+      "mark": "QA-E2E-009",
+      "method": "GET",
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "post": null
+    },
+    {
+      "type": "response",
+      "time": "2026-10-20T07:50:45.079Z",
+      "mark": "QA-E2E-009",
+      "status": 200,
+      "url": "http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1",
+      "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"step\":\"start\",\"drafts\":{\"prep\":null},\"projectContext\":{\"bk\":\"QA 전처리 실행\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\",\"collectionId\":\"c1\",\"prep\":{\"config\":{\"adFilter\":[],\"excludeSources\":[],\"excludeChannels\":[],\"minBodyChars\":10,\"boilerplate\":{\"naver_cafe\":[\"카페 회원이 되시면 전체 내용을 볼 수 있습니다.\",\"카페 가입하기\"],\"naver_blog\":[\"공감\",\"이웃추가\"],\"clien\":[],\"ppomppu\":[],\"youtube\":[]},\"analyzer\":\"kiwi\",\"tokenPos\":[\"NNG\",\"NNP\",\"VV\",\"VA\",\"XR\"],\"embedder\":\"fake\",\"embedModel\":\"voyage-4\",\"embedDim\":1024},\"derivedRef\":{\"collectionId\":\"c1\",\"prepKey\":\"p_8d4420d74b0b\"},\"status\":\"done\",\"savedAt\":\"2026-10-20T07:49:34.574128+00:00\",\"reused\":true,\"runId\":null},\"completion\":{\"crawlDone\":true,\"prepDone\":true,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+    }
+  ],
+  "api": [
+    {
+      "time": "2026-10-20T07:50:48.752Z",
+      "url": "http://127.0.0.1:8411/persona/s3bee57561d744ff8a5cf63fc5bff34f9/status",
+      "status": 200,
+      "body": {
+        "package": false,
+        "evidence_required": true,
+        "status": "none",
+        "run": null,
+        "progress": 0,
+        "personas": []
+      }
+    },
+    {
+      "time": "2026-10-20T07:50:48.765Z",
+      "url": "http://127.0.0.1:8411/train/s3bee57561d744ff8a5cf63fc5bff34f9/status",
+      "status": 200,
+      "body": {
+        "training": {},
+        "workers": [],
+        "monitor": null,
+        "stage5": null
+      }
+    },
+    {
+      "time": "2026-10-20T07:50:48.771Z",
+      "url": "http://127.0.0.1:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status",
+      "status": 200,
+      "body": {
+        "status": "done",
+        "progress": 1,
+        "detail": {},
+        "runId": null,
+        "derivedRef": {
+          "collectionId": "c1",
+          "prepKey": "p_8d4420d74b0b"
+        },
+        "stage3": {
+          "original": 6,
+          "after": 6,
+          "removed": {
+            "ad": 0,
+            "excluded_source": 0,
+            "duplicate": 0,
+            "too_short": 0,
+            "excluded_channel": 0
+          },
+          "boilerplate_replaced": {},
+          "tokens_written": 6,
+          "embedded": 6,
+          "embed_failed_zero_vector": 0,
+          "prepKey": "p_8d4420d74b0b",
+          "embedder": "fake",
+          "analyzer": "kiwi-0.24.0",
+          "at": "2026-10-20T07:49:09.457330+00:00"
+        },
+        "error": null,
+        "config": {
+          "adFilter": [],
+          "excludeSources": [],
+          "excludeChannels": [],
+          "minBodyChars": 10,
+          "boilerplate": {
+            "naver_cafe": [
+              "카페 회원이 되시면 전체 내용을 볼 수 있습니다.",
+              "카페 가입하기"
+            ],
+            "naver_blog": [
+              "공감",
+              "이웃추가"
+            ],
+            "clien": [],
+            "ppomppu": [],
+            "youtube": []
+          },
+          "analyzer": "kiwi",
+          "tokenPos": [
+            "NNG",
+            "NNP",
+            "VV",
+            "VA",
+            "XR"
+          ],
+          "embedder": "fake",
+          "embedModel": "voyage-4",
+          "embedDim": 1024
+        },
+        "reused": true
+      }
+    }
+  ]
+}

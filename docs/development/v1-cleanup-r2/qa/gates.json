@@ -1,0 +1,1754 @@
+{
+  "e001": {
+    "time": "2026-10-20T07:51:28.480Z",
+    "before": "http://localhost:3411/pipeline/start",
+    "after": "http://localhost:3411/pipeline/start",
+    "nav": [
+      {
+        "text": "1시작진행 중",
+        "aria": null,
+        "href": "/pipeline/start",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "2키워드",
+        "aria": null,
+        "href": "/pipeline/keywords",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "3크롤링",
+        "aria": null,
+        "href": "/pipeline/crawling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "4전처리",
+        "aria": null,
+        "href": "/pipeline/preprocess",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "5라벨링",
+        "aria": null,
+        "href": "/pipeline/labeling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "6학습",
+        "aria": null,
+        "href": "/pipeline/training",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "7클러스터링",
+        "aria": "true",
+        "href": null,
+        "title": "전처리(3단계)를 먼저 완료하세요",
+        "tabindex": null
+      },
+      {
+        "text": "8근거 탐색",
+        "aria": "true",
+        "href": null,
+        "title": "전처리(3단계)를 먼저 완료하세요",
+        "tabindex": null
+      },
+      {
+        "text": "9페르소나",
+        "aria": "true",
+        "href": null,
+        "title": "전처리(3단계)를 먼저 완료하세요",
+        "tabindex": null
+      },
+      {
+        "text": "10인사이트",
+        "aria": "true",
+        "href": null,
+        "title": "전처리(3단계)를 먼저 완료하세요",
+        "tabindex": null
+      }
+    ]
+  },
+  "e002": {
+    "time": "2026-10-20T07:51:45.782Z",
+    "url": "http://localhost:3411/pipeline/clustering",
+    "body": "3단계(전처리)를 먼저 완료하세요. 전처리가 끝나야 클러스터링 화면을 열 수 있습니다.\n전처리 화면으로",
+    "events": [
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.341Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/pipeline/clustering",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.475Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/pipeline/clustering"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.493Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/image?url=%2Fperson-a-logo.png&w=128&q=75",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.493Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_app_globals_91e4631d.css",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.500Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_components_known_KnownInsightsDrawer_module_f6259c5d.css",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.500Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_956a0d3a._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.500Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.500Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.500Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.500Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.500Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_client_17643121._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.500Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.501Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_%40swc_helpers_cjs_d80fb378._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.501Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/_a0ff3932._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.501Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/turbopack-_23a915ee._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.501Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_be32b49c._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.501Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.501Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_app_layout_tsx_1cf6b850._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.501Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_21866b6e._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.501Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_fbef865f._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.501Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_layout_tsx_8e9f1618._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.502Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_e7388ad9._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.502Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_18abd9f5._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.502Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_clustering_page_tsx_6c34f574._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.502Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_1cf6b850.js",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.505Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_components_known_KnownInsightsDrawer_module_f6259c5d.css"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.505Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_app_globals_91e4631d.css"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.505Z",
+        "mark": "QA-E2E-002",
+        "status": 304,
+        "url": "http://localhost:3411/_next/image?url=%2Fperson-a-logo.png&w=128&q=75"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.506Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/fonts/Pretendard-Bold.otf",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.506Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/fonts/Pretendard-Regular.otf",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.506Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/fonts/Pretendard-SemiBold.otf",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.507Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_956a0d3a._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.510Z",
+        "mark": "QA-E2E-002",
+        "status": 304,
+        "url": "http://localhost:3411/fonts/Pretendard-Bold.otf"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.513Z",
+        "mark": "QA-E2E-002",
+        "status": 304,
+        "url": "http://localhost:3411/fonts/Pretendard-Regular.otf"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.521Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.521Z",
+        "mark": "QA-E2E-002",
+        "status": 304,
+        "url": "http://localhost:3411/fonts/Pretendard-SemiBold.otf"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.523Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.535Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/_a0ff3932._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.542Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_%40swc_helpers_cjs_d80fb378._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.548Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.550Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/turbopack-_23a915ee._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.552Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_be32b49c._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.555Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.569Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_app_layout_tsx_1cf6b850._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.574Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_client_17643121._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.574Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_layout_tsx_8e9f1618._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.581Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.583Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_clustering_page_tsx_6c34f574._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.583Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_fbef865f._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.587Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_e7388ad9._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.587Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js"
+      },
+      {
+        "type": "console",
+        "time": "2026-10-20T07:51:45.588Z",
+        "mark": "QA-E2E-002",
+        "level": "info",
+        "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+        "location": {
+          "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+          "line": 2297,
+          "column": 27,
+          "lineNumber": 2297,
+          "columnNumber": 27
+        }
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.599Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.599Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c7192189._.js",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.599Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_21866b6e._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.599Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_1cf6b850.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.599Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_18abd9f5._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.600Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c7192189._.js"
+      },
+      {
+        "type": "console",
+        "time": "2026-10-20T07:51:45.602Z",
+        "mark": "QA-E2E-002",
+        "level": "log",
+        "text": "[HMR] connected",
+        "location": {
+          "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+          "line": 2297,
+          "column": 27,
+          "lineNumber": 2297,
+          "columnNumber": 27
+        }
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.602Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.623Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/__nextjs_font/geist-latin.woff2",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.623Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/__nextjs_font/geist-latin.woff2"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.624Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/integrations",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.624Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "post": null
+      },
+      {
+        "type": "console",
+        "time": "2026-10-20T07:51:45.624Z",
+        "mark": "QA-E2E-002",
+        "level": "warning",
+        "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio.",
+        "location": {
+          "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+          "line": 2297,
+          "column": 27,
+          "lineNumber": 2297,
+          "columnNumber": 27
+        }
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.624Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.627Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.642Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/integrations",
+        "body": "[{\"name\":\"openai\",\"connected\":false,\"env_vars\":[\"OPENAI_API_KEY\",\"OPENAI_MODEL\"],\"affects\":[\"llm\"],\"last_error\":null},{\"name\":\"claude\",\"connected\":false,\"env_vars\":[\"CLAUDE_API_KEY\"],\"affects\":[\"llm\"],\"last_error\":null}]"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.647Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"step\":\"start\",\"drafts\":{},\"projectContext\":{\"bk\":\"QA 전처리 전\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\",\"completion\":{\"crawlDone\":false,\"prepDone\":false,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.657Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/sessions",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.658Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/integrations",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.658Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.659Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/sessions/sa0e61b32fcd940bebff92bc1e0189a8f/versions",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.659Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/sessions",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.659Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/integrations",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.659Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.669Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "body": "{\"items\":[]}"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.670Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/integrations",
+        "body": "[{\"name\":\"openai\",\"connected\":false,\"env_vars\":[\"OPENAI_API_KEY\",\"OPENAI_MODEL\"],\"affects\":[\"llm\"],\"last_error\":null},{\"name\":\"claude\",\"connected\":false,\"env_vars\":[\"CLAUDE_API_KEY\"],\"affects\":[\"llm\"],\"last_error\":null}]"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.670Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/sessions/sa0e61b32fcd940bebff92bc1e0189a8f/versions",
+        "body": "{\"activeVersion\":\"v1\",\"versions\":[{\"id\":\"v1\",\"parent\":null,\"restartFrom\":\"stage0\",\"createdAt\":\"2026-10-20T07:16:59.483428+00:00\",\"note\":\"\",\"readonly\":false,\"collectionId\":null}]}"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.674Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.675Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "body": "{\"items\":[]}"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.680Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"step\":\"start\",\"drafts\":{},\"projectContext\":{\"bk\":\"QA 전처리 전\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\",\"completion\":{\"crawlDone\":false,\"prepDone\":false,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.691Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.691Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/sessions/sa0e61b32fcd940bebff92bc1e0189a8f/versions",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.692Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/sessions",
+        "body": "{\"status\":\"ok\",\"sessions\":[{\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"bk\":\"QA 전처리 실행\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\"},{\"sid\":\"qaold\",\"bk\":\"QA 옛 세션\",\"step\":\"clustering\",\"schemaVersion\":null,\"legacy\":true,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.497362+00:00\"},{\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"bk\":\"QA 전처리 전\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\"}]}"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.693Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/sessions",
+        "body": "{\"status\":\"ok\",\"sessions\":[{\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"bk\":\"QA 전처리 실행\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\"},{\"sid\":\"qaold\",\"bk\":\"QA 옛 세션\",\"step\":\"clustering\",\"schemaVersion\":null,\"legacy\":true,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.497362+00:00\"},{\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"bk\":\"QA 전처리 전\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\"}]}"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.694Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "body": "{\"items\":[]}"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.698Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/sessions/sa0e61b32fcd940bebff92bc1e0189a8f/versions",
+        "body": "{\"activeVersion\":\"v1\",\"versions\":[{\"id\":\"v1\",\"parent\":null,\"restartFrom\":\"stage0\",\"createdAt\":\"2026-10-20T07:16:59.483428+00:00\",\"note\":\"\",\"readonly\":false,\"collectionId\":null}]}"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.700Z",
+        "mark": "QA-E2E-002",
+        "method": "GET",
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.708Z",
+        "mark": "QA-E2E-002",
+        "status": 200,
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"step\":\"start\",\"drafts\":{},\"projectContext\":{\"bk\":\"QA 전처리 전\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\",\"completion\":{\"crawlDone\":false,\"prepDone\":false,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+      }
+    ],
+    "actionUrl": "http://localhost:3411/pipeline/preprocess"
+  },
+  "e003": {
+    "before": {
+      "status": "ok",
+      "data": {
+        "schemaVersion": 2,
+        "sid": "sa0e61b32fcd940bebff92bc1e0189a8f",
+        "step": "start",
+        "drafts": {},
+        "projectContext": {
+          "bk": "QA 전처리 전",
+          "oneLiner": "QA용 세션",
+          "researchQuestion": {
+            "text": "냉방 경험은?",
+            "template": null
+          },
+          "projectType": {
+            "choice": "new",
+            "note": ""
+          },
+          "taskMode": null,
+          "analysisGoal": {
+            "choice": "needs",
+            "note": ""
+          },
+          "keyMetrics": [
+            {
+              "name": "만족",
+              "source": "",
+              "item": ""
+            }
+          ],
+          "constraints": [],
+          "positioning": {
+            "price": "value",
+            "market": "new",
+            "priceText": "",
+            "marketText": ""
+          },
+          "personaSeeds": null,
+          "channels": [
+            "fixture"
+          ],
+          "knownInsights": [],
+          "productCategory": {
+            "l1": "가전",
+            "l2": null,
+            "l3": null,
+            "source": "user"
+          },
+          "targetScope": null,
+          "futureCustomer": null,
+          "schemaVersion": 1
+        },
+        "knownInsights": [],
+        "version": "v1",
+        "updatedAt": "2026-10-20T07:16:59.486410+00:00",
+        "completion": {
+          "crawlDone": false,
+          "prepDone": false,
+          "labelingDone": false,
+          "exportDone": false,
+          "clustersDone": false,
+          "segmentDone": false,
+          "personaDone": false,
+          "insightDone": false,
+          "evidenceDone": false
+        }
+      }
+    },
+    "time": "2026-10-20T07:51:46.349Z",
+    "url": "http://localhost:3411/pipeline/personas",
+    "body": "3단계(전처리)를 먼저 완료하세요. 전처리가 끝나야 페르소나 화면을 열 수 있습니다.\n전처리 화면으로",
+    "startButtons": 0,
+    "after": {
+      "status": "ok",
+      "data": {
+        "schemaVersion": 2,
+        "sid": "sa0e61b32fcd940bebff92bc1e0189a8f",
+        "step": "start",
+        "drafts": {},
+        "projectContext": {
+          "bk": "QA 전처리 전",
+          "oneLiner": "QA용 세션",
+          "researchQuestion": {
+            "text": "냉방 경험은?",
+            "template": null
+          },
+          "projectType": {
+            "choice": "new",
+            "note": ""
+          },
+          "taskMode": null,
+          "analysisGoal": {
+            "choice": "needs",
+            "note": ""
+          },
+          "keyMetrics": [
+            {
+              "name": "만족",
+              "source": "",
+              "item": ""
+            }
+          ],
+          "constraints": [],
+          "positioning": {
+            "price": "value",
+            "market": "new",
+            "priceText": "",
+            "marketText": ""
+          },
+          "personaSeeds": null,
+          "channels": [
+            "fixture"
+          ],
+          "knownInsights": [],
+          "productCategory": {
+            "l1": "가전",
+            "l2": null,
+            "l3": null,
+            "source": "user"
+          },
+          "targetScope": null,
+          "futureCustomer": null,
+          "schemaVersion": 1
+        },
+        "knownInsights": [],
+        "version": "v1",
+        "updatedAt": "2026-10-20T07:16:59.486410+00:00",
+        "completion": {
+          "crawlDone": false,
+          "prepDone": false,
+          "labelingDone": false,
+          "exportDone": false,
+          "clustersDone": false,
+          "segmentDone": false,
+          "personaDone": false,
+          "insightDone": false,
+          "evidenceDone": false
+        }
+      }
+    },
+    "events": [
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.889Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_e75dccbd._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.889Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_preprocess_page_tsx_6c34f574._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.889Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.890Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/prep/sa0e61b32fcd940bebff92bc1e0189a8f/status?version=v1",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.890Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/crawl/sa0e61b32fcd940bebff92bc1e0189a8f/status",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.890Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.892Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/prep/sa0e61b32fcd940bebff92bc1e0189a8f/status?version=v1",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.894Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/crawl/sa0e61b32fcd940bebff92bc1e0189a8f/status",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.894Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.895Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_preprocess_page_tsx_6c34f574._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.899Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.902Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_e75dccbd._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.909Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"step\":\"start\",\"drafts\":{},\"projectContext\":{\"bk\":\"QA 전처리 전\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\",\"completion\":{\"crawlDone\":false,\"prepDone\":false,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.910Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/prep/sa0e61b32fcd940bebff92bc1e0189a8f/status?version=v1",
+        "body": "{\"status\":\"none\",\"progress\":0,\"detail\":{},\"runId\":null,\"derivedRef\":null,\"stage3\":null,\"error\":null,\"config\":{\"adFilter\":[],\"excludeSources\":[],\"excludeChannels\":[],\"minBodyChars\":10,\"boilerplate\":{\"naver_cafe\":[\"카페 회원이 되시면 전체 내용을 볼 수 있습니다.\",\"카페 가입하기\"],\"naver_blog\":[\"공감\",\"이웃추가\"],\"clien\":[],\"ppomppu\":[],\"youtube\":[]},\"analyzer\":\"kiwi\",\"tokenPos\":[\"NNG\",\"NNP\",\"VV\",\"VA\",\"XR\"],\"embedder\":\"fake\",\"embedModel\":\"voyage-4\",\"embedDim\":1024},\"reused\":false}"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.915Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/pipeline/personas",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.953Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/pipeline/personas"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/image?url=%2Fperson-a-logo.png&w=128&q=75",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_app_globals_91e4631d.css",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_components_known_KnownInsightsDrawer_module_f6259c5d.css",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_956a0d3a._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_client_17643121._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_%40swc_helpers_cjs_d80fb378._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/_a0ff3932._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/turbopack-_23a915ee._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_be32b49c._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_app_layout_tsx_1cf6b850._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.963Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_21866b6e._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.964Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_fbef865f._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.964Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_layout_tsx_8e9f1618._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.964Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_579b2110._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.964Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_personas_page_tsx_6c34f574._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.964Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_1cf6b850.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.964Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/src_components_persona_persona_b3de1545.css",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.969Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_components_known_KnownInsightsDrawer_module_f6259c5d.css"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.970Z",
+        "mark": "QA-E2E-003",
+        "status": 304,
+        "url": "http://localhost:3411/_next/image?url=%2Fperson-a-logo.png&w=128&q=75"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.970Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_app_globals_91e4631d.css"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.972Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_components_persona_persona_b3de1545.css"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.974Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_956a0d3a._.js"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.976Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/fonts/Pretendard-Bold.otf",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.976Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/fonts/Pretendard-Regular.otf",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:45.976Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/fonts/Pretendard-SemiBold.otf",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.991Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.991Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.993Z",
+        "mark": "QA-E2E-003",
+        "status": 304,
+        "url": "http://localhost:3411/fonts/Pretendard-Bold.otf"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.993Z",
+        "mark": "QA-E2E-003",
+        "status": 304,
+        "url": "http://localhost:3411/fonts/Pretendard-Regular.otf"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.999Z",
+        "mark": "QA-E2E-003",
+        "status": 304,
+        "url": "http://localhost:3411/fonts/Pretendard-SemiBold.otf"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:45.999Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.005Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/_a0ff3932._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.007Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_%40swc_helpers_cjs_d80fb378._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.011Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/turbopack-_23a915ee._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.011Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.013Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_app_layout_tsx_1cf6b850._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.016Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_be32b49c._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.017Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_client_17643121._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.019Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_layout_tsx_8e9f1618._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.026Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_app_pipeline_personas_page_tsx_6c34f574._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.034Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_21866b6e._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.034Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_1cf6b850.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.035Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.035Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/src_579b2110._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.037Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js"
+      },
+      {
+        "type": "console",
+        "time": "2026-10-20T07:51:46.038Z",
+        "mark": "QA-E2E-003",
+        "level": "info",
+        "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+        "location": {
+          "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+          "line": 2297,
+          "column": 27,
+          "lineNumber": 2297,
+          "columnNumber": 27
+        }
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.045Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.045Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c7192189._.js",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.045Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/node_modules_fbef865f._.js"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.053Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c7192189._.js"
+      },
+      {
+        "type": "console",
+        "time": "2026-10-20T07:51:46.053Z",
+        "mark": "QA-E2E-003",
+        "level": "log",
+        "text": "[HMR] connected",
+        "location": {
+          "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+          "line": 2297,
+          "column": 27,
+          "lineNumber": 2297,
+          "columnNumber": 27
+        }
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.054Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.071Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/__nextjs_font/geist-latin.woff2",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.072Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/__nextjs_font/geist-latin.woff2"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.072Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/integrations",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.072Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "post": null
+      },
+      {
+        "type": "console",
+        "time": "2026-10-20T07:51:46.072Z",
+        "mark": "QA-E2E-003",
+        "level": "warning",
+        "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio.",
+        "location": {
+          "url": "http://localhost:3411/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+          "line": 2297,
+          "column": 27,
+          "lineNumber": 2297,
+          "columnNumber": 27
+        }
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.072Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.076Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:3411/favicon.ico?favicon.0b3bf435.ico"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.115Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/integrations",
+        "body": "[{\"name\":\"openai\",\"connected\":false,\"env_vars\":[\"OPENAI_API_KEY\",\"OPENAI_MODEL\"],\"affects\":[\"llm\"],\"last_error\":null},{\"name\":\"claude\",\"connected\":false,\"env_vars\":[\"CLAUDE_API_KEY\"],\"affects\":[\"llm\"],\"last_error\":null}]"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.125Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"step\":\"start\",\"drafts\":{},\"projectContext\":{\"bk\":\"QA 전처리 전\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\",\"completion\":{\"crawlDone\":false,\"prepDone\":false,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.140Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/sessions",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.140Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/integrations",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.140Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.140Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/sessions/sa0e61b32fcd940bebff92bc1e0189a8f/versions",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.140Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/sessions",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.140Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/integrations",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.140Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.153Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/integrations",
+        "body": "[{\"name\":\"openai\",\"connected\":false,\"env_vars\":[\"OPENAI_API_KEY\",\"OPENAI_MODEL\"],\"affects\":[\"llm\"],\"last_error\":null},{\"name\":\"claude\",\"connected\":false,\"env_vars\":[\"CLAUDE_API_KEY\"],\"affects\":[\"llm\"],\"last_error\":null}]"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.167Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "body": "{\"items\":[]}"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.168Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/sessions/sa0e61b32fcd940bebff92bc1e0189a8f/versions",
+        "body": "{\"activeVersion\":\"v1\",\"versions\":[{\"id\":\"v1\",\"parent\":null,\"restartFrom\":\"stage0\",\"createdAt\":\"2026-10-20T07:16:59.483428+00:00\",\"note\":\"\",\"readonly\":false,\"collectionId\":null}]}"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.168Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.183Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f",
+        "body": "{\"items\":[]}"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.189Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"step\":\"start\",\"drafts\":{},\"projectContext\":{\"bk\":\"QA 전처리 전\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\",\"completion\":{\"crawlDone\":false,\"prepDone\":false,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.201Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/sessions",
+        "body": "{\"status\":\"ok\",\"sessions\":[{\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"bk\":\"QA 전처리 실행\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\"},{\"sid\":\"qaold\",\"bk\":\"QA 옛 세션\",\"step\":\"clustering\",\"schemaVersion\":null,\"legacy\":true,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.497362+00:00\"},{\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"bk\":\"QA 전처리 전\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\"}]}"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.201Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "post": null
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.201Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/sessions/sa0e61b32fcd940bebff92bc1e0189a8f/versions",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.292Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/known/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "body": "{\"items\":[]}"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.299Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/sessions/sa0e61b32fcd940bebff92bc1e0189a8f/versions",
+        "body": "{\"activeVersion\":\"v1\",\"versions\":[{\"id\":\"v1\",\"parent\":null,\"restartFrom\":\"stage0\",\"createdAt\":\"2026-10-20T07:16:59.483428+00:00\",\"note\":\"\",\"readonly\":false,\"collectionId\":null}]}"
+      },
+      {
+        "type": "request",
+        "time": "2026-10-20T07:51:46.300Z",
+        "mark": "QA-E2E-003",
+        "method": "GET",
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "post": null
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.314Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/session/sa0e61b32fcd940bebff92bc1e0189a8f?version=v1",
+        "body": "{\"status\":\"ok\",\"data\":{\"schemaVersion\":2,\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"step\":\"start\",\"drafts\":{},\"projectContext\":{\"bk\":\"QA 전처리 전\",\"oneLiner\":\"QA용 세션\",\"researchQuestion\":{\"text\":\"냉방 경험은?\",\"template\":null},\"projectType\":{\"choice\":\"new\",\"note\":\"\"},\"taskMode\":null,\"analysisGoal\":{\"choice\":\"needs\",\"note\":\"\"},\"keyMetrics\":[{\"name\":\"만족\",\"source\":\"\",\"item\":\"\"}],\"constraints\":[],\"positioning\":{\"price\":\"value\",\"market\":\"new\",\"priceText\":\"\",\"marketText\":\"\"},\"personaSeeds\":null,\"channels\":[\"fixture\"],\"knownInsights\":[],\"productCategory\":{\"l1\":\"가전\",\"l2\":null,\"l3\":null,\"source\":\"user\"},\"targetScope\":null,\"futureCustomer\":null,\"schemaVersion\":1},\"knownInsights\":[],\"version\":\"v1\",\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\",\"completion\":{\"crawlDone\":false,\"prepDone\":false,\"labelingDone\":false,\"exportDone\":false,\"clustersDone\":false,\"segmentDone\":false,\"personaDone\":false,\"insightDone\":false,\"evidenceDone\":false}}}"
+      },
+      {
+        "type": "response",
+        "time": "2026-10-20T07:51:46.328Z",
+        "mark": "QA-E2E-003",
+        "status": 200,
+        "url": "http://localhost:8411/sessions",
+        "body": "{\"status\":\"ok\",\"sessions\":[{\"sid\":\"s3bee57561d744ff8a5cf63fc5bff34f9\",\"bk\":\"QA 전처리 실행\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:49:34.577924+00:00\"},{\"sid\":\"qaold\",\"bk\":\"QA 옛 세션\",\"step\":\"clustering\",\"schemaVersion\":null,\"legacy\":true,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.497362+00:00\"},{\"sid\":\"sa0e61b32fcd940bebff92bc1e0189a8f\",\"bk\":\"QA 전처리 전\",\"step\":\"start\",\"schemaVersion\":2,\"legacy\":false,\"activity\":null,\"updatedAt\":\"2026-10-20T07:16:59.486410+00:00\"}]}"
+      }
+    ]
+  }
+}

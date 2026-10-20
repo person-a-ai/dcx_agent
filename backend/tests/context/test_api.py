@@ -87,7 +87,7 @@ def test_legacy_full_save_merges_but_keeps_server_keys(client):
 
 
 def test_labeling_save_then_train_reads(client):
-    from app.services.training import load_json
+    from app.services.s3 import load_json
     sid = create(client)
     client.post('/save-session', json={'sid': sid, 'data': {'labeledData': [{'text': '합성', 'label': 1}]}})
     assert load_json(f'sessions/{sid}/session.json')['labeledData'] == [{'text': '합성', 'label': 1}]

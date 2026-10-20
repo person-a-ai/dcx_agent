@@ -1,0 +1,263 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary "파이프라인" [ref=e3]:
+      - generic [ref=e4]:
+        - img "Person A" [ref=e5]
+        - button "사이드바 접기" [expanded] [ref=e6] [cursor=pointer]
+      - generic [ref=e10]:
+        - generic [ref=e11]: 파이프라인
+        - navigation "파이프라인 단계" [ref=e12]:
+          - link "1. 시작" [ref=e13] [cursor=pointer]:
+            - /url: /pipeline/start
+            - generic [aria-hidden] [ref=e14]: "1"
+            - generic [ref=e15]: 시작
+            - generic [ref=e16]: 진행 중
+          - link "2. 키워드" [ref=e17] [cursor=pointer]:
+            - /url: /pipeline/keywords
+            - generic [aria-hidden] [ref=e18]: "2"
+            - generic [ref=e19]: 키워드
+          - link "3. 크롤링" [ref=e20] [cursor=pointer]:
+            - /url: /pipeline/crawling
+            - generic [aria-hidden] [ref=e21]: "3"
+            - generic [ref=e22]: 크롤링
+          - link "4. 전처리" [ref=e23] [cursor=pointer]:
+            - /url: /pipeline/preprocess
+            - generic [aria-hidden] [ref=e24]: "4"
+            - generic [ref=e25]: 전처리
+          - link "5. 라벨링" [ref=e26] [cursor=pointer]:
+            - /url: /pipeline/labeling
+            - generic [aria-hidden] [ref=e27]: "5"
+            - generic [ref=e28]: 라벨링
+          - link "6. 학습" [ref=e29] [cursor=pointer]:
+            - /url: /pipeline/training
+            - generic [aria-hidden] [ref=e30]: "6"
+            - generic [ref=e31]: 학습
+          - link "7. 클러스터링" [disabled] [ref=e32]:
+            - generic [aria-hidden] [ref=e33]: "7"
+            - generic [ref=e34]: 클러스터링
+          - link "8. 근거 탐색" [disabled] [ref=e35]:
+            - generic [aria-hidden] [ref=e36]: "8"
+            - generic [ref=e37]: 근거 탐색
+          - link "9. 페르소나" [disabled] [ref=e38]:
+            - generic [aria-hidden] [ref=e39]: "9"
+            - generic [ref=e40]: 페르소나
+          - link "10. 인사이트" [disabled] [ref=e41]:
+            - generic [aria-hidden] [ref=e42]: "10"
+            - generic [ref=e43]: 인사이트
+      - generic [ref=e44]:
+        - generic [ref=e45]: 세션 없음
+        - button "Known Insight · 0" [disabled] [ref=e46]
+        - generic [ref=e50]:
+          - button "외부 API · 0/2 연결 열기" [ref=e51] [cursor=pointer]
+          - generic [ref=e55]: 내부용
+    - generic [ref=e56]:
+      - main [ref=e57]:
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - heading "최근 세션" [level=2] [ref=e62]
+            - status [ref=e63]: 처리 중…
+            - paragraph [ref=e67]: 주의가 필요한 세션이 위에 옵니다. 구버전 세션은 0~2단계를 편집할 수 없습니다.
+          - group [ref=e69]:
+            - generic [ref=e70]:
+              - paragraph [ref=e71]: 0단계 · 입력
+              - heading "새 프로젝트를 설정합니다" [level=1] [ref=e72]
+              - paragraph [ref=e73]: 0-A는 이후 모든 단계가 참고하는 프로젝트 개요입니다. 0-B는 분석 결과와 대조할 초기 기준선이며 전부 선택 입력입니다.
+            - generic [ref=e74]:
+              - generic [ref=e75]:
+                - group [ref=e76]:
+                  - generic [ref=e77]:
+                    - heading "과제 유형 *" [level=2] [ref=e78]
+                    - paragraph [ref=e79]: 프로젝트 성격(브랜딩 · 리뉴얼 등)과는 따로 고릅니다.
+                    - radiogroup "과제 유형 *" [ref=e80]:
+                      - 'radio "지표 개선형 외부·사내 평가 지표를 올리는 과제입니다. 예: 환자경험평가 점수 개선" [ref=e81] [cursor=pointer]':
+                        - strong [ref=e82]: 지표 개선형
+                        - generic [ref=e83]: "외부·사내 평가 지표를 올리는 과제입니다. 예: 환자경험평가 점수 개선"
+                      - 'radio "탐색·기획형 아직 드러나지 않은 맥락과 기회를 찾는 과제입니다. 예: 새 주거 컨셉 발굴" [checked] [ref=e84] [cursor=pointer]':
+                        - strong [ref=e85]: 탐색·기획형
+                        - generic [ref=e86]: "아직 드러나지 않은 맥락과 기회를 찾는 과제입니다. 예: 새 주거 컨셉 발굴"
+                    - status [ref=e87]: 핵심 지표 선택
+                  - generic [ref=e88]:
+                    - generic [ref=e89]:
+                      - generic [ref=e90]:
+                        - heading "0-A 프로젝트 개요" [level=2] [ref=e91]
+                        - paragraph [ref=e92]: 필수 · 지켜지는 값. 어긋나는 결과는 막지 않고 방향성과 맞지 않을 수 있음으로 표시합니다.
+                      - generic [ref=e93]: 가드레일
+                    - generic [ref=e94]:
+                      - generic [ref=e95]:
+                        - generic [ref=e96]: 제품명*
+                        - textbox "제품명*" [invalid] [ref=e97]
+                        - generic [ref=e98]: 제품명을 입력하세요.
+                      - generic [ref=e99]:
+                        - generic [ref=e100]: 한줄 정의*
+                        - textbox "한줄 정의*" [invalid] [ref=e101]
+                        - generic [ref=e102]: 한줄 정의를 입력하세요.
+                    - group [ref=e103]:
+                      - heading "프로젝트 성격 *" [level=3] [ref=e104]
+                      - radiogroup "프로젝트 성격" [ref=e105]:
+                        - radio "브랜딩" [ref=e106] [cursor=pointer]
+                        - radio "신규기획" [ref=e107] [cursor=pointer]
+                        - radio "리뉴얼" [ref=e108] [cursor=pointer]
+                        - radio "UX개선" [ref=e109] [cursor=pointer]
+                      - paragraph [ref=e110]: 프로젝트 성격을 선택하세요.
+                      - generic [ref=e111]:
+                        - generic [ref=e112]: 프로젝트 성격 보충 설명
+                        - textbox "프로젝트 성격 보충 설명" [ref=e113]
+                    - generic [ref=e114]:
+                      - generic [ref=e115]:
+                        - button "사용 중 불편 탐색하기" [ref=e116] [cursor=pointer]
+                        - button "비사용자의 망설임 탐색하기" [ref=e117] [cursor=pointer]
+                        - button "대체 방법과 이유 탐색하기" [ref=e118] [cursor=pointer]
+                        - button "드러나지 않은 맥락 탐색하기" [ref=e119] [cursor=pointer]
+                      - generic [ref=e120]:
+                        - generic [ref=e121]: 리서치 질문*
+                        - textbox "리서치 질문*" [invalid] [ref=e122]
+                        - generic [ref=e123]: 리서치 질문을 입력하세요.
+                    - group [ref=e124]:
+                      - heading "핵심 지표 (선택)" [level=3] [ref=e125]
+                      - paragraph [ref=e126]: 선택 입력입니다. 방향을 잡는 지표가 있으면 적으세요.
+                      - generic [ref=e127]:
+                        - generic [ref=e128]:
+                          - generic [ref=e129]: 지표명
+                          - textbox "지표명" [ref=e130]
+                        - generic [ref=e131]:
+                          - generic [ref=e132]: 출처
+                          - textbox "출처" [ref=e133]
+                        - generic [ref=e134]:
+                          - generic [ref=e135]: 관련 설문 문항
+                          - textbox "관련 설문 문항" [ref=e136]
+                      - button "지표 추가하기" [disabled] [ref=e137]
+                    - generic [ref=e138]:
+                      - generic [ref=e139]:
+                        - generic [ref=e140]:
+                          - generic [ref=e141]: 사내 제약
+                          - textbox "사내 제약" [ref=e142]
+                          - generic [ref=e143]: 한 줄씩 추가하세요.
+                        - button "사내 제약 추가하기" [ref=e144] [cursor=pointer]
+                      - generic [ref=e145]:
+                        - heading "브랜드 포지셔닝 (선택)" [level=3] [ref=e146]
+                        - generic [ref=e147]:
+                          - generic [ref=e148]:
+                            - heading "가격대" [level=4] [ref=e149]
+                            - generic [ref=e150]:
+                              - radiogroup "가격대" [ref=e151]:
+                                - radio "프리미엄" [ref=e152] [cursor=pointer]
+                                - radio "가성비" [ref=e153] [cursor=pointer]
+                              - button "+ 직접 입력" [ref=e154] [cursor=pointer]
+                          - generic [ref=e155]:
+                            - heading "시장 위치" [level=4] [ref=e156]
+                            - generic [ref=e157]:
+                              - radiogroup "시장 위치" [ref=e158]:
+                                - radio "시장 선도자" [ref=e159] [cursor=pointer]
+                                - radio "시장 도전자" [ref=e160] [cursor=pointer]
+                                - radio "신규 진입자" [ref=e161] [cursor=pointer]
+                              - button "+ 직접 입력" [ref=e162] [cursor=pointer]
+                          - paragraph [ref=e163]: 고른 칩을 다시 누르면 해제됩니다.
+                    - generic [ref=e164]:
+                      - group [ref=e165]:
+                        - heading "수집 채널 *" [level=3] [ref=e166]
+                        - group "수집 채널" [ref=e167]:
+                          - button "네이버 카페" [ref=e168] [cursor=pointer]
+                          - button "네이버 블로그" [ref=e169] [cursor=pointer]
+                          - button "유튜브" [ref=e170] [cursor=pointer]
+                          - button "뽐뿌" [ref=e171] [cursor=pointer]
+                          - button "클리앙" [ref=e172] [cursor=pointer]
+                          - button "개발용 샘플" [ref=e173] [cursor=pointer]
+                        - paragraph [ref=e174]: 채널을 하나 이상 선택하세요.
+                      - generic [ref=e175]:
+                        - generic [ref=e176]:
+                          - generic [ref=e177]: 이미 아는 것
+                          - textbox "이미 아는 것" [ref=e178]
+                          - generic [ref=e179]: 한 줄씩 추가하세요.
+                        - button "이미 아는 것 추가하기" [ref=e180] [cursor=pointer]
+                  - generic [ref=e181]:
+                    - generic [ref=e182]:
+                      - generic [ref=e183]:
+                        - heading "생각하는 페르소나 (선택)" [level=2] [ref=e184]
+                        - paragraph [ref=e185]: 떠오르는 사람을 한 줄씩 적으세요. 결과는 이 목록을 넘어서도록 지시합니다.
+                      - generic [ref=e186]: 시드
+                    - generic [ref=e187]:
+                      - generic [ref=e188]:
+                        - generic [ref=e189]: 페르소나
+                        - textbox "페르소나" [ref=e190]:
+                          - /placeholder: "예: 초진 보호자"
+                      - button "추가하기" [ref=e191] [cursor=pointer]
+                    - generic [ref=e192]:
+                      - checkbox "예시와 다른 페르소나를 우선 발굴" [checked] [ref=e193]
+                      - text: 예시와 다른 페르소나를 우선 발굴
+                  - generic [ref=e194]:
+                    - generic [ref=e195]:
+                      - generic [ref=e196]:
+                        - heading "0-B 분석 대상 · 초기 기준선" [level=2] [ref=e197]
+                        - paragraph [ref=e198]: 선택 · 대조되는 값. 우선 탐색하되 범위 밖 발견도 배제하지 않습니다.
+                      - generic [ref=e199]: 기준선
+                    - generic [ref=e200]:
+                      - heading "제품군 대 › 중 › 소" [level=3] [ref=e201]
+                      - button "자동 제안하기" [disabled] [ref=e202]
+                    - generic [ref=e203]:
+                      - generic [ref=e204]:
+                        - generic [ref=e205]: 대분류
+                        - textbox "대분류" [ref=e206]
+                      - generic [ref=e207]:
+                        - generic [ref=e208]: 중분류
+                        - textbox "중분류" [ref=e209]
+                      - generic [ref=e210]:
+                        - generic [ref=e211]: 소분류
+                        - textbox "소분류" [ref=e212]
+                    - generic [ref=e213]:
+                      - generic [ref=e214]:
+                        - heading "연령대" [level=3] [ref=e215]
+                        - group "연령대" [ref=e216]:
+                          - button "20대" [ref=e217] [cursor=pointer]
+                          - button "30대" [ref=e218] [cursor=pointer]
+                          - button "40대" [ref=e219] [cursor=pointer]
+                          - button "50대+" [ref=e220] [cursor=pointer]
+                        - paragraph [ref=e221]: 미선택은 전체입니다.
+                      - generic [ref=e222]:
+                        - heading "성별" [level=3] [ref=e223]
+                        - group "성별" [ref=e224]:
+                          - button "남성" [ref=e225] [cursor=pointer]
+                          - button "여성" [ref=e226] [cursor=pointer]
+                        - paragraph [ref=e227]: 미선택은 전체입니다.
+                      - generic [ref=e228]:
+                        - heading "가구 형태" [level=3] [ref=e229]
+                        - group "가구 형태" [ref=e230]:
+                          - button "1인 가구" [ref=e231] [cursor=pointer]
+                          - button "신혼 가구" [ref=e232] [cursor=pointer]
+                          - button "영유아 자녀 가구" [ref=e233] [cursor=pointer]
+                          - button "학령기 자녀 가구" [ref=e234] [cursor=pointer]
+                          - button "고령자 동거 가구" [ref=e235] [cursor=pointer]
+                        - paragraph [ref=e236]: 미선택은 전체입니다.
+                      - generic [ref=e237]:
+                        - heading "생애주기" [level=3] [ref=e238]
+                        - group "생애주기" [ref=e239]:
+                          - button "학생" [ref=e240] [cursor=pointer]
+                          - button "사회 초년기" [ref=e241] [cursor=pointer]
+                          - button "자녀 양육기" [ref=e242] [cursor=pointer]
+                          - button "자녀 독립기" [ref=e243] [cursor=pointer]
+                          - button "은퇴기" [ref=e244] [cursor=pointer]
+                        - paragraph [ref=e245]: 미선택은 전체입니다.
+                    - generic [ref=e246]:
+                      - generic [ref=e247]: 분석 대상 보충 설명
+                      - textbox "분석 대상 보충 설명" [ref=e248]
+                    - generic [ref=e249]:
+                      - heading "미래 고객 정의" [level=3] [ref=e250]
+                      - group "미래 고객 정의" [ref=e251]:
+                        - button "경쟁 제품 사용자" [ref=e252] [cursor=pointer]
+                        - button "구매 관망자" [ref=e253] [cursor=pointer]
+                        - button "이탈 고객" [ref=e254] [cursor=pointer]
+                        - button "인접 니즈 고객" [ref=e255] [cursor=pointer]
+                      - generic [ref=e256]:
+                        - generic [ref=e257]: 미래 고객 보충 설명
+                        - textbox "미래 고객 보충 설명" [ref=e258]
+                - region "저장 작업" [ref=e259]:
+                  - status [ref=e260]: 변경 사항 없음
+                  - button "임시 저장" [ref=e261] [cursor=pointer]
+                  - button "저장" [ref=e262] [cursor=pointer]
+                  - button "키워드 생성 시작하기" [ref=e263] [cursor=pointer]
+              - complementary [ref=e264]:
+                - group [ref=e266]:
+                  - generic "project_context.md 미리보기" [ref=e267]
+                  - paragraph [ref=e268]: 서버 저장 맥락을 바탕으로 만든 미리보기입니다.
+                  - generic [ref=e269]: "## 0-A 프로젝트 개요 - 제품명: - 과제 유형: 탐색·기획형 — 아직 드러나지 않은 맥락과 기회를 찾는 과제. 넓게 탐색 - 한줄 정의: - 리서치 질문: - 프로젝트 유형: - 핵심 지표 (방향 지시자, 측정값 아님): 없음 - 사내 제약: 없음 - 수집 채널: 없음 - 제품 분류: - 제품 분류 출처: 사용자 입력 ## 생각하는 페르소나 · 디멘션 - 없음 디멘션: 사회적 외부 페르소나 · 개인 취향·활동 · 신체 외부 동선 · 내부 바이오 예시는 출발점일 뿐이다. 네 디멘션 각각에서 예시와 비슷한 페르소나에 머물지 말고, 예시와 다른 페르소나와 맥락을 우선 발굴할 것 ## 0-B 분석 대상 · 초기 기준선 분석 대상 초기 기준선 — 우선 탐색하되 범위 밖 발견도 배제하지 말 것, 해석을 조정하지 말 것 - 연령대: 전체 - 성별: 전체 - 가구 유형: 전체 - 생애 단계: 전체 - 분석 대상 메모: 없음 - 미래 고객: 전체 ## 이미 아는 것 - 없음"
+      - button "챗봇 열기" [ref=e270] [cursor=pointer]
+  - alert [ref=e273]

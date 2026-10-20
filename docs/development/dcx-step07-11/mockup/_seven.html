@@ -1,0 +1,2085 @@
+<!doctype html><meta charset="utf-8"><title>DCX STEP 07~11</title>
+<style>/* Person A Design System — 대시보드·BI 기준은 '디자인규칙 수정본'이다.
+   우선순위(스킬 CLAUDE.md): ① uploads/rules-revised.html(수정본) ② seed-design.html
+   ③ tokens/*.css 는 seed 산물 — 수정본과 어긋나는 값은 수정본이 이긴다.
+   두 블루는 경쟁이 아니라 역할이 다르다:
+     persona-blue  #38B6F9 = 신호(사람·맥락·변화). 채움·선택 배경·차트 series. 위 글자는 ink.
+     action        #0a73b5 = 조작(링크·버튼·포커스). 흰 배경 위 텍스트로 쓸 수 있는 유일한 블루.
+   폰트·로고는 아티팩트 블롭을 먼저, 로컬 미리보기용 상대경로를 뒤에 둔다.
+   기존 화면 마크업이 쓰는 레거시 변수명은 아래에서 이 토큰들에 별칭으로 연결한다. */
+
+/* ── fonts ── UI 400/600/700 + 수정본이 요구하는 insight 800 */
+@font-face{font-family:Pretendard;font-weight:400;font-style:normal;font-display:swap;
+  src:url("/_blob/b61d00bb36beee27cff0927bae844311") format("woff2"),
+      url("./assets/Pretendard-Regular.woff2") format("woff2")}
+@font-face{font-family:Pretendard;font-weight:500;font-style:normal;font-display:swap;
+  src:url("/_blob/d7c65e026fbb548b5fa5045e0d4607aa") format("woff2"),
+      url("./assets/Pretendard-Medium.woff2") format("woff2")}
+@font-face{font-family:Pretendard;font-weight:600;font-style:normal;font-display:swap;
+  src:url("/_blob/cea76f29df8261db72490b8144c866a7") format("woff2"),
+      url("./assets/Pretendard-SemiBold.woff2") format("woff2")}
+@font-face{font-family:Pretendard;font-weight:700;font-style:normal;font-display:swap;
+  src:url("/_blob/6a3823c062967e5b736dd887f949c066") format("woff2"),
+      url("./assets/Pretendard-Bold.woff2") format("woff2")}
+@font-face{font-family:Pretendard;font-weight:800;font-style:normal;font-display:swap;
+  src:url("./assets/Pretendard-ExtraBold.woff2") format("woff2")}
+
+/* ── colors ── 수정본 3색 예산: Empathy 70 · Shadow 20 · Person 7 · Status 3 */
+:root{
+/* brand — 수정본 값 */
+--persona-blue-100:#38b6f9;--persona-blue-soft:#e4f5fe;--persona-graphite-100:#676668;
+/* action — 조작 블루. 수정본이 규정하지 않으므로 seed 를 승계한다(흰 배경 대비 5.1:1) */
+--action:#0a73b5;--action-hover:#085d93;--action-soft:#e8f4fc;--on-action:#ffffff;
+/* surface & line — surface 는 Empathy White */
+--surface:#f8fcff;--surface-raised:#ffffff;--surface-sunken:#eceef1;--line:#e1e4e8;--line-strong:#7f838b;
+/* ink — 수정본에 램프가 없어 seed 3단계를 유지한다(모두 AA 이상) */
+--ink:#1c1e22;--ink-secondary:#55585f;--ink-subtle:#6a6e76;
+/* status — 3% */
+--success:#1b7446;--success-soft:#e6f6ec;--warning:#9a5b00;--warning-soft:#fff3dc;--danger:#c62828;--danger-soft:#fdeaea;
+/* 신호(signal) — Person Blue 의 제품 내 역할 */
+--signal:var(--persona-blue-100);--signal-soft:var(--persona-blue-soft);--on-signal:var(--ink);
+/* semantic aliases */
+--text-secondary:var(--ink-secondary);--text-subtle:var(--ink-subtle);--text-link:var(--action);
+--surface-page:var(--surface);--surface-card:var(--surface-raised);--surface-header:var(--surface-sunken);
+--border-default:var(--line);--border-control:var(--line-strong);--focus-ring:var(--action);
+--selected-bg:var(--persona-blue-soft);--info:var(--action);--info-soft:var(--action-soft);
+}
+
+/* ── typography ── 수정본 시맨틱 스케일. 크기를 고르지 않고 역할 이름을 고른다. */
+:root{
+--font-sans:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",system-ui,sans-serif;
+--font-mono:"SF Mono",Menlo,Consolas,"D2Coding",monospace;
+--text-insight:800 40px/52px var(--font-sans);--tracking-insight:-0.04em;
+--text-screen-title:800 30px/40px var(--font-sans);--tracking-screen-title:-0.035em;
+--text-section-title:700 24px/34px var(--font-sans);--tracking-section-title:-0.03em;
+--text-card-title:700 18px/27px var(--font-sans);--tracking-card-title:-0.02em;
+--text-body:400 15px/24px var(--font-sans);--tracking-body:-0.01em;
+--text-body-strong:600 15px/24px var(--font-sans);
+--text-label:600 13px/19px var(--font-sans);--tracking-label:-0.005em;
+--text-caption:400 12px/18px var(--font-sans);
+--text-code:400 13px/20px var(--font-mono);
+--weight-regular:400;--weight-medium:500;--weight-semibold:600;--weight-bold:700;--weight-insight:800;
+/* 레거시 별칭 — 기존 마크업이 부르는 이름을 역할 스케일로 끌어온다 */
+--text-display-lg:var(--text-screen-title);--tracking-display-lg:var(--tracking-screen-title);
+--text-display:var(--text-section-title);--tracking-display:var(--tracking-section-title);
+--text-heading-lg:var(--text-card-title);--text-heading:var(--text-card-title);
+--text-body-lg:400 16px/26px var(--font-sans);
+}
+
+/* ── spacing · radius · elevation ── */
+:root{
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;--space-12:48px;
+/* 수정본 관계 간격 — 같은 정보 관계에는 같은 값 */
+--gap-eyebrow-head:var(--space-2);--gap-head-sub:var(--space-3);--gap-sub-body:var(--space-2);
+--gap-body-evidence:var(--space-4);--gap-evidence-action:var(--space-5);
+--gap-sectionhead-content:var(--space-6);--gap-section-section:var(--space-12);
+/* 수정본 radius — Input 6 · Button 10 · Card 14 · Overlay 18 */
+--radius-sm:6px;--radius-md:10px;--radius-lg:14px;--radius-xl:18px;--radius-full:999px;
+/* 그림자는 떠 있는 것에만 — drawer·popover·modal */
+--shadow-sm:0 1px 2px rgba(28,30,34,0.06);
+--shadow-md:0 8px 24px rgba(28,30,34,0.12),0 1px 2px rgba(28,30,34,0.06);
+--motion:150ms ease-out;
+--control-md:36px;--control-sm:28px;--badge-h:22px;
+/* 수정본 레이아웃 — 12col · gutter 24 · margin 32 · sidebar 224 */
+--sidebar-w:224px;--grid-gutter:var(--space-6);--grid-margin:var(--space-8);
+--card-pad:var(--space-6);--content-max:1200px;--card-min:280px;
+}
+
+/* ── 레거시 별칭 ── 15개 화면 마크업이 참조하는 이름들 */
+:root{
+--canvas:var(--surface);--panel:var(--surface-raised);--raise:var(--surface-raised);--sunk:var(--surface-sunken);
+--fg:var(--ink);--sec:var(--ink-secondary);--mut:var(--ink-secondary);--qui:var(--ink-subtle);
+--line2:var(--line-strong);--act:var(--action);--act-fg:var(--on-action);
+--indigo:var(--persona-blue-100);--ind-fg:var(--action);--ind-deep:var(--action-hover);
+--ind-bg:var(--action-soft);--ind-ln:var(--action);
+--obs:var(--success);--inf:var(--warning);--spe:var(--danger);
+--obs-bg:var(--success-soft);--inf-bg:var(--warning-soft);--spe-bg:var(--danger-soft);
+--obs-ln:var(--success);--inf-ln:var(--warning);--spe-ln:var(--danger);
+}
+
+/* ── base ── */
+*{box-sizing:border-box}
+body{margin:0;font:var(--text-body);letter-spacing:var(--tracking-body);color:var(--ink);
+  background:var(--surface);-webkit-font-smoothing:antialiased;
+  word-break:keep-all;overflow-wrap:break-word}
+a{color:var(--action);text-decoration:none}a:hover{color:var(--action-hover);text-decoration:underline}
+:focus-visible{outline:2px solid var(--action);outline-offset:2px}
+.mono{font:var(--text-code);font-variant-numeric:tabular-nums;letter-spacing:0;
+  word-break:normal;white-space:nowrap}
+
+/* ---------- 수정본 정보 구조 ----------
+   사람의 변화 → 행동 근거 → 해석 → 다른 가능성 → 다음 행동.
+   .insight 는 한 화면에 하나만 둔다 (800 dominant insight). */
+.signal{display:flex;flex-direction:column}
+.signal .eyebrow{font:var(--text-label);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-subtle);margin-bottom:var(--gap-eyebrow-head)}
+.insight{margin:0;font:var(--text-insight);letter-spacing:var(--tracking-insight);color:var(--ink)}
+.insight .up{color:var(--action)}
+.signal .interp{margin:var(--gap-head-sub) 0 0;font:var(--text-body-lg);color:var(--ink-secondary)}
+.signal .alt{margin:var(--gap-sub-body) 0 0;font:var(--text-body);color:var(--ink-subtle)}
+
+/* 근거 — 해석 가까이에 표본·기간·source·confidence·원문 */
+.evid{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-3);
+  margin-top:var(--gap-body-evidence);padding-top:var(--space-3);border-top:1px solid var(--line)}
+.evid>span{font:var(--text-label);color:var(--ink-secondary);white-space:nowrap}
+.evid .src{color:var(--action)}
+.conf{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--badge-h);
+  padding:0 var(--space-2);border-radius:var(--radius-sm);background:var(--surface-sunken);
+  font:var(--text-label);color:var(--ink-secondary);white-space:nowrap;flex:none}
+.conf i{display:inline-flex;gap:2px;font-style:normal}
+.conf i b{width:5px;height:5px;border-radius:var(--radius-full);background:var(--line-strong)}
+.conf i b.on{background:var(--signal)}
+.conf.hi{background:var(--signal-soft);color:var(--ink)}
+.conf.lo{background:var(--warning-soft);color:var(--warning)}
+.conf.lo i b.on{background:var(--warning)}
+
+/* 다음 행동 — 모든 핵심 insight 는 여기서 끝난다 */
+.nextact{display:flex;align-items:center;gap:var(--space-3);margin-top:var(--gap-evidence-action);
+  padding:var(--space-3) var(--space-4);border:1px solid var(--line);
+  border-left:3px solid var(--signal);border-radius:var(--radius-md);background:var(--surface-raised)}
+.nextact .lb{font:var(--text-label);color:var(--ink-subtle);white-space:nowrap;flex:none}
+.nextact .tx{font:var(--text-body-strong);color:var(--ink);min-width:0}
+.nextact .go{margin-left:auto;font:var(--text-label);color:var(--action);white-space:nowrap;flex:none}
+
+/* 신호 강조 — Person Blue 는 채움으로만. 위 글자는 ink. */
+.sig{background:var(--signal-soft);color:var(--on-signal)}
+.sig-edge{border-color:var(--signal)}
+
+/* 12-column grid — gutter 24 */
+.g12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gutter);align-items:start}
+.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}
+.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+
+/* ---------- artboard ---------- */
+.art{width:1440px;background:var(--surface);display:flex;flex-direction:column}
+.app{display:flex;flex-direction:column;flex:1;min-height:0}
+
+/* ---------- app header ---------- */
+.top{height:56px;flex:none;display:flex;align-items:center;gap:var(--space-3);
+  padding:0 var(--space-4);border-bottom:1px solid var(--line);background:var(--surface-raised)}
+.brand{display:flex;align-items:center;gap:var(--space-2);font:var(--text-body-strong);
+  color:var(--ink);white-space:nowrap}
+.brand .dot{width:32px;height:32px;flex:none;border-radius:var(--radius-sm);
+  background:url("/_blob/3f933f71922cb48295ada36d5be25263") center/contain no-repeat,
+             url("./assets/person-a-logo.png") center/contain no-repeat}
+.top .sep{width:1px;height:18px;background:var(--line)}
+.pill{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--control-sm);
+  padding:0 var(--space-3);border-radius:var(--radius-sm);font:var(--text-label);
+  color:var(--ink-secondary);background:transparent;border:1px solid transparent;
+  white-space:nowrap;transition:background var(--motion)}
+.pill:hover{background:var(--surface-sunken)}
+.pill.on{background:var(--surface-sunken);color:var(--ink);border-color:var(--line)}
+.grow{flex:1}
+
+/* ---------- Button (§7.1) ---------- */
+.btn{display:inline-flex;align-items:center;gap:var(--space-2);height:var(--control-md);
+  padding:0 var(--space-4);border-radius:var(--radius-sm);font:var(--text-body-strong);
+  border:1px solid var(--line-strong);background:var(--surface-raised);color:var(--ink);
+  white-space:nowrap;transition:background var(--motion),border-color var(--motion)}
+.btn:hover{background:var(--action-soft)}
+.btn.pri{background:var(--action);color:var(--on-action);border-color:var(--action)}
+.btn.pri:hover{background:var(--action-hover);border-color:var(--action-hover)}
+.btn.gho{background:transparent;border-color:transparent;color:var(--action)}
+.btn.gho:hover{background:var(--action-soft)}
+.btn.dng{background:var(--danger);color:var(--on-action);border-color:var(--danger)}
+.btn.sm,.btn.lg{height:var(--control-sm);padding:0 var(--space-3);font:var(--text-label)}
+.btn.lg{height:var(--control-md);padding:0 var(--space-6);font:var(--text-body-strong)}
+
+/* ---------- body split (§4.4) ---------- */
+.body{display:flex;flex:1;min-height:0}
+.side{width:var(--sidebar-w);flex:none;border-right:1px solid var(--line);background:var(--surface);
+  padding:var(--space-3) var(--space-2);overflow:hidden}
+.side .grp{font:var(--text-caption);font-weight:var(--weight-semibold);color:var(--ink-subtle);
+  padding:var(--space-4) var(--space-3) var(--space-2)}
+.step{display:flex;align-items:center;gap:var(--space-2);height:34px;padding:0 var(--space-3);
+  border-radius:var(--radius-sm);font:var(--text-label);color:var(--ink-secondary);
+  white-space:nowrap;transition:background var(--motion)}
+.step:hover{background:var(--surface-sunken)}
+.step.on{background:var(--selected-bg);color:var(--ink)}
+.step .no{font:var(--text-caption);color:var(--ink-subtle);width:36px;flex:none;
+  font-variant-numeric:tabular-nums}
+.step.on .no{color:var(--action)}
+.step .st{margin-left:auto;width:8px;height:8px;border-radius:var(--radius-full);
+  background:var(--line-strong);flex:none;opacity:.45}
+.step .st.done{background:var(--success);opacity:1}
+.step .st.run{background:var(--warning);opacity:1}
+.step .st.cur{background:var(--action);opacity:1}
+.side .note{margin:var(--space-3) var(--space-2);padding:var(--space-3);
+  border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface-raised)}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;background:var(--surface)}
+.mhead{flex:none;padding:var(--space-6) var(--grid-margin) var(--space-4);border-bottom:1px solid var(--line)}
+.mhead .eyebrow{font:var(--text-label);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-subtle);margin-bottom:var(--gap-eyebrow-head)}
+.mhead h1{margin:0;font:var(--text-screen-title);letter-spacing:var(--tracking-screen-title)}
+.mhead .sub{margin-top:var(--gap-head-sub);font:var(--text-body);color:var(--ink-secondary);max-width:96ch}
+.mbody{flex:1;min-height:0;padding:var(--space-6) var(--grid-margin);
+  display:flex;flex-direction:column;gap:var(--gap-sectionhead-content)}
+
+/* ---------- context panel ---------- */
+.chat{width:320px;flex:none;border-left:1px solid var(--line);background:var(--surface-raised);
+  display:flex;flex-direction:column}
+.chat.rail{width:52px;align-items:center;padding-top:var(--space-3);gap:var(--space-4)}
+.chat .chead{flex:none;height:48px;display:flex;align-items:center;gap:var(--space-2);
+  padding:0 var(--space-4);border-bottom:1px solid var(--line);font:var(--text-heading);white-space:nowrap}
+.chat .cbody{flex:1;min-height:0;padding:var(--space-4);display:flex;flex-direction:column;
+  gap:var(--space-3);overflow:hidden}
+.chat .cfoot{flex:none;padding:var(--space-3) var(--space-4);border-top:1px solid var(--line)}
+.msg{border:1px solid var(--line);border-radius:var(--radius-md);padding:var(--space-3);
+  background:var(--surface-raised);font:var(--text-body);color:var(--ink)}
+.msg.me{background:var(--action-soft);border-color:var(--action-soft)}
+.msg .who{display:block;font:var(--text-caption);color:var(--ink-subtle);margin-bottom:var(--space-1)}
+.input{height:var(--control-md);border:1px solid var(--line-strong);border-radius:var(--radius-sm);
+  background:var(--surface-raised);display:flex;align-items:center;padding:0 var(--space-3);
+  font:var(--text-body);color:var(--ink-subtle)}
+
+/* ---------- Card (§7.3) — 보더로 구분, 정적 카드에 그림자 없음 ---------- */
+.card{border:1px solid var(--line);border-radius:var(--radius-lg);
+  background:var(--surface-raised);overflow:hidden}
+.card.sunk{background:var(--surface-sunken)}
+.card>.ch{display:flex;align-items:center;gap:var(--space-2);
+  padding:var(--space-4) var(--card-pad);border-bottom:1px solid var(--line)}
+.card>.ch h3{margin:0;font:var(--text-card-title);letter-spacing:var(--tracking-card-title);white-space:nowrap}
+.card>.cc{padding:var(--card-pad)}
+.lab{font:var(--text-label);letter-spacing:var(--tracking-label);color:var(--ink-secondary);white-space:nowrap}
+.row{display:flex;gap:var(--grid-gutter)}
+.row>*{min-width:0}
+.col{display:flex;flex-direction:column;gap:var(--grid-gutter);min-width:0}
+.sm{font:var(--text-body);color:var(--ink-secondary)}
+.xs{font:var(--text-caption);color:var(--ink-secondary)}
+.mu,.qu{color:var(--ink-subtle)} .fg{color:var(--ink)}
+
+/* ---------- Badge (§7.4) — 텍스트가 의미, 색은 보조 ---------- */
+.b{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--badge-h);
+  padding:0 var(--space-2);border-radius:var(--radius-sm);font:var(--text-label);
+  background:var(--surface-sunken);color:var(--ink-secondary);border:1px solid transparent;
+  white-space:nowrap;flex:none}
+.b.ind{background:var(--info-soft);color:var(--info)}
+.b.obs{background:var(--success-soft);color:var(--success)}
+.b.inf{background:var(--warning-soft);color:var(--warning)}
+.b.spe{background:var(--danger-soft);color:var(--danger)}
+.b.brand{background:var(--persona-blue-soft);color:var(--ink)}
+.b.solid{background:var(--ink);color:var(--on-action)}
+.b.pill{border-radius:var(--radius-full)}
+.dotg{width:8px;height:8px;border-radius:var(--radius-full);display:inline-block;flex:none}
+.dotg.o{background:var(--success)} .dotg.i{background:var(--warning)} .dotg.s{background:var(--danger)}
+
+/* ---------- Table (§7.5) — dense 변형: 로그·관리 화면 ---------- */
+table{width:100%;border-collapse:collapse;background:var(--surface-raised)}
+th,td{text-align:left;font:var(--text-label);font-weight:var(--weight-regular);
+  padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:var(--weight-medium);color:var(--ink-secondary);background:var(--surface-sunken);
+  white-space:nowrap}
+td{color:var(--ink)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+
+/* ---------- meters ---------- */
+.bar{height:8px;border-radius:var(--radius-full);background:var(--surface-sunken);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--persona-blue-100)}
+.bar>i.n{background:var(--line-strong)} .bar>i.o{background:var(--success)} .bar>i.w{background:var(--warning)}
+.kv{display:flex;align-items:baseline;gap:var(--space-2)}
+.kv b{font:var(--text-display);letter-spacing:var(--tracking-display);
+  font-variant-numeric:tabular-nums;white-space:nowrap;flex:none}
+.kpi{display:flex;flex-direction:column;gap:var(--space-1);padding:var(--space-4);
+  border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface-raised)}
+.kpi .v{font:var(--text-display);letter-spacing:var(--tracking-display);
+  font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--control-sm);
+  padding:0 var(--space-3);border-radius:var(--radius-sm);border:1px solid var(--line-strong);
+  background:var(--surface-raised);font:var(--text-label);color:var(--ink);white-space:nowrap;
+  transition:background var(--motion)}
+.chip.on{background:var(--selected-bg);border-color:var(--action);color:var(--ink)}
+.chip.off{color:var(--ink-subtle);border-color:var(--line);background:var(--surface-sunken)}
+.wrap{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.fld{border:1px solid var(--line-strong);border-radius:var(--radius-sm);background:var(--surface-raised);
+  padding:var(--space-2) var(--space-3);font:var(--text-body);color:var(--ink);min-height:var(--control-md)}
+.fld.ph{color:var(--ink-subtle);background:var(--surface-sunken);border-color:var(--line)}
+.seg{display:inline-flex;padding:2px;border:1px solid var(--line);border-radius:var(--radius-sm);
+  background:var(--surface-sunken)}
+.seg>span{height:var(--control-sm);display:inline-flex;align-items:center;padding:0 var(--space-3);
+  border-radius:4px;font:var(--text-label);color:var(--ink-secondary);white-space:nowrap;
+  transition:background var(--motion)}
+.seg>span.on{background:var(--surface-raised);color:var(--ink);box-shadow:var(--shadow-sm)}
+
+/* ---------- annotation pins ---------- */
+.pin{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
+  border-radius:var(--radius-full);background:var(--action-soft);color:var(--action);
+  font:var(--text-caption);font-weight:var(--weight-semibold);flex:none;font-variant-numeric:tabular-nums}
+.pin.fl{position:absolute;z-index:5;background:var(--surface-raised);color:var(--action);
+  border:1px solid var(--action);box-shadow:0 0 0 3px var(--surface)}
+.rel{position:relative}
+.ann{flex:none;border-top:1px solid var(--line);background:var(--surface-sunken);
+  padding:var(--space-6) var(--space-8)}
+.ann h4{margin:0 0 var(--space-1);font:var(--text-heading)}
+.ann .lead{margin:0 0 var(--space-4);font:var(--text-caption);color:var(--ink-secondary)}
+.ann .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-3) var(--space-6)}
+.ann .it{display:flex;gap:var(--space-2)}
+.ann .it p{margin:0;font:var(--text-caption);color:var(--ink-secondary)}
+.ann .it p em{font-style:normal;color:var(--ink-subtle)}
+.ann .it p b{font-weight:var(--weight-semibold);color:var(--ink)}
+.tag{display:inline-block;font:var(--text-caption);font-weight:var(--weight-medium);
+  padding:1px var(--space-2);border-radius:var(--radius-sm);background:var(--surface-sunken);
+  color:var(--ink-secondary);margin-right:var(--space-1);white-space:nowrap}
+.tag.rep{background:var(--action-soft);color:var(--action)}
+.tag.new{background:var(--success-soft);color:var(--success)}
+.tag.keep{background:var(--surface-sunken);color:var(--ink-secondary)}
+.tag.open{background:var(--danger-soft);color:var(--danger)}
+
+/* ---------- keyword board ---------- */
+.kw{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--control-sm);
+  padding:0 var(--space-3);border-radius:var(--radius-full);font:var(--text-label);
+  border:1px solid var(--line);background:var(--surface-raised);color:var(--ink);white-space:nowrap}
+.kw.old{background:var(--surface-sunken);color:var(--ink-secondary)}
+.kw.new{background:var(--action-soft);border-color:var(--action);color:var(--action)}
+.kw.rej{background:transparent;color:var(--ink-subtle);text-decoration:line-through;
+  border-color:var(--line);border-style:dashed}
+.kw.man{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.kw.sug{background:var(--persona-blue-soft);border-color:var(--persona-blue-100);color:var(--ink)}
+.kw .sc{font:var(--text-caption);font-weight:var(--weight-semibold);padding:0 var(--space-1);
+  border-radius:var(--radius-sm);font-variant-numeric:tabular-nums}
+.kw .sc.hi{background:var(--success-soft);color:var(--success)}
+.kw .sc.mid{background:var(--warning-soft);color:var(--warning)}
+.kw .sc.lo{background:var(--danger-soft);color:var(--danger)}
+.axis{border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface-raised);overflow:hidden}
+.axis>.ah{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-4);
+  background:var(--surface-sunken);border-bottom:1px solid var(--line);
+  font:var(--text-label);font-weight:var(--weight-semibold);white-space:nowrap}
+.sub{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--line)}
+.sub:last-child{border-bottom:none}
+.sub>.sh{display:flex;align-items:center;gap:var(--space-2);font:var(--text-label);
+  color:var(--ink-secondary);white-space:nowrap}
+.sub>.sh .car{color:var(--ink-subtle);width:10px}
+.sub>.sh .cnt{color:var(--ink-subtle);font-variant-numeric:tabular-nums}
+.drop{border:1px dashed var(--action);background:var(--action-soft);border-radius:var(--radius-md)}
+.overlay{border:1px solid var(--line);border-radius:var(--radius-xl);
+  background:var(--surface-raised);box-shadow:var(--shadow-md)}
+
+html{background:#c9ced7}body{margin:0;padding:24px;display:flex;flex-direction:column;gap:44px;align-items:flex-start}
+.cap{font:600 13px/1.4 Pretendard,system-ui,sans-serif;color:#2f343b;letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:10px}
+.art{outline:1px solid #9aa1ad;box-shadow:0 2px 18px rgba(11,12,15,.16)}
+.slot{overflow:hidden}
+@media(max-width:1500px){body{padding:10px;display:block;overflow-x:auto}.slot{margin-bottom:36px}}</style><div><div class="cap">STEP 07 · 군집 → Touch Point</div><div class="slot" style="width:1440px;height:2620px"><div class="art" style="width: 1440px; height: 2620px;">
+  <div class="app">
+    <header class="top">
+  <div class="brand"><span class="dot"></span>DCX Agent</div>
+  <span class="sep"></span>
+  <span class="pill on">에어팟 프로 3 · 운동·건강 맥락 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span>
+  <span class="pill">세션 3개</span>
+  <span class="grow"></span>
+  <span class="pill">작업 2건 실행 중</span>
+  <span class="pill">문서 검색</span>
+  <span class="btn gho">내보내기</span>
+  <span class="btn pri">세션 저장</span>
+</header>
+    <div class="body">
+      <nav class="side"><div class="grp">Data Defining</div><div class="step"><span class="no">00</span><span>세션</span><span class="st done"></span></div><div class="step"><span class="no">01·02</span><span>입력 선언</span><span class="st done"></span></div><div class="step"><span class="no">03</span><span>키워드 설계</span><span class="st done"></span></div><div class="step"><span class="no">04</span><span>데이터 수집</span><span class="st done"></span></div><div class="grp">Data Sensing</div><div class="step"><span class="no">05</span><span>전처리 · 임베딩</span><span class="st done"></span></div><div class="step"><span class="no">06-A</span><span>모델 학습</span><span class="st done"></span></div><div class="step"><span class="no">06-B</span><span>근거 판정</span><span class="st done"></span></div><div class="step on"><span class="no">07</span><span>군집</span><span class="st cur"></span></div><div class="step"><span class="no">08</span><span>페르소나</span><span class="st "></span></div><div class="step"><span class="no">09</span><span>근거 수집</span><span class="st "></span></div><div class="grp">Data Shaping</div><div class="step"><span class="no">10-A</span><span>Customer Action Map</span><span class="st "></span></div><div class="step"><span class="no">10-B</span><span>기회 영역</span><span class="st "></span></div><div class="step"><span class="no">11-A</span><span>인사이트 도출</span><span class="st "></span></div><div class="step"><span class="no">11-B</span><span>경험 디자인 컨셉</span><span class="st "></span></div><div class="grp">운영</div><div class="step"><span class="no">ADM</span><span>프롬프트 관리</span><span class="st "></span></div><div class="note"><div class="lab">활성 선언</div>
+    <p class="xs" style="margin:6px 0 0;color:var(--sec)">무선 이어폰을 운동·건강 맥락에서 재정의할 미충족 니즈를 찾는다</p>
+    <p class="xs" style="margin:6px 0 0">STEP 01 한줄 정의 · 전 단계 프롬프트 헤더로 상주</p></div></nav>
+      <main class="main">
+        <div class="mhead"><div class="eyebrow">STEP 07 · Data Sensing</div><h1>군집 → Touch Point</h1><div class="sub">기존 방법을 지우지 않고, 수정 방법을 나란히 놓는다 · ID는 한쪽에서만 발급한다 · 1.0 Touch Point 장표는 구조를 그대로 승계한다</div></div>
+        <div class="mbody">
+<div class="g12" style="flex:none">
+
+  <!-- 사람의 변화 → 해석 → 다른 가능성 → 근거 → 다음 행동 (수정본 정보 순서) -->
+  <section class="c8 card"><div class="cc">
+    <div class="signal">
+      <div class="eyebrow">Touch Point · 가장 큰 군집 CL0</div>
+      <h2 class="insight">운동 중 몸 상태를 확인하려다<br>기기를 두 개 차게 되는 사람이 가장 많습니다.</h2>
+      <p class="interp">하나를 고르면 다른 하나를 포기해야 하는 구조여서, 기기를 <span class="fg">줄이고 싶다</span>는 요구가 반복해서 올라옵니다.</p>
+      <p class="alt">다른 가능성 · 광학 센서 정확도를 의심하는 반례가 1,180건 남아 있습니다. 삭제하지 않고 CL4로 보존했습니다.</p>
+      <div class="evid">
+        <span>표본 <span class="mono fg">14,820</span>건</span>
+        <span>최근 90일</span>
+        <span>커뮤니티 · 리뷰 통합</span>
+        <span class="conf hi">신뢰도 <i><b class="on"></b><b class="on"></b><b class="on"></b></i> 3/3 · 높음</span>
+        <span class="src">원문 보기 →</span>
+      </div>
+      <div class="nextact">
+        <span class="lb">다음 행동</span>
+        <span class="tx">CL4 정확도 불신 반례를 STEP 09 근거 수집 대상에 포함</span>
+        <span class="go">반례 원문 1,180건 확인하기 →</span>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- 근거 요약 4col -->
+  <aside class="c4 col" style="gap:var(--space-3)">
+    <div class="card rel"><div class="cc" style="padding:var(--space-4);display:flex;align-items:center;gap:var(--space-3)">
+      <span class="pin fl" style="top:-8px;left:-9px">1</span>
+      <div style="min-width:0">
+        <div class="lab">ID 발급 갈래 <span class="mono qu" style="text-transform:none;letter-spacing:0;font-weight:400">primary_method</span></div>
+        <div class="xs" style="margin-top:4px">나머지 갈래는 비교 화면에만 나온다 · 세션 단위로 되돌릴 수 있다</div>
+      </div>
+      <span class="grow"></span>
+      <span class="seg" style="flex:none"><span class="on">수정 방법</span><span>기존 방법</span></span>
+    </div></div>
+    <div class="row" style="gap:var(--space-3)">
+      <div class="kpi" style="flex:1"><span class="lab">L1 Cluster</span><span class="v">6</span><span class="xs">실루엣 최대 k · 3~14 탐색</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">L2 Persona</span><span class="v">14</span><span class="xs">클러스터당 2~3</span></div>
+    </div>
+    <div class="row" style="gap:var(--space-3)">
+      <div class="kpi" style="flex:1"><span class="lab">L3 Context</span><span class="v">38</span><span class="xs">페르소나당 2~4</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">1.0 재현성</span><span class="v">.58<span class="xs" style="font-weight:400"> ARI</span></span><span class="xs">.66 NMI · 두 갈래 최대겹침</span></div>
+    </div>
+  </aside>
+</div>
+
+<div class="row" style="flex:none;min-height:0">
+  <div class="card" style="flex:1">
+    <div class="ch"><h3>기존 방법 · 1.0</h3><span class="b">Ward + SNA + LDA</span><span class="grow"></span><span class="xs">형태소 토큰 입력</span></div>
+    <div class="cc">
+      <svg viewBox="0 0 320 132" width="100%" height="132" style="display:block">
+        <g stroke-width="1.2" fill="none" style="stroke:var(--line-strong)">
+          <path d="M14 126V96h28v30M14 96h28"/><path d="M56 126V104h28v22M56 104h28"/>
+          <path d="M28 96V74h42v30M28 74h42"/>
+          <path d="M104 126V110h26v16M104 110h26"/><path d="M146 126V100h26v26M146 100h26"/>
+          <path d="M117 110V80h38v20M117 80h38"/>
+          <path d="M49 74V50h87v30M49 50h87"/>
+          <path d="M196 126V106h30v20M196 106h30"/><path d="M244 126V112h30v14M244 112h30"/>
+          <path d="M211 106V78h44v34M211 78h44"/>
+          <path d="M92 50V30h141v48M92 30h141"/>
+        </g>
+        <line x1="0" y1="62" x2="320" y2="62" stroke-width="1" stroke-dasharray="4 3"/ style="stroke:var(--action)">
+        <text x="322" y="60" font-size="9" text-anchor="end" style="fill:var(--ink-secondary)">cut k=6</text>
+      </svg>
+      <div style="margin-top:8px;display:flex;gap:12px;align-items:flex-end;border-top:1px solid var(--line);padding-top:9px">
+        <div style="flex:none;width:150px">
+          <div class="lab" style="margin-bottom:3px">실루엣 스코어 그래프</div>
+          <svg viewBox="0 0 150 46" width="150" height="46" style="display:block">
+            <polyline points="8,38 25,26 42,14 59,10 76,18 93,25 110,31 127,36 142,40" fill="none" stroke-width="1.6"/ style="stroke:var(--action)">
+            <circle cx="59" cy="10" r="3.4"/ style="fill:var(--action)">
+            <line x1="59" y1="10" x2="59" y2="42" stroke-width=".9" stroke-dasharray="3 2"/ style="stroke:var(--action)">
+            <g stroke-width="1" style="stroke:var(--line)"><line x1="4" y1="42" x2="146" y2="42"/></g>
+            <g font-size="8" style="fill:var(--ink-subtle)"><text x="4" y="52">3</text><text x="56" y="52">6</text><text x="138" y="52">14</text></g>
+            <text x="64" y="12" font-size="8.5" style="fill:var(--action-hover)">최대 0.31</text>
+          </svg>
+        </div>
+        <div class="xs" style="flex:1;display:flex;flex-direction:column;gap:3px">
+          <span>채택 k <span class="mono fg">6</span> · Elbow와 일치</span>
+          <span>TF-IDF 상위 10 · 명사</span>
+          <span class="rel" style="color:var(--spe)">1.0 실측 실루엣 <span class="mono">0.044 / 0.036</span> — 내부·외부를 사람이 나눠 돌린 값<span class="pin fl" style="top:-2px;right:-9px">6</span></span>
+        </div>
+      </div>
+      <div class="xs qu" style="margin-top:7px">L2는 명사 동시출현 행렬(상위 ≈300) → 모듈성 분할 → Desire 유사한 것 통합. L3는 micro segment 내부 gensim LDA, topic_num 2~10 스캔.</div>
+    </div>
+  </div>
+
+  <div class="card rel" style="flex:1">
+    <span class="pin fl" style="top:12px;left:-9px">3</span>
+    <div class="ch"><h3>수정 방법 · 임베딩</h3><span class="b ind">ID 발급</span><span class="grow"></span><span class="xs">Voyage 1024D 입력</span></div>
+    <div class="cc">
+      <svg viewBox="0 0 320 132" width="100%" height="132" style="display:block">
+        <g opacity=".92">
+          <circle cx="58" cy="40" r="20"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 9%, transparent)"><circle cx="130" cy="30" r="17"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 9%, transparent)">
+          <circle cx="212" cy="46" r="22"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 9%, transparent)"><circle cx="84" cy="98" r="19"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 9%, transparent)">
+          <circle cx="168" cy="100" r="16"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 9%, transparent)"><circle cx="256" cy="98" r="18"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 9%, transparent)">
+        </g>
+        <g style="fill:var(--ink-secondary)">
+          <circle cx="52" cy="36" r="2"/><circle cx="64" cy="44" r="2"/><circle cx="58" cy="30" r="2"/><circle cx="46" cy="47" r="2"/><circle cx="68" cy="33" r="2"/>
+          <circle cx="126" cy="26" r="2"/><circle cx="136" cy="34" r="2"/><circle cx="130" cy="38" r="2"/><circle cx="122" cy="36" r="2"/>
+          <circle cx="206" cy="42" r="2"/><circle cx="218" cy="50" r="2"/><circle cx="212" cy="38" r="2"/><circle cx="222" cy="40" r="2"/><circle cx="204" cy="54" r="2"/>
+          <circle cx="78" cy="94" r="2"/><circle cx="90" cy="102" r="2"/><circle cx="84" cy="90" r="2"/><circle cx="76" cy="105" r="2"/>
+          <circle cx="164" cy="96" r="2"/><circle cx="172" cy="104" r="2"/><circle cx="168" cy="92" r="2"/>
+          <circle cx="250" cy="94" r="2"/><circle cx="262" cy="102" r="2"/><circle cx="256" cy="90" r="2"/>
+        </g>
+        <g style="fill:var(--danger)"><circle cx="152" cy="64" r="2.6"/><circle cx="108" cy="66" r="2.6"/><circle cx="232" cy="74" r="2.6"/><circle cx="34" cy="76" r="2.6"/></g>
+        <text x="150" y="126" font-size="9" style="fill:var(--danger)">● Edge · dist_centroid &gt; P90 — 삭제하지 않고 반례 후보로 보존</text>
+      </svg>
+      <div class="xs" style="margin-top:9px;display:flex;gap:14px"><span>자동 k <span class="mono fg">6</span> · 실루엣 최대</span><span>c-TF-IDF 상위 10</span></div>
+      <div class="xs qu" style="margin-top:7px">L2·L3는 상위 구획 내부 서브 K-means(k 2~3 / 2~4) + c-TF-IDF. 클러스터를 한 문서로 합쳐 계산하므로 <span class="fg">구별하는 어휘</span>가 뽑힌다.</div>
+    </div>
+  </div>
+
+  <div class="card rel" style="width:360px;flex:none">
+    <span class="pin fl" style="top:12px;left:-9px">2</span>
+    <div class="ch"><h3>Cluster Quality Report</h3><span class="grow"></span><span class="xs">진단만 · 실행하지 않음</span></div>
+    <div class="cc" style="display:flex;flex-direction:column;gap:9px">
+      <div class="xs" style="display:flex;align-items:center;gap:8px"><span style="width:118px" class="sec">Experience Cohesion</span><div class="bar" style="flex:1"><i class="o" style="width:64%"></i></div><span class="mono fg" style="width:42px;text-align:right">0.64</span><span class="b obs">양호</span></div>
+      <div class="xs" style="display:flex;align-items:center;gap:8px"><span style="width:118px">Boundary Clarity</span><div class="bar" style="flex:1"><i class="w" style="width:75%"></i></div><span class="mono fg" style="width:42px;text-align:right">11.2%</span><span class="b">15% 이내</span></div>
+      <div class="xs" style="display:flex;align-items:center;gap:8px"><span style="width:118px">재현성 ARI · L1</span><div class="bar" style="flex:1"><i class="o" style="width:74%"></i></div><span class="mono fg" style="width:42px;text-align:right">0.74</span><span class="b obs">안정</span></div>
+      <div class="xs" style="display:flex;align-items:center;gap:8px"><span style="width:118px">재현성 ARI · L2</span><div class="bar" style="flex:1"><i class="w" style="width:58%"></i></div><span class="mono fg" style="width:42px;text-align:right">0.58</span><span class="b inf">임계 근접</span></div>
+      <div class="xs" style="display:flex;align-items:center;gap:8px"><span style="width:118px">NPMI · C_v</span><div class="bar" style="flex:1"><i class="n" style="width:61%"></i></div><span class="mono fg" style="width:42px;text-align:right">0.61</span><span class="b">LDA 0.57</span></div>
+      <div class="xs" style="display:flex;align-items:center;gap:8px"><span style="width:118px">Noise &amp; Outlier</span><div class="bar" style="flex:1"><i class="n" style="width:50%"></i></div><span class="mono fg" style="width:42px;text-align:right">5.0%</span><span class="b">보존</span></div>
+      <div class="xs" style="border-top:1px solid var(--line);padding-top:9px;margin-top:2px">
+        지표는 문헌에서 왔지만 <span class="fg">임계값은 아니다</span> — Cohesion 0.6, 음수 실루엣 15%, ARI L1 0.7 / L2 0.6은 설계 시작값이다. 아래 층일수록 문서 수가 줄어 재표집 분산이 커지므로 층별로 완화했다.
+      </div>
+      <div class="xs" style="border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--sunk)">
+        AS-IS에서 silhouette은 <span class="mono">best_k</span> 선택에 내부적으로 쓰인 뒤 폐기됐고, 사람은 군집 품질을 알 방법이 없었다. 같은 계산을 <span class="fg">사람에게 보여주는 진단</span>으로 되돌린 것이다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">7</span>
+  <div class="ch"><h3>Touch Point 정의</h3><span class="b ind">1.0 장표 구조 승계</span>
+    <span class="seg" style="margin-left:6px"><span class="on">CL0</span><span>CL1</span><span>CL2</span><span>CL3</span><span>CL4</span><span>CL5</span></span>
+    <span class="grow"></span>
+    <span class="xs">한 줄 정의 — <span class="fg">운동 중 몸 상태를 확인하려다 기기를 두 개 차게 되는 상황을 반복해 겪고, 하나로 줄이고 싶어 한다</span></span></div>
+  <div class="cc" style="display:flex;gap:16px">
+    <div style="width:184px;flex:none">
+      <div class="lab">c-TF-IDF 결과 <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">상위 14</span></div>
+      <table style="margin-top:6px">
+        <tbody>
+          <tr><td class="fg">심박</td><td class="n mono fg">0.704</td></tr>
+          <tr><td class="fg">워치</td><td class="n mono fg">0.695</td></tr>
+          <tr><td class="fg">러닝</td><td class="n mono fg">0.691</td></tr>
+          <tr><td>귀찮다</td><td class="n mono">0.676</td></tr>
+          <tr><td>손목</td><td class="n mono">0.674</td></tr>
+          <tr><td>챙기다</td><td class="n mono">0.666</td></tr>
+          <tr><td>측정</td><td class="n mono">0.665</td></tr>
+          <tr><td>운동</td><td class="n mono">0.649</td></tr>
+          <tr><td>충전</td><td class="n mono">0.634</td></tr>
+          <tr><td class="qu">＋ 5개</td><td class="n mono qu">…</td></tr>
+        </tbody>
+      </table>
+      <div class="xs" style="margin-top:8px;border-top:1px solid var(--line);padding-top:8px">
+        1.0은 클러스터별 <span class="mono">TF-IDF</span>였다. 2.0은 클러스터를 한 문서로 합쳐 계산하는 <span class="mono fg">c-TF-IDF</span>이므로 <span class="fg">다른 클러스터와 구별되는 어휘</span>가 올라온다.
+      </div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div class="lab">하위 주제별 대표 원문 <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">— 서브 K-means로 자동 분할 · 1.0은 사람이 골랐다</span></div>
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:7px">
+        <div class="card sunk"><div class="cc" style="padding:10px 11px">
+          <div class="sm fg" style="font-size:12.5px;font-weight:510">기기 중복</div>
+          <div class="xs" style="margin-top:6px">"러닝할 때 워치랑 이어폰 둘 다 챙겨 나가는 거 은근 귀찮잖아요 하나로 되면 좋겠는데"</div>
+          <div class="xs qu" style="margin-top:6px;display:flex;gap:6px"><span class="mono">n 4,120</span><span>·</span><span>Core 72%</span></div>
+        </div></div>
+        <div class="card sunk"><div class="cc" style="padding:10px 11px">
+          <div class="sm fg" style="font-size:12.5px;font-weight:510">측정 기대</div>
+          <div class="xs" style="margin-top:6px">"이어폰으로 심박 체크되면 진짜 편할 듯 워치 없이 이어폰만으로 되면 좋겠는데 될까요"</div>
+          <div class="xs qu" style="margin-top:6px;display:flex;gap:6px"><span class="mono">n 3,860</span><span>·</span><span>Core 68%</span></div>
+        </div></div>
+        <div class="card sunk"><div class="cc" style="padding:10px 11px">
+          <div class="sm fg" style="font-size:12.5px;font-weight:510">착용 지속</div>
+          <div class="xs" style="margin-top:6px">"장시간 끼고 있으면 귀가 아파서 결국 빼게 되는데 그럼 기록이 끊겨요"</div>
+          <div class="xs qu" style="margin-top:6px;display:flex;gap:6px"><span class="mono">n 3,540</span><span>·</span><span>Core 61%</span></div>
+        </div></div>
+        <div class="card sunk" style="border-color:var(--spe-ln)"><div class="cc" style="padding:10px 11px">
+          <div class="sm" style="font-size:12.5px;font-weight:510;color:var(--spe)">정확도 불신 <span class="b spe">반례</span></div>
+          <div class="xs" style="margin-top:6px">"이어폰 센서는 광학이라 흔들리면 튄다던데 그걸 믿고 쓸 수 있나요"</div>
+          <div class="xs qu" style="margin-top:6px;display:flex;gap:6px"><span class="mono">n 1,180</span><span>·</span><span>Edge 34%</span></div>
+        </div></div>
+      </div>
+      <div class="xs" style="margin-top:9px;border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--sunk)">
+        1.0 장표는 대표 원문을 사람이 읽고 4~6개 소주제로 묶어 배치했다. 2.0은 <span class="fg">L2 서브 K-means의 하위 구획을 그대로 칸으로 쓴다</span> — 배치가 판단이 아니라 계산이 되므로, 같은 입력이면 같은 장표가 다시 나온다. 반례 칸은 삭제 대상이 아니라 <span class="fg">보존 대상</span>이므로 항상 마지막 칸에 남는다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card rel" style="flex:1;min-height:0;display:flex;flex-direction:column">
+  <span class="pin fl" style="top:12px;left:-9px">5</span>
+  <div class="ch"><h3>Cluster 목록</h3><span class="b ind">수정 방법 갈래 · ID 발급</span><span class="grow"></span>
+    <span class="xs">밴드 = dist_centroid 백분위 · Core ≤P50 / Fringe P50–P90 / Edge &gt;P90</span></div>
+  <div style="flex:1;overflow:hidden">
+    <table>
+      <thead><tr><th style="width:74px">ID</th><th style="width:186px">c-TF-IDF 상위 어휘</th><th style="width:152px">주된 제약 <span class="qu">dominant_constraint</span></th><th class="n" style="width:66px">문서</th><th style="width:150px">밴드 분포</th><th class="n" style="width:96px">max_sim_to_known</th><th class="n" style="width:86px">combo_rarity</th><th style="width:76px">Persona</th></tr></thead>
+      <tbody>
+        <tr><td class="mono" style="color:var(--fg)">CL0</td><td>심박 · 워치 · 러닝 · 귀찮다</td><td class="xs">기기를 늘려야 함</td><td class="n">14,820</td>
+          <td><div style="display:flex;height:6px;border-radius:3px;overflow:hidden"><i style="width:52%;background:var(--mut)"></i><i style="width:36%;background:var(--line-strong)"></i><i style="width:12%;background:var(--danger)"></i></div><div class="xs" style="margin-top:3px">52 / 36 / 12</div></td>
+          <td class="n mono">0.41</td><td class="n mono" style="color:var(--obs)">0.68</td><td class="xs">3개</td></tr>
+        <tr><td class="mono" style="color:var(--fg)">CL1</td><td>땀 · 이탈 · 폼팁 · 고정</td><td class="xs">교체로 해결 안 됨</td><td class="n">12,140</td>
+          <td><div style="display:flex;height:6px;border-radius:3px;overflow:hidden"><i style="width:58%;background:var(--mut)"></i><i style="width:33%;background:var(--line-strong)"></i><i style="width:9%;background:var(--danger)"></i></div><div class="xs" style="margin-top:3px">58 / 33 / 9</div></td>
+          <td class="n mono" style="color:var(--inf)">0.73</td><td class="n mono">0.22</td><td class="xs">2개</td></tr>
+        <tr><td class="mono" style="color:var(--fg)">CL2</td><td>수면 · 착용 · 배터리 · 알림</td><td class="xs">장시간 착용 부담</td><td class="n">9,460</td>
+          <td><div style="display:flex;height:6px;border-radius:3px;overflow:hidden"><i style="width:46%;background:var(--mut)"></i><i style="width:38%;background:var(--line-strong)"></i><i style="width:16%;background:var(--danger)"></i></div><div class="xs" style="margin-top:3px">46 / 38 / 16</div></td>
+          <td class="n mono">0.29</td><td class="n mono" style="color:var(--obs)">0.81</td><td class="xs">3개</td></tr>
+        <tr><td class="mono" style="color:var(--fg)">CL3</td><td>통화 · 풍절음 · 마이크 · 회의</td><td class="xs">환경 소음 제어 불가</td><td class="n">8,220</td>
+          <td><div style="display:flex;height:6px;border-radius:3px;overflow:hidden"><i style="width:61%;background:var(--mut)"></i><i style="width:31%;background:var(--line-strong)"></i><i style="width:8%;background:var(--danger)"></i></div><div class="xs" style="margin-top:3px">61 / 31 / 8</div></td>
+          <td class="n mono" style="color:var(--inf)">0.77</td><td class="n mono">0.18</td><td class="xs">2개</td></tr>
+        <tr><td class="mono" style="color:var(--fg)">CL4</td><td>정확도 · 센서 · 불신 · 리뷰</td><td class="xs">검증 수단이 없음</td><td class="n">6,910</td>
+          <td><div style="display:flex;height:6px;border-radius:3px;overflow:hidden"><i style="width:44%;background:var(--mut)"></i><i style="width:39%;background:var(--line-strong)"></i><i style="width:17%;background:var(--danger)"></i></div><div class="xs" style="margin-top:3px">44 / 39 / 17</div></td>
+          <td class="n mono">0.34</td><td class="n mono" style="color:var(--obs)">0.74</td><td class="xs">2개</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cc rel" style="flex:none;border-top:1px solid var(--line);padding:11px 14px;display:flex;gap:16px;align-items:center">
+    <span class="pin fl" style="top:-9px;left:16px">4</span>
+    <span class="xs"><span class="lab">modifier seed</span> STEP 01·02 타겟(사회초년생 · 1인가구)은 <span class="fg">군집 입력이 아니다</span> — Persona 명명과 Desire 초안의 힌트로만 쓴다</span>
+    <span class="grow"></span>
+    <span class="xs qu">타겟을 군집 입력에 넣으면 "미리 아는 세그먼트"가 군집을 가르는 축이 되어 미지의 소비자가 나오지 않는다</span>
+  </div>
+</div>
+        </div>
+      </main>
+      <aside class="chat rail">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#565c66" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-5.5A8 8 0 0 1 11 4h2a8 8 0 0 1 8 8Z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#747a84" stroke-width="1.7"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#747a84" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </aside>
+    </div>
+  </div>
+  <section class="ann">
+    <h4>1.0 대비 변경점</h4>
+    <p class="lead"><span class="tag rep">치환</span>AS-IS가 있고 대체된다 &nbsp;<span class="tag new">신설</span>AS-IS 없음 · 새로 꽂는다 &nbsp;<span class="tag keep">유지</span>기존 확정 재확인 &nbsp;<span class="tag open">미결</span>답이 필요한 것</p>
+    <div class="grid"><div class="it"><span class="pin">1</span><p><span class="tag rep">치환</span><b>두 갈래 병행.</b> 1.0 결과물은 이미 검증된 산출이고, 임베딩 기반 분할이 그 결과를 얼마나 보존하는지는 아직 아무도 모른다. 한쪽을 지우면 그 질문을 영구히 답할 수 없다. 다만 <b>ID는 한 갈래에서만</b> 발급한다 — 둘 다 발급하면 같은 <em class="mono">persona_id</em>가 두 뜻을 갖고 STEP 09 filter가 무너진다.</p></div>
+<div class="it"><span class="pin">2</span><p><span class="tag rep">치환</span><b>품질 지표를 사람에게 되돌린다.</b> AS-IS의 silhouette은 <em class="mono">best_k</em> 선택에 내부적으로 쓰인 뒤 폐기됐다. 같은 계산을 3축(Validity · Stability · Coherence) 진단으로 노출하되, 배지는 <b>진단만</b> 하고 Split·Merge를 실행하지 않는다.</p></div>
+<div class="it"><span class="pin">3</span><p><span class="tag new">신설</span><b>메타 2종 병기.</b> <em class="mono">max_sim_to_known</em>은 STEP 05에서 계산된 값을 그대로 실어 나르므로 비용 0이다. <em class="mono">combo_rarity</em>는 각 값은 흔한데 <b>조합이 희소한</b> 문서를 잡는다 — 그런 문서는 거리상 중앙에 앉아 있어 <em class="mono">dist_centroid</em>로는 절대 걸리지 않는다.</p></div>
+<div class="it"><span class="pin">4</span><p><span class="tag new">신설</span><b>modifier는 입력이 아니라 힌트.</b> STEP 01·02의 타겟은 5-Dimension의 축이 아니라 cross-cut 수식어로 재정의된다. 사후 세분화 원칙과 같은 논리 — 미리 아는 세그먼트가 군집을 가르면 안 된다.</p></div>
+<div class="it"><span class="pin">5</span><p><span class="tag new">신설</span><b>Context에 5-Dim 요약 첨부.</b> 소속 Core 원문 dims의 최빈값을 <em class="mono">dominant_constraint</em>로 붙인다. 제약이 명시되면 STEP 09의 쿼리 문장이 "~해서 불편"에서 <b>"~라는 제약 때문에 ~로 우회"</b>로 구체화된다.</p></div>
+<div class="it"><span class="pin">6</span><p><span class="tag keep">유지</span><b>실루엣 곡선을 장표 그대로 노출한다.</b> 1.0은 내부·외부를 사람이 나눠 각각 돌렸고 실루엣 계수가 <em class="mono">0.044 / 0.036</em>으로 매우 낮았다. 2.0은 한 번에 돌리고 k 3~14를 스캔해 최댓값을 채택하되, <b>곡선 자체를 보여준다</b> — 최고점이 얼마나 평평한지 보이지 않으면 k=6이 얼마나 임의적인지 알 수 없다.</p></div>
+<div class="it"><span class="pin">7</span><p><span class="tag keep">유지</span><b>Touch Point 정의 장표 승계.</b> 상위 어휘 랭킹 + 하위 주제별 대표 원문 그리드는 1.0 장표의 형식 그대로다. 바뀐 것은 둘 — 어휘가 TF-IDF에서 <b>c-TF-IDF</b>(클러스터를 한 문서로 합쳐 계산)로 바뀌어 구별하는 어휘가 올라오고, 소주제 칸이 사람의 묶음이 아니라 <b>L2 서브 K-means 구획</b>이라 재현된다. 반례 칸은 항상 마지막에 보존한다.</p></div>
+<div class="it"><span class="pin">—</span><p><span class="tag open">미결</span><b>L3 k 결정 · combo_rarity 임계 · centrality 산식.</b> L3는 문서 수가 적어 실루엣이 불안정하다 — Granularity 하한과 실루엣 중 무엇을 우선할지 정해야 한다. 조합 희소성을 Pinecone metadata로 버틸지 그래프 DB를 도입할지도 열려 있다.</p></div></div>
+  </section>
+</div>
+</div></div><div><div class="cap">STEP 08 · SNA → 페르소나</div><div class="slot" style="width:1440px;height:2810px"><div class="art" style="width: 1440px; height: 2810px;">
+  <div class="app">
+    <header class="top">
+  <div class="brand"><span class="dot"></span>DCX Agent</div>
+  <span class="sep"></span>
+  <span class="pill on">에어팟 프로 3 · 운동·건강 맥락 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span>
+  <span class="pill">세션 3개</span>
+  <span class="grow"></span>
+  <span class="pill">작업 2건 실행 중</span>
+  <span class="pill">문서 검색</span>
+  <span class="btn gho">내보내기</span>
+  <span class="btn pri">세션 저장</span>
+</header>
+    <div class="body">
+      <nav class="side"><div class="grp">Data Defining</div><div class="step"><span class="no">00</span><span>세션</span><span class="st done"></span></div><div class="step"><span class="no">01·02</span><span>입력 선언</span><span class="st done"></span></div><div class="step"><span class="no">03</span><span>키워드 설계</span><span class="st done"></span></div><div class="step"><span class="no">04</span><span>데이터 수집</span><span class="st done"></span></div><div class="grp">Data Sensing</div><div class="step"><span class="no">05</span><span>전처리 · 임베딩</span><span class="st done"></span></div><div class="step"><span class="no">06-A</span><span>모델 학습</span><span class="st done"></span></div><div class="step"><span class="no">06-B</span><span>근거 판정</span><span class="st done"></span></div><div class="step"><span class="no">07</span><span>군집</span><span class="st done"></span></div><div class="step on"><span class="no">08</span><span>페르소나</span><span class="st cur"></span></div><div class="step"><span class="no">09</span><span>근거 수집</span><span class="st "></span></div><div class="grp">Data Shaping</div><div class="step"><span class="no">10-A</span><span>Customer Action Map</span><span class="st "></span></div><div class="step"><span class="no">10-B</span><span>기회 영역</span><span class="st "></span></div><div class="step"><span class="no">11-A</span><span>인사이트 도출</span><span class="st "></span></div><div class="step"><span class="no">11-B</span><span>경험 디자인 컨셉</span><span class="st "></span></div><div class="grp">운영</div><div class="step"><span class="no">ADM</span><span>프롬프트 관리</span><span class="st "></span></div><div class="note"><div class="lab">활성 선언</div>
+    <p class="xs" style="margin:6px 0 0;color:var(--sec)">무선 이어폰을 운동·건강 맥락에서 재정의할 미충족 니즈를 찾는다</p>
+    <p class="xs" style="margin:6px 0 0">STEP 01 한줄 정의 · 전 단계 프롬프트 헤더로 상주</p></div></nav>
+      <main class="main">
+        <div class="mhead"><div class="eyebrow">STEP 08 · Data Sensing</div><h1>SNA → 페르소나</h1><div class="sub">한 번 사라졌던 1.0의 Actor 층을 되살린 것이며 신설이 아니다 · 여기서 Desire와 Goal이 확정된다</div></div>
+        <div class="mbody">
+<section class="card" style="flex:none"><div class="cc">
+    <div class="signal">
+      <div class="eyebrow">Persona · CL0 최대 모듈 M1</div>
+      <h2 class="insight">운동 중에도 손목을 비우고 싶어 하는<br>사람이 이 클러스터에서 가장 큽니다.</h2>
+      <p class="interp">측정을 포기하는 게 아니라 <span class="fg">측정을 유지한 채 기기를 줄이려는</span> 쪽입니다 — 심박·워치·러닝이 한 모듈로 묶여 전체의 44%를 차지합니다.</p>
+      <p class="alt">다른 가능성 · 같은 클러스터 안의 M3(정확도·센서·리뷰, 23%)는 반대 방향입니다. 기기를 줄이면 값을 못 믿겠다는 사람들이고, 이들은 M1과 같은 사람일 수 있습니다.</p>
+      <div class="evid">
+        <span>노드 <span class="mono fg">≈300</span></span>
+        <span>모듈성 <span class="mono fg">Q 0.42</span></span>
+        <span>CL0 내부 문단 기준</span>
+        <span class="conf hi">신뢰도 <i><b class="on"></b><b class="on"></b><b></b></i> 2/3 · 보통</span>
+        <span class="src">동시출현 네트워크 보기 →</span>
+      </div>
+      <div class="nextact">
+        <span class="lb">다음 행동</span>
+        <span class="tx">미확정 Desire · Goal 17건을 승인해 STEP 09 근거 수집을 연다</span>
+        <span class="go">확정 대기 17건 확인하기 →</span>
+      </div>
+    </div>
+</div></section>
+
+<div class="row rel" style="flex:none">
+  <span class="pin fl" style="top:-8px;left:-9px">4</span>
+  <div class="kpi" style="flex:1"><span class="lab">확정 대상</span><span class="v">48</span><span class="xs">두 갈래 병행 · 한 갈래면 21</span></div>
+  <div class="kpi" style="flex:1"><span class="lab">확정 완료</span><span class="v">31</span><span class="xs">Desire · Goal 승인됨</span></div>
+  <div class="kpi" style="flex:1"><span class="lab">Persona</span><span class="v">14</span><span class="xs">클러스터당 2~3</span></div>
+  <div class="kpi" style="flex:1"><span class="lab">모듈성 Q</span><span class="v">0.42</span><span class="xs">명사 동시출현 상위 ≈300</span></div>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">5</span>
+  <div class="ch"><h3>마이크로 세그먼트 도출 절차</h3><span class="b ind">1.0 SNA 장표 구조 승계</span><span class="grow"></span>
+    <span class="xs">노드 = 의미 있는 품사(명사 · 형용사 · 동사) · 클러스터 CL0 내부 문단 기준</span></div>
+  <div class="cc" style="display:flex;gap:0;align-items:stretch">
+
+    <div style="flex:1;padding-right:16px">
+      <div style="display:flex;align-items:center;gap:7px"><span class="b solid">1</span><span class="sm fg" style="font-weight:510;font-size:12.5px">노드 생성</span></div>
+      <div class="xs" style="margin-top:5px">동일 문단에서 함께 나타난 단어를 노드로 올린다</div>
+      <div class="wrap" style="margin-top:8px">
+        <span class="chip">심박</span><span class="chip">워치</span><span class="chip">러닝</span><span class="chip">귀찮다</span>
+        <span class="chip">손목</span><span class="chip">챙기다</span><span class="chip">충전</span><span class="chip">기록</span>
+        <span class="chip off">＋ 292</span>
+      </div>
+      <div class="xs qu" style="margin-top:8px">불용어 · 1회 출현 노드 제거 후 상위 ≈300</div>
+    </div>
+
+    <div style="width:1px;background:var(--line);flex:none"></div>
+
+    <div style="flex:1.05;padding:0 16px">
+      <div style="display:flex;align-items:center;gap:7px"><span class="b solid">2</span><span class="sm fg" style="font-weight:510;font-size:12.5px">공출현 빈도 계산</span></div>
+      <div class="xs" style="margin-top:5px">같은 문단에 동시 등장하면 빈도가 카운트된다</div>
+      <table style="margin-top:8px">
+        <thead><tr><th style="width:52px"></th><th class="n">심박</th><th class="n">워치</th><th class="n">러닝</th><th class="n">귀찮다</th></tr></thead>
+        <tbody>
+          <tr><td class="lab" style="padding:5px 8px">심박</td><td class="n mono qu">—</td><td class="n mono fg">412</td><td class="n mono fg">386</td><td class="n mono">104</td></tr>
+          <tr><td class="lab" style="padding:5px 8px">워치</td><td class="n mono fg">412</td><td class="n mono qu">—</td><td class="n mono">231</td><td class="n mono fg">298</td></tr>
+          <tr><td class="lab" style="padding:5px 8px">러닝</td><td class="n mono fg">386</td><td class="n mono">231</td><td class="n mono qu">—</td><td class="n mono">88</td></tr>
+          <tr><td class="lab" style="padding:5px 8px">귀찮다</td><td class="n mono">104</td><td class="n mono fg">298</td><td class="n mono">88</td><td class="n mono qu">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="width:1px;background:var(--line);flex:none"></div>
+
+    <div style="flex:1;padding-left:16px">
+      <div style="display:flex;align-items:center;gap:7px"><span class="b solid">3</span><span class="sm fg" style="font-weight:510;font-size:12.5px">모듈성 분석</span></div>
+      <div class="xs" style="margin-top:5px">아이겐벡터 중심성 기준으로 모듈을 가른다 — 모듈이 곧 마이크로 세그먼트다</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+        <div class="xs" style="display:flex;align-items:center;gap:8px"><span class="dotg" style="background:var(--indigo)"></span><span style="width:112px" class="fg">M1 심박 · 워치 · 러닝</span><div class="bar" style="flex:1"><i style="width:44%"></i></div><span class="mono" style="width:30px;text-align:right">44%</span></div>
+        <div class="xs" style="display:flex;align-items:center;gap:8px"><span class="dotg o"></span><span style="width:112px" class="fg">M2 수면 · 착용 · 배터리</span><div class="bar" style="flex:1"><i class="o" style="width:33%"></i></div><span class="mono" style="width:30px;text-align:right">33%</span></div>
+        <div class="xs" style="display:flex;align-items:center;gap:8px"><span class="dotg i"></span><span style="width:112px" class="fg">M3 정확도 · 센서 · 리뷰</span><div class="bar" style="flex:1"><i class="w" style="width:23%"></i></div><span class="mono" style="width:30px;text-align:right">23%</span></div>
+      </div>
+      <div class="xs" style="margin-top:9px;border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--sunk)">
+        모듈성 <span class="mono fg">Q 0.42</span> · 1.0과 같은 산식이다. 다만 1.0은 여기서 나온 모듈을 <span class="fg">사람이 읽고 Desire를 해석해</span> Actor를 정의했고, 2.0은 그 자리를 아래의 확정 절차가 대신한다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="flex:1;min-height:0">
+  <div class="card rel" style="flex:1.2;display:flex;flex-direction:column">
+    <span class="pin fl" style="top:12px;left:-9px">1</span>
+    <div class="ch"><h3>명사 동시출현 네트워크</h3><span class="b">CL0 내부</span><span class="grow"></span><span class="xs">모듈성 분할 3개</span></div>
+    <div class="cc" style="flex:1;display:flex;flex-direction:column">
+      <svg viewBox="0 0 440 268" width="100%" style="flex:1;display:block">
+        <g stroke-width="1" fill="none" style="stroke:var(--line)">
+          <path d="M120 84 168 60M120 84 96 132M120 84 176 116M168 60 176 116M96 132 152 156M176 116 152 156M120 84 152 156"/>
+          <path d="M300 78 352 100M300 78 268 128M352 100 324 152M268 128 324 152M300 78 324 152"/>
+          <path d="M196 206 252 196M196 206 164 232M252 196 236 240M164 232 236 240"/>
+          <path d="M176 116 268 128M152 156 196 206M324 152 252 196" stroke-dasharray="3 3"/ style="stroke:var(--line)">
+        </g>
+        <g>
+          <circle cx="120" cy="84" r="22"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 16%, transparent);stroke:var(--action)">
+          <circle cx="168" cy="60" r="12"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 10%, transparent);stroke:var(--line-strong)">
+          <circle cx="96" cy="132" r="13"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 10%, transparent);stroke:var(--line-strong)">
+          <circle cx="176" cy="116" r="15"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 10%, transparent);stroke:var(--line-strong)">
+          <circle cx="152" cy="156" r="11"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 10%, transparent);stroke:var(--line-strong)">
+          <circle cx="300" cy="78" r="19"/ style="fill:color-mix(in srgb, var(--success) 10%, transparent);stroke:color-mix(in srgb, var(--success) 50%, transparent)">
+          <circle cx="352" cy="100" r="12"/ style="fill:color-mix(in srgb, var(--success) 8%, transparent);stroke:color-mix(in srgb, var(--success) 30%, transparent)">
+          <circle cx="268" cy="128" r="13"/ style="fill:color-mix(in srgb, var(--success) 8%, transparent);stroke:color-mix(in srgb, var(--success) 30%, transparent)">
+          <circle cx="324" cy="152" r="11"/ style="fill:color-mix(in srgb, var(--success) 8%, transparent);stroke:color-mix(in srgb, var(--success) 30%, transparent)">
+          <circle cx="196" cy="206" r="17"/ style="fill:color-mix(in srgb, var(--warning) 11%, transparent);stroke:color-mix(in srgb, var(--warning) 45%, transparent)">
+          <circle cx="252" cy="196" r="12"/ style="fill:color-mix(in srgb, var(--warning) 9%, transparent);stroke:color-mix(in srgb, var(--warning) 30%, transparent)">
+          <circle cx="164" cy="232" r="10"/ style="fill:color-mix(in srgb, var(--warning) 9%, transparent);stroke:color-mix(in srgb, var(--warning) 30%, transparent)">
+          <circle cx="236" cy="240" r="10"/ style="fill:color-mix(in srgb, var(--warning) 9%, transparent);stroke:color-mix(in srgb, var(--warning) 30%, transparent)">
+        </g>
+        <g font-size="10" text-anchor="middle" style="fill:var(--ink-secondary)">
+          <text x="120" y="87">심박</text><text x="168" y="63">워치</text><text x="96" y="135">러닝</text><text x="176" y="119">귀찮다</text><text x="152" y="159">손목</text>
+          <text x="300" y="81">수면</text><text x="352" y="103">배터리</text><text x="268" y="131">착용</text><text x="324" y="155">리포트</text>
+          <text x="196" y="209">정확도</text><text x="252" y="199">센서</text><text x="164" y="235">리뷰</text><text x="236" y="243">의심</text>
+        </g>
+        <g font-size="10" font-weight="600">
+          <text x="60" y="30" style="fill:var(--action-hover)">P1 · 귀로 건강 재는 러너</text>
+          <text x="264" y="30" style="fill:var(--success)">P2 · 밤새 재는 사람</text>
+          <text x="150" y="262" style="fill:var(--warning)">P3 · 숫자를 못 믿는 사람</text>
+        </g>
+      </svg>
+      <div class="xs" style="border-top:1px solid var(--line);padding-top:9px;margin-top:6px">
+        점선은 모듈 간 연결 — 기존 방법은 Desire가 유사한 모듈을 <span class="fg">클러스터를 가로질러</span> 통합하고, 수정 방법은 하지 않는다. 겹침표의 차이가 그대로 답이 된다.
+      </div>
+    </div>
+  </div>
+
+  <div class="card rel" style="width:296px;flex:none;display:flex;flex-direction:column">
+    <span class="pin fl" style="top:12px;left:-9px">3</span>
+    <div class="ch"><h3>Eigenvector centrality</h3><span class="grow"></span><span class="xs">상위 16</span></div>
+    <div class="cc" style="flex:1;display:flex;flex-direction:column;gap:6px;overflow:hidden">
+      <div class="xs" style="margin-bottom:2px">"Desire가 드러나는 키워드" — 어느 방법으로 경계를 잡았든 <span class="fg">같은 방식</span>으로 뽑는다</div>
+      <div class="xs" style="display:flex;gap:8px;align-items:center"><span style="width:52px" class="fg">심박</span><div class="bar" style="flex:1"><i style="width:100%"></i></div><span class="mono" style="width:36px;text-align:right">.812</span></div>
+      <div class="xs" style="display:flex;gap:8px;align-items:center"><span style="width:52px" class="fg">워치</span><div class="bar" style="flex:1"><i style="width:96%"></i></div><span class="mono" style="width:36px;text-align:right">.781</span></div>
+      <div class="xs" style="display:flex;gap:8px;align-items:center"><span style="width:52px" class="fg">러닝</span><div class="bar" style="flex:1"><i style="width:94%"></i></div><span class="mono" style="width:36px;text-align:right">.764</span></div>
+      <div class="xs" style="display:flex;gap:8px;align-items:center"><span style="width:52px" class="fg">귀찮다</span><div class="bar" style="flex:1"><i style="width:91%"></i></div><span class="mono" style="width:36px;text-align:right">.742</span></div>
+      <div class="xs" style="display:flex;gap:8px;align-items:center"><span style="width:52px">손목</span><div class="bar" style="flex:1"><i class="n" style="width:82%"></i></div><span class="mono" style="width:36px;text-align:right">.668</span></div>
+      <div class="xs" style="display:flex;gap:8px;align-items:center"><span style="width:52px">챙기다</span><div class="bar" style="flex:1"><i class="n" style="width:74%"></i></div><span class="mono" style="width:36px;text-align:right">.601</span></div>
+      <div class="xs" style="display:flex;gap:8px;align-items:center"><span style="width:52px">충전</span><div class="bar" style="flex:1"><i class="n" style="width:66%"></i></div><span class="mono" style="width:36px;text-align:right">.537</span></div>
+      <div class="xs" style="display:flex;gap:8px;align-items:center"><span style="width:52px">기록</span><div class="bar" style="flex:1"><i class="n" style="width:61%"></i></div><span class="mono" style="width:36px;text-align:right">.496</span></div>
+      <div class="xs qu" style="margin-top:2px">＋ 8개</div>
+      <div class="xs" style="margin-top:auto;border-top:1px solid var(--line);padding-top:9px;color:var(--spe)">
+        ★ 산식 미결 — 정규화 방식과 표시 개수. 적용 층이 L2인 것까지가 확정이다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">2</span>
+  <div class="ch"><h3>P1 확정 · CL0-P1</h3><span class="b ind">검토 중</span><span class="grow"></span>
+    <span class="xs">여기서 확정한 값이 STEP 10·11에 그대로 표시된다 — 다시 생성하지 않는다</span></div>
+  <div class="cc" style="display:flex;gap:16px">
+    <div style="flex:1.5;display:flex;flex-direction:column;gap:11px">
+      <div><div class="lab">Persona 명 <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">— modifier 반영</span></div>
+        <div class="fld" style="margin-top:5px">귀로 건강 재는 러너</div></div>
+      <div><div class="lab">Desire <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">— 1문장</span></div>
+        <div class="fld" style="margin-top:5px">운동 중 몸 상태를 최소한의 기기로 확인받고 싶다</div>
+        <div class="xs" style="margin-top:5px">centrality 상위 어휘 기반 — 심박 .812 · 워치 .781 · 러닝 .764 · 귀찮다 .742</div></div>
+      <div><div class="lab">Goal <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">— 번호 목록 · 소속 Context에서 올린 목표</span></div>
+        <div class="fld" style="margin-top:5px">1. 러닝 흐름을 끊지 않고 심박을 확인한다</div>
+        <div class="fld" style="margin-top:5px">2. 기기를 늘리지 않고 운동·수면 데이터를 한 곳에 모은다</div></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:11px">
+      <div><div class="lab">modifier <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">STEP 01·02 cross-cut</span></div>
+        <div class="wrap" style="margin-top:6px"><span class="chip on">사회초년생</span><span class="chip on">1인가구</span><span class="chip">신혼</span></div></div>
+      <div><div class="lab">소속 Context</div>
+        <div class="wrap" style="margin-top:6px"><span class="chip">C1 기기 중복</span><span class="chip">C2 측정 기대</span><span class="chip">C3 정확도 불신</span><span class="chip">C4 땀 이탈</span></div></div>
+      <div class="xs" style="border:1px solid var(--line);border-radius:6px;padding:9px 10px;background:var(--sunk)">
+        문서 45건 · 작성자 26명(중복 제거) · Cohesion 0.66 · ARI 0.58<br>
+        <span class="qu">작성자 수를 함께 세는 이유 — 한 사람이 여러 글을 쓴 경우 문서 수만으로는 담론의 폭이 부풀려진다</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:auto"><span class="btn gho">Desire 재생성</span><span class="grow"></span><span class="btn">보류</span><span class="btn pri">확정</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">6</span>
+  <div class="ch"><h3>Cluster → Persona → Desire 매핑</h3><span class="b ind">1.0 「Touch Point → Micro Segment → Desire[Actor]」 표 승계</span>
+    <span class="grow"></span><span class="xs">두 갈래 중 <span class="fg">수정 방법</span> 갈래 · 기존 방법 갈래는 비교 탭에서 같은 표로 본다</span></div>
+  <table>
+    <thead><tr><th style="width:176px">Cluster <span class="qu">[Touch Point]</span></th><th style="width:74px">Persona</th><th>Desire <span class="qu">[Actor]</span></th><th class="n" style="width:66px">문서</th><th class="n" style="width:62px">작성자</th><th style="width:78px">확정</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="3" style="border-right:1px solid var(--line)"><span class="mono fg">CL0</span> 운동 중 신체 신호 확인</td>
+        <td class="mono fg">P1</td><td>운동 중 몸 상태를 최소한의 기기로 확인받고 싶다</td><td class="n">4,120</td><td class="n">2,318</td><td><span class="b obs">확정</span></td></tr>
+      <tr><td class="mono fg">P2</td><td>자는 동안의 몸 상태까지 같은 기기로 이어 재고 싶다</td><td class="n">3,540</td><td class="n">1,902</td><td><span class="b obs">확정</span></td></tr>
+      <tr><td class="mono fg">P3</td><td>측정값을 믿을 수 있는지 먼저 확인하고 싶다</td><td class="n">1,180</td><td class="n">742</td><td><span class="b ind">검토 중</span></td></tr>
+      <tr><td rowspan="2" style="border-right:1px solid var(--line)"><span class="mono fg">CL1</span> 착용 안정성</td>
+        <td class="mono fg">P1</td><td>격한 움직임에도 빠지지 않게 고정하고 싶다</td><td class="n">7,260</td><td class="n">3,441</td><td><span class="b obs">확정</span></td></tr>
+      <tr><td class="mono fg">P2</td><td>교체 부품을 사지 않고 해결하고 싶다</td><td class="n">4,880</td><td class="n">2,106</td><td><span class="b">대기</span></td></tr>
+      <tr><td rowspan="2" style="border-right:1px solid var(--line)"><span class="mono fg">CL2</span> 장시간 착용</td>
+        <td class="mono fg">P1</td><td>자는 내내 끼고 있어도 부담이 없었으면 한다</td><td class="n">5,210</td><td class="n">2,634</td><td><span class="b obs">확정</span></td></tr>
+      <tr><td class="mono fg">P2</td><td>충전 때문에 기록이 끊기지 않았으면 한다</td><td class="n">4,250</td><td class="n">1,988</td><td><span class="b">대기</span></td></tr>
+      <tr><td colspan="6" class="xs qu" style="text-align:center;padding:9px">CL3 · CL4 · CL5 ＋ 7개 페르소나</td></tr>
+    </tbody>
+  </table>
+  <div class="cc" style="border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:14px;align-items:center">
+    <span class="xs">1.0은 <span class="fg">8 Touch Point → 14 Actor</span>였고, Desire가 비슷한 세그먼트를 <b>클러스터를 가로질러</b> 통합했다.</span>
+    <span class="grow"></span>
+    <span class="xs qu">2.0은 가로지르지 않는다 — 가로지르면 <span class="mono">persona_id</span>가 어느 클러스터의 자식인지 끊겨 STEP 09 filter가 무너진다. 가로지르는 종합은 STEP 11에서 한다.</span>
+  </div>
+</div>
+        </div>
+      </main>
+      <aside class="chat"><div class="chead"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink-secondary)" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-5.5A8 8 0 0 1 11 4h2a8 8 0 0 1 8 8Z"/></svg>확정 보조<span class="grow"></span><span class="b">31 / 48</span></div>
+<div class="cbody">
+  <div class="msg"><span class="who">에이전트</span>CL0-P1의 Desire 초안입니다. centrality 상위 4개 어휘(심박·워치·러닝·귀찮다)가 모두 들어가도록 썼습니다.</div>
+  <div class="msg me"><span class="who">나</span>"최소한의 기기"가 너무 해석 같은데, 원문에 그렇게 말한 사람이 있어?</div>
+  <div class="msg"><span class="who">에이전트</span>직접 표현은 없습니다. <span class="mono" style="font-size:12px">desire_support</span> 3건은 모두 "둘 다 챙기기 귀찮다" 형태입니다. <span class="fg">추론</span>으로 표시하거나 "기기를 늘리지 않고"로 바꾸면 관측에 더 가깝습니다.</div>
+  <div class="msg" style="border-color:var(--ind-ln)"><span class="who">확정 대기</span>
+    <div class="xs" style="display:flex;flex-direction:column;gap:4px;margin-top:3px">
+      <span>CL0-P2 · 밤새 재는 사람</span><span>CL0-P3 · 숫자를 못 믿는 사람</span><span>CL1-P1 · 땀에 지는 사람</span><span class="qu">＋ 14개</span>
+    </div></div>
+</div>
+<div class="cfoot"><div class="input">Desire를 수정하거나 근거를 요청하세요</div></div></aside>
+    </div>
+  </div>
+  <section class="ann">
+    <h4>1.0 대비 변경점</h4>
+    <p class="lead"><span class="tag rep">치환</span>AS-IS가 있고 대체된다 &nbsp;<span class="tag new">신설</span>AS-IS 없음 · 새로 꽂는다 &nbsp;<span class="tag keep">유지</span>기존 확정 재확인 &nbsp;<span class="tag open">미결</span>답이 필요한 것</p>
+    <div class="grid"><div class="it"><span class="pin">1</span><p><span class="tag keep">복원</span><b>Actor 층 복원.</b> 1.0의 Actor = micro segment 층은 한 번 사라졌다가 되살아난 것이며 신설이 아니다. 명칭만 Persona로 정리했다. 층 구조는 <em class="mono">Cluster &gt; Persona &gt; Context</em>이고 Action은 층이 아니라 Context의 행동 서술 속성이다.</p></div>
+<div class="it"><span class="pin">2</span><p><span class="tag rep">치환</span><b>Desire·Goal 확정 권한이 여기로.</b> AS-IS는 STEP 10·11의 LLM이 이름·상황·페인포인트·인사이트를 한 번에 뱉으면서 페르소나 개수까지 정했다. 서술하는 단계가 개수를 정하면 통계 구획과 산출물 개수가 어긋난다. 구획을 만드는 단계에서 확정해야 Action 배분이 정의된다.</p></div>
+<div class="it"><span class="pin">3</span><p><span class="tag keep">유지</span><b>centrality 상위 16.</b> "Desire가 드러나는 키워드"를 뽑는 방식은 1.0 장표 그대로다 — 어느 방법으로 경계를 잡았든 같은 방식으로 뽑으므로 두 갈래 모두에서 같은 화면이 재현된다.</p></div>
+<div class="it"><span class="pin">4</span><p><span class="tag rep">치환</span><b>수작업이 확정 절차로.</b> 아이겐벡터 중심성 모듈성 분할 후 Desire를 사람이 해석하던 자리를 P1 확정 절차가 대신한다. 두 갈래를 병행하면 HITL 확정 대상이 21개에서 48개로 늘어난다 — 계산 2배 · 화면 2배가 병행의 비용이다.</p></div>
+<div class="it"><span class="pin">5</span><p><span class="tag keep">유지</span><b>SNA 3단계를 장표 그대로 노출한다.</b> 노드 생성 → 공출현 빈도 행렬 → 모듈성 분석은 1.0 장표의 세 칸 그대로이고 산식도 같다. 공출현 행렬을 <b>실제 숫자로 보여주는 것</b>이 요점이다 — 1.0 장표에서도 이 행렬은 예시 이미지였고, 어떤 쌍이 세그먼트를 갈랐는지 사후에 확인할 방법이 없었다.</p></div>
+<div class="it"><span class="pin">6</span><p><span class="tag rep">치환</span><b>매핑표는 남기되 가로지르기는 뺀다.</b> 1.0의 「Touch Point → Micro Segment → Desire[Actor]」 표는 형식 그대로 승계한다. 다만 1.0이 <em>Desire가 비슷한 세그먼트를 클러스터를 가로질러 통합</em>하던 절차는 제거했다 — 가로지르면 <em class="mono">persona_id</em>가 어느 클러스터의 자식인지 끊겨 STEP 09의 filter 3키가 무너진다. 가로지르는 종합은 STEP 11 인사이트에서 한다.</p></div>
+<div class="it"><span class="pin">—</span><p><span class="tag open">미결</span><b>centrality 산식.</b> 정규화 방식과 표시 개수가 정해지지 않았다. 적용 층이 L2라는 것까지가 확정이다.</p></div>
+<div class="it"><span class="pin">—</span><p><span class="tag keep">닫힘</span><b>재론하지 않는 것.</b> Persona는 클러스터의 자식이고 클러스터당 2~3개 · Desire/Goal 2층 표시 · merge/split/move는 인덱스 재배치를 동반하므로 포스트 MVP 부록.</p></div></div>
+  </section>
+</div>
+</div></div><div><div class="cap">STEP 09 · LDA → 근거 수집</div><div class="slot" style="width:1440px;height:2580px"><div class="art" style="width: 1440px; height: 2580px;">
+  <div class="app">
+    <header class="top">
+  <div class="brand"><span class="dot"></span>DCX Agent</div>
+  <span class="sep"></span>
+  <span class="pill on">에어팟 프로 3 · 운동·건강 맥락 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span>
+  <span class="pill">세션 3개</span>
+  <span class="grow"></span>
+  <span class="pill">작업 2건 실행 중</span>
+  <span class="pill">문서 검색</span>
+  <span class="btn gho">내보내기</span>
+  <span class="btn pri">세션 저장</span>
+</header>
+    <div class="body">
+      <nav class="side"><div class="grp">Data Defining</div><div class="step"><span class="no">00</span><span>세션</span><span class="st done"></span></div><div class="step"><span class="no">01·02</span><span>입력 선언</span><span class="st done"></span></div><div class="step"><span class="no">03</span><span>키워드 설계</span><span class="st done"></span></div><div class="step"><span class="no">04</span><span>데이터 수집</span><span class="st done"></span></div><div class="grp">Data Sensing</div><div class="step"><span class="no">05</span><span>전처리 · 임베딩</span><span class="st done"></span></div><div class="step"><span class="no">06-A</span><span>모델 학습</span><span class="st done"></span></div><div class="step"><span class="no">06-B</span><span>근거 판정</span><span class="st done"></span></div><div class="step"><span class="no">07</span><span>군집</span><span class="st done"></span></div><div class="step"><span class="no">08</span><span>페르소나</span><span class="st done"></span></div><div class="step on"><span class="no">09</span><span>근거 수집</span><span class="st cur"></span></div><div class="grp">Data Shaping</div><div class="step"><span class="no">10-A</span><span>Customer Action Map</span><span class="st "></span></div><div class="step"><span class="no">10-B</span><span>기회 영역</span><span class="st "></span></div><div class="step"><span class="no">11-A</span><span>인사이트 도출</span><span class="st "></span></div><div class="step"><span class="no">11-B</span><span>경험 디자인 컨셉</span><span class="st "></span></div><div class="grp">운영</div><div class="step"><span class="no">ADM</span><span>프롬프트 관리</span><span class="st "></span></div><div class="note"><div class="lab">활성 선언</div>
+    <p class="xs" style="margin:6px 0 0;color:var(--sec)">무선 이어폰을 운동·건강 맥락에서 재정의할 미충족 니즈를 찾는다</p>
+    <p class="xs" style="margin:6px 0 0">STEP 01 한줄 정의 · 전 단계 프롬프트 헤더로 상주</p></div></nav>
+      <main class="main">
+        <div class="mhead"><div class="eyebrow">STEP 09 · Data Sensing</div><h1>LDA → 근거 수집</h1><div class="sub">1.0 LDA 토픽맵을 승계해 Action을 뽑고, 근거는 관련성 단독이 아니라 감점·가점 두 항을 곱해 추천한다</div></div>
+        <div class="mbody">
+<div class="g12" style="flex:none">
+  <section class="c8 card"><div class="cc">
+    <div class="signal">
+      <div class="eyebrow">Action · 최대 토픽 A1</div>
+      <h2 class="insight">워치와 이어폰을 함께 챙겨 나가는 행동이<br>이 페르소나 원문의 38%입니다.</h2>
+      <p class="interp">토픽 비중이 가장 큰 행동이지만, 아직은 <span class="fg">토픽 가중치가 만든 라벨</span>입니다 — 실제 원문이 이 문장을 뒷받침하는지는 근거 수집이 끝나야 확인됩니다.</p>
+      <p class="alt">다른 가능성 · 경험차원 6개 중 Think · Relate가 비어 있습니다. 이 사람의 판단 과정과 관계 맥락은 아직 근거가 없습니다.</p>
+      <div class="evid">
+        <span>표본 <span class="mono fg">1,566</span>건</span>
+        <span><span class="mono">CL0-P1-C2</span></span>
+        <span>λ <span class="mono fg">0.60</span></span>
+        <span class="conf hi">신뢰도 <i><b class="on"></b><b class="on"></b><b></b></i> 2/3 · 보통</span>
+        <span class="src">원문 보기 →</span>
+      </div>
+      <div class="nextact">
+        <span class="lb">다음 행동</span>
+        <span class="tx">A3 정확도 근거 수집을 대기에서 풀어 반례를 먼저 확보한다</span>
+        <span class="go">A3 후보 865건 확인하기 →</span>
+      </div>
+    </div>
+  </div></section>
+
+  <aside class="c4 col" style="gap:var(--space-3)">
+    <div class="card sunk"><div class="cc" style="padding:var(--space-4);display:flex;align-items:center;gap:var(--space-3)">
+      <span class="mono b ind" style="flex:none">CL0-P1-C2</span>
+      <div style="min-width:0"><div class="sm fg" style="font-weight:510">이어팟 심박 측정에 대한 기대</div>
+        <div class="xs" style="margin-top:2px">주된 제약: 생체 신호 측정 기능 없음 · #심박 #측정 #생체 #기대</div></div>
+      <span class="grow"></span><span class="seg" style="flex:none"><span>C1</span><span class="on">C2</span><span>C3</span><span>C4</span></span>
+    </div></div>
+    <div class="row" style="gap:var(--space-3)">
+      <div class="kpi" style="flex:1"><span class="lab">경험차원</span><span class="v">4<span class="xs" style="font-weight:400"> / 6</span></span><span class="xs" style="color:var(--inf)">Think · Relate 비어 있음</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">후보</span><span class="v">50</span><span class="xs">3키 filter 필수 적용</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">노출</span><span class="v">10<span class="xs" style="font-weight:400"> +2</span></span><span class="xs">support 7 · counter 1 · rare 2</span></div>
+    </div>
+  </aside>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">4</span>
+  <div class="ch"><h3>Action 도출 · 토픽 맵</h3><span class="b ind">1.0 LDAVis 장표 구조 승계</span>
+    <span class="grow"></span>
+    <span class="xs">CL0-P1 내부 · 토픽 수 <span class="mono fg">4</span> <span class="qu">(2~10 스캔 · NPMI 최대)</span></span></div>
+  <div class="cc" style="display:flex;gap:16px">
+
+    <div style="width:290px;flex:none">
+      <div class="lab">토픽 간 거리 <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">원 크기 = 토픽 비중 · 원 거리 = 유사성</span></div>
+      <svg viewBox="0 0 290 178" width="100%" height="178" style="display:block;margin-top:6px">
+        <g stroke-width="1" style="stroke:var(--line)"><line x1="20" y1="94" x2="276" y2="94" stroke-dasharray="3 3"/><line x1="148" y1="12" x2="148" y2="174" stroke-dasharray="3 3"/></g>
+        <circle cx="96" cy="66" r="42" stroke-width="1.2"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 16%, transparent);stroke:var(--action)">
+        <circle cx="186" cy="54" r="27" stroke-width="1.1"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 13%, transparent);stroke:var(--line-strong)">
+        <circle cx="206" cy="128" r="24" stroke-width="1.1"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 13%, transparent);stroke:var(--line-strong)">
+        <circle cx="76" cy="136" r="18" stroke-width="1.1"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 11%, transparent);stroke:var(--line-strong)">
+        <g font-size="11" font-weight="600" text-anchor="middle" style="fill:var(--ink)">
+          <text x="96" y="70">A1</text><text x="186" y="58">A2</text><text x="206" y="132">A3</text><text x="76" y="140">A4</text>
+        </g>
+        <g font-size="8.5" style="fill:var(--ink-secondary)"><text x="20" y="172">PC1</text><text x="262" y="88">PC2</text></g>
+      </svg>
+      <div class="xs" style="margin-top:5px;display:flex;align-items:center;gap:8px">
+        <span class="lab" style="flex:none">λ</span>
+        <div class="bar" style="flex:1"><i style="width:60%"></i></div>
+        <span class="mono fg" style="flex:none">0.60</span>
+      </div>
+      <div class="xs qu" style="margin-top:4px">0에 가까울수록 해당 토픽만의 차별 어휘 · Sievert &amp; Shirley(2014) 권장 0.6</div>
+    </div>
+
+    <div style="width:214px;flex:none;border-left:1px solid var(--line);padding-left:16px">
+      <div class="lab">A1 주도 어휘 <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">relevance 정렬</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-top:7px">
+        <div class="xs" style="display:flex;gap:7px;align-items:center"><span style="width:44px" class="fg">워치</span><div class="bar" style="flex:1"><i style="width:100%"></i></div></div>
+        <div class="xs" style="display:flex;gap:7px;align-items:center"><span style="width:44px" class="fg">챙기다</span><div class="bar" style="flex:1"><i style="width:88%"></i></div></div>
+        <div class="xs" style="display:flex;gap:7px;align-items:center"><span style="width:44px" class="fg">둘 다</span><div class="bar" style="flex:1"><i style="width:81%"></i></div></div>
+        <div class="xs" style="display:flex;gap:7px;align-items:center"><span style="width:44px">귀찮다</span><div class="bar" style="flex:1"><i class="n" style="width:72%"></i></div></div>
+        <div class="xs" style="display:flex;gap:7px;align-items:center"><span style="width:44px">손목</span><div class="bar" style="flex:1"><i class="n" style="width:64%"></i></div></div>
+        <div class="xs" style="display:flex;gap:7px;align-items:center"><span style="width:44px">충전</span><div class="bar" style="flex:1"><i class="n" style="width:51%"></i></div></div>
+      </div>
+      <div class="xs" style="margin-top:9px;border-top:1px solid var(--line);padding-top:8px">
+        1.0은 이 막대를 사람이 눈으로 읽고 Action 문장을 썼다. λ도 도메인마다 다시 잡아야 했다. 2.0은 막대를 <span class="fg">그대로 두되</span> 문장은 아래 표에서 근거와 함께 확정한다.
+      </div>
+    </div>
+
+    <div style="flex:1;min-width:0;border-left:1px solid var(--line);padding-left:16px">
+      <div class="lab">도출된 Action <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">— 이 페르소나 4개 · 세션 전체 38개</span></div>
+      <table style="margin-top:6px">
+        <thead><tr><th style="width:56px">ID</th><th>Action 문장</th><th class="n" style="width:62px">토픽 비중</th><th class="n" style="width:60px">문서</th><th style="width:66px">근거 수집</th></tr></thead>
+        <tbody>
+          <tr style="background:var(--ind-bg)"><td class="mono fg">A1</td><td class="fg">워치와 이어폰을 함께 챙겨 나가며 둘 다 착용한다</td><td class="n mono">0.38</td><td class="n mono">1,566</td><td><span class="b ind">진행 중</span></td></tr>
+          <tr><td class="mono fg">A2</td><td>이어폰만으로 심박이 측정되는지 찾아보고 묻는다</td><td class="n mono">0.27</td><td class="n mono">1,112</td><td><span class="b obs">완료</span></td></tr>
+          <tr><td class="mono fg">A3</td><td>측정값이 튀는 경험을 공유하며 정확도를 따진다</td><td class="n mono">0.21</td><td class="n mono">865</td><td><span class="b">대기</span></td></tr>
+          <tr><td class="mono fg">A4</td><td>운동 앱과 건강 앱 사이에서 기록을 손으로 옮긴다</td><td class="n mono">0.14</td><td class="n mono">577</td><td><span class="b">대기</span></td></tr>
+        </tbody>
+      </table>
+      <div class="xs" style="margin-top:8px;border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--sunk)">
+        1.0은 LDA 토픽을 통합해 <span class="fg">59개 Action</span>을 얻고 여기서 멈췄다. 2.0은 Action마다 <b>근거 수집을 한 번 더 돌린다</b> — Action은 토픽 가중치가 만든 라벨이고, 그 라벨이 실제 원문으로 뒷받침되는지는 아직 확인되지 않았기 때문이다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">1</span>
+  <div class="ch"><h3>원문 찾기</h3><span class="grow"></span>
+    <span class="xs">검색 범위</span>
+    <span class="seg"><span>이 Context</span><span>이 Persona</span><span class="on">클러스터 CL0 전체</span><span>세션 전체</span></span></div>
+  <div class="cc" style="display:flex;gap:16px;align-items:stretch">
+    <div style="flex:1.05;display:flex;flex-direction:column;gap:9px">
+      <div style="display:flex;gap:8px">
+        <div class="fld" style="flex:1;display:flex;align-items:center;gap:8px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink-subtle)" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span>워치를 안 차도 되는지 묻는 글</span>
+        </div>
+        <span class="btn pri" style="height:34px">검색</span>
+      </div>
+      <div class="wrap">
+        <span class="xs qu" style="align-self:center;margin-right:2px">필터</span>
+        <span class="chip on">핵심 근거 <span class="mono xs">core</span></span>
+        <span class="chip">보조 단서 <span class="mono xs">supporting</span></span>
+        <span class="chip on">아직 안 쓴 것</span>
+        <span class="chip">반례만</span>
+        <span class="chip">밴드 Edge</span>
+        <span class="chip">목적축 있음 <span class="mono xs">task_goal</span></span>
+        <span class="chip">제약축 있음 <span class="mono xs">resource_constraint</span></span>
+      </div>
+      <div class="xs" style="margin-top:auto">클러스터 CL0의 <span class="fg">14,820</span>문장에서 <span class="fg">37</span>건 일치 · 이미 노출된 10건은 회색으로 표시</div>
+    </div>
+
+    <div class="card sunk rel" style="flex:1;border-color:var(--ind-ln)"><div class="cc" style="padding:11px 13px">
+      <span class="pin fl" style="top:-9px;left:14px">5</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--action)" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="1.8"/ style="fill:var(--action)"><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3"/></svg>
+        <span class="lab" style="color:var(--ind-fg)">클러스터 중심 문장</span>
+        <span class="b ind mono">dist_centroid 0.041</span>
+        <span class="grow"></span>
+        <span class="xs qu">추천 순위에는 넣지 않는다 — 기준선으로만 고정</span>
+      </div>
+      <div class="sm" style="margin-top:7px;color:var(--fg)">"러닝할 때 워치랑 이어폰 둘 다 챙겨 나가는 게 은근 귀찮은데, 하나로 되면 좋겠어요"</div>
+      <div class="xs" style="margin-top:6px;display:flex;gap:12px;align-items:center">
+        <span class="mono">#77930</span><span>CL0-P1-C1 · Core</span>
+        <span style="color:var(--spe)"><span class="mono">max_sim_to_known 0.88</span> — 이미 아는 이야기</span>
+        <span class="grow"></span>
+        <span class="xs qu">quality <span class="mono">31위</span> / relevance <span class="mono">1위</span></span>
+      </div>
+      <div class="xs" style="margin-top:7px;border-top:1px solid var(--line2);padding-top:7px">
+        이 문장은 <b>이 구획이 무엇에 관한 것인지</b>를 한 줄로 말해 준다. 동시에 정의상 가장 전형적이므로 <b>인사이트로는 0</b>이다. 추천에서 내리되 화면에서 지우지 않는다 — 중심을 모르면 아래 목록이 얼마나 가장자리인지 판단할 수 없다.
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<div class="row" style="flex:1;min-height:0">
+  <div class="card rel" style="flex:1.75;display:flex;flex-direction:column">
+    <span class="pin fl" style="top:12px;left:-9px">6</span>
+    <div class="ch"><h3>추천 순위</h3>
+      <span class="seg"><span class="on">quality</span><span>relevance 단독</span></span>
+      <span class="grow"></span>
+      <span class="mono xs" style="border:1px solid var(--line2);border-radius:5px;padding:3px 8px;background:var(--sunk);color:var(--sec)">quality = relevance × (1 − <span class="fg">0.5</span>·known) × (1 + <span class="fg">0.3</span>·rarity)</span></div>
+    <div style="flex:1;overflow:hidden">
+      <table>
+        <thead><tr>
+          <th style="width:52px">순위</th><th>원문</th>
+          <th class="n" style="width:58px">relev.</th>
+          <th class="n" style="width:64px">known ▼</th>
+          <th class="n" style="width:62px">rarity ▲</th>
+          <th class="n" style="width:60px">quality</th>
+          <th style="width:52px"></th></tr></thead>
+        <tbody>
+          <tr><td><span class="mono fg">1</span> <span class="xs" style="color:var(--obs)">▲23</span></td>
+            <td>"워치 놓고 나갔는데 이어폰만으로 심박 보이면 그날은 진짜 편했을 듯"<div class="xs qu" style="margin-top:2px"><span class="mono">#92418</span> · Think · Feel · Fringe</div></td>
+            <td class="n mono">0.61</td><td class="n mono" style="color:var(--obs)">0.14</td><td class="n mono" style="color:var(--obs)">0.79</td>
+            <td class="n mono fg">0.70</td><td><span class="btn" style="height:24px;padding:0 9px">붙이기</span></td></tr>
+          <tr><td><span class="mono fg">2</span> <span class="xs" style="color:var(--obs)">▲9</span></td>
+            <td>"애초에 손목에 뭘 차는 걸 싫어해서 시계형은 후보에도 없었어요"<div class="xs qu" style="margin-top:2px"><span class="mono">#94233</span> · Feel · Think · <span style="color:var(--spe)">Edge</span></div></td>
+            <td class="n mono">0.58</td><td class="n mono" style="color:var(--obs)">0.11</td><td class="n mono" style="color:var(--obs)">0.84</td>
+            <td class="n mono fg">0.68</td><td><span class="btn" style="height:24px;padding:0 9px">붙이기</span></td></tr>
+          <tr><td><span class="mono fg">3</span> <span class="xs" style="color:var(--obs)">▲16</span></td>
+            <td>"러닝 크루에서 워치 안 찬 사람이 나뿐이라 좀 신경 쓰였어요"<div class="xs qu" style="margin-top:2px"><span class="mono">#90117</span> · Relate · Core</div></td>
+            <td class="n mono">0.52</td><td class="n mono" style="color:var(--obs)">0.19</td><td class="n mono" style="color:var(--obs)">0.71</td>
+            <td class="n mono fg">0.57</td><td><span class="btn" style="height:24px;padding:0 9px">붙이기</span></td></tr>
+          <tr><td><span class="mono fg">4</span> <span class="xs qu">－</span></td>
+            <td>"심박존 알림만 귀로 들려도 화면 볼 일이 없어질 텐데"<div class="xs qu" style="margin-top:2px"><span class="mono">#88902</span> · Think · Outcome · Core</div></td>
+            <td class="n mono">0.66</td><td class="n mono">0.44</td><td class="n mono">0.38</td>
+            <td class="n mono fg">0.41</td><td><span class="btn" style="height:24px;padding:0 9px">붙이기</span></td></tr>
+          <tr style="background:var(--spe-bg)"><td><span class="mono fg">9</span> <span class="xs" style="color:var(--spe)">▼8</span></td>
+            <td>"운동할 때 심박 보려면 결국 워치를 차야 하니까 둘 다 챙기게 돼요"<div class="xs" style="margin-top:2px;color:var(--spe)"><span class="mono">#85014</span> · <b>relevance 정렬에서는 1위였다</b> — 이미 아는 이야기라 감점되어 내려왔다</div></td>
+            <td class="n mono fg">0.94</td><td class="n mono" style="color:var(--spe)">0.91</td><td class="n mono" style="color:var(--spe)">0.08</td>
+            <td class="n mono">0.27</td><td><span class="btn gho" style="height:24px;padding:0 9px">붙이기</span></td></tr>
+          <tr style="opacity:.5"><td><span class="mono">31</span></td>
+            <td>"러닝할 때 워치랑 이어폰 둘 다 챙겨 나가는 게 은근 귀찮은데"<div class="xs qu" style="margin-top:2px"><span class="mono">#77930</span> · 중심 문장 · 위에 기준선으로 고정 노출됨</div></td>
+            <td class="n mono">0.89</td><td class="n mono">0.88</td><td class="n mono">0.05</td>
+            <td class="n mono">0.21</td><td class="xs qu">기준선</td></tr>
+          <tr><td class="mono qu">＋31</td><td class="xs qu" colspan="6">더 보기</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card rel" style="flex:1;display:flex;flex-direction:column">
+    <span class="pin fl" style="top:12px;left:-9px">2</span>
+    <div class="ch"><h3>노출 건</h3><span class="b">STEP 10·11로 넘어간다</span><span class="grow"></span>
+      <span class="seg"><span class="on">전체 12</span><span>자동 10</span><span>직접 2</span></span></div>
+    <div style="flex:1;overflow:hidden">
+      <table>
+        <thead><tr><th style="width:62px">문장</th><th>인용</th><th style="width:66px">역할</th><th style="width:60px">출처</th><th style="width:34px"></th></tr></thead>
+        <tbody>
+          <tr><td class="mono">84117</td><td>"폼팁 사이즈 바꿔봐도 똑같길래 그냥 한쪽만 끼고 뜁니다"</td><td class="xs">support</td><td><span class="b">자동</span></td><td class="xs qu">✕</td></tr>
+          <tr style="background:color-mix(in srgb, var(--persona-blue-100) 5%, transparent)"><td class="mono">91204</td><td>"분유 타듯이 귀에 온도계 꽂는 느낌이라 자꾸 확인하게 돼요"</td><td class="xs" style="color:var(--obs)">rare</td><td><span class="b">자동</span></td><td class="xs qu">✕</td></tr>
+          <tr><td class="mono">77930</td><td>"워치 안 차고 나가면 기록이 안 남으니까 결국 둘 다 챙긴다"</td><td class="xs">support</td><td><span class="b">자동</span></td><td class="xs qu">✕</td></tr>
+          <tr><td class="mono">88451</td><td>"이어폰 센서는 광학이라 흔들리면 튄다던데 믿을 수 있나요"</td><td class="xs" style="color:var(--spe)">counter</td><td><span class="b">자동</span></td><td class="xs qu">✕</td></tr>
+          <tr><td class="mono">95612</td><td>"수면 재려고 꼈다가 새벽에 빠져서 이불 속에서 찾는 게 일"</td><td class="xs" style="color:var(--obs)">rare</td><td><span class="b">자동</span></td><td class="xs qu">✕</td></tr>
+          <tr><td class="mono">80233</td><td>"러닝앱이랑 건강앱이 따로 놀아서 주에 한 번 손으로 옮겨요"</td><td class="xs">support</td><td><span class="b">자동</span></td><td class="xs qu">✕</td></tr>
+          <tr style="background:var(--obs-bg)"><td class="mono">92418</td><td>"워치 놓고 나갔는데 이어폰만으로 심박 보이면 그날은 진짜 편했을 듯"</td><td class="xs">support</td><td><span class="b obs">직접</span></td><td class="xs qu">✕</td></tr>
+          <tr style="background:var(--obs-bg)"><td class="mono">90117</td><td>"러닝 크루에서 워치 안 찬 사람이 나뿐이라 좀 신경 쓰였어요"</td><td class="xs">support</td><td><span class="b obs">직접</span></td><td class="xs qu">✕</td></tr>
+          <tr><td class="mono qu">＋ 4건</td><td class="xs qu">더 보기</td><td></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cc" style="flex:none;border-top:1px solid var(--line);padding:11px 13px;display:flex;flex-direction:column;gap:8px">
+      <div class="xs" style="display:flex;align-items:center;gap:8px">
+        <span class="lab">경험차원 커버리지</span>
+        <span class="b obs">Sense</span><span class="b obs">Feel</span><span class="b obs">Act</span><span class="b obs">Outcome</span>
+        <span class="b">Think</span><span class="b">Relate</span>
+        <span class="grow"></span><span class="fg">4 / 6</span>
+      </div>
+      <div class="xs">직접 붙인 <span class="mono">92418</span>이 Think를, <span class="mono">90117</span>이 Relate를 채우면 <span class="fg">6/6</span>이 되어 자동 보충 검색이 발동하지 않는다.</div>
+      <div class="xs" style="border:1px solid var(--inf-ln);background:var(--inf-bg);border-radius:6px;padding:7px 10px;color:var(--sec)">
+        ⚠ 같은 방향 rare <span class="fg">3건</span> 감지 · <span class="fg">미분화 Context 후보</span>로 올릴까요?
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card sunk rel" style="flex:none">
+  <span class="pin fl" style="top:-8px;left:-9px">3</span>
+  <div class="cc" style="padding:11px 14px;display:flex;align-items:center;gap:14px">
+    <span class="lab">자동 10건은 이렇게 뽑혔다</span>
+    <span class="chip">경험가설 8문장으로 검색</span><span class="xs qu">→</span>
+    <span class="chip">후보 50</span><span class="xs qu">→</span>
+    <span class="chip">지연 태깅 18</span><span class="xs qu">→</span>
+    <span class="chip on">quality × DPP</span><span class="xs qu">→</span>
+    <span class="chip">노출 10</span>
+    <span class="grow"></span>
+    <span class="xs qu">각 단계는 아래 변경점 ④~⑥ 참조 · 사람이 직접 붙인 건은 이 경로를 거치지 않고 <span class="fg">role은 붙일 때 지정</span>한다</span>
+  </div>
+</div>
+        </div>
+      </main>
+      <aside class="chat rail">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#565c66" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-5.5A8 8 0 0 1 11 4h2a8 8 0 0 1 8 8Z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#747a84" stroke-width="1.7"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#747a84" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </aside>
+    </div>
+  </div>
+  <section class="ann">
+    <h4>1.0 대비 변경점</h4>
+    <p class="lead"><span class="tag rep">치환</span>AS-IS가 있고 대체된다 &nbsp;<span class="tag new">신설</span>AS-IS 없음 · 새로 꽂는다 &nbsp;<span class="tag keep">유지</span>기존 확정 재확인 &nbsp;<span class="tag open">미결</span>답이 필요한 것</p>
+    <div class="grid"><div class="it"><span class="pin">1</span><p><span class="tag new">신설</span><b>직접 찾아 붙이기.</b> 1.0에서 분석가가 원문을 손으로 뒤져 근거를 모으던 작업을 자동화하되, <b>그 손을 없애지는 않는다.</b> 같은 클러스터 안의 전체 문서를 대상으로 검색하고(filter 3키와 <em class="mono">evidence_level</em> · 밴드 · 목적축/제약축 선택 필터를 그대로 검색 조건으로 쓴다), 찾은 원문을 노출 건에 붙인다. 붙인 건은 <em class="mono">source: 직접</em>으로 구분돼 Evidence Package에 들어간다.</p></div>
+<div class="it"><span class="pin">2</span><p><span class="tag keep">유지</span><b>Evidence Package는 유일한 계약.</b> AS-IS는 클러스터 요약과 RAG Top-10을 STEP 10·11 프롬프트에 인라인으로 흘려넣었다. 계약 스키마 하나로 교체하면 STEP 10·11 프롬프트를 바꾸지 않고도 STEP 09를 개선할 수 있다. v8에서 추가된 것은 <em class="mono">novelty</em> 컬럼뿐이다.</p></div>
+<div class="it"><span class="pin">3</span><p><span class="tag new">신설</span><b>Experience Coverage와 에스컬레이션.</b> 선정 세트의 경험차원 태그 합집합이 6분의 4 미만이면 자동 보충 검색이 돈다. 같은 방향 rare가 3건 이상 모이면 "미분화 Context 후보" 플래그를 올려 수동 생성 검토로 보낸다 — Edge에서 새 세그먼트가 태어나는 경로다.</p></div>
+<div class="it"><span class="pin">4</span><p><span class="tag keep">유지</span><b>LDA 토픽맵을 지우지 않는다.</b> 1.0은 LDAVis를 사람이 눈으로 읽어 59개 Action을 썼고 λ도 도메인마다 다시 잡아야 했다. 2.0은 <b>토픽맵과 어휘 막대를 그대로 남기되</b> Action 문장을 여기서 끝내지 않는다 — Action은 토픽 가중치가 만든 라벨일 뿐이고, 그 라벨이 실제 원문으로 뒷받침되는지는 아직 확인되지 않았기 때문에 Action마다 근거 수집을 한 번 더 돌린다.</p></div>
+<div class="it"><span class="pin">5</span><p><span class="tag new">신설</span><b>클러스터 중심 문장을 기준선으로 고정한다.</b> centroid에 가장 가까운 문장은 이 구획이 무엇에 관한 것인지를 한 줄로 말해 준다. 동시에 <b>정의상 가장 전형적</b>이므로 <em class="mono">max_sim_to_known</em>이 높고 quality 순위에서는 내려간다(예시에서 31위). 그래서 순위표에 섞지 않고 <b>상단에 별도로 고정</b>한다 — 추천에서는 빼되, 중심을 모르면 아래 목록이 얼마나 가장자리인지 판단할 수 없다.</p></div>
+<div class="it"><span class="pin">6</span><p><span class="tag rep">치환</span><b>관련성 단독 정렬을 버린다.</b> AS-IS는 검색 순위가 <em>관련성 단독</em>으로 정해졌다. 그런데 관련성이 가장 높은 문서는 대개 실무자가 이미 아는 이야기다 — <b>근거로는 맞고 인사이트로는 0</b>이다. TO-BE는 두 항을 곱한다: <em class="mono">(1 − 0.5·max_sim_to_known)</em>은 아는 것과 유사하면 <b>감점</b>, <em class="mono">(1 + 0.3·combo_rarity)</em>는 조합이 희소하면 <b>가점</b>. 화면은 세 항을 컬럼으로 분해해 보여주고 <b>관련성 정렬 대비 순위 이동량</b>(▲23 · ▼8)을 함께 찍는다 — 공식만 적어두면 무슨 일이 일어났는지 아무도 확인할 수 없다. 두 정렬은 토글로 나란히 대조된다.</p></div>
+<div class="it"><span class="pin">—</span><p><span class="tag rep">치환</span><b>쿼리 2층 · HyDE.</b> AS-IS는 클러스터 TF-IDF 상위 5개를 이어 붙인 문자열로 인덱스 <em>전체</em>를 검색했다 — filter가 없어 클러스터 3의 근거에 클러스터 7 문서가 섞였고 추적할 스키마도 없었다. TO-BE는 <em class="mono">persona_query</em>(Desire 정의문 검증)와 <em class="mono">context_query</em>(경험차원 6종 + 반례 + Residual 8문장)로 나누고, filter 3키가 옵션이 아니라 <b>필수</b>다. 차원별로 나눠 검색하는 것 자체가 Coverage를 보장한다.</p></div>
+<div class="it"><span class="pin">—</span><p><span class="tag new">신설</span><b>코드 검증 4항목.</b> 생성된 쿼리를 LLM에게 다시 묻지 않고 코드로 검사한다 — (a) <em class="mono">anchor_context_ids</em> 합집합 = Context 전체 (b) 8문장에 dim 누락 없음 (c) "페르소나는"·"클러스터" 같은 분석 용어 금지어 정규식 (d) 미달 시 1회 재생성, 실패하면 <em class="mono">stage_7.json</em>에 <em class="mono">query_gen_fail</em> 기록. 쿼리 품질이 모델의 그날 컨디션이 아니라 계약이 된다.</p></div>
+<div class="it"><span class="pin">—</span><p><span class="tag rep">치환</span><b>리랭킹 재정의와 새로움 신호 5종.</b> <em class="mono">quality = relevance × (1 − 0.5·max_sim_to_known) × (1 + 0.3·combo_rarity)</em> — 아는 것에 페널티, 조합 희소에 보너스. MMR(λ=0.7) + rare 하드 쿼터가 서로 다른 목적함수로 충돌하던 것을 DPP 집합 선택 하나로 묶고 쿼터는 fallback으로 내렸다. 새로움 신호는 <em class="mono">dist_centroid · pred_entropy</em>(기존) + <em class="mono">max_sim_to_known · combo_rarity · emerging·lexical_surprise</em>(신설) 5종이며, 모두 대리 지표라 최종 10건에만 LLM Novelty Cross-check를 건다.</p></div></div>
+  </section>
+</div>
+</div></div><div><div class="cap">STEP 10-A · Customer Action Map</div><div class="slot" style="width:1440px;height:2660px"><div class="art" style="width: 1440px; height: 2660px;">
+  <div class="app">
+    <header class="top">
+  <div class="brand"><span class="dot"></span>DCX Agent</div>
+  <span class="sep"></span>
+  <span class="pill on">에어팟 프로 3 · 운동·건강 맥락 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span>
+  <span class="pill">세션 3개</span>
+  <span class="grow"></span>
+  <span class="pill">작업 2건 실행 중</span>
+  <span class="pill">문서 검색</span>
+  <span class="btn gho">내보내기</span>
+  <span class="btn pri">세션 저장</span>
+</header>
+    <div class="body">
+      <nav class="side"><div class="grp">Data Defining</div><div class="step"><span class="no">00</span><span>세션</span><span class="st done"></span></div><div class="step"><span class="no">01·02</span><span>입력 선언</span><span class="st done"></span></div><div class="step"><span class="no">03</span><span>키워드 설계</span><span class="st done"></span></div><div class="step"><span class="no">04</span><span>데이터 수집</span><span class="st done"></span></div><div class="grp">Data Sensing</div><div class="step"><span class="no">05</span><span>전처리 · 임베딩</span><span class="st done"></span></div><div class="step"><span class="no">06-A</span><span>모델 학습</span><span class="st done"></span></div><div class="step"><span class="no">06-B</span><span>근거 판정</span><span class="st done"></span></div><div class="step"><span class="no">07</span><span>군집</span><span class="st done"></span></div><div class="step"><span class="no">08</span><span>페르소나</span><span class="st done"></span></div><div class="step"><span class="no">09</span><span>근거 수집</span><span class="st done"></span></div><div class="grp">Data Shaping</div><div class="step on"><span class="no">10-A</span><span>Customer Action Map</span><span class="st cur"></span></div><div class="step"><span class="no">10-B</span><span>기회 영역</span><span class="st "></span></div><div class="step"><span class="no">11-A</span><span>인사이트 도출</span><span class="st "></span></div><div class="step"><span class="no">11-B</span><span>경험 디자인 컨셉</span><span class="st "></span></div><div class="grp">운영</div><div class="step"><span class="no">ADM</span><span>프롬프트 관리</span><span class="st "></span></div><div class="note"><div class="lab">활성 선언</div>
+    <p class="xs" style="margin:6px 0 0;color:var(--sec)">무선 이어폰을 운동·건강 맥락에서 재정의할 미충족 니즈를 찾는다</p>
+    <p class="xs" style="margin:6px 0 0">STEP 01 한줄 정의 · 전 단계 프롬프트 헤더로 상주</p></div></nav>
+      <main class="main">
+        <div class="mhead"><div class="eyebrow">STEP 10-A · Data Shaping</div><h1>Customer Action Map</h1><div class="sub">1.0 CAM의 행 구조를 그대로 승계하고 열의 단위를 Action으로 바꾼다 · 등급은 LLM이 아니라 기계가 판정한다</div></div>
+        <div class="mbody">
+<div class="g12" style="flex:none">
+  <section class="c8 card"><div class="cc">
+    <div class="signal">
+      <div class="eyebrow">Persona P1 · 귀로 건강 재는 러너</div>
+      <h2 class="insight">이 사람은 심박을 확인하려다<br>매번 워치를 다시 차는 데서 멈춥니다.</h2>
+      <p class="interp">막히는 지점이 상황이 아니라 <span class="fg">행동</span>에 있습니다 — 1.0은 상황과 결론만 남기고 그 사이를 비워뒀고, 비어 있던 자리가 아래 행동 · 장벽 행입니다.</p>
+      <p class="alt">다른 가능성 · 센서 정밀도에 대한 불신은 행동 이전에 작동하는 장벽이라 CAM 행에는 잡히지 않습니다. 10-B 기회 영역에서 따로 봅니다.</p>
+      <div class="evid">
+        <span>근거 <span class="mono fg">27</span>건</span>
+        <span>작성자 <span class="mono fg">15</span>명</span>
+        <span>Action 4개</span>
+        <span class="conf hi">신뢰도 <i><b class="on"></b><b class="on"></b><b></b></i> 2/3 · 보통</span>
+        <span class="src">원문 27건 보기 →</span>
+      </div>
+      <div class="nextact">
+        <span class="lb">다음 행동</span>
+        <span class="tx">'추측' 등급으로 판정된 칸을 STEP 09 근거 수집으로 되돌린다</span>
+        <span class="go">추측 칸 확인하기 →</span>
+      </div>
+    </div>
+  </div></section>
+
+  <aside class="c4 col" style="gap:var(--space-3)">
+    <div class="card"><div class="cc" style="padding:var(--space-4)">
+      <div class="lab">Desire <span class="qu" style="text-transform:none;letter-spacing:0;font-weight:400">— STEP 08 확정 · 재생성 없음</span></div>
+      <div class="sm fg" style="margin-top:6px">운동 중 몸 상태를 최소한의 기기로 확인받고 싶어 함</div>
+      <div class="wrap" style="margin-top:9px"><span class="chip on">#심박</span><span class="chip on">#워치</span><span class="chip on">#러닝</span><span class="chip on">#측정</span></div>
+    </div></div>
+    <div class="row" style="gap:var(--space-3)">
+      <div class="kpi" style="flex:1"><span class="lab">Pain Point</span><span class="v">3</span><span class="xs">물리 부담 · 기능 부재 · 사전 불신</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">Goal</span><span class="v">2</span><span class="xs">흐름 유지 · 기록 통합</span></div>
+    </div>
+  </aside>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">1</span>
+  <div class="ch"><h3 style="color:var(--ind-fg)">[Cluster 0 — Persona 1]</h3>
+    <span style="font-size:15px;font-weight:590;letter-spacing:-.2px">귀로 건강 재는 러너</span>
+    <span class="grow"></span>
+    <span class="xs">근거 <span class="fg">27건</span> · 작성자 <span class="fg">15명</span> · Action <span class="fg">4개</span> · 신뢰도 <span class="fg">중</span></span>
+    <span class="seg" style="margin-left:8px"><span>‹</span><span class="on">P1 / 14</span><span>›</span></span></div>
+  <div class="cc" style="display:flex;gap:0">
+    <div style="flex:1.1;padding-right:16px">
+      <div class="lab">Desire <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">— STEP 08에서 확정됨 · 여기서 다시 생성하지 않는다</span></div>
+      <div class="sm" style="margin-top:6px;color:var(--fg)">운동 중 몸 상태를 최소한의 기기로 확인받고 싶어 함</div>
+      <div class="wrap" style="margin-top:9px"><span class="chip on">#심박</span><span class="chip on">#워치</span><span class="chip on">#러닝</span><span class="chip on">#챙기다</span><span class="chip on">#측정</span></div>
+    </div>
+    <div style="width:1px;background:var(--line);flex:none"></div>
+    <div style="flex:1;padding:0 16px">
+      <div class="lab">Goal</div>
+      <div class="xs" style="margin-top:6px;display:flex;flex-direction:column;gap:5px;color:var(--sec)">
+        <span>1. 러닝 흐름을 끊지 않고 심박을 확인한다</span>
+        <span>2. 기기를 늘리지 않고 운동·수면 데이터를 한 곳에 모은다</span>
+      </div>
+    </div>
+    <div style="width:1px;background:var(--line);flex:none"></div>
+    <div style="flex:1.15;padding-left:16px">
+      <div class="lab">Pain Points</div>
+      <div class="xs" style="margin-top:6px;display:flex;flex-direction:column;gap:5px;color:var(--sec)">
+        <span>1. 두 기기를 모두 챙기고 착용해야 하는 물리적 부담</span>
+        <span>2. 이어폰에 실제 측정 기능이 없어 기대가 해소되지 않음</span>
+        <span>3. 센서 정밀도에 대한 사전 불신이 수용을 막음</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card sunk rel" style="flex:none">
+  <span class="pin fl" style="top:-8px;left:-9px">2</span>
+  <div class="cc" style="padding:11px 14px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:nowrap">
+      <span class="lab" style="flex:none">1.0의 4필드 한 번에 → 2.0의 4화면으로 펼침</span>
+      <span class="chip" style="flex:none">① 이름 · Desire <span class="mono xs qu">STEP 08</span></span><span class="xs qu" style="flex:none">→</span>
+      <span class="chip on" style="flex:none">② 상황 → <b>행동</b> → 장벽 <span class="mono xs">STEP 10</span></span><span class="xs qu" style="flex:none">→</span>
+      <span class="chip" style="flex:none">③ 페인포인트 우선순위 <span class="mono xs qu">STEP 10-B</span></span><span class="xs qu" style="flex:none">→</span>
+      <span class="chip" style="flex:none">④ 인사이트 <span class="mono xs qu">STEP 11</span></span>
+      <span class="grow"></span>
+    </div>
+    <div class="xs qu">AS-IS는 이 넷을 한 번의 LLM 호출로 뱉어 <span class="fg">상황과 결론만 있고 그 사이가 비어 있었다</span> — 비어 있던 자리가 아래 <b>행동 · 장벽</b> 행이다</div>
+  </div>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">3</span>
+  <div class="ch"><h3>Customer Action Map</h3><span class="b ind">행 구조 1.0 승계 · 열 단위 = Action</span>
+    <span class="grow"></span>
+    <span class="xs"><span class="dotg o"></span> 관측 &nbsp;<span class="dotg i"></span> 추론 &nbsp;<span class="dotg s"></span> 추측</span></div>
+  <table>
+    <thead><tr>
+      <th style="width:92px"></th>
+      <th style="width:23.5%"><span class="fg">A1</span> <span class="qu mono">topic 7</span></th>
+      <th style="width:23.5%"><span class="fg">A2</span> <span class="qu mono">topic 3</span></th>
+      <th style="width:23.5%"><span class="fg">A3</span> <span class="qu mono">topic 6</span></th>
+      <th style="width:23.5%"><span class="fg">A4</span> <span class="qu mono">topic 1</span></th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td class="lab" style="background:var(--sunk)">상황<br><span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">Context</span></td>
+        <td>러닝 중 심박을 보려면 손목 기기가 필요한 상황이 반복된다 <span class="b obs">관측</span></td>
+        <td>이어폰만으로 측정되는지 확인할 방법이 없다 <span class="b obs">관측</span></td>
+        <td>측정값이 튀는 경험이 커뮤니티에 공유되어 있다 <span class="b obs">관측</span></td>
+        <td>운동 기록과 건강 기록이 서로 다른 앱에 남는다 <span class="b obs">관측</span></td>
+      </tr>
+      <tr style="background:var(--ind-bg)">
+        <td class="lab" style="background:color-mix(in srgb, var(--persona-blue-100) 14%, transparent);color:var(--ind-fg)">행동<br><span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400;color:var(--ind-fg)">Action · 신설</span></td>
+        <td class="fg">워치와 이어폰을 함께 챙겨 나가며 둘 다 착용한다 <span class="b obs">관측</span></td>
+        <td class="fg">이어폰만으로 심박이 측정되는지 찾아보고 커뮤니티에 묻는다 <span class="b obs">관측</span></td>
+        <td class="fg">정확도를 따지며 구매를 미룬다 <span class="b inf">추론</span></td>
+        <td class="fg">주 1회 기록을 손으로 옮긴다 <span class="b obs">관측</span></td>
+      </tr>
+      <tr>
+        <td class="lab" style="background:var(--sunk)">장벽<br><span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">Barrier · 신설</span></td>
+        <td>기기를 줄이면 기록이 끊긴다 — 줄일 수 없는 이유가 있다 <span class="b obs">관측</span></td>
+        <td>현재 이어폰에 측정 기능 자체가 없다 <span class="b obs">관측</span></td>
+        <td>정밀도를 스스로 검증할 수단이 없다 <span class="b inf">추론</span></td>
+        <td>두 앱 사이에 자동 연동 경로가 없다 <span class="b inf">추론</span></td>
+      </tr>
+      <tr>
+        <td class="lab" style="background:var(--sunk)">키워드<br><span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">Keywords</span></td>
+        <td class="xs">#워치 #챙기다 #둘다 #귀찮다</td>
+        <td class="xs">#심박 #측정 #이어폰 #가능</td>
+        <td class="xs">#정확도 #센서 #광학 #불신</td>
+        <td class="xs">#기록 #연동 #앱 #옮기다</td>
+      </tr>
+      <tr>
+        <td class="lab" style="background:var(--sunk)">Artifact</td>
+        <td class="xs">스마트워치, 심박 스트랩, 러닝 앱</td>
+        <td class="xs">광학 심박 센서 이어폰, 심박존 음성 알림</td>
+        <td class="xs">기준기 대조 리포트, 오차 공시</td>
+        <td class="xs">건강 데이터 허브, 자동 동기화</td>
+      </tr>
+      <tr>
+        <td class="lab" style="background:var(--sunk)">Sentiment</td>
+        <td><span class="mono fg">1.02</span><div class="bar" style="margin-top:4px"><i class="n" style="width:10%"></i></div></td>
+        <td><span class="mono fg">5.51</span><div class="bar" style="margin-top:4px"><i class="o" style="width:55%"></i></div></td>
+        <td><span class="mono fg">1.34</span><div class="bar" style="margin-top:4px"><i class="n" style="width:13%"></i></div></td>
+        <td><span class="mono fg">2.10</span><div class="bar" style="margin-top:4px"><i class="n" style="width:21%"></i></div></td>
+      </tr>
+      <tr>
+        <td class="lab" style="background:var(--sunk)">Opportunity<br><span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">ODI · 구역</span></td>
+        <td><span class="mono fg">14.98</span> <span class="b spe">F At-risk</span></td>
+        <td><span class="mono fg">12.49</span> <span class="b inf">C Competitive</span></td>
+        <td><span class="mono">1.00</span> <span class="b">잠정 · 미확정</span></td>
+        <td><span class="mono fg">9.30</span> <span class="b spe">F At-risk</span></td>
+      </tr>
+      <tr>
+        <td class="lab" style="background:var(--sunk)">근거</td>
+        <td class="xs"><span class="fg">11건</span> · 작성자 8 <span class="qu">· 반례 0</span></td>
+        <td class="xs"><span class="fg">12건</span> · 작성자 9 <span class="qu">· 반례 1</span></td>
+        <td class="xs" style="color:var(--spe)"><span class="fg">4건</span> · 작성자 3 · <b>반례 담론</b></td>
+        <td class="xs"><span class="fg">6건</span> · 작성자 5 <span class="qu">· 반례 0</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="row" style="flex:1;min-height:0">
+  <div class="card rel" style="flex:1.5;display:flex;flex-direction:column">
+    <span class="pin fl" style="top:12px;left:-9px">4</span>
+    <div class="ch"><h3>Action 상세</h3><span class="b ind mono">CL0-P1-A1</span>
+      <span class="seg" style="margin-left:6px"><span class="on">A1</span><span>A2</span><span>A3</span><span>A4</span></span>
+      <span class="grow"></span><span class="xs">1.0 장표의 Action 상세 페이지 구조 승계 · Reviews 포함</span></div>
+    <div class="cc" style="flex:1;display:flex;flex-direction:column;gap:0;overflow:hidden">
+      <table style="flex:none">
+        <tbody>
+          <tr><td class="lab" style="width:78px">Keywords</td><td class="xs">#워치 #챙기다 #둘다 #귀찮다</td></tr>
+          <tr><td class="lab">Action</td><td class="fg">워치와 이어폰을 함께 챙겨 나가며 둘 다 착용한다</td></tr>
+          <tr><td class="lab">Context</td><td>러닝 중 심박을 보려면 손목 기기가 필요한 상황이 반복된다</td></tr>
+          <tr><td class="lab">Barrier</td><td>기기를 줄이면 기록이 끊긴다 — 줄일 수 없는 이유가 있다</td></tr>
+          <tr><td class="lab">Artifact</td><td class="xs">스마트워치, 심박 스트랩, 러닝 앱, 암밴드</td></tr>
+          <tr><td class="lab">Sentiment</td><td><span class="mono fg">1.02</span> <span class="qu">/ 10 · 표본 1,566건</span></td></tr>
+        </tbody>
+      </table>
+      <div style="flex:1;min-height:0;border-top:1px solid var(--line);padding-top:10px;margin-top:2px">
+        <div class="lab">Reviews <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">— STEP 09 Evidence Package에서 그대로 올라온다 · 여기서 다시 검색하지 않는다</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:7px">
+          <div class="xs" style="display:flex;gap:8px"><span class="mono qu" style="flex:none;width:44px">77930</span><span>"워치 안 차고 나가면 기록이 안 남으니까 결국 둘 다 챙긴다"</span><span class="b obs" style="flex:none">관측 근거</span></div>
+          <div class="xs" style="display:flex;gap:8px"><span class="mono qu" style="flex:none;width:44px">92418</span><span>"워치 놓고 나갔는데 이어폰만으로 심박 보이면 그날은 진짜 편했을 듯"</span><span class="b obs" style="flex:none">관측 근거</span></div>
+          <div class="xs" style="display:flex;gap:8px"><span class="mono qu" style="flex:none;width:44px">90117</span><span>"러닝 크루에서 워치 안 찬 사람이 나뿐이라 좀 신경 쓰였어요"</span><span class="b obs" style="flex:none">관측 근거</span></div>
+          <div class="xs" style="display:flex;gap:8px"><span class="mono qu" style="flex:none;width:44px">80233</span><span>"러닝앱이랑 건강앱이 따로 놀아서 주에 한 번 손으로 옮겨요"</span><span class="b" style="flex:none">A4로 이관</span></div>
+          <div class="xs" style="margin-top:2px;color:var(--ind-fg)">원문 8건 더 보기 ⌄</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card rel" style="width:390px;flex:none;display:flex;flex-direction:column">
+    <span class="pin fl" style="top:12px;left:-9px">5</span>
+    <div class="ch"><h3>등급 기계 판정</h3><span class="b">LLM은 등급을 매기지 않는다</span></div>
+    <div class="cc" style="flex:1;display:flex;flex-direction:column;gap:10px;overflow:hidden">
+      <div class="mono xs" style="border:1px solid var(--line2);border-radius:6px;padding:10px;background:var(--sunk);color:var(--sec);line-height:19px">
+        hits = retrieve(서술문, scope=이 Action의 Evidence Package)<br>
+        <span style="color:var(--obs)">if</span> hits ≥ 1 ∧ 어휘중첩 ≥ 0.40 → <span class="fg">관측</span> <span class="qu">+ 인용 id 부착</span><br>
+        <span style="color:var(--inf)">elif</span> 상위 서술에서 유도 가능 → <span class="fg">추론</span> <span class="qu">+ 유도 경로 부착</span><br>
+        <span style="color:var(--spe)">else</span> → <span class="fg">추측</span> <span class="qu">+ 근거 없음 표시</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div class="xs" style="display:flex;align-items:center;gap:8px"><span class="b obs" style="width:44px;justify-content:center">관측</span><div class="bar" style="flex:1"><i class="o" style="width:67%"></i></div><span class="mono fg" style="width:52px;text-align:right">16 / 24</span></div>
+        <div class="xs" style="display:flex;align-items:center;gap:8px"><span class="b inf" style="width:44px;justify-content:center">추론</span><div class="bar" style="flex:1"><i class="w" style="width:25%"></i></div><span class="mono fg" style="width:52px;text-align:right">6 / 24</span></div>
+        <div class="xs" style="display:flex;align-items:center;gap:8px"><span class="b spe" style="width:44px;justify-content:center">추측</span><div class="bar" style="flex:1"><i class="n" style="width:8%"></i></div><span class="mono fg" style="width:52px;text-align:right">2 / 24</span></div>
+      </div>
+      <div class="xs" style="border:1px solid var(--line);border-radius:6px;padding:9px 10px;background:var(--panel)">
+        <span class="lab">판정 예시 — A3 행동</span>
+        <div style="margin-top:5px">"정확도를 따지며 구매를 미룬다"</div>
+        <div style="margin-top:5px;color:var(--inf)">→ 검색 히트 0건. 그러나 상황("측정값이 튀는 경험이 공유되어 있다")과 감정(유보)에서 유도 가능 → <b>추론</b></div>
+        <div class="xs qu" style="margin-top:4px">유도 경로: C3.상황 ∧ C3.감정 ⊢ 구매 유보</div>
+      </div>
+      <div class="xs" style="border:1px solid var(--spe-ln);background:var(--spe-bg);border-radius:6px;padding:9px 10px;color:var(--sec)">
+        <b style="color:var(--spe)">추측 2건은 화면에서 지우지 않는다.</b> 지우면 서술이 매끄러워지지만, 무엇이 근거 없이 쓰였는지 알 수 없게 된다. 추측 비율이 30%를 넘으면 이 페르소나는 <span class="fg">신뢰도 하</span>로 내려가고 STEP 11 종합에서 가중치가 깎인다.
+      </div>
+      <div class="xs" style="margin-top:auto;border-top:1px solid var(--line);padding-top:9px">
+        기회 영역 지도는 <span class="fg">STEP 10-B</span> 화면으로 옮겼다 — 이 화면의 Opportunity 행과 같은 값이라 두 번 그리지 않는다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="flex:none">
+  <div class="card" style="flex:1">
+    <div class="ch"><h3 style="color:var(--ind-fg)">수렴</h3><span class="xs qu">Action 전체를 하나의 의도로</span></div>
+    <div class="cc" style="display:flex;flex-direction:column;gap:9px">
+      <div style="display:flex;gap:9px;align-items:flex-start">
+        <span class="lab" style="width:34px;flex:none;padding-top:2px">의도</span>
+        <span class="sm" style="flex:1;color:var(--fg)">기기 하나로 운동과 건강 측정을 통합하고 싶어 함</span>
+        <span class="b spe" style="flex:none"><span class="dotg s"></span> 추측</span>
+      </div>
+      <div class="xs" style="margin-top:2px">－ 근거 컨텍스트: <span class="fg">C1</span>(중복 착용 부담) → <span class="fg">C2</span>(측정 기대)</div>
+      <div class="xs">－ 유도 컨텍스트: <span class="fg">C3</span>(정확도 불신) → 의도 실현의 전제 조건</div>
+    </div>
+  </div>
+
+  <div class="card rel" style="flex:1.1">
+    <span class="pin fl" style="top:12px;left:-9px">6</span>
+    <div class="ch"><h3 style="color:var(--ind-fg)">속성</h3></div>
+    <div class="cc">
+      <table>
+        <tbody>
+          <tr><td class="lab" style="width:96px">사용 맥락 / JTBD</td><td style="color:var(--ind-fg)">러닝 · 운동 중 착용 · 운동하는 동안 최소한의 기기로 심박 몸상태를 확인한다</td></tr>
+          <tr><td class="lab">여정 분포</td><td style="color:var(--ind-fg)">인지 50% &nbsp;·&nbsp; 탐색 35% &nbsp;·&nbsp; 비교 15%</td></tr>
+          <tr><td class="lab">감도</td><td style="color:var(--ind-fg)">기능 중 &nbsp;·&nbsp; 가격 중 &nbsp;·&nbsp; 브랜드 중</td></tr>
+          <tr><td class="lab">가치지향</td><td class="mono" style="color:var(--spe)">null</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card rel" style="flex:1.35">
+    <span class="pin fl" style="top:12px;left:-9px">7</span>
+    <div class="ch"><h3 style="color:var(--ind-fg)">처방</h3></div>
+    <div class="cc">
+      <table>
+        <tbody>
+          <tr><td class="lab" style="width:66px">인사이트</td><td>이어폰 단독 심박 측정으로 워치 병용 필요를 제거(C1). 측정 기능에 대한 기대가 이미 형성돼 있어 확장 여지가 큼(C2). 단, 1차는 비의료 심박 · 수면 지표로 제한(Stage 0 사내 제약: 의료적 효과 표현 제한). 핵심 지표인 신규 맥락 유입에 러닝 세그먼트가 기여 가능.</td></tr>
+          <tr><td class="lab">여정(가설)</td><td>ENTRY(운동 심박) &nbsp;→&nbsp; EXPAND(수면 측정) &nbsp;→&nbsp; COMMIT(건강 허브)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+        </div>
+      </main>
+      <aside class="chat rail">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#565c66" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-5.5A8 8 0 0 1 11 4h2a8 8 0 0 1 8 8Z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#747a84" stroke-width="1.7"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#747a84" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </aside>
+    </div>
+  </div>
+  <section class="ann">
+    <h4>1.0 대비 변경점</h4>
+    <p class="lead"><span class="tag rep">치환</span>AS-IS가 있고 대체된다 &nbsp;<span class="tag new">신설</span>AS-IS 없음 · 새로 꽂는다 &nbsp;<span class="tag keep">유지</span>기존 확정 재확인 &nbsp;<span class="tag open">미결</span>답이 필요한 것</p>
+    <div class="grid"><div class="it"><span class="pin">1</span><p><span class="tag keep">유지</span><b>Actor 헤더는 1.0 CAM 그대로.</b> Desire · Goal · Pain Points 3분할 헤더는 1.0 장표의 형식 그대로다. 다만 이 값들은 여기서 <b>생성되지 않는다</b> — STEP 08에서 확정된 값을 표시만 한다. 서술하는 화면이 정의까지 하면 통계 구획과 산출물이 어긋난다.</p></div>
+<div class="it"><span class="pin">2</span><p><span class="tag rep">치환</span><b>4필드 한 번에 → 4화면으로 펼침.</b> 구현 버전의 LLM은 <em>이름 · 상황 · 페인포인트 · 인사이트</em> 네 필드를 한 번에 뱉었고, 그래서 <b>상황과 결론만 있고 그 사이가 비어 있었다.</b> 넷을 네 화면(08 / 10 / 10-B / 11)으로 펼치면 그 사이가 강제로 채워진다 — 비어 있던 자리가 이 화면의 <b>행동 · 장벽</b> 행이다.</p></div>
+<div class="it"><span class="pin">3</span><p><span class="tag rep">치환</span><b>행 구조 승계 · 열 단위를 Action으로.</b> Action · Context · Keywords · Sentiment · Opportunity 행은 1.0 CAM 그대로이고, Artifact는 1.0 상세 페이지에 있던 행을 매트릭스로 끌어올린 것이다. 바뀐 것은 <b>열의 단위</b>다 — 1.0도 열이 Action이었지만 각 열은 LDA 토픽 라벨일 뿐이었다. 2.0의 열은 <em class="mono">CL0-P1-A1</em>이라는 <b>계층 ID를 가진 구획</b>이라 Evidence Package와 1:1로 붙는다. 신설 행은 <b>장벽(Barrier)</b> 하나뿐이고, 상황 → 행동 → 장벽이 한 열 안에서 세로로 읽힌다.</p></div>
+<div class="it"><span class="pin">4</span><p><span class="tag keep">유지</span><b>Action 상세와 Reviews.</b> 1.0 장표는 Action 하나마다 Keywords · Action · Context · Artifact · Sentiment · Reviews를 담은 상세 페이지를 따로 뒀다. 그 구조를 그대로 승계하되 <b>Reviews를 다시 검색하지 않는다</b> — STEP 09 Evidence Package에서 확정된 인용이 그대로 올라온다. 1.0에서는 상세 페이지의 인용이 어느 절차로 선택됐는지 추적할 수 없었다.</p></div>
+<div class="it"><span class="pin">5</span><p><span class="tag new">신설</span><b>등급을 LLM이 스스로 매기지 않는다.</b> 인용할 원문이 있으면 <b>관측</b>, 유도만 가능하면 <b>추론</b>, 어느 쪽도 아니면 <b>추측</b> — 이 판정은 <em class="mono">retrieve(서술문, scope=이 Action의 Evidence Package)</em>의 히트 여부라는 <b>기계적 사실</b>로 결정된다. 모델에게 "이건 관측인가요"를 묻지 않는다. 물으면 모델은 자기가 방금 쓴 문장을 변호한다. 추측 건은 지우지 않고 남기며, 추측 비율 30% 초과 시 페르소나 신뢰도가 <b>하</b>로 내려가 STEP 11 종합에서 가중치가 깎인다.</p></div>
+<div class="it"><span class="pin">6</span><p><span class="tag rep">교정</span><b>서수 감도 · 분포형 여정 · null 허용.</b> 감도는 "기능 강"이 아니라 서수 <b>상 / 중 / 하</b>다. 여정은 단일 라벨이 범주 오류이므로 분포로 적고, 가치지향은 근거가 부족하면 <em class="mono">null</em>로 비운다 — 채우면 거짓 정밀도가 된다.</p></div>
+<div class="it"><span class="pin">7</span><p><span class="tag new">신설</span><b>처방에만 회사 컨텍스트를 주입한다.</b> 분석 목적 → 처방 방향, 핵심 지표 → 겨냥할 지표, 사내 제약 → 부정 제약. 여정 ENTRY → EXPAND → COMMIT은 예측이 아니라 <b>가설</b>로 표기한다. 해석 층(CAM · 속성)에는 주입하지 않는다 — 넣으면 발견이 가설에 맞춰 오염된다.</p></div>
+<div class="it"><span class="pin">—</span><p><span class="tag keep">이전</span><b>기회 영역 지도는 STEP 10-B로.</b> 이전 와이어프레임은 이 화면에도 Opportunity Map을 그렸는데, CAM의 Opportunity 행과 같은 값이라 두 번 그릴 이유가 없다. 지도는 10-B 한 곳에 두고 이 화면은 행으로만 참조한다.</p></div>
+<div class="it"><span class="pin">—</span><p><span class="tag new">신설</span><b>담론 단위 서술 + 반례 필수.</b> 각 칸은 "이 사람이 이랬다"가 아니라 "이 Action에서 이런 담론이 관측된다"로 쓴다. A3처럼 소수 담론이 <b>반례로 남아 있어야</b> A2의 기대가 무비판적으로 통과하지 않는다.</p></div></div>
+  </section>
+</div>
+</div></div><div><div class="cap">STEP 10-B · 기회 영역</div><div class="slot" style="width:1440px;height:1860px"><div class="art" style="width: 1440px; height: 1860px;">
+  <div class="app">
+    <header class="top">
+  <div class="brand"><span class="dot"></span>DCX Agent</div>
+  <span class="sep"></span>
+  <span class="pill on">에어팟 프로 3 · 운동·건강 맥락 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span>
+  <span class="pill">세션 3개</span>
+  <span class="grow"></span>
+  <span class="pill">작업 2건 실행 중</span>
+  <span class="pill">문서 검색</span>
+  <span class="btn gho">내보내기</span>
+  <span class="btn pri">세션 저장</span>
+</header>
+    <div class="body">
+      <nav class="side"><div class="grp">Data Defining</div><div class="step"><span class="no">00</span><span>세션</span><span class="st done"></span></div><div class="step"><span class="no">01·02</span><span>입력 선언</span><span class="st done"></span></div><div class="step"><span class="no">03</span><span>키워드 설계</span><span class="st done"></span></div><div class="step"><span class="no">04</span><span>데이터 수집</span><span class="st done"></span></div><div class="grp">Data Sensing</div><div class="step"><span class="no">05</span><span>전처리 · 임베딩</span><span class="st done"></span></div><div class="step"><span class="no">06-A</span><span>모델 학습</span><span class="st done"></span></div><div class="step"><span class="no">06-B</span><span>근거 판정</span><span class="st done"></span></div><div class="step"><span class="no">07</span><span>군집</span><span class="st done"></span></div><div class="step"><span class="no">08</span><span>페르소나</span><span class="st done"></span></div><div class="step"><span class="no">09</span><span>근거 수집</span><span class="st done"></span></div><div class="grp">Data Shaping</div><div class="step"><span class="no">10-A</span><span>Customer Action Map</span><span class="st done"></span></div><div class="step on"><span class="no">10-B</span><span>기회 영역</span><span class="st cur"></span></div><div class="step"><span class="no">11-A</span><span>인사이트 도출</span><span class="st "></span></div><div class="step"><span class="no">11-B</span><span>경험 디자인 컨셉</span><span class="st "></span></div><div class="grp">운영</div><div class="step"><span class="no">ADM</span><span>프롬프트 관리</span><span class="st "></span></div><div class="note"><div class="lab">활성 선언</div>
+    <p class="xs" style="margin:6px 0 0;color:var(--sec)">무선 이어폰을 운동·건강 맥락에서 재정의할 미충족 니즈를 찾는다</p>
+    <p class="xs" style="margin:6px 0 0">STEP 01 한줄 정의 · 전 단계 프롬프트 헤더로 상주</p></div></nav>
+      <main class="main">
+        <div class="mhead"><div class="eyebrow">STEP 10-B · Data Shaping</div><h1>기회 영역</h1><div class="sub">별도 모듈이 아니라 STEP 07 구획 × STEP 09 감정 태그의 집계 뷰다 · 새로 계산하는 값이 없다</div></div>
+        <div class="mbody">
+<div class="g12" style="flex:none">
+  <section class="c8 card"><div class="cc">
+    <div class="signal">
+      <div class="eyebrow">Opportunity · P1 집계점</div>
+      <h2 class="insight">이 사람이 가장 중요하게 여기는 행동이<br>가장 덜 충족돼 있습니다.</h2>
+      <p class="interp">P1 집계점은 <span class="mono fg">I 6.72 · S 2.68</span> — baseline 아래 <span class="fg">Underserved</span> 쪽입니다. 워치와 이어폰을 함께 챙기는 A1이 그 안에서도 가장 낮습니다.</p>
+      <p class="alt">다른 가능성 · A3(정확도를 따지는 행동)은 D Forsaken에 있습니다. 중요하지 않아서가 아니라 <span class="fg">아직 충분히 말해지지 않은</span> 쪽일 수 있습니다.</p>
+      <div class="evid">
+        <span>Action <span class="mono fg">4</span>개</span>
+        <span>Importance = 문서 수 min-max</span>
+        <span>Satisfaction = 감정 극성</span>
+        <span class="conf hi">신뢰도 <i><b class="on"></b><b class="on"></b><b></b></i> 2/3 · 보통</span>
+        <span class="src">집계 근거 보기 →</span>
+      </div>
+      <div class="nextact">
+        <span class="lb">다음 행동</span>
+        <span class="tx">A1을 STEP 11-A 인사이트 도출의 첫 입력으로 고정한다</span>
+        <span class="go">A1 근거 1,566건 확인하기 →</span>
+      </div>
+    </div>
+  </div></section>
+
+  <aside class="c4 col" style="gap:var(--space-3)">
+    <div class="row" style="gap:var(--space-3)">
+      <div class="kpi" style="flex:1"><span class="lab">Importance</span><span class="v">6.72</span><span class="xs">P1 집계 · 10점 환산</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">Satisfaction</span><span class="v">2.68</span><span class="xs">baseline 대비 −4.04</span></div>
+    </div>
+    <div class="card sunk"><div class="cc" style="padding:var(--space-4)">
+      <div class="lab">새로 계산하는 값 없음</div>
+      <div class="xs" style="margin-top:6px">STEP 07 구획 × STEP 09 감정 태그의 집계 뷰다. 별도 모듈이 아니므로 앞 단계를 다시 돌리면 이 화면도 같이 바뀐다.</div>
+    </div></div>
+  </aside>
+</div>
+
+<div class="row" style="flex:1;min-height:0">
+  <div class="card rel" style="flex:1.45;display:flex;flex-direction:column">
+    <span class="pin fl" style="top:12px;left:-9px">2</span>
+    <div class="ch"><h3>Opportunity Map</h3><span class="b ind">점 = Action · 색 = 페르소나</span><span class="grow"></span>
+      <span class="seg"><span class="on">CL0-P1</span><span>전체</span></span>
+      <span class="chip on" style="margin-left:8px">집계점 표시</span></div>
+    <div class="cc" style="flex:1;display:flex;flex-direction:column">
+      <svg viewBox="0 0 600 344" width="100%" style="flex:1;display:block">
+        <!-- zone grid -->
+        <g stroke-width="1" style="stroke:var(--line)">
+          <rect x="56" y="40" width="520" height="260" fill="none"/>
+          <line x1="229" y1="40" x2="229" y2="300" stroke-dasharray="3 4"/>
+          <line x1="402" y1="40" x2="402" y2="300" stroke-dasharray="3 4"/>
+          <line x1="56" y1="170" x2="576" y2="170" stroke-dasharray="3 4"/>
+        </g>
+        <g font-size="10" style="fill:var(--ink-subtle)">
+          <text x="66" y="56">D Forsaken</text><text x="239" y="56">B Experiencing</text><text x="412" y="56">A Exciting</text>
+          <text x="66" y="294">E Dangling</text><text x="239" y="294">F At-risk</text><text x="412" y="294">C Competitive</text>
+        </g>
+        <!-- baseline -->
+        <line x1="56" y1="300" x2="576" y2="40" stroke-width="1" stroke-dasharray="5 4" opacity=".7"/ style="stroke:var(--action)">
+        <text x="500" y="82" font-size="9.5" style="fill:var(--action-hover)">Satisfaction = Importance · 아래가 Underserved</text>
+        <!-- other personas -->
+        <g style="fill:var(--line-strong)">
+          <circle cx="150" cy="210" r="4.5"/><circle cx="196" cy="128" r="4.5"/><circle cx="286" cy="236" r="4.5"/>
+          <circle cx="330" cy="104" r="4.5"/><circle cx="452" cy="196" r="4.5"/><circle cx="500" cy="118" r="4.5"/>
+          <circle cx="242" cy="176" r="4.5"/><circle cx="380" cy="268" r="4.5"/>
+        </g>
+        <!-- persona aggregate -->
+        <circle cx="405" cy="230" r="15" fill="none" stroke-width="1.2" stroke-dasharray="4 3"/ style="stroke:var(--ink-secondary)">
+        <text x="425" y="234" font-size="9.5" style="fill:var(--ink-secondary)">P1 집계 I 6.72 · S 2.68</text>
+        <!-- actions -->
+        <circle cx="472" cy="274" r="8"/ style="fill:color-mix(in srgb, var(--warning) 95%, transparent)">
+        <circle cx="524" cy="157" r="8"/ style="fill:color-mix(in srgb, var(--warning) 95%, transparent)">
+        <circle cx="352" cy="245" r="8"/ style="fill:color-mix(in srgb, var(--warning) 95%, transparent)">
+        <circle cx="108" cy="265" r="8" fill="none" stroke-width="1.8"/ style="stroke:color-mix(in srgb, var(--warning) 95%, transparent)">
+        <!-- novelty marker -->
+        <path d="M524 141 l4.5 9 10 1.4 -7.2 7 1.7 9.9 -9-4.7 -9 4.7 1.7-9.9 -7.2-7 10-1.4z" opacity=".95" transform="translate(0,-16)"/ style="fill:var(--success)">
+        <g font-size="10" style="fill:var(--ink)">
+          <text x="484" y="278">A1</text><text x="536" y="161">A2</text><text x="364" y="249">A4</text><text x="120" y="269" style="fill:var(--ink-secondary)">A3</text>
+        </g>
+        <!-- axes -->
+        <g font-size="10" style="fill:var(--ink-secondary)">
+          <text x="56" y="320">0</text><text x="300" y="320" text-anchor="middle">Importance — Action 문서 수 min-max</text><text x="576" y="320" text-anchor="end">10</text>
+          <text x="46" y="304" text-anchor="end">0</text><text x="46" y="44" text-anchor="end">10</text>
+        </g>
+        <text x="16" y="170" font-size="10" transform="rotate(-90 16 170)" text-anchor="middle" style="fill:var(--ink-secondary)">Satisfaction — 감정 극성</text>
+      </svg>
+      <div class="xs rel" style="border-top:1px solid var(--line);padding-top:9px;margin-top:6px;display:flex;gap:16px">
+        <span class="pin fl" style="top:2px;right:-9px">3</span>
+        <span><span style="color:var(--warning)">●</span> 현재 페르소나의 Action</span>
+        <span><span style="color:var(--warning)">○</span> 반례 Action</span>
+        <span class="qu">● 세션 전체의 다른 페르소나</span>
+        <span class="qu">⭘ 점선 = 페르소나 집계점</span>
+        <span style="color:var(--success)">★ novelty 高 ∧ ODI 高 — 실무자가 몰랐고 기회도 큰 지점</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col" style="width:352px;flex:none">
+    <div class="card rel" style="flex:none;border-color:color-mix(in srgb, var(--danger) 30%, transparent)">
+      <span class="pin fl" style="top:12px;left:-9px">4</span>
+      <div class="ch" style="background:var(--spe-bg)"><h3 style="color:var(--spe)">★ 구역 표기는 잠정이다</h3></div>
+      <div class="cc"><div class="xs">ODI는 정의되어 있고 좌표로 검산도 맞는데, A부터 F까지 <span class="fg">구역을 가르는 경계 규칙이 없다</span>. Importance 구간과 Satisfaction 대비 관계를 어떻게 조합할지 확정해야 하며, 그때까지 A3처럼 경계 근처 점은 구역을 단정하지 않는다.</div></div>
+    </div>
+
+    <div class="card" style="flex:none">
+      <div class="ch"><h3>ODI</h3><span class="grow"></span><span class="xs">점수 체계 정식화</span></div>
+      <div class="cc">
+        <div class="mono xs" style="border:1px solid var(--line2);border-radius:6px;padding:10px;background:var(--sunk);color:var(--sec);line-height:19px">
+          Importance = Context 문서 수 × Coverage · min-max<br>
+          Satisfaction = polarity 평균 <span class="qu">표본 20건 이상일 때만</span><br>
+          <span class="fg">ODI = I + max(I − S, 0)</span>
+        </div>
+        <div class="xs rel" style="margin-top:9px;border:1px solid color-mix(in srgb, var(--warning) 28%, transparent);background:var(--inf-bg);border-radius:6px;padding:9px 10px;color:var(--sec)">
+          <span class="pin fl" style="top:-9px;right:10px">5</span>
+          ⚠ 스케일 경고 — Satisfaction·ODI 절대값은 1.0(SentiWord 사전 기반)과 스케일이 다르다. 2.0은 min-max 정규화 0~10이므로 <span class="fg">1.0 장표 수치와 직접 비교하면 안 된다.</span>
+        </div>
+        <div class="xs qu" style="margin-top:8px">★ Persona 단위 I·S 집계 산식도 미결 — 소속 Action의 문서 수 가중 평균을 시작값으로 둔다. "중요도 상위 15% · 만족도 하위 20% → Underserved" 판정이 이 값을 쓴다.</div>
+      </div>
+    </div>
+
+    <div class="card rel" style="flex:1;display:flex;flex-direction:column">
+      <span class="pin fl" style="top:12px;left:-9px">6</span>
+      <div class="ch"><h3>SNAGraph</h3><span class="b">계층 구조 뷰</span></div>
+      <div class="cc" style="flex:1;display:flex;flex-direction:column;gap:7px">
+        <div class="xs" style="display:flex;gap:7px;align-items:center"><span class="b solid" style="flex:none">제품</span><span class="qu">에어팟 프로 3</span></div>
+        <div class="xs" style="display:flex;gap:7px;align-items:center;padding-left:14px"><span class="b ind" style="flex:none">Cluster</span><span class="mono">CL0</span><span class="qu">심박 · 워치 · 러닝</span></div>
+        <div class="xs" style="display:flex;gap:7px;align-items:center;padding-left:28px"><span class="b" style="flex:none">Persona</span><span class="mono">CL0-P1</span><span class="qu">귀로 건강 재는 러너</span></div>
+        <div class="xs" style="display:flex;gap:7px;align-items:center;padding-left:42px"><span class="b" style="flex:none">Action</span><span class="mono">A1 A2 A3 A4</span></div>
+        <div class="xs" style="display:flex;gap:7px;align-items:center;padding-left:28px"><span class="b" style="flex:none">Persona</span><span class="mono">CL0-P2</span><span class="qu">밤새 재는 사람</span></div>
+        <div class="xs" style="display:flex;gap:7px;align-items:center;padding-left:14px"><span class="b ind" style="flex:none">Cluster</span><span class="mono">CL1</span><span class="qu">땀 · 이탈 · 폼팁</span></div>
+        <div class="xs" style="margin-top:auto;border-top:1px solid var(--line);padding-top:9px">
+          2층 force graph에서 <span class="fg">3층 트리</span>로 확장한다. 어휘 동시출현 네트워크와 Eigenvector centrality의 본진은 <span class="fg">STEP 08 페르소나 정의 화면</span>으로 이전했다.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">1</span>
+  <div class="ch"><h3>Action 집계</h3><span class="grow"></span><span class="xs">두 축 모두 Evidence Package에 이미 들어 있다 — 새로 계산하는 값이 없다</span></div>
+  <table>
+    <thead><tr><th style="width:250px">Action</th><th class="n" style="width:82px">Importance</th><th class="n" style="width:88px">Satisfaction</th><th class="n" style="width:72px">ODI</th><th style="width:132px">구역</th><th class="n" style="width:72px">novelty</th><th>해석</th></tr></thead>
+    <tbody>
+      <tr><td>A1 기기 중복 착용</td><td class="n mono">8.00</td><td class="n mono">1.02</td><td class="n mono" style="color:var(--fg)">14.98</td><td><span class="b spe">F At-risk</span></td><td class="n"><span class="b inf">中</span></td><td class="xs">중요도는 높은데 만족이 바닥 — 가장 큰 미충족</td></tr>
+      <tr><td>A2 심박 측정 기대</td><td class="n mono">9.00</td><td class="n mono">5.51</td><td class="n mono" style="color:var(--fg)">12.49</td><td><span class="b inf">C Competitive</span></td><td class="n"><span class="b obs">高 ★</span></td><td class="xs">기대는 크지만 A3 불신이 전제 조건으로 걸려 있다</td></tr>
+      <tr><td>A3 정확도 불신 <span class="b spe">반례</span></td><td class="n mono">1.00</td><td class="n mono">1.34</td><td class="n mono">1.00</td><td><span class="b">잠정 · 미확정</span></td><td class="n"><span class="b">低</span></td><td class="xs">소수 담론이지만 A2의 수용을 막는 조건</td></tr>
+      <tr><td>A4 땀 · 이탈</td><td class="n mono">5.70</td><td class="n mono">2.10</td><td class="n mono" style="color:var(--fg)">9.30</td><td><span class="b spe">F At-risk</span></td><td class="n"><span class="b obs">高</span></td><td class="xs">폼팁 교체로 해결되지 않는 구조적 제약</td></tr>
+    </tbody>
+  </table>
+</div>
+        </div>
+      </main>
+      <aside class="chat rail">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#565c66" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-5.5A8 8 0 0 1 11 4h2a8 8 0 0 1 8 8Z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#747a84" stroke-width="1.7"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#747a84" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </aside>
+    </div>
+  </div>
+  <section class="ann">
+    <h4>1.0 대비 변경점</h4>
+    <p class="lead"><span class="tag rep">치환</span>AS-IS가 있고 대체된다 &nbsp;<span class="tag new">신설</span>AS-IS 없음 · 새로 꽂는다 &nbsp;<span class="tag keep">유지</span>기존 확정 재확인 &nbsp;<span class="tag open">미결</span>답이 필요한 것</p>
+    <div class="grid"><div class="it"><span class="pin">1</span><p><span class="tag keep">유지</span><b>두 축과 6구역 그대로.</b> 중요도 × 만족도 두 축과 A~F 6개 영역 구획(Underserved / Overserved)은 1.0 장표를 그대로 유지한다. 별도 모듈이 아니라 STEP 07 구획 × STEP 09 감정 태그의 <b>집계 뷰</b>이므로 새로 계산하는 값이 없다.</p></div>
+<div class="it"><span class="pin">2</span><p><span class="tag rep">치환</span><b>점의 단위가 Action, 색이 페르소나.</b> 그리고 점수 체계가 ODI = Importance + max(Importance − Satisfaction, 0)으로 정식화된다. 1.0에서는 배치만 있고 점수 정의가 없었다.</p></div>
+<div class="it"><span class="pin">3</span><p><span class="tag new">신설</span><b>novelty 마커.</b> STEP 09의 LLM Novelty 판정 결과가 <em class="mono">novelty</em> 컬럼으로 올라오고, novelty 高 ∧ ODI 高 사분면에 별도 마커가 붙는다 — <b>"실무자가 몰랐고 기회도 큰"</b> 지점이다. 기존 기회 지도는 "기회가 큰"만 말할 수 있었다.</p></div>
+<div class="it"><span class="pin">4</span><p><span class="tag open">미결</span><b>구역 경계 산식 · Persona 집계 산식.</b> ODI는 정의됐지만 A~F를 가르는 경계 규칙이 없다. Persona 단위 Importance·Satisfaction 집계 산식은 Underserved 판정이 직접 의존하므로 실측으로 확정해야 한다.</p></div>
+<div class="it"><span class="pin">5</span><p><span class="tag open">경고</span><b>1.0 수치와 직접 비교 금지.</b> 1.0의 Satisfaction은 SentiWord 사전 기반이고 2.0은 polarity 평균의 min-max 정규화다. 같은 이름이지만 스케일이 다르다.</p></div>
+<div class="it"><span class="pin">6</span><p><span class="tag rep">치환</span><b>SNAGraph의 역할 축소.</b> 2층 force graph에서 제품 → Cluster → Persona → Action의 3층 트리로 바뀐다. 어휘 동시출현 네트워크와 centrality는 STEP 08 화면으로 이전했으므로, 여기서는 계층 구조만 보여준다.</p></div></div>
+  </section>
+</div>
+</div></div><div><div class="cap">STEP 11-A · 인사이트 도출</div><div class="slot" style="width:1440px;height:1890px"><div class="art" style="width: 1440px; height: 1890px;">
+  <div class="app">
+    <header class="top">
+  <div class="brand"><span class="dot"></span>DCX Agent</div>
+  <span class="sep"></span>
+  <span class="pill on">에어팟 프로 3 · 운동·건강 맥락 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span>
+  <span class="pill">세션 3개</span>
+  <span class="grow"></span>
+  <span class="pill">작업 2건 실행 중</span>
+  <span class="pill">문서 검색</span>
+  <span class="btn gho">내보내기</span>
+  <span class="btn pri">세션 저장</span>
+</header>
+    <div class="body">
+      <nav class="side"><div class="grp">Data Defining</div><div class="step"><span class="no">00</span><span>세션</span><span class="st done"></span></div><div class="step"><span class="no">01·02</span><span>입력 선언</span><span class="st done"></span></div><div class="step"><span class="no">03</span><span>키워드 설계</span><span class="st done"></span></div><div class="step"><span class="no">04</span><span>데이터 수집</span><span class="st done"></span></div><div class="grp">Data Sensing</div><div class="step"><span class="no">05</span><span>전처리 · 임베딩</span><span class="st done"></span></div><div class="step"><span class="no">06-A</span><span>모델 학습</span><span class="st done"></span></div><div class="step"><span class="no">06-B</span><span>근거 판정</span><span class="st done"></span></div><div class="step"><span class="no">07</span><span>군집</span><span class="st done"></span></div><div class="step"><span class="no">08</span><span>페르소나</span><span class="st done"></span></div><div class="step"><span class="no">09</span><span>근거 수집</span><span class="st done"></span></div><div class="grp">Data Shaping</div><div class="step"><span class="no">10-A</span><span>Customer Action Map</span><span class="st done"></span></div><div class="step"><span class="no">10-B</span><span>기회 영역</span><span class="st done"></span></div><div class="step on"><span class="no">11-A</span><span>인사이트 도출</span><span class="st cur"></span></div><div class="step"><span class="no">11-B</span><span>경험 디자인 컨셉</span><span class="st "></span></div><div class="grp">운영</div><div class="step"><span class="no">ADM</span><span>프롬프트 관리</span><span class="st "></span></div><div class="note"><div class="lab">활성 선언</div>
+    <p class="xs" style="margin:6px 0 0;color:var(--sec)">무선 이어폰을 운동·건강 맥락에서 재정의할 미충족 니즈를 찾는다</p>
+    <p class="xs" style="margin:6px 0 0">STEP 01 한줄 정의 · 전 단계 프롬프트 헤더로 상주</p></div></nav>
+      <main class="main">
+        <div class="mhead"><div class="eyebrow">STEP 11-A · Data Shaping</div><h1>인사이트 도출</h1><div class="sub">앱 Stage 8-E · 여러 페르소나를 가로지르는 종합이라 insight-chat 대화형 캔버스에서 수행한다</div></div>
+        <div class="mbody">
+<div class="g12" style="flex:none">
+  <section class="c8 card"><div class="cc">
+    <div class="signal">
+      <div class="eyebrow">Insight 2 · 페르소나 교차</div>
+      <h2 class="insight">서로 다른 두 사람이<br>같은 것을 원하고 있습니다.</h2>
+      <p class="interp">러닝하는 사람과 잠자는 사람이 각자 다른 맥락에서 <span class="fg">귀에 이미 있는 것으로 몸을 재고 싶다</span>는 하나의 요구로 수렴합니다.</p>
+      <p class="alt">다른 가능성 · 나머지 인사이트 3개는 단일 페르소나에서만 나왔습니다. 종합이 아니라 아직 개별 신호일 수 있습니다.</p>
+      <div class="evid">
+        <span>기여 페르소나 <span class="mono fg">2</span>명</span>
+        <span>인사이트 5개 중 2번</span>
+        <span>#심박 #워치병용 #수면</span>
+        <span class="conf hi">신뢰도 <i><b class="on"></b><b class="on"></b><b></b></i> 2/3 · 보통</span>
+        <span class="src">기여 근거 보기 →</span>
+      </div>
+      <div class="nextact">
+        <span class="lb">다음 행동</span>
+        <span class="tx">Insight 2를 STEP 11-B 경험 디자인 컨셉의 입력으로 확정한다</span>
+        <span class="go">컨셉 초안 보기 →</span>
+      </div>
+    </div>
+  </div></section>
+
+  <aside class="c4 col" style="gap:var(--space-3)">
+    <div class="row" style="gap:var(--space-3)">
+      <div class="kpi" style="flex:1"><span class="lab">인사이트</span><span class="v">5</span><span class="xs">대화형 캔버스에서 종합</span></div>
+      <div class="kpi" style="flex:1"><span class="lab">교차 페르소나</span><span class="v">2<span class="xs" style="font-weight:400"> / 14</span></span><span class="xs">러너 · 베개 대신 이어팟</span></div>
+    </div>
+    <div class="card sunk"><div class="cc" style="padding:var(--space-4)">
+      <div class="lab">여기만 대화형인 이유</div>
+      <div class="xs" style="margin-top:6px">여러 페르소나를 가로지르는 종합이라 단일 페르소나 파이프라인으로는 나오지 않는다. 앱 Stage 8-E의 insight-chat 캔버스에서 수행한다.</div>
+    </div></div>
+  </aside>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">1</span>
+  <div class="ch">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="1.7"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 1 3.7 10.7c-.5.4-.7 1-.7 1.6H9c0-.6-.2-1.2-.7-1.6A6 6 0 0 1 12 3Z"/></svg>
+    <h3 style="color:var(--ind-fg)">8-E 인사이트 도출</h3>
+    <span class="qu" style="font-size:12px">›</span><h3>인사이트별 Pain Point</h3>
+    <span class="chip">인사이트 5개 · 대화형</span>
+    <span class="grow"></span>
+    <span class="seg"><span>‹</span><span class="on">Insight 2 / 5</span><span>›</span></span>
+    <span class="chip off">···</span>
+  </div>
+  <div class="cc" style="display:flex;gap:16px">
+    <div style="width:186px;height:124px;flex:none;border-radius:8px;background:var(--sunk);border:1px solid var(--line2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink-subtle)" stroke-width="1.4"><rect x="3" y="4.5" width="18" height="15" rx="2"/><circle cx="8.5" cy="10" r="1.8"/><path d="m3.5 17 5-4.5 4 3.5 3-2.5 5 4"/></svg>
+      <span class="xs qu">이미지 자리</span>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="b solid" style="height:22px;padding:0 9px;font-size:12px">Insight 2</span>
+        <span style="font-size:17px;font-weight:590;letter-spacing:-.25px">"귀로 재는 컨디션, 손목은 이제 그만"</span>
+      </div>
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;gap:9px"><span class="pin" style="background:var(--act);border-color:transparent;color:var(--act-fg)">1</span>
+          <span class="sm" style="color:var(--fg)">운동할 때 몸 상태는 알고 싶지만 기기를 두 개 차는 건 싫다</span></div>
+        <div style="display:flex;gap:9px"><span class="pin" style="background:var(--act);border-color:transparent;color:var(--act-fg)">2</span>
+          <span class="sm" style="color:var(--fg)">이어폰이 이미 귀에 있으니 그걸로 재줬으면 좋겠다</span></div>
+      </div>
+      <div class="wrap" style="margin-top:10px">
+        <span class="chip on">#심박</span><span class="chip on">#워치병용</span><span class="chip on">#수면</span>
+      </div>
+      <div class="xs" style="margin-top:9px;display:flex;gap:6px;align-items:center">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--ink-subtle)" stroke-width="1.7"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5 6-5s6 1.7 6 5"/><path d="M16 6.2a3 3 0 0 1 0 5.6M18 14.4c2 .7 3 2.2 3 4.6"/></svg>
+        <span class="fg">기여 페르소나:</span> 귀로 건강 재는 러너 · 베개 대신 이어팟
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="flex:none">
+  <div class="card rel" style="flex:1">
+    <span class="pin fl" style="top:12px;left:-9px">3</span>
+    <div class="ch"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--action)" stroke-width="1.7"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/></svg>
+      <h3>경험 차원 레이더</h3><span class="qu" style="font-size:11px">ⓘ</span></div>
+    <div class="cc" style="display:flex;align-items:center;gap:18px">
+      <svg viewBox="0 0 220 176" width="220" height="176" style="flex:none">
+        <polygon points="110,30 170.6,135 49.4,135" fill="none" stroke="var(--line2)"/>
+        <polygon points="110,65 140.3,117.5 79.7,117.5" fill="none" stroke="var(--line)" stroke-dasharray="3 3"/>
+        <polygon points="110,82.5 125.2,108.8 94.8,108.8" fill="none" stroke="var(--line)" stroke-dasharray="3 3"/>
+        <line x1="110" y1="100" x2="110" y2="30" stroke="var(--line)"/>
+        <line x1="110" y1="100" x2="170.6" y2="135" stroke="var(--line)"/>
+        <line x1="110" y1="100" x2="49.4" y2="135" stroke="var(--line)"/>
+        <polygon points="110,75.5 137.3,115.8 85.8,114" fill="none" stroke-width="1.2" stroke-dasharray="4 3"/ style="stroke:var(--ink-subtle)">
+        <polygon points="110,65 158.5,128 91.8,110.5" stroke-width="1.6"/ style="fill:color-mix(in srgb, var(--persona-blue-100) 14%, transparent);stroke:var(--action)">
+        <circle cx="110" cy="65" r="3"/ style="fill:var(--action)"><circle cx="158.5" cy="128" r="3"/ style="fill:var(--action)"><circle cx="91.8" cy="110.5" r="3"/ style="fill:var(--action)">
+        <g font-size="10.5" text-anchor="middle" style="fill:var(--ink-secondary)">
+          <text x="110" y="16">Computed</text><text x="110" y="27" font-weight="600">0.5</text>
+        </g>
+        <g font-size="10.5" style="fill:var(--ink-secondary)">
+          <text x="176" y="140">Connected</text><text x="176" y="151" font-weight="600">0.8</text>
+          <text x="44" y="140" text-anchor="end">Shared</text><text x="44" y="151" text-anchor="end" font-weight="600">0.3</text>
+        </g>
+        <g font-size="9" style="fill:var(--ink-subtle)"><text x="114" y="69">0.5</text><text x="114" y="86">0.25</text></g>
+        <g font-size="9.5" style="fill:var(--ink-secondary)"><text x="16" y="170">— Insight 2</text><text x="92" y="170">--- 평균 (전체 인사이트)</text></g>
+      </svg>
+      <div class="xs" style="flex:1">1.0 장표의 3축을 승계한다.
+        <div style="margin-top:8px;color:var(--spe)">★ 산식 미정 — 1.0에도 산출 근거가 문서화되어 있지 않다. 후보는 정량 지표로 산출된 정도 · 컨텍스트 간 연결 수 · 복수 페르소나 공유 정도.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="flex:1.25">
+    <div class="ch"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--action)" stroke-width="1.7"><path d="M4 20V10M9.3 20V4M14.7 20v-8M20 20V7"/></svg>
+      <h3>Opportunity Score</h3><span class="qu" style="font-size:11px">ⓘ</span><span class="grow"></span>
+      <span class="xs">평균선 = 우선순위 컷</span></div>
+    <div class="cc">
+      <div style="display:flex;gap:14px">
+        <div class="xs" style="width:22px;flex:none;display:flex;flex-direction:column;justify-content:space-between;height:150px;text-align:right;color:var(--qui)">
+          <span>15</span><span>12</span><span>9</span><span>6</span><span>3</span><span>0</span>
+        </div>
+        <div style="flex:1;position:relative;height:150px;display:flex;align-items:flex-end;gap:26px;border-bottom:1px solid var(--line2)">
+          <div style="position:absolute;left:0;right:0;bottom:53.3%;border-top:1px dashed var(--qui)"></div>
+          <div style="position:absolute;right:-2px;bottom:53.3%;transform:translateY(-4px);font-size:11px;color:var(--mut)">평균 8.0</div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span class="mono xs fg" style="margin-bottom:3px">14.98</span><div style="width:100%;height:96px;background:var(--indigo);border-radius:3px 3px 0 0"></div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span class="mono xs fg" style="margin-bottom:3px">12.49</span><div style="width:100%;height:80px;background:var(--indigo);border-radius:3px 3px 0 0"></div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span class="mono xs fg" style="margin-bottom:3px">9.12</span><div style="width:100%;height:58px;background:var(--indigo);border-radius:3px 3px 0 0"></div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span class="mono xs fg" style="margin-bottom:3px">1.00</span><div style="width:100%;height:7px;background:var(--line2);border-radius:3px 3px 0 0"></div></div>
+        </div>
+      </div>
+      <div class="xs" style="margin-top:7px;display:flex;gap:26px;padding-left:36px">
+        <span style="flex:1;text-align:center"><span class="fg">C1</span><br>러너-C1</span>
+        <span style="flex:1;text-align:center"><span class="fg">C2</span><br>러너-C2</span>
+        <span style="flex:1;text-align:center"><span class="fg">C3</span><br>러너-C3</span>
+        <span style="flex:1;text-align:center"><span class="fg">C6</span><br>통화-C6</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row rel" style="flex:none;gap:0;align-items:stretch">
+  <span class="pin fl" style="top:-8px;left:-9px">2</span>
+  <div class="card" style="flex:1;border-left:2px solid var(--ind-ln)"><div class="cc" style="padding:11px 12px">
+    <div class="sm" style="color:var(--fg);font-size:12.5px">← 러닝 중 심박을 알고 싶어 워치를 따로 착용함</div>
+    <div class="xs" style="margin-top:7px">러너 - <span class="mono">C1</span> - Act <span class="chip" style="height:20px;font-size:11px">Computed</span></div>
+  </div></div>
+  <div style="width:30px;flex:none;display:flex;align-items:center;justify-content:center"><span class="qu">→</span></div>
+  <div class="card" style="flex:1;border-left:2px solid var(--obs-ln)"><div class="cc" style="padding:11px 12px">
+    <div class="sm" style="color:var(--fg);font-size:12.5px">→ 이어폰으로 재주면 워치를 안 차도 돼</div>
+    <div class="xs" style="margin-top:7px">러너 - <span class="mono">C1</span> - <span class="chip" style="height:20px;font-size:11px;border-color:var(--obs-ln);color:var(--obs);background:var(--obs-bg)">Connected</span></div>
+  </div></div>
+  <div style="width:30px;flex:none;display:flex;align-items:center;justify-content:center"><span class="qu">→</span></div>
+  <div class="card" style="flex:1;border-left:2px solid var(--ind-ln)"><div class="cc" style="padding:11px 12px">
+    <div class="sm" style="color:var(--fg);font-size:12.5px">← 수면 지표까지 한 기기로 묶고 싶어함</div>
+    <div class="xs" style="margin-top:7px">베개 - <span class="mono">C9</span> - Outcome <span class="chip" style="height:20px;font-size:11px">Shared</span></div>
+  </div></div>
+  <div style="width:30px;flex:none;display:flex;align-items:center;justify-content:center"><span class="qu">→</span></div>
+  <div class="card" style="flex:1;border-left:2px solid color-mix(in srgb, var(--danger) 50%, transparent)"><div class="cc" style="padding:11px 12px">
+    <div class="sm" style="color:var(--fg);font-size:12.5px">→ 정확도를 못 믿어 구매를 유보함</div>
+    <div class="xs" style="margin-top:7px">러너 - <span class="mono">C3</span> - Shared <span class="b spe">⚠ 반례</span></div>
+  </div></div>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">4</span>
+  <div class="cc" style="padding:12px 14px">
+    <div style="display:flex;align-items:center;gap:9px">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--action)" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-5.5A8 8 0 0 1 11 4h2a8 8 0 0 1 8 8Z"/></svg>
+      <span class="sm fg" style="font-weight:510">insight-chat</span><span class="qu" style="font-size:11px">ⓘ</span>
+      <span class="grow"></span>
+      <span class="chip">대화 기록 12</span>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:10px;align-items:flex-start">
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+        <span class="chip" style="height:auto;padding:6px 10px;white-space:normal;align-self:flex-start">C1과 C9를 하나의 인사이트로 묶어줘</span>
+        <span class="chip" style="height:auto;padding:6px 10px;white-space:normal;align-self:flex-start">이 인사이트가 핵심 지표 중 무엇에 기여하는지 다시 써줘</span>
+      </div>
+      <div style="flex:1.2;display:flex;gap:8px;align-items:center">
+        <div class="input" style="flex:1;height:36px">메시지를 입력하세요…</div>
+        <span class="btn pri" style="height:36px;padding:0 16px">전송 ➤</span>
+      </div>
+    </div>
+    <div class="xs" style="margin-top:9px">ⓘ 수정은 <span class="mono fg">MODIFIED_DATA</span>로 S3에 반영됩니다.</div>
+  </div>
+</div>
+        </div>
+      </main>
+      <aside class="chat rail">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#565c66" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-5.5A8 8 0 0 1 11 4h2a8 8 0 0 1 8 8Z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#747a84" stroke-width="1.7"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#747a84" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </aside>
+    </div>
+  </div>
+  <section class="ann">
+    <h4>1.0 대비 변경점</h4>
+    <p class="lead"><span class="tag rep">치환</span>AS-IS가 있고 대체된다 &nbsp;<span class="tag new">신설</span>AS-IS 없음 · 새로 꽂는다 &nbsp;<span class="tag keep">유지</span>기존 확정 재확인 &nbsp;<span class="tag open">미결</span>답이 필요한 것</p>
+    <div class="grid"><div class="it"><span class="pin">1</span><p><span class="tag rep">치환</span><b>단위가 Context에서 인사이트로.</b> 1.0은 Pain Point를 사람이 카테고리화하고 트렌드 리포트와 대조해 7개 인사이트를 썼다. TO-BE는 여러 페르소나를 <b>가로질러</b> 하나의 인사이트로 묶고, 인사이트별 Pain Point를 2~3줄로 쓰면서 기여 페르소나를 함께 표기한다.</p></div>
+<div class="it"><span class="pin">2</span><p><span class="tag new">신설</span><b>계층 ID 접지.</b> 여정의 각 칸마다 <em class="mono">러너 - C1 - Act</em> 형식으로 어느 페르소나·어느 컨텍스트·어느 경험차원에서 온 것인지 붙인다. 1.0 장표는 하이라이트만 있어 어느 구획에서 온 원문인지 추적할 수 없었다. 반례(C3)는 여정 안에 남겨 기대가 무비판적으로 통과하지 않게 한다.</p></div>
+<div class="it"><span class="pin">3</span><p><span class="tag keep">유지</span><b>레이더 3축과 ODI 막대.</b> Computed · Connected · Shared는 1.0 장표에서 승계한 축이고, 막대 값은 8-A의 ODI를 인사이트 단위로 다시 묶은 것이지 새 계산이 아니다. 평균선 위로 올라온 인사이트만 다음으로 넘긴다. <span class="tag open">미결</span>레이더 3축 산식은 1.0에도 근거가 문서화되어 있지 않아 값이 잠정이다.</p></div>
+<div class="it"><span class="pin">4</span><p><span class="tag rep">치환</span><b>페르소나 호출 범위 밖 → 대화형 캔버스.</b> 인사이트 도출은 여러 페르소나를 가로지르는 종합이라 페르소나 하나를 만드는 호출에 넣을 수 없다. insight-chat에서 수행하고, 사람이 고친 내용은 <em class="mono">MODIFIED_DATA</em>로 반영된다. 워크샵은 <b>생성이 아니라 검증</b> 단계로 후치된다.</p></div>
+<div class="it"><span class="pin">—</span><p><span class="tag new">신설</span><b>세션 종료 시 known_insights로 승격.</b> 확정된 인사이트는 <em class="mono">known_insights</em>에 append되어 다음 세션의 기준선이 자동으로 올라간다 — STEP 05의 <em class="mono">max_sim_to_known</em>이 참조하는 그 기준점이다.</p></div>
+<div class="it"><span class="pin">—</span><p><span class="tag open">확인 필요</span><b>번호 체계.</b> 첨부 화면은 <em>8-A ~ 8-E</em>(앱 Stage 8 하위)로, STEP 10–11 문서는 <em>10-A ~ 11-F</em>(DCX STEP)로 적고 있다. 좌측 내비게이션은 DCX STEP을, 화면 안 섹션 제목은 첨부 화면을 따랐다. 발표에서 어느 쪽으로 통일할지 정해야 한다.</p></div></div>
+  </section>
+</div>
+</div></div><div><div class="cap">STEP 11-B · 경험 디자인 컨셉</div><div class="slot" style="width:1440px;height:2700px"><div class="art" style="width: 1440px; height: 2700px;">
+  <div class="app">
+    <header class="top">
+  <div class="brand"><span class="dot"></span>DCX Agent</div>
+  <span class="sep"></span>
+  <span class="pill on">에어팟 프로 3 · 운동·건강 맥락 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span>
+  <span class="pill">세션 3개</span>
+  <span class="grow"></span>
+  <span class="pill">작업 2건 실행 중</span>
+  <span class="pill">문서 검색</span>
+  <span class="btn gho">내보내기</span>
+  <span class="btn pri">세션 저장</span>
+</header>
+    <div class="body">
+      <nav class="side"><div class="grp">Data Defining</div><div class="step"><span class="no">00</span><span>세션</span><span class="st done"></span></div><div class="step"><span class="no">01·02</span><span>입력 선언</span><span class="st done"></span></div><div class="step"><span class="no">03</span><span>키워드 설계</span><span class="st done"></span></div><div class="step"><span class="no">04</span><span>데이터 수집</span><span class="st done"></span></div><div class="grp">Data Sensing</div><div class="step"><span class="no">05</span><span>전처리 · 임베딩</span><span class="st done"></span></div><div class="step"><span class="no">06-A</span><span>모델 학습</span><span class="st done"></span></div><div class="step"><span class="no">06-B</span><span>근거 판정</span><span class="st done"></span></div><div class="step"><span class="no">07</span><span>군집</span><span class="st done"></span></div><div class="step"><span class="no">08</span><span>페르소나</span><span class="st done"></span></div><div class="step"><span class="no">09</span><span>근거 수집</span><span class="st done"></span></div><div class="grp">Data Shaping</div><div class="step"><span class="no">10-A</span><span>Customer Action Map</span><span class="st done"></span></div><div class="step"><span class="no">10-B</span><span>기회 영역</span><span class="st done"></span></div><div class="step"><span class="no">11-A</span><span>인사이트 도출</span><span class="st done"></span></div><div class="step on"><span class="no">11-B</span><span>경험 디자인 컨셉</span><span class="st cur"></span></div><div class="grp">운영</div><div class="step"><span class="no">ADM</span><span>프롬프트 관리</span><span class="st "></span></div><div class="note"><div class="lab">활성 선언</div>
+    <p class="xs" style="margin:6px 0 0;color:var(--sec)">무선 이어폰을 운동·건강 맥락에서 재정의할 미충족 니즈를 찾는다</p>
+    <p class="xs" style="margin:6px 0 0">STEP 01 한줄 정의 · 전 단계 프롬프트 헤더로 상주</p></div></nav>
+      <main class="main">
+        <div class="mhead"><div class="eyebrow">STEP 11-B · Data Shaping</div><h1>경험 디자인 컨셉</h1><div class="sub">1.0 컨셉 장표의 4블록(Persona · Service · Experience · Interview)을 구조 그대로 승계한다 · 달라지는 것은 출처가 ID로 접지된다는 것뿐이다</div></div>
+        <div class="mbody">
+<section class="card" style="flex:none"><div class="cc">
+  <div class="signal">
+    <div class="eyebrow">컨셉 CO-02 · Insight 2 파생</div>
+    <h2 class="insight">손목을 비워도 기록이 끊기지 않으면,<br>이 사람은 워치를 내려놓습니다.</h2>
+    <p class="interp">가장 큰 미충족은 A1 <span class="fg">둘 다 착용</span>(ODI 14.98)이고, 이 컨셉은 그 행동 자체를 없애는 쪽으로 설계됐습니다.</p>
+    <p class="alt">다른 가능성 · A3 정확도 불신이 반례로 남아 있습니다. 기준기 대조 오차를 공시하지 않으면 이 컨셉은 받아들여지지 않을 수 있습니다.</p>
+    <div class="evid">
+      <span>근거 Action <span class="mono fg">3</span>개</span>
+      <span>컨셉 9개 중 2번</span>
+      <span><span class="mono">CL0-P1</span></span>
+      <span class="conf hi">신뢰도 <i><b class="on"></b><b class="on"></b><b></b></i> 2/3 · 보통</span>
+      <span class="src">파생 경로 보기 →</span>
+    </div>
+    <div class="nextact">
+      <span class="lb">다음 행동</span>
+      <span class="tx">기준기 대조 오차 공시안을 검증 인터뷰 항목에 넣는다</span>
+      <span class="go">인터뷰 가이드 보기 →</span>
+    </div>
+  </div>
+</div></section>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">1</span>
+  <div class="ch"><h3>컨셉 CO-02</h3>
+    <span style="font-size:15px;font-weight:590;letter-spacing:-.2px">귀에 있는 것으로 몸 상태를 잰다</span>
+    <span class="b ind">Insight 2 에서 파생</span>
+    <span class="grow"></span>
+    <span class="seg"><span>‹</span><span class="on">컨셉 2 / 9</span><span>›</span></span>
+    <span class="btn gho" style="margin-left:8px">장표로 내보내기</span></div>
+  <div class="cc" style="display:flex;gap:0;align-items:stretch">
+
+    <div style="flex:1.15;padding-right:16px">
+      <div style="display:flex;align-items:center;gap:8px"><span class="b solid">01</span><span class="lab" style="color:var(--fg)">PERSONA</span></div>
+      <div style="display:flex;gap:12px;margin-top:9px">
+        <div style="width:52px;height:52px;border-radius:50%;background:var(--sunk);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;flex:none">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ink-subtle)" stroke-width="1.5"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20.5c0-3.9 3.4-6 7.5-6s7.5 2.1 7.5 6"/></svg>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="sm fg" style="font-weight:510">귀로 건강 재는 러너</div>
+          <div class="xs" style="margin-top:3px">주 4회 러닝 · 사회초년생 · 1인가구</div>
+          <div class="xs qu mono" style="margin-top:3px">CL0-P1</div>
+        </div>
+      </div>
+      <div class="lab" style="margin-top:11px">Pain Point</div>
+      <div class="xs" style="margin-top:5px;display:flex;flex-direction:column;gap:5px">
+        <span>1. 두 기기를 모두 챙기고 착용해야 하는 물리적 부담 <span class="mono qu">A1</span></span>
+        <span>2. 이어폰에 측정 기능이 없어 기대가 해소되지 않음 <span class="mono qu">A2</span></span>
+      </div>
+      <div class="lab" style="margin-top:11px">From</div>
+      <div class="xs" style="margin-top:5px">Insight 2 <span class="fg">"귀로 재는 컨디션, 손목은 이제 그만"</span></div>
+      <div class="wrap" style="margin-top:10px"><span class="chip on">#심박</span><span class="chip on">#기기통합</span><span class="chip on">#러닝</span></div>
+    </div>
+
+    <div style="width:1px;background:var(--line);flex:none"></div>
+
+    <div style="flex:1.5;padding:0 16px">
+      <div style="display:flex;align-items:center;gap:8px"><span class="b solid">02</span><span class="lab" style="color:var(--fg)">SERVICE</span></div>
+      <div class="sm fg" style="margin-top:9px;font-weight:510">러닝 중 귀로 듣는 심박존 안내 + 워치 없이 이어지는 건강 기록</div>
+      <div class="xs" style="margin-top:9px;display:flex;flex-direction:column;gap:6px">
+        <span>▪ 이어폰 광학 센서로 러닝 중 심박을 측정하고, 화면을 보지 않아도 되도록 <b>심박존 이탈만 음성으로</b> 알린다</span>
+        <span>▪ 워치를 차지 않은 날에도 기록이 끊기지 않도록 이어폰 단독 세션을 건강 허브에 자동으로 잇는다</span>
+        <span>▪ 측정값의 신뢰를 스스로 확인할 수 있도록 <b>기준기 대조 오차를 공시</b>한다</span>
+      </div>
+      <div class="xs" style="margin-top:11px;border:1px solid var(--line);border-radius:6px;padding:9px 10px;background:var(--sunk)">
+        <span class="lab">근거 Action</span>
+        <div class="wrap" style="margin-top:6px">
+          <span class="chip"><span class="mono">A1</span> 둘 다 착용 <span class="b spe">ODI 14.98</span></span>
+          <span class="chip"><span class="mono">A2</span> 측정 기대 <span class="b inf">ODI 12.49</span></span>
+          <span class="chip"><span class="mono">A3</span> 정확도 불신 <span class="b">반례</span></span>
+        </div>
+        <div class="xs qu" style="margin-top:6px">세 번째 불릿은 <b>반례 A3에서 나왔다</b> — 반례를 남겨 두지 않았다면 이 기능은 설계되지 않았다</div>
+      </div>
+    </div>
+
+    <div style="width:1px;background:var(--line);flex:none"></div>
+
+    <div style="flex:1.05;padding-left:16px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:8px"><span class="b solid">4D</span><span class="lab" style="color:var(--fg)">4D-CX</span>
+        <span class="grow"></span><span class="xs qu">경험의 확장 방향</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px">
+        <div class="card sunk"><div class="cc" style="padding:9px 10px">
+          <div class="xs fg" style="font-weight:510">정신적 세계</div><div class="xs qu">더 깊은 경험</div>
+          <div class="bar" style="margin-top:6px"><i class="n" style="width:30%"></i></div></div></div>
+        <div class="card" style="border-color:var(--ind-ln);background:var(--ind-bg)"><div class="cc" style="padding:9px 10px">
+          <div class="xs" style="font-weight:590;color:var(--ind-fg)">물리적 세계</div><div class="xs" style="color:var(--ind-fg)">더 선명한 경험</div>
+          <div class="bar" style="margin-top:6px"><i style="width:82%"></i></div></div></div>
+        <div class="card sunk"><div class="cc" style="padding:9px 10px">
+          <div class="xs fg" style="font-weight:510">문화적 세계</div><div class="xs qu">더 넓은 경험</div>
+          <div class="bar" style="margin-top:6px"><i class="n" style="width:24%"></i></div></div></div>
+        <div class="card" style="border-color:var(--obs-ln);background:var(--obs-bg)"><div class="cc" style="padding:9px 10px">
+          <div class="xs" style="font-weight:590;color:var(--obs)">시스템 세계</div><div class="xs" style="color:var(--obs)">더 큰 경험</div>
+          <div class="bar" style="margin-top:6px"><i class="o" style="width:61%"></i></div></div></div>
+      </div>
+      <div class="xs rel" style="margin-top:9px;border-top:1px solid var(--line);padding-top:8px">
+        <span class="pin fl" style="top:2px;right:-9px">4</span>
+        네 칸의 비중은 <b>Service 불릿을 사람이 배정</b>한 것이지 계산값이 아니다. 1.0 장표도 같았다 — 표시는 유지하되 <span class="fg">산식 없음</span>을 명시한다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="flex:1;min-height:0">
+  <div class="card rel" style="flex:1.25;display:flex;flex-direction:column">
+    <span class="pin fl" style="top:12px;left:-9px">2</span>
+    <div class="ch"><span class="b solid">03</span><h3>EXPERIENCE</h3><span class="grow"></span>
+      <span class="xs">1인칭 경험 서술 · 1.0 장표 형식 그대로</span></div>
+    <div class="cc" style="flex:1;display:flex;flex-direction:column;gap:12px">
+      <div class="card sunk"><div class="cc" style="padding:13px 15px">
+        <div class="sm" style="color:var(--fg);line-height:22px">
+          워치를 안 찬 날은 기록이 비어서 결국 둘 다 챙겨 나갔는데,<br>
+          이제 이어폰만 끼고 나가도 심박존을 귀로 알려주고 기록도 그대로 남는다.<br>
+          오차가 얼마인지 앱에 적혀 있어서 숫자를 믿고 페이스를 조절하게 됐다.
+        </div>
+      </div></div>
+      <div>
+        <div class="lab">서술을 구성한 구획 <span class="qu" style="text-transform:none;letter-spacing:-.06px;font-weight:400">— 문장마다 어느 Action에서 왔는지 붙는다</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:7px">
+          <div class="xs" style="display:flex;gap:9px;align-items:flex-start"><span class="mono b" style="flex:none">A1</span><span>"워치를 안 찬 날은 기록이 비어서 결국 둘 다 챙겨 나갔는데"</span><span class="b obs" style="flex:none">관측</span></div>
+          <div class="xs" style="display:flex;gap:9px;align-items:flex-start"><span class="mono b" style="flex:none">A2</span><span>"이어폰만 끼고 나가도 심박존을 귀로 알려주고"</span><span class="b spe" style="flex:none">추측 · 미래</span></div>
+          <div class="xs" style="display:flex;gap:9px;align-items:flex-start"><span class="mono b" style="flex:none">A3</span><span>"오차가 얼마인지 앱에 적혀 있어서 숫자를 믿고"</span><span class="b spe" style="flex:none">추측 · 미래</span></div>
+        </div>
+      </div>
+      <div class="xs" style="margin-top:auto;border:1px solid var(--inf-ln);background:var(--inf-bg);border-radius:6px;padding:9px 11px;color:var(--sec)">
+        ⚠ 컨셉 서술의 <b>앞부분은 관측</b>(지금 일어나는 일)이고 <b>뒷부분은 추측</b>(아직 없는 제품의 경험)이다. 1.0 장표는 이 둘을 한 문단으로 섞어 써서 어디까지가 데이터고 어디부터가 제안인지 구분되지 않았다. 등급을 문장 단위로 붙이면 그 경계가 드러난다.
+      </div>
+    </div>
+  </div>
+
+  <div class="card rel" style="flex:1;display:flex;flex-direction:column">
+    <span class="pin fl" style="top:12px;left:-9px">3</span>
+    <div class="ch"><span class="b solid">04</span><h3>INTERVIEW</h3><span class="b inf">검증 대기</span><span class="grow"></span>
+      <span class="xs">생성이 아니라 검증 단계</span></div>
+    <div class="cc" style="flex:1;display:flex;flex-direction:column;gap:10px">
+      <div class="card sunk"><div class="cc" style="padding:11px 12px">
+        <div class="xs" style="color:var(--sec);line-height:19px">"러닝할 때 워치를 안 차면 그 날은 기록이 통째로 비어서, 결국 귀찮아도 둘 다 차게 되더라고요. 이어폰이 대신 재준다면 확실히 하나는 안 챙길 것 같아요."</div>
+        <div class="xs qu" style="margin-top:7px;display:flex;align-items:center;gap:6px">
+          <span>20대 · 직장인 · 주 4회 러닝</span><span class="grow"></span><span class="b obs">컨셉 지지</span></div>
+      </div></div>
+      <div class="card sunk" style="border-color:var(--spe-ln)"><div class="cc" style="padding:11px 12px">
+        <div class="xs" style="color:var(--sec);line-height:19px">"오차를 적어 준다고 해도 그 숫자를 제가 검증할 방법이 없잖아요. 차라리 워치 값이랑 같이 보여주면 믿을 것 같은데요."</div>
+        <div class="xs qu" style="margin-top:7px;display:flex;align-items:center;gap:6px">
+          <span>30대 · 프리랜서 · 주 2회 러닝</span><span class="grow"></span><span class="b spe">컨셉 반박</span></div>
+      </div></div>
+      <div class="card" style="border-style:dashed;border-color:var(--line2);background:transparent"><div class="cc" style="padding:14px 12px;text-align:center">
+        <div class="xs qu">인터뷰 2 / 목표 6 — 미실시 4건</div>
+        <div class="xs" style="margin-top:5px;color:var(--ind-fg)">인터뷰 슬롯 추가 ＋</div>
+      </div></div>
+      <div class="xs" style="margin-top:auto;border-top:1px solid var(--line);padding-top:9px">
+        <b>반박 인터뷰가 컨셉을 바꾼다.</b> 두 번째 인용은 Service 세 번째 불릿("오차 공시")이 충분하지 않다고 말한다 — 이 반박은 폐기되지 않고 <span class="fg">컨셉 수정 요청</span>으로 남아 다음 라운드의 입력이 된다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card rel" style="flex:none">
+  <span class="pin fl" style="top:12px;left:-9px">5</span>
+  <div class="ch"><h3>컨셉 목록</h3><span class="grow"></span>
+    <span class="xs">인사이트 하나가 컨셉 여러 개를 낳는다 · 1.0은 인사이트 7개 → 컨셉 16개였다</span></div>
+  <table>
+    <thead><tr><th style="width:62px">ID</th><th style="width:212px">컨셉</th><th style="width:150px">From Insight</th><th style="width:132px">페르소나</th><th style="width:118px">근거 Action</th><th class="n" style="width:66px">ODI 합</th><th style="width:96px">인터뷰</th><th>4D-CX 주축</th></tr></thead>
+    <tbody>
+      <tr><td class="mono fg">CO-01</td><td>자는 동안 빠지지 않는 착용 형태</td><td class="xs">Insight 1 손목을 벗다</td><td class="xs">밤새 재는 사람</td><td class="xs mono">A5 A6</td><td class="n mono fg">18.4</td><td><span class="b obs">4 / 4</span></td><td class="xs">물리적 세계</td></tr>
+      <tr style="background:var(--ind-bg)"><td class="mono fg">CO-02</td><td class="fg">귀에 있는 것으로 몸 상태를 잰다</td><td class="xs">Insight 2 귀로 재는 컨디션</td><td class="xs">귀로 건강 재는 러너</td><td class="xs mono">A1 A2 A3</td><td class="n mono fg">28.5</td><td><span class="b inf">2 / 6</span></td><td class="xs">물리적 · 시스템</td></tr>
+      <tr><td class="mono fg">CO-03</td><td>기록이 끊기지 않는 충전 동선</td><td class="xs">Insight 2 귀로 재는 컨디션</td><td class="xs">귀로 건강 재는 러너</td><td class="xs mono">A4</td><td class="n mono">9.3</td><td><span class="b">0 / 4</span></td><td class="xs">시스템 세계</td></tr>
+      <tr><td class="mono fg">CO-04</td><td>측정값을 남과 견줘 볼 수 있는 자리</td><td class="xs">Insight 3 숫자를 나누다</td><td class="xs">숫자를 못 믿는 사람</td><td class="xs mono">A3 A9</td><td class="n mono">11.2</td><td><span class="b">0 / 4</span></td><td class="xs">문화적 세계</td></tr>
+      <tr><td colspan="8" class="xs qu" style="text-align:center;padding:9px">＋ 5개 컨셉</td></tr>
+    </tbody>
+  </table>
+</div>
+        </div>
+      </main>
+      <aside class="chat"><div class="chead"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink-secondary)" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-5.5A8 8 0 0 1 11 4h2a8 8 0 0 1 8 8Z"/></svg>컨셉 캔버스<span class="grow"></span><span class="b">CO-02</span></div>
+<div class="cbody">
+  <div class="msg"><span class="who">에이전트</span>Insight 2에서 컨셉 3개를 뽑았습니다. CO-02는 A1·A2를 함께 해소하고, 반례 A3를 <span class="fg">세 번째 불릿</span>으로 흡수했습니다.</div>
+  <div class="msg me"><span class="who">나</span>세 번째 불릿, 인터뷰에서 반박 나왔잖아. 오차 공시로는 부족하다는데.</div>
+  <div class="msg"><span class="who">에이전트</span>반박 인용을 <span class="mono" style="font-size:12px">컨셉 수정 요청</span>으로 걸어 뒀습니다. A3의 장벽 서술이 "정밀도를 스스로 검증할 수단이 없다"이므로, 공시보다 <span class="fg">대조 수단 제공</span>이 장벽에 더 정확히 대응합니다. 불릿을 고쳐 쓸까요?</div>
+  <div class="msg" style="border-color:var(--spe-ln);background:var(--spe-bg)"><span class="who">검증 부채</span>
+    <div class="xs" style="display:flex;flex-direction:column;gap:4px;margin-top:3px">
+      <span>CO-02 · 인터뷰 2 / 6</span><span>CO-03 · 인터뷰 0 / 4</span><span>CO-04 · 인터뷰 0 / 4</span>
+      <span class="qu">인터뷰 미달 컨셉은 최종 장표에서 <span class="fg">검증 대기</span>로 표시된다</span>
+    </div></div>
+</div>
+<div class="cfoot"><div class="input">컨셉을 수정하거나 근거를 요청하세요</div></div></aside>
+    </div>
+  </div>
+  <section class="ann">
+    <h4>1.0 대비 변경점</h4>
+    <p class="lead"><span class="tag rep">치환</span>AS-IS가 있고 대체된다 &nbsp;<span class="tag new">신설</span>AS-IS 없음 · 새로 꽂는다 &nbsp;<span class="tag keep">유지</span>기존 확정 재확인 &nbsp;<span class="tag open">미결</span>답이 필요한 것</p>
+    <div class="grid"><div class="it"><span class="pin">1</span><p><span class="tag keep">유지</span><b>4블록 구조를 통째로 승계한다.</b> 01 PERSONA · 02 SERVICE · 03 EXPERIENCE · 04 INTERVIEW와 우측 4D-CX 4분면은 1.0 컨셉 장표의 레이아웃 그대로다. 이 화면은 <b>발표 산출물의 형태 그 자체</b>여야 하므로 형식을 바꾸지 않는다. 바뀌는 것은 하나 — 모든 블록이 <em class="mono">CL0-P1-A1</em> 계층 ID로 접지되어, 장표의 어느 문장이든 원문까지 역추적된다.</p></div>
+<div class="it"><span class="pin">2</span><p><span class="tag new">신설</span><b>컨셉 서술에도 문장 단위 등급.</b> 1.0 EXPERIENCE 블록은 "~해서 편하다"를 한 문단으로 썼고, 어디까지가 관측된 현재고 어디부터가 아직 없는 제품의 경험인지 구분되지 않았다. 앞부분은 <b>관측</b>, 뒷부분은 <b>추측 · 미래</b>로 갈라 붙인다 — 컨셉에서 추측이 나오는 건 정상이고, <b>표시되지 않는 것</b>이 문제다.</p></div>
+<div class="it"><span class="pin">3</span><p><span class="tag rep">치환</span><b>인터뷰는 생성이 아니라 검증.</b> 1.0은 컨셉을 다 만든 뒤 고관여자 인터뷰를 별도 챕터로 붙였고, 인용은 대체로 컨셉을 지지하는 것이 실렸다. 2.0은 인터뷰를 컨셉 블록 <b>안</b>에 두고 <b>지지 / 반박</b>을 함께 센다. 반박은 폐기되지 않고 <em class="mono">컨셉 수정 요청</em>으로 남아 다음 라운드 입력이 된다. 인터뷰 미달 컨셉은 최종 장표에 <b>검증 대기</b>로 찍힌다.</p></div>
+<div class="it"><span class="pin">4</span><p><span class="tag open">미결</span><b>4D-CX 4분면 산식 없음.</b> 정신적 · 물리적 · 문화적 · 시스템 네 세계의 비중은 1.0에서도 사람이 배정한 값이고 산출 근거가 문서화되어 있지 않다. 표시는 승계하되 <b>계산값이 아님을 화면에 명시</b>한다. 레이더 3축(Computed · Connected · Shared)과 같은 처지다.</p></div>
+<div class="it"><span class="pin">5</span><p><span class="tag rep">치환</span><b>인사이트 1개 → 컨셉 N개를 표로 관리한다.</b> 1.0은 인사이트 7개에서 컨셉 16개가 나왔지만 어느 인사이트가 어느 컨셉을 낳았는지는 장표 순서로만 알 수 있었다. From Insight · 근거 Action · ODI 합 · 인터뷰 진척을 한 표에 두면 <b>어떤 컨셉이 근거가 얇은지</b>가 정렬 한 번으로 드러난다.</p></div>
+<div class="it"><span class="pin">—</span><p><span class="tag new">신설</span><b>반례가 기능을 낳는다.</b> CO-02의 세 번째 불릿("기준기 대조 오차 공시")은 반례 Action A3에서 나왔다. STEP 07의 Edge 보존 → STEP 09의 counter 인용 → STEP 10의 반례 담론 → 여기까지가 한 줄로 이어진다. 반례를 어느 단계에서든 버렸다면 이 기능은 설계되지 않았다.</p></div></div>
+  </section>
+</div>
+</div></div>

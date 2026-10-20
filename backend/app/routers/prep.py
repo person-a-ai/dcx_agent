@@ -106,9 +106,8 @@ def run(sid: str, version: str | None = None):
         root = _root(sid, ref['collectionId'], ref['prepKey'])
         manifest = store.read_json(root / 'manifest.json')
         # Only fully published results can bypass the worker (and provider setup).
-        if (manifest and manifest.get('collectionFinalized') is True and manifest.get('status') == 'done' and manifest.get('compatWritten')
-                and (root / 'stage_3.json').exists()
-                and (Path(settings.local_data_dir) / manifest['compatRef']).exists()):
+        if (manifest and manifest.get('collectionFinalized') is True and manifest.get('status') == 'done'
+                and (root / 'stage_3.json').exists()):
             _save(sid, config=cfg.model_dump(), derivedRef=ref, status='done', runId=None, reused=True)
             clear_stale(sid, data['version'], 'stage3', already_locked=True)
             return {**_view(sid, store.load_session(sid)), 'reused': True}

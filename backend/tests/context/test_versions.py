@@ -16,7 +16,7 @@ def test_create_version_copies_all_but_collection(client, data_dir, monkeypatch)
     assert (session_dir(sid) / 'keyword_events.jsonl').read_text() == 'event'
     assert load_session(sid)['collectionId'] == 'c1'
     assert list(collection.parent.iterdir()) == [collection]
-    from app.services.training import load_json
+    from app.services.s3 import load_json
     assert load_json(f'sessions/{sid}/session.json')['version'] == 'v2'
 
 

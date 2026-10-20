@@ -1,0 +1,540 @@
+# QA-EDGE-002 — PASS
+
+- URL: http://localhost:3411/pipeline/preprocess
+- Tested HEAD: `5de8f30bbb05986afa4b5ccf579d3d0442302857`
+- Executor: codex / browser-qa; thread `01a15844-a762-7910-97e2-9d33167a6188`.
+- Recorded UTC interval: 2026-10-20T07:47:05.382Z → 2026-10-20T07:50:05.079Z.
+
+## Expected
+
+Later stages stay locked during prep, unlock only after done without reload, and remain open after reload.
+
+## Steps
+
+1. Observe alongside the first QA-E2E-006 UI run.
+2. Install read-only DOM MutationObserver before clicking run.
+3. Correlate running/done HTTP responses with sidebar href changes.
+4. Capture done state, then reload and check the link.
+
+## Actual
+
+Locked at running; first done response 07:49:10.253Z, automatic unlock 07:49:10.420Z; reload retained links.
+
+- PASS — running is running
+- PASS — running derivedRef exists yet locked
+- PASS — only locked then unlocked transition
+- PASS — unlock after done
+- PASS — all four unlocked
+- PASS — no page navigation before unlock
+- PASS — reload preserves link
+
+## Evidence
+
+- [prep-running.json](prep-running.json)
+- [prep-success.json](prep-success.json)
+- [prep-timeout.json](prep-timeout.json)
+- [all-events.json](all-events.json)
+- [QA-EDGE-002-running.png](QA-EDGE-002-running.png) — absolute-path capture, existence verified, visually inspected.
+- [QA-E2E-006-done.png](QA-E2E-006-done.png) — absolute-path capture, existence verified, visually inspected.
+- [QA-EDGE-002-reload.png](QA-EDGE-002-reload.png) — absolute-path capture, existence verified, visually inspected.
+
+## Console / network / API
+
+Page errors: 0; console error messages: 2.
+
+Complete timestamped request/response bodies and console locations are in the linked JSON. Relevant observed HTTP/error entries:
+
+```text
+2026-10-20T07:47:05.955Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/config?version=v1
+2026-10-20T07:47:06.896Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/run?version=v1
+2026-10-20T07:47:07.059Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:47:07.212Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:47:10.278Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:47:13.485Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:47:15.016Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:47:15.041Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:47:15.117Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:47:16.407Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:47:19.487Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:47:22.734Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:47:25.020Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:47:25.040Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:47:25.078Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:47:25.649Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:47:33.493Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:47:42.596Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:47:42.674Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:47:42.676Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:47:42.841Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:47:45.553Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:47:45.672Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:47:45.701Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:47:45.750Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:47:58.878Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:01.241Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:48:04.911Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:48:05.356Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:48:05.960Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:05.961Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:48:06.476Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:48:06.507Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:48:08.520Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:14.136Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:15.505Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:48:15.506Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:48:16.548Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:48:25.221Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:29.498Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:30.672Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:48:30.673Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:48:32.565Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:48:34.013Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:35.485Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:48:35.631Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:48:35.977Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:48:36.807Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:39.961Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:43.894Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:49.075Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:48:50.546Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:50.953Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:48:56.174Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:48:56.618Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:48:56.621Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:48:56.687Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:48:56.749Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:04.277Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:49:05.507Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:49:05.683Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:49:05.688Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:07.239Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:49:10.253Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:49:10.400Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:14.920Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:49:14.990Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:49:14.995Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:24.918Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:49:24.988Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:49:24.993Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:34.567Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/config?version=v1
+2026-10-20T07:49:34.576Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/run?version=v1
+2026-10-20T07:49:34.579Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:34.634Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:35.016Z HTTP 200 http://localhost:8411/integrations
+2026-10-20T07:49:35.026Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9
+2026-10-20T07:49:35.058Z HTTP 200 http://localhost:8411/integrations
+2026-10-20T07:49:35.058Z HTTP 200 http://localhost:8411/known/s3bee57561d744ff8a5cf63fc5bff34f9
+2026-10-20T07:49:35.059Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:49:35.059Z HTTP 200 http://localhost:8411/known/s3bee57561d744ff8a5cf63fc5bff34f9
+2026-10-20T07:49:35.064Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:49:35.064Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:35.067Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:49:35.084Z HTTP 200 http://localhost:8411/known/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:35.085Z HTTP 404 http://localhost:8411/crawl/s3bee57561d744ff8a5cf63fc5bff34f9/status
+2026-10-20T07:49:35.085Z console Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:8411/crawl/s3bee57561d744ff8a5cf63fc5bff34f9/status
+2026-10-20T07:49:35.085Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:49:35.086Z HTTP 404 http://localhost:8411/crawl/s3bee57561d744ff8a5cf63fc5bff34f9/status
+2026-10-20T07:49:35.086Z console Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:8411/crawl/s3bee57561d744ff8a5cf63fc5bff34f9/status
+2026-10-20T07:49:35.086Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:49:35.092Z HTTP 200 http://localhost:8411/prep/s3bee57561d744ff8a5cf63fc5bff34f9/status?version=v1
+2026-10-20T07:49:35.096Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:35.098Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:35.120Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:45.054Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:49:45.075Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:49:45.079Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:49:55.047Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:49:55.075Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:49:55.078Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+2026-10-20T07:50:05.045Z HTTP 200 http://localhost:8411/sessions
+2026-10-20T07:50:05.074Z HTTP 200 http://localhost:8411/sessions/s3bee57561d744ff8a5cf63fc5bff34f9/versions
+2026-10-20T07:50:05.079Z HTTP 200 http://localhost:8411/session/s3bee57561d744ff8a5cf63fc5bff34f9?version=v1
+```
+
+## Captured state / API output
+
+```json
+{
+  "running": {
+    "time": "2026-10-20T07:47:07.236Z",
+    "status": {
+      "status": "running",
+      "progress": 0,
+      "detail": {},
+      "runId": "f03dcd6d76fa4b5b98c4ba7627fba717",
+      "derivedRef": {
+        "collectionId": "c1",
+        "prepKey": "p_8d4420d74b0b"
+      },
+      "stage3": null,
+      "error": null,
+      "config": {
+        "adFilter": [],
+        "excludeSources": [],
+        "excludeChannels": [],
+        "minBodyChars": 10,
+        "boilerplate": {
+          "naver_cafe": [
+            "카페 회원이 되시면 전체 내용을 볼 수 있습니다.",
+            "카페 가입하기"
+          ],
+          "naver_blog": [
+            "공감",
+            "이웃추가"
+          ],
+          "clien": [],
+          "ppomppu": [],
+          "youtube": []
+        },
+        "analyzer": "kiwi",
+        "tokenPos": [
+          "NNG",
+          "NNP",
+          "VV",
+          "VA",
+          "XR"
+        ],
+        "embedder": "fake",
+        "embedModel": "voyage-4",
+        "embedDim": 1024
+      },
+      "reused": false
+    },
+    "nav": [
+      {
+        "text": "시작",
+        "aria": null,
+        "href": "/pipeline/start",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "키워드",
+        "aria": null,
+        "href": "/pipeline/keywords",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "크롤링",
+        "aria": null,
+        "href": "/pipeline/crawling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "4전처리진행 중",
+        "aria": null,
+        "href": "/pipeline/preprocess",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "5라벨링",
+        "aria": null,
+        "href": "/pipeline/labeling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "6학습",
+        "aria": null,
+        "href": "/pipeline/training",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "7클러스터링",
+        "aria": "true",
+        "href": null,
+        "title": "전처리(3단계)를 먼저 완료하세요",
+        "tabindex": null
+      },
+      {
+        "text": "8근거 탐색",
+        "aria": "true",
+        "href": null,
+        "title": "전처리(3단계)를 먼저 완료하세요",
+        "tabindex": null
+      },
+      {
+        "text": "9페르소나",
+        "aria": "true",
+        "href": null,
+        "title": "전처리(3단계)를 먼저 완료하세요",
+        "tabindex": null
+      },
+      {
+        "text": "10인사이트",
+        "aria": "true",
+        "href": null,
+        "title": "전처리(3단계)를 먼저 완료하세요",
+        "tabindex": null
+      }
+    ]
+  },
+  "done": {
+    "time": "2026-10-20T07:49:34.263Z",
+    "nav": [
+      {
+        "text": "시작",
+        "aria": null,
+        "href": "/pipeline/start",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "키워드",
+        "aria": null,
+        "href": "/pipeline/keywords",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "크롤링",
+        "aria": null,
+        "href": "/pipeline/crawling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "전처리진행 중",
+        "aria": null,
+        "href": "/pipeline/preprocess",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "5라벨링",
+        "aria": null,
+        "href": "/pipeline/labeling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "6학습",
+        "aria": null,
+        "href": "/pipeline/training",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "7클러스터링",
+        "aria": null,
+        "href": "/pipeline/clustering",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "8근거 탐색",
+        "aria": null,
+        "href": "/pipeline/evidence",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "9페르소나",
+        "aria": null,
+        "href": "/pipeline/personas",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "10인사이트",
+        "aria": null,
+        "href": "/pipeline/insights",
+        "title": null,
+        "tabindex": null
+      }
+    ],
+    "transitions": [
+      {
+        "time": "2026-10-20T07:47:05.382Z",
+        "items": [
+          {
+            "text": "7클러스터링",
+            "href": null,
+            "disabled": "true"
+          },
+          {
+            "text": "8근거 탐색",
+            "href": null,
+            "disabled": "true"
+          },
+          {
+            "text": "9페르소나",
+            "href": null,
+            "disabled": "true"
+          },
+          {
+            "text": "10인사이트",
+            "href": null,
+            "disabled": "true"
+          }
+        ]
+      },
+      {
+        "time": "2026-10-20T07:49:10.420Z",
+        "items": [
+          {
+            "text": "7클러스터링",
+            "href": "/pipeline/clustering",
+            "disabled": null
+          },
+          {
+            "text": "8근거 탐색",
+            "href": "/pipeline/evidence",
+            "disabled": null
+          },
+          {
+            "text": "9페르소나",
+            "href": "/pipeline/personas",
+            "disabled": null
+          },
+          {
+            "text": "10인사이트",
+            "href": "/pipeline/insights",
+            "disabled": null
+          }
+        ]
+      }
+    ],
+    "status": {
+      "status": "done",
+      "progress": 1,
+      "detail": {},
+      "runId": null,
+      "derivedRef": {
+        "collectionId": "c1",
+        "prepKey": "p_8d4420d74b0b"
+      },
+      "stage3": {
+        "original": 6,
+        "after": 6,
+        "removed": {
+          "ad": 0,
+          "excluded_source": 0,
+          "duplicate": 0,
+          "too_short": 0,
+          "excluded_channel": 0
+        },
+        "boilerplate_replaced": {},
+        "tokens_written": 6,
+        "embedded": 6,
+        "embed_failed_zero_vector": 0,
+        "prepKey": "p_8d4420d74b0b",
+        "embedder": "fake",
+        "analyzer": "kiwi-0.24.0",
+        "at": "2026-10-20T07:49:09.457330+00:00"
+      },
+      "error": null,
+      "config": {
+        "adFilter": [],
+        "excludeSources": [],
+        "excludeChannels": [],
+        "minBodyChars": 10,
+        "boilerplate": {
+          "naver_cafe": [
+            "카페 회원이 되시면 전체 내용을 볼 수 있습니다.",
+            "카페 가입하기"
+          ],
+          "naver_blog": [
+            "공감",
+            "이웃추가"
+          ],
+          "clien": [],
+          "ppomppu": [],
+          "youtube": []
+        },
+        "analyzer": "kiwi",
+        "tokenPos": [
+          "NNG",
+          "NNP",
+          "VV",
+          "VA",
+          "XR"
+        ],
+        "embedder": "fake",
+        "embedModel": "voyage-4",
+        "embedDim": 1024
+      },
+      "reused": false
+    }
+  },
+  "reloaded": {
+    "time": "2026-10-20T07:49:35.058Z",
+    "nav": [
+      {
+        "text": "시작",
+        "aria": null,
+        "href": "/pipeline/start",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "키워드",
+        "aria": null,
+        "href": "/pipeline/keywords",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "크롤링",
+        "aria": null,
+        "href": "/pipeline/crawling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "전처리진행 중",
+        "aria": null,
+        "href": "/pipeline/preprocess",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "5라벨링",
+        "aria": null,
+        "href": "/pipeline/labeling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "6학습",
+        "aria": null,
+        "href": "/pipeline/training",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "7클러스터링",
+        "aria": null,
+        "href": "/pipeline/clustering",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "8근거 탐색",
+        "aria": null,
+        "href": "/pipeline/evidence",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "9페르소나",
+        "aria": null,
+        "href": "/pipeline/personas",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "10인사이트",
+        "aria": null,
+        "href": "/pipeline/insights",
+        "title": null,
+        "tabindex": null
+      }
+    ]
+  }
+}
+```

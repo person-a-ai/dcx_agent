@@ -1,0 +1,211 @@
+{
+  "verdict": "FAIL",
+  "head": "c15ea7fa22e3641078939a524f5a5581b2689127",
+  "fingerprint": "a89512faf2eacae1e240d660ab0707ad5043d4e09f028b5a79b7fc68da8044e8",
+  "findings": [
+    {
+      "id": "F-01",
+      "severity": "P0",
+      "scenario": "QA-EDGE-002",
+      "title": "Later-stage navigation unlocks while preprocessing is running",
+      "detail": "MutationObserver recorded all four hrefs at 04:21:11.411Z. Status responses at 04:21:10.958Z and 04:21:13.979Z were running, stage3=null. Post-completion and reload assertions passed; the stipulated locked-running state did not.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-EDGE-002.md"
+    },
+    {
+      "id": "F-02",
+      "severity": "P1",
+      "scenario": "QA-E2E-004",
+      "title": "Direct insights navigation issues prohibited /sessions requests",
+      "detail": "GET http://localhost:8411/sessions occurred at 04:20:16.327Z and 04:20:16.328Z. The banner was correct. No exemption was made for requests possibly originating in the shared shell.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-E2E-004.md"
+    },
+    {
+      "id": "F-03",
+      "severity": "P1",
+      "scenario": "QA-E2E-005",
+      "title": "Completed-prep persona screen violates zero-error-console criterion",
+      "detail": "GET /segment/sf7d9d6897a31472895cf5fdeafb9cea1/personas?version=v1 returned 409 three times, with the message that earlier layers must be confirmed. All ten links and all three new screens were present.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-E2E-005.md"
+    },
+    {
+      "id": "F-04",
+      "severity": "P2",
+      "scenario": "QA-EDGE-003",
+      "title": "Stage3 restart keeps stale prep reference and leaves later stages open",
+      "detail": "UI POST versions from=v1/restartFrom=stage3 created active v2. Session retained prep.derivedRef, prep.status=stale and completion.prepDone=false. The clustering screen remained open; required gate banner never appeared.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-EDGE-003.md"
+    },
+    {
+      "id": "F-05",
+      "severity": "P1",
+      "scenario": "QA-REG-001",
+      "title": "Insight chatbot UI integration could not be verified",
+      "detail": "The visible chatbot on /pipeline/insights uses /chat and displayed a valid no-model fallback. /insights immediately redirects. Direct /insight-chat returned 200, proving route survival only; it does not prove the requested insight chatbot UI request path.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-REG-001.md"
+    }
+  ],
+  "executor": "codex",
+  "role": "browser-qa",
+  "freshSession": true,
+  "dispatch": "01a15786-12bc-7fa3-a3ca-65e3d7d2f1d0",
+  "browser": {
+    "tool": "playwright-mcp",
+    "session": "Fresh isolated Chrome/Chromium 155.0.8059.85 context; initially one page and empty localStorage; worker-owned page closed after QA",
+    "preflight": "PASS",
+    "evidence": "docs/development/v1-cleanup/qa/preflight.md"
+  },
+  "scenarios": [
+    {
+      "id": "QA-E2E-001",
+      "url": "http://localhost:3411/pipeline/start",
+      "result": "PASS",
+      "expected": "Four stages disabled with required titles/no href; six earlier links work; locked click stays put.",
+      "actual": "All DOM attributes matched; clicking clustering left URL unchanged.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-E2E-001.md"
+    },
+    {
+      "id": "QA-E2E-002",
+      "url": "http://localhost:3411/pipeline/clustering",
+      "result": "PASS",
+      "expected": "Clustering prep banner/action; no cluster-status, cluster, cluster-refine, save-session requests.",
+      "actual": "Exact banner; no prohibited requests; action opened /pipeline/preprocess.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-E2E-002.md"
+    },
+    {
+      "id": "QA-E2E-003",
+      "url": "http://localhost:3411/pipeline/personas",
+      "result": "PASS",
+      "expected": "Persona prep banner, no old Start button or prohibited requests; session step unchanged.",
+      "actual": "Exact banner; no Start button or prohibited requests; step remained start.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-E2E-003.md"
+    },
+    {
+      "id": "QA-E2E-004",
+      "url": "http://localhost:3411/pipeline/insights",
+      "result": "FAIL",
+      "expected": "Insight prep banner; no /sessions, persona-status, cluster-status, sna-data requests.",
+      "actual": "Banner matched, but GET /sessions occurred twice.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-E2E-004.md"
+    },
+    {
+      "id": "QA-E2E-005",
+      "url": "http://localhost:3411/pipeline/insights",
+      "result": "FAIL",
+      "expected": "Ten enabled links; three new screens; no gate banners; zero console errors.",
+      "actual": "Screens and links matched; persona endpoint returned 409 and produced three console errors.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-E2E-005.md"
+    },
+    {
+      "id": "QA-E2E-006",
+      "url": "http://localhost:3411/pipeline/preprocess",
+      "result": "PASS",
+      "expected": "Prep done; no preprocessed directory/compatRef; same-settings rerun reused=true; clustering linked.",
+      "actual": "Six docs completed; no compatibility artifacts; second POST reused=true; link enabled.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-E2E-006.md"
+    },
+    {
+      "id": "QA-E2E-007",
+      "url": "http://localhost:3411/pipeline/start",
+      "result": "PASS",
+      "expected": "All three legacy banners; action to start; no prohibited legacy requests.",
+      "actual": "Exact banners and destinations matched on all three pages; prohibited requests absent.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-E2E-007.md"
+    },
+    {
+      "id": "QA-NEG-001",
+      "url": "http://127.0.0.1:8411",
+      "result": "PASS",
+      "expected": "Thirteen removed endpoints return 404/405 without Traceback.",
+      "actual": "All thirteen returned 404; no Traceback.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-NEG-001.md"
+    },
+    {
+      "id": "QA-NEG-002",
+      "url": "http://127.0.0.1:8411",
+      "result": "PASS",
+      "expected": "Persona/train/prep v2 status routes do not return 404.",
+      "actual": "All three returned 200.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-NEG-002.md"
+    },
+    {
+      "id": "QA-NEG-003",
+      "url": "http://localhost:3411/pipeline/clustering",
+      "result": "PASS",
+      "expected": "Empty storage shows project-selection banner; action to start; zero console errors.",
+      "actual": "Storage empty; banner/action matched; zero console errors.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-NEG-003.md"
+    },
+    {
+      "id": "QA-EDGE-001",
+      "url": "http://localhost:3411/pipeline/personas",
+      "result": "PASS",
+      "expected": "375x812: 72px number-only sidebar, unclipped banner/action, no horizontal overflow.",
+      "actual": "Sidebar 72px; scrollWidth 375; action below message and clickable; screenshot inspected.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-EDGE-001.md"
+    },
+    {
+      "id": "QA-EDGE-002",
+      "url": "http://localhost:3411/pipeline/preprocess",
+      "result": "FAIL",
+      "expected": "Locked during initial prep; linked after completion without refresh; link survives reload.",
+      "actual": "Link survived completion/reload, but unlocked at 04:21:11.411Z while prep remained running through 04:21:13.979Z.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-EDGE-002.md"
+    },
+    {
+      "id": "QA-EDGE-003",
+      "url": "http://localhost:3411/pipeline/clustering",
+      "result": "FAIL",
+      "expected": "Stage3 restart creates v2 without prep, locks later stages and shows prep banner.",
+      "actual": "v2 retained stale derivedRef with prepDone=false; all later links stayed enabled; no prep banner.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-EDGE-003.md"
+    },
+    {
+      "id": "QA-EDGE-004",
+      "url": "http://localhost:3411/pipeline/personas",
+      "result": "PASS",
+      "expected": "Tab skips four locked entries; unlocked entries have visible 2px focus outlines.",
+      "actual": "Six links received 2px solid focus outlines; next Tab skipped to version button.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-EDGE-004.md"
+    },
+    {
+      "id": "QA-REG-001",
+      "url": "http://localhost:3411/pipeline/insights",
+      "result": "FAIL",
+      "expected": "Chat panels send to /chat and /insight-chat without 404 and show answer/error.",
+      "actual": "Pipeline panel sent /chat:200 and displayed fallback. Direct /insight-chat probe:200, but its UI path was unreachable after /insights redirected; UI integration unverified.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-REG-001.md"
+    },
+    {
+      "id": "QA-REG-002",
+      "url": "http://localhost:3411/insights",
+      "result": "PASS",
+      "expected": "/insights redirects to /pipeline/insights.",
+      "actual": "Redirect and final rendered screen confirmed.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-REG-002.md"
+    },
+    {
+      "id": "QA-REG-003",
+      "url": "http://localhost:3411/pipeline/preprocess",
+      "result": "PASS",
+      "expected": "Every derived document has desc/cafe/link; desc length <=4000.",
+      "actual": "All six rows have required keys; each desc is 44 characters.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-REG-003.md"
+    },
+    {
+      "id": "QA-REG-004",
+      "url": "http://localhost:3411/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Keyword screen opens with zero console errors.",
+      "actual": "Rendered keyword screen; zero console errors.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-REG-004.md"
+    },
+    {
+      "id": "QA-REG-005",
+      "url": "http://localhost:3411/pipeline/crawling",
+      "result": "PASS",
+      "expected": "Legacy crawling preserves the 0-2-stage editing restriction banner.",
+      "actual": "Exact existing restriction message displayed.",
+      "evidence": "docs/development/v1-cleanup/qa/QA-REG-005.md"
+    }
+  ]
+}

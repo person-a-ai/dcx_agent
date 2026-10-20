@@ -1,0 +1,201 @@
+{
+  "time": "2026-10-20T04:21:23.703244+00:00",
+  "preprocessedExists": false,
+  "manifests": [
+    {
+      "path": ".harness/qa-data/derived/sf7d9d6897a31472895cf5fdeafb9cea1/c1/p_8d4420d74b0b/manifest.json",
+      "hasCompatRef": false,
+      "data": {
+        "collectionId": "c1",
+        "prepKey": "p_8d4420d74b0b",
+        "config": {
+          "adFilter": [],
+          "excludeSources": [],
+          "excludeChannels": [],
+          "minBodyChars": 10,
+          "boilerplate": {
+            "naver_cafe": [
+              "카페 회원이 되시면 전체 내용을 볼 수 있습니다.",
+              "카페 가입하기"
+            ],
+            "naver_blog": [
+              "공감",
+              "이웃추가"
+            ],
+            "clien": [],
+            "ppomppu": [],
+            "youtube": []
+          },
+          "analyzer": "kiwi",
+          "tokenPos": [
+            "NNG",
+            "NNP",
+            "VV",
+            "VA",
+            "XR"
+          ],
+          "embedder": "fake",
+          "embedModel": "voyage-4",
+          "embedDim": 1024
+        },
+        "collectionFinalized": true,
+        "embedder": {
+          "name": "fake",
+          "model": "voyage-4",
+          "dim": 1024
+        },
+        "analyzer": "kiwi-0.24.0",
+        "createdAt": "2026-10-20T04:21:13.312954+00:00",
+        "counts": {
+          "original": 6,
+          "after": 6,
+          "removed": {
+            "ad": 0,
+            "excluded_source": 0,
+            "duplicate": 0,
+            "too_short": 0,
+            "excluded_channel": 0
+          },
+          "boilerplate_replaced": {},
+          "tokens_written": 6,
+          "embedded": 6,
+          "embed_failed_zero_vector": 0,
+          "prepKey": "p_8d4420d74b0b",
+          "embedder": "fake",
+          "analyzer": "kiwi-0.24.0",
+          "at": "2026-10-20T04:21:14.539728+00:00"
+        },
+        "progress": {
+          "done_shards": 1,
+          "total_shards": 1,
+          "docs_written": 6,
+          "tokens_written": 6,
+          "vectors_written": 6
+        },
+        "embedderName": "fake",
+        "status": "done"
+      }
+    }
+  ],
+  "docs": [
+    {
+      "path": ".harness/qa-data/derived/sf7d9d6897a31472895cf5fdeafb9cea1/c1/p_8d4420d74b0b/docs/part-00001.jsonl",
+      "rows": [
+        {
+          "doc_id": "qa0",
+          "keys": [
+            "doc_id",
+            "title",
+            "body",
+            "comments",
+            "source",
+            "url",
+            "fetch_level",
+            "src_meta",
+            "desc",
+            "cafe",
+            "link",
+            "idx"
+          ],
+          "hasRequiredKeys": true,
+          "descLength": 44
+        },
+        {
+          "doc_id": "qa1",
+          "keys": [
+            "doc_id",
+            "title",
+            "body",
+            "comments",
+            "source",
+            "url",
+            "fetch_level",
+            "src_meta",
+            "desc",
+            "cafe",
+            "link",
+            "idx"
+          ],
+          "hasRequiredKeys": true,
+          "descLength": 44
+        },
+        {
+          "doc_id": "qa2",
+          "keys": [
+            "doc_id",
+            "title",
+            "body",
+            "comments",
+            "source",
+            "url",
+            "fetch_level",
+            "src_meta",
+            "desc",
+            "cafe",
+            "link",
+            "idx"
+          ],
+          "hasRequiredKeys": true,
+          "descLength": 44
+        },
+        {
+          "doc_id": "qa3",
+          "keys": [
+            "doc_id",
+            "title",
+            "body",
+            "comments",
+            "source",
+            "url",
+            "fetch_level",
+            "src_meta",
+            "desc",
+            "cafe",
+            "link",
+            "idx"
+          ],
+          "hasRequiredKeys": true,
+          "descLength": 44
+        },
+        {
+          "doc_id": "qa4",
+          "keys": [
+            "doc_id",
+            "title",
+            "body",
+            "comments",
+            "source",
+            "url",
+            "fetch_level",
+            "src_meta",
+            "desc",
+            "cafe",
+            "link",
+            "idx"
+          ],
+          "hasRequiredKeys": true,
+          "descLength": 44
+        },
+        {
+          "doc_id": "qa5",
+          "keys": [
+            "doc_id",
+            "title",
+            "body",
+            "comments",
+            "source",
+            "url",
+            "fetch_level",
+            "src_meta",
+            "desc",
+            "cafe",
+            "link",
+            "idx"
+          ],
+          "hasRequiredKeys": true,
+          "descLength": 44
+        }
+      ]
+    }
+  ]
+}

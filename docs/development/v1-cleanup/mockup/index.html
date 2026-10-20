@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>v1-cleanup 목업 — 사이드바 잠금 · 배너</title>
+<!-- 실제 앱의 토큰·디자인 시스템 CSS 복사본(frontend/src/styles/tokens.css, components/ds/ds.css). -->
+<style>
+/* inlined copy: frontend/src/styles/tokens.css + frontend/src/components/ds/ds.css @ 4444a50 */
+:root{
+  --blue:#38B6F9; --blue-deep:#168FCC; --blue-soft:#EAF8FF; --blue-tint:#DDF4FE;
+  --ink:#676668; --ink-strong:#1c1e22; --sub:#8A8A8C; /* 키트 값 유지 (리뷰 8B) */
+  --line:#E7EAEE; --line-strong:#7f838b; --paper:#FFFFFF; --soft:#F8FCFF; --sunken:#F3F4F6;
+  --action:#0a73b5; --action-hover:#085d93; --action-soft:#e8f4fc;
+  --success:#1b7446; --success-soft:#e6f6ec; --warning:#9a5b00; --warning-soft:#fff3dc; --danger:#c62828; --danger-soft:#fdeaea;
+  --r-input:6px; --r-button:10px; --r-card:14px; --r-overlay:18px; --r-full:999px;
+  --shadow-overlay:0 8px 24px rgba(28,30,34,.12),0 1px 2px rgba(28,30,34,.06);
+  --font:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",system-ui,sans-serif;
+  --mono:"SF Mono",Menlo,Consolas,monospace;
+}
+
+:root {
+  --shadow-md: var(--shadow-overlay);
+  --sidebar-width:224px; --sidebar-collapsed:72px; --content-max:1200px;
+  --chat-width:400px;
+}
+@theme inline {
+  --font-sans: var(--font);
+  --color-primary: var(--action); --color-primary-hover: var(--action-hover);
+  --color-blue: var(--blue); --color-blue-deep: var(--blue-deep); --color-blue-soft: var(--blue-soft); --color-blue-tint: var(--blue-tint);
+  --color-ink: var(--ink); --color-ink-strong: var(--ink-strong); --color-sub: var(--sub);
+  --color-line: var(--line); --color-line-strong: var(--line-strong);
+  --color-paper: var(--paper); --color-soft: var(--soft); --color-sunken: var(--sunken);
+  --color-action: var(--action); --color-action-soft: var(--action-soft);
+  --color-success: var(--success); --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning); --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger); --color-danger-soft: var(--danger-soft);
+  --radius-input: var(--r-input); --radius-button: var(--r-button); --radius-card: var(--r-card); --radius-overlay: var(--r-overlay); --radius-full: var(--r-full);
+}
+
+:root {
+  --type-insight:800 40px/52px var(--font);
+  --type-screen:800 30px/40px var(--font);
+  --type-section:700 24px/34px var(--font);
+  --type-card:700 18px/27px var(--font);
+  --type-body:400 15px/24px var(--font);
+  --type-label:600 13px/19px var(--font);
+  --type-caption:400 12px/18px var(--font);
+  --type-input:400 14px/20px var(--font);
+  --type-badge:600 12px/18px var(--font);
+  --type-eyebrow:700 12px/18px var(--font);
+}
+
+/* 시맨틱 스케일 */
+.ds-t-insight{font:var(--type-insight);letter-spacing:-.04em;color:var(--ink-strong);margin:0}
+.ds-t-screen{font:var(--type-screen);letter-spacing:-.035em;color:var(--ink-strong);margin:0}
+.ds-t-section{font:var(--type-section);letter-spacing:-.03em;color:var(--ink-strong);margin:0}
+.ds-t-card{font:var(--type-card);letter-spacing:-.02em;color:var(--ink-strong);margin:0}
+.ds-t-body{font:var(--type-body);letter-spacing:-.01em}
+.ds-t-label{font:var(--type-label);letter-spacing:-.005em}
+.ds-t-caption{font:var(--type-caption);color:var(--sub)}
+.ds-eyebrow{font:var(--type-eyebrow);letter-spacing:.06em;color:var(--ink)}
+.ds-num{font-variant-numeric:tabular-nums}
+.ds-mono{font:400 12px/18px var(--mono)}
+
+/* 카드 */
+.ds-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-card);padding:24px;min-width:0}
+.ds-card.ds-sm{padding:16px}
+.ds-card-h{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:24px}
+.ds-card-h p{margin:4px 0 0}
+.ds-card-f{display:flex;justify-content:flex-end;gap:8px;margin-top:24px;padding-top:16px;border-top:1px solid var(--line)}
+.ds-sticky{position:sticky;top:62px}
+
+/* 버튼 */
+.ds-btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:var(--r-button);font:var(--type-label);cursor:pointer;border:1px solid var(--line-strong);background:var(--paper);color:var(--ink-strong);transition:background 150ms ease-out;white-space:nowrap}
+.ds-btn:hover{background:var(--action-soft)}
+.ds-btn.ds-primary{background:var(--action);color:var(--paper);border-color:transparent}
+.ds-btn.ds-primary:hover{background:var(--action-hover)}
+.ds-btn.ds-quiet{border-color:transparent;background:transparent;color:var(--action)}
+.ds-btn.ds-quiet:hover{background:var(--action-soft)}
+.ds-btn.ds-sm{height:28px;padding:0 10px}
+.ds-btn[disabled]{opacity:.5;cursor:not-allowed}
+.ds-btn svg,.ds-ic svg{width:16px;height:16px;stroke-width:1.5}
+
+/* 폼 */
+.ds-field{display:grid;gap:6px;margin-bottom:20px;align-content:start}
+.ds-field:last-child{margin-bottom:0}
+.ds-field label,.ds-field .ds-lab{font:var(--type-label);color:var(--ink-strong)}
+.ds-field .ds-req{color:var(--danger);margin-left:2px}
+.ds-field .ds-hint{font:var(--type-caption);color:var(--sub)}
+.ds-field .ds-err{font:var(--type-caption);color:var(--danger);display:flex;gap:4px;align-items:center}
+.ds-inp,textarea.ds-inp{width:100%;min-height:36px;padding:7px 12px;border:1px solid var(--line-strong);border-radius:var(--r-input);font:var(--type-input);color:var(--ink-strong);background:var(--paper)}
+textarea.ds-inp{resize:vertical}
+.ds-inp.ds-error{border-color:var(--danger)}
+.ds-inp::placeholder{color:var(--sub)}
+.ds-row2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:20px;align-items:start}
+.ds-row3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;align-items:start}
+.ds-row2>.ds-field,.ds-row3>.ds-field{margin-bottom:0}
+.ds-field .ds-row2,.ds-field .ds-row3{margin-bottom:0}
+.ds-card>:last-child{margin-bottom:0}
+/* 나란히 놓인 카드는 높이를 맞추고, 다음 행동은 카드 바닥에 붙인다 */
+.ds-grid.ds-eq{align-items:stretch}
+.ds-card.ds-insight{display:flex;flex-direction:column}
+.ds-card.ds-insight .ds-meta{margin-bottom:20px}
+.ds-card.ds-insight .ds-nextact{margin-top:auto}
+
+/* 선택 칩 (button + aria-pressed) */
+.ds-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ds-chip{height:32px;padding:0 12px;border-radius:var(--r-button);border:1px solid var(--line);background:var(--paper);color:var(--ink);font:var(--type-label);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.ds-chip[aria-pressed=true]{border-color:var(--blue);background:var(--blue-soft);color:var(--blue-deep)}
+.ds-chip .ds-x{opacity:.7}
+
+/* 배지 (분류는 Neutral) */
+.ds-badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:var(--r-input);font:var(--type-badge);background:var(--sunken);color:var(--ink);white-space:nowrap}
+.ds-badge.ds-pill{border-radius:var(--r-full)}
+.ds-badge.ds-success{background:var(--success-soft);color:var(--success)}
+.ds-badge.ds-warning{background:var(--warning-soft);color:var(--warning)}
+.ds-badge.ds-danger{background:var(--danger-soft);color:var(--danger)}
+.ds-badge.ds-info{background:var(--action-soft);color:var(--action)}
+.ds-badge .ds-dot{width:6px;height:6px;border-radius:var(--r-full);background:currentColor}
+
+/* 세그먼트 */
+.ds-seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-button);overflow:hidden}
+.ds-seg button{border:0;border-right:1px solid var(--line);background:var(--paper);height:32px;padding:0 14px;font:var(--type-label);color:var(--ink);cursor:pointer}
+.ds-seg button:last-child{border-right:0}
+.ds-seg button[aria-pressed=true]{background:var(--blue-soft);color:var(--blue-deep)}
+
+/* 토글 */
+.ds-toggle{display:flex;align-items:flex-start;gap:12px}
+.ds-sw{width:36px;height:20px;border-radius:var(--r-full);background:var(--line-strong);position:relative;flex:none;margin-top:2px;border:0;cursor:pointer}
+.ds-sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:var(--r-full);background:var(--paper)}
+.ds-sw[aria-checked=true]{background:var(--action)}.ds-sw[aria-checked=true]::after{left:18px}
+
+/* 라운드 스테퍼 */
+.ds-stepper{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:24px}
+.ds-stp{border:1px solid var(--line);border-radius:var(--r-button);padding:10px 12px;background:var(--paper)}
+.ds-stp .ds-k{font:var(--type-eyebrow);color:var(--ink)}
+.ds-stp .ds-v{font:var(--type-label);color:var(--ink-strong)}
+.ds-stp .ds-c{font:var(--type-caption);color:var(--sub)}
+.ds-stp.ds-done .ds-k{color:var(--success)}
+.ds-stp.ds-on{border-color:var(--blue);background:var(--blue-soft)}
+.ds-stp.ds-on .ds-k{color:var(--blue-deep)}
+
+/* 탭 */
+.ds-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.ds-tab{border:0;background:transparent;padding:10px 12px;font:var(--type-label);color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.ds-tab[aria-selected=true]{color:var(--ink-strong);border-bottom-color:var(--action)}
+.ds-tab .ds-num{margin-left:4px;color:var(--sub);font-weight:400}
+
+/* 팝오버 */
+.ds-pop{position:absolute;z-index:10;width:300px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-overlay);box-shadow:var(--shadow-md);padding:16px}
+.ds-pop h4{margin:0 0 4px;font:700 14px/20px var(--font);color:var(--ink-strong)}
+.ds-pop .ds-chips{margin:12px 0}
+.ds-pop .ds-kbd{font:400 11px/16px var(--mono);border:1px solid var(--line);border-radius:var(--r-input);padding:0 4px;color:var(--sub)}
+
+/* 막대 */
+.ds-bars{display:grid;gap:12px}
+.ds-bar{display:grid;grid-template-columns:48px 1fr 44px;align-items:center;gap:10px}
+.ds-bar .ds-track{height:8px;background:var(--sunken);border-radius:var(--r-full);overflow:hidden}
+.ds-bar .ds-fill{height:100%;background:var(--ink);border-radius:var(--r-full)}
+.ds-bar .ds-fill.ds-hi{background:var(--blue)}
+.ds-bar .ds-t-label{color:var(--ink)}
+.ds-bar .ds-v{text-align:right}
+
+/* 표 */
+.ds-tbl{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:var(--r-button);overflow:hidden;background:var(--paper)}
+.ds-tbl th{background:var(--sunken);text-align:left;font:var(--type-badge);color:var(--ink);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+.ds-tbl td{padding:10px 12px;border-bottom:1px solid var(--line);font:var(--type-input);color:var(--ink-strong);vertical-align:middle;white-space:nowrap}
+.ds-tbl tr:last-child td{border-bottom:0}
+.ds-tbl tbody tr:hover td{background:var(--soft)}
+.ds-tbl tr.ds-sel td{background:var(--blue-soft)}
+.ds-tbl .ds-r{text-align:right}
+.ds-tbl caption{caption-side:bottom;text-align:left;padding:10px 12px;font:var(--type-caption);color:var(--sub)}
+.ds-tbl .ds-dim{color:var(--sub)}
+
+/* 증거 · 메타 */
+.ds-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font:var(--type-caption);color:var(--sub)}
+.ds-meta .ds-sep{width:3px;height:3px;border-radius:var(--r-full);background:var(--line-strong)}
+.ds-nextact{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.ds-nextact .ds-t-label{color:var(--ink-strong)}
+.ds-kv{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;margin:0}
+.ds-kv dt{font:var(--type-label);color:var(--ink)}
+.ds-kv dd{margin:0;font:var(--type-input);color:var(--ink-strong);text-align:right}
+.ds-stat{display:grid;gap:2px}
+.ds-stat .ds-v{font:var(--type-section);letter-spacing:-.03em;color:var(--ink-strong)}
+.ds-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.ds-progress{height:10px;background:var(--sunken);border-radius:var(--r-full);overflow:hidden}
+.ds-progress>div{height:100%;background:var(--blue)}
+
+/* 알림 */
+.ds-note{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:var(--r-button);background:var(--sunken);font:var(--type-input);color:var(--ink-strong)}
+.ds-note.ds-warn{background:var(--warning-soft)}
+.ds-note.ds-warn .ds-ic{color:var(--warning)}
+.ds-note .ds-ic{color:var(--ink);margin-top:2px}
+.ds-note .ds-actions{margin-left:auto}
+
+
+.ds-tab { color:var(--ink); }
+.ds-inp:disabled { background:var(--sunken); cursor:not-allowed; opacity:.5; }
+.ds-select { position:relative; }
+.ds-select select { appearance:none; padding-right:32px; height:36px; }
+.ds-select svg { position:absolute; right:10px; top:10px; pointer-events:none; }
+.ds-check { display:inline-flex; align-items:center; gap:8px; font:var(--type-label); color:var(--ink-strong); }
+.ds-check input { width:16px; height:16px; accent-color:var(--action); }
+.ds-chip[aria-checked=true],.ds-seg button[aria-checked=true] { border-color:var(--blue); background:var(--blue-soft); color:var(--blue-deep); }
+.ds-seg { overflow:visible; gap:0; flex-wrap:nowrap; }
+.ds-seg button { border-radius:0; }
+.ds-seg button:first-child { border-radius:var(--r-button) 0 0 var(--r-button); }
+.ds-seg button:last-child { border-radius:0 var(--r-button) var(--r-button) 0; }
+.ds-seg button:only-child { border-radius:var(--r-button); }
+.ds-pop-anchor { position:relative; display:inline-block; }
+.ds-pop { max-width:calc(100vw - 32px); right:0; top:100%; }
+.ds-pop[data-align="start"] { left:0; right:auto; }
+/* Use the existing frame as the panel's focus indicator, not a second outline. */
+.ds-pop:focus-visible { outline:none; border-color:var(--action); }
+.ds-skeleton { background:var(--sunken); }
+.ds-note.success { background:var(--success-soft); }.ds-note.success .ds-ic { color:var(--success); }
+.ds-note.warning { background:var(--warning-soft); }.ds-note.warning .ds-ic { color:var(--warning); }
+.ds-note.danger { background:var(--danger-soft); }.ds-note.danger .ds-ic { color:var(--danger); }
+.ds-note.info { background:var(--action-soft); }.ds-note.info .ds-ic { color:var(--action); }
+.ds-note .ds-actions { flex-wrap:wrap; }
+.ds-tbl,.ds-stats,.ds-bars { font-variant-numeric:tabular-nums; }
+.ds-tbl { table-layout:fixed; }.ds-tbl td,.ds-tbl th { white-space:normal; overflow-wrap:anywhere; }
+.ds-stepper { list-style:none; padding:0; }.ds-stp { min-width:0; overflow-wrap:anywhere; }
+.ds-insight > * + * { margin-top:16px; }
+.ds-btn-icon { min-width:24px; min-height:24px; justify-content:center; }
+@media(max-width:1100px) { .ds-row2,.ds-row3,.ds-stats { grid-template-columns:1fr; } }
+
+.ds-actions { display:flex; gap:8px; justify-content:flex-end; align-items:center; }
+.ds-stat dd { margin:0; }
+.ds-chip:disabled,.ds-sw:disabled,.ds-tab:disabled { opacity:.5; cursor:not-allowed; }
+.ds-tabs { flex-wrap:wrap; }
+
+/* Drawer restart forms stay in the scrollable drawer layout. */
+.ds-pop-contained { display:block; min-width:0; }
+.ds-pop-contained > .ds-pop { position:static; width:100%; max-width:100%; margin-top:12px; }
+.ds-btn.ds-wrap{height:auto;min-height:36px;white-space:normal;padding:8px 14px;line-height:1.45;text-align:left;justify-content:flex-start}
+textarea.ds-inp{line-height:1.5}
+
+</style>
+<style>
+/* frontend/src/app/globals.css 의 파이프라인 셸 규칙 발췌 */
+* { box-sizing:border-box; }
+body { margin:0; font:var(--type-body); letter-spacing:-.01em; color:var(--ink); background:var(--soft); font-family:Pretendard, system-ui, sans-serif; }
+.pipeline-shell { display:flex; height:640px; min-height:0; border:1px solid var(--line); background:var(--soft); }
+.pipeline-side { width:var(--sidebar-width); flex:none; background:var(--soft); border-right:1px solid var(--line); padding:28px 20px; display:flex; flex-direction:column; gap:28px; overflow-y:auto; }
+.pipeline-group { font:var(--type-eyebrow); letter-spacing:.08em; color:var(--ink); margin:0 8px 8px; }
+.pipeline-nav { display:grid; gap:2px; }
+.pipeline-nav a { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:var(--r-button); text-decoration:none; font:400 13px/19px var(--font); color:var(--ink); }
+.pipeline-nav .n { width:20px; height:20px; flex:none; border-radius:var(--r-input); display:grid; place-items:center; font:700 11px/1 var(--font); background:var(--sunken); color:var(--ink); }
+.pipeline-nav .done .n { background:var(--success-soft); color:var(--success); }
+.pipeline-nav .on { background:var(--paper); color:var(--ink-strong); font-weight:700; }
+.pipeline-nav .on .n { background:var(--blue); color:var(--ink-strong); }
+.pipeline-nav small { margin-left:auto; font:400 11px/16px var(--font); color:var(--sub); }
+.pipeline-content { flex:1; min-width:0; display:flex; flex-direction:column; }
+.pipeline-main { flex:1; overflow:auto; padding:32px 32px 64px; }
+.pipeline-wrap { max-width:var(--content-max); margin:0 auto; }
+.narrow .pipeline-side { width:var(--sidebar-collapsed); padding:20px 10px; }
+.narrow .pipeline-group, .narrow .pipeline-nav span, .narrow .pipeline-nav small { display:none; }
+.phone .pipeline-main { padding:24px 16px; }
+/* 제안: 잠긴 단계의 새 규칙(지금은 근거 탐색 잠금에 별도 스타일이 없음) */
+.pipeline-nav a[aria-disabled="true"] { color:var(--sub); cursor:not-allowed; }
+.pipeline-nav a[aria-disabled="true"] .n { opacity:.6; }
+/* 목업 조작부 */
+.mock-bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:16px; background:var(--paper); border-bottom:1px solid var(--line); }
+.mock-bar b { font:var(--type-label); margin-right:4px; }
+.mock-stage { padding:16px; display:flex; justify-content:center; }
+.mock-frame { width:100%; max-width:1200px; }
+.mock-frame.narrow { max-width:820px; }
+.mock-frame.phone { max-width:375px; }
+.mock-note { font:400 12px/18px var(--font); color:var(--sub); padding:0 16px 16px; max-width:1200px; margin:0 auto; }
+.ds-actions { margin-left:auto; display:flex; gap:8px; }
+.ds-note { align-items:center; }
+.phone .ds-note { flex-wrap:wrap; }
+.phone .ds-actions { margin-left:0; width:100%; }
+</style>
+</head>
+<body>
+<div class="mock-bar" role="toolbar" aria-label="목업 상태">
+  <b>세션</b>
+  <button class="ds-btn ds-sm" data-state="pre">새 세션 · 전처리 전</button>
+  <button class="ds-btn ds-sm" data-state="old">옛 세션(schemaVersion 없음)</button>
+  <button class="ds-btn ds-sm" data-state="ready">새 세션 · 전처리 완료</button>
+  <b style="margin-left:16px">화면</b>
+  <button class="ds-btn ds-sm" data-page="clustering">클러스터링</button>
+  <button class="ds-btn ds-sm" data-page="personas">페르소나</button>
+  <button class="ds-btn ds-sm" data-page="insights">인사이트</button>
+  <b style="margin-left:16px">폭</b>
+  <button class="ds-btn ds-sm" data-width="wide">데스크톱</button>
+  <button class="ds-btn ds-sm" data-width="narrow">≤1100px</button>
+  <button class="ds-btn ds-sm" data-width="phone">모바일 375px</button>
+</div>
+<div class="mock-stage">
+  <div class="mock-frame" id="frame">
+    <div class="pipeline-shell">
+      <aside class="pipeline-side">
+        <div>
+          <div class="pipeline-group">파이프라인</div>
+          <nav class="pipeline-nav" aria-label="파이프라인 단계" id="nav"></nav>
+        </div>
+      </aside>
+      <div class="pipeline-content"><main class="pipeline-main"><div class="pipeline-wrap" id="main"></div></main></div>
+    </div>
+  </div>
+</div>
+<p class="mock-note" id="note"></p>
+<script>
+const STEPS = ['시작','키워드','크롤링','전처리','라벨링','학습','클러스터링','근거 탐색','페르소나','인사이트'];
+const PAGES = { clustering: 6, personas: 8, insights: 9 };
+const LOCKED_BEFORE_PREP = [6, 7, 8, 9];
+let state = 'pre', page = 'clustering', width = 'wide';
+const check = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>';
+const warn = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>';
+function render() {
+  const done = state === 'pre' ? 3 : state === 'ready' ? 6 : 0; // 완료한 단계 수(목업용)
+  const viewed = PAGES[page];
+  document.getElementById('nav').innerHTML = STEPS.map((name, i) => {
+    const locked = state === 'pre' && LOCKED_BEFORE_PREP.includes(i);
+    const cls = i === viewed ? 'on' : i < done ? 'done' : '';
+    const n = i < done ? check : i + 1;
+    const attrs = locked
+      ? `role="link" aria-disabled="true" title="전처리(3단계)를 먼저 완료하세요"`
+      : `href="#"`;
+    return `<a class="${cls}" ${attrs}><i class="n" aria-hidden="true">${n}</i><span>${name}</span>${i === viewed ? '<small>진행 중</small>' : ''}</a>`;
+  }).join('');
+  let main;
+  if (state === 'pre') {
+    main = `<div class="ds-note warning" role="status"><span class="ds-ic">${warn}</span><div>3단계(전처리)를 먼저 완료하세요. 전처리가 끝나야 ${STEPS[viewed]} 화면을 열 수 있습니다.</div><div class="ds-actions"><button class="ds-btn ds-primary">전처리 화면으로</button></div></div>`;
+  } else if (state === 'old') {
+    main = `<div class="ds-note warning" role="status"><span class="ds-ic">${warn}</span><div>구버전 세션은 이 단계를 열 수 없습니다. 새 프로젝트를 만들어 진행하세요.</div><div class="ds-actions"><button class="ds-btn">프로젝트 선택하기</button></div></div>`;
+  } else {
+    main = `<div class="ds-card"><p class="ds-t-label" style="margin:0 0 8px">변경 없음</p><p style="margin:0">전처리를 끝낸 새 세션은 지금과 같은 ${({clustering:'SegmentScreen',personas:'PersonaScreen',insights:'InsightScreen'})[page]}을 그대로 보여 줍니다.</p></div>`;
+  }
+  document.getElementById('main').innerHTML = main;
+  document.getElementById('frame').className = 'mock-frame ' + (width === 'wide' ? '' : width === 'narrow' ? 'narrow' : 'narrow phone');
+  document.getElementById('note').textContent = {
+    pre: '새 세션 · 전처리 전: 클러스터링·근거 탐색·페르소나·인사이트 4개 단계가 잠깁니다(지금은 근거 탐색만 잠김). 잠긴 단계는 링크가 아니며 마우스를 올리면 이유가 보입니다. URL로 직접 들어오면 배너만 보이고 v1 API를 부르지 않습니다.',
+    old: '옛 세션: 세 페이지 모두 같은 배너. 옛 화면과 v1 API는 삭제됩니다(운영 옛 세션 0개). 사이드바 잠금 규칙은 derivedRef 기준이라 옛 세션도 같은 4개 단계가 잠깁니다 — 화면은 배너 문구만 다릅니다.',
+    ready: '새 세션 · 전처리 완료: 변경 없음(회귀 확인 대상).',
+  }[state];
+  document.querySelectorAll('[data-state]').forEach(b => b.classList.toggle('ds-primary', b.dataset.state === state));
+  document.querySelectorAll('[data-page]').forEach(b => b.classList.toggle('ds-primary', b.dataset.page === page));
+  document.querySelectorAll('[data-width]').forEach(b => b.classList.toggle('ds-primary', b.dataset.width === width));
+}
+document.querySelectorAll('[data-state]').forEach(b => b.onclick = () => { state = b.dataset.state; render(); });
+document.querySelectorAll('[data-page]').forEach(b => b.onclick = () => { page = b.dataset.page; render(); });
+document.querySelectorAll('[data-width]').forEach(b => b.onclick = () => { width = b.dataset.width; render(); });
+render();
+</script>
+</body>
+</html>
