@@ -1,0 +1,19 @@
+{
+ "verdict": "PASS",
+ "head": "c15ea7fa22e3641078939a524f5a5581b2689127",
+ "fingerprint": "a89512faf2eacae1e240d660ab0707ad5043d4e09f028b5a79b7fc68da8044e8",
+ "executor": "codex",
+ "role": "code-review",
+ "freshSession": true,
+ "dispatch": "01a1577f-a992-7740-91e0-0d1308ddc0ed",
+ "base_commit": "81e24779dae04b5736542f69523fa6817fe29103",
+ "review_commit": "c15ea7fa22e3641078939a524f5a5581b2689127",
+ "findings": [],
+ "notes": [
+  "P3 (non-blocking, follow-up): three pipeline pages hardcode banner stage names instead of STEP_NAMES (02-design §1-2); names currently match.",
+  "P3 (non-blocking, pre-existing, follow-up): BACKEND.md/PIPELINE.md still describe routers/crawling.py and /crawl,/status endpoints, Pinecone search; README says eight stages.",
+  "Reviewer: 824 local imports across 258 frontend files resolve; chat deps, /insights redirect, ops/nginx/scripts/CI unchanged; 96 filter-output comparisons identical; 3 manifest variants reuse without compat file.",
+  "Reviewer sandbox could not run full pytest/vitest (no tmp dir); controller-run results: serial backend 2807 passed; frontend lint/vitest 962/build pass."
+ ],
+ "transcribed_by": "controller (reviewer printed JSON; sandbox read-only)"
+}
