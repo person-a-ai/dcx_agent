@@ -1,0 +1,326 @@
+{
+  "done": {
+    "time": "2026-10-20T07:49:34.263Z",
+    "nav": [
+      {
+        "text": "시작",
+        "aria": null,
+        "href": "/pipeline/start",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "키워드",
+        "aria": null,
+        "href": "/pipeline/keywords",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "크롤링",
+        "aria": null,
+        "href": "/pipeline/crawling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "전처리진행 중",
+        "aria": null,
+        "href": "/pipeline/preprocess",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "5라벨링",
+        "aria": null,
+        "href": "/pipeline/labeling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "6학습",
+        "aria": null,
+        "href": "/pipeline/training",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "7클러스터링",
+        "aria": null,
+        "href": "/pipeline/clustering",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "8근거 탐색",
+        "aria": null,
+        "href": "/pipeline/evidence",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "9페르소나",
+        "aria": null,
+        "href": "/pipeline/personas",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "10인사이트",
+        "aria": null,
+        "href": "/pipeline/insights",
+        "title": null,
+        "tabindex": null
+      }
+    ],
+    "transitions": [
+      {
+        "time": "2026-10-20T07:47:05.382Z",
+        "items": [
+          {
+            "text": "7클러스터링",
+            "href": null,
+            "disabled": "true"
+          },
+          {
+            "text": "8근거 탐색",
+            "href": null,
+            "disabled": "true"
+          },
+          {
+            "text": "9페르소나",
+            "href": null,
+            "disabled": "true"
+          },
+          {
+            "text": "10인사이트",
+            "href": null,
+            "disabled": "true"
+          }
+        ]
+      },
+      {
+        "time": "2026-10-20T07:49:10.420Z",
+        "items": [
+          {
+            "text": "7클러스터링",
+            "href": "/pipeline/clustering",
+            "disabled": null
+          },
+          {
+            "text": "8근거 탐색",
+            "href": "/pipeline/evidence",
+            "disabled": null
+          },
+          {
+            "text": "9페르소나",
+            "href": "/pipeline/personas",
+            "disabled": null
+          },
+          {
+            "text": "10인사이트",
+            "href": "/pipeline/insights",
+            "disabled": null
+          }
+        ]
+      }
+    ],
+    "status": {
+      "status": "done",
+      "progress": 1,
+      "detail": {},
+      "runId": null,
+      "derivedRef": {
+        "collectionId": "c1",
+        "prepKey": "p_8d4420d74b0b"
+      },
+      "stage3": {
+        "original": 6,
+        "after": 6,
+        "removed": {
+          "ad": 0,
+          "excluded_source": 0,
+          "duplicate": 0,
+          "too_short": 0,
+          "excluded_channel": 0
+        },
+        "boilerplate_replaced": {},
+        "tokens_written": 6,
+        "embedded": 6,
+        "embed_failed_zero_vector": 0,
+        "prepKey": "p_8d4420d74b0b",
+        "embedder": "fake",
+        "analyzer": "kiwi-0.24.0",
+        "at": "2026-10-20T07:49:09.457330+00:00"
+      },
+      "error": null,
+      "config": {
+        "adFilter": [],
+        "excludeSources": [],
+        "excludeChannels": [],
+        "minBodyChars": 10,
+        "boilerplate": {
+          "naver_cafe": [
+            "카페 회원이 되시면 전체 내용을 볼 수 있습니다.",
+            "카페 가입하기"
+          ],
+          "naver_blog": [
+            "공감",
+            "이웃추가"
+          ],
+          "clien": [],
+          "ppomppu": [],
+          "youtube": []
+        },
+        "analyzer": "kiwi",
+        "tokenPos": [
+          "NNG",
+          "NNP",
+          "VV",
+          "VA",
+          "XR"
+        ],
+        "embedder": "fake",
+        "embedModel": "voyage-4",
+        "embedDim": 1024
+      },
+      "reused": false
+    }
+  },
+  "reuse": {
+    "status": "done",
+    "progress": 1,
+    "detail": {},
+    "runId": null,
+    "derivedRef": {
+      "collectionId": "c1",
+      "prepKey": "p_8d4420d74b0b"
+    },
+    "stage3": {
+      "original": 6,
+      "after": 6,
+      "removed": {
+        "ad": 0,
+        "excluded_source": 0,
+        "duplicate": 0,
+        "too_short": 0,
+        "excluded_channel": 0
+      },
+      "boilerplate_replaced": {},
+      "tokens_written": 6,
+      "embedded": 6,
+      "embed_failed_zero_vector": 0,
+      "prepKey": "p_8d4420d74b0b",
+      "embedder": "fake",
+      "analyzer": "kiwi-0.24.0",
+      "at": "2026-10-20T07:49:09.457330+00:00"
+    },
+    "error": null,
+    "config": {
+      "adFilter": [],
+      "excludeSources": [],
+      "excludeChannels": [],
+      "minBodyChars": 10,
+      "boilerplate": {
+        "naver_cafe": [
+          "카페 회원이 되시면 전체 내용을 볼 수 있습니다.",
+          "카페 가입하기"
+        ],
+        "naver_blog": [
+          "공감",
+          "이웃추가"
+        ],
+        "clien": [],
+        "ppomppu": [],
+        "youtube": []
+      },
+      "analyzer": "kiwi",
+      "tokenPos": [
+        "NNG",
+        "NNP",
+        "VV",
+        "VA",
+        "XR"
+      ],
+      "embedder": "fake",
+      "embedModel": "voyage-4",
+      "embedDim": 1024
+    },
+    "reused": true
+  },
+  "reloaded": {
+    "time": "2026-10-20T07:49:35.058Z",
+    "nav": [
+      {
+        "text": "시작",
+        "aria": null,
+        "href": "/pipeline/start",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "키워드",
+        "aria": null,
+        "href": "/pipeline/keywords",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "크롤링",
+        "aria": null,
+        "href": "/pipeline/crawling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "전처리진행 중",
+        "aria": null,
+        "href": "/pipeline/preprocess",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "5라벨링",
+        "aria": null,
+        "href": "/pipeline/labeling",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "6학습",
+        "aria": null,
+        "href": "/pipeline/training",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "7클러스터링",
+        "aria": null,
+        "href": "/pipeline/clustering",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "8근거 탐색",
+        "aria": null,
+        "href": "/pipeline/evidence",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "9페르소나",
+        "aria": null,
+        "href": "/pipeline/personas",
+        "title": null,
+        "tabindex": null
+      },
+      {
+        "text": "10인사이트",
+        "aria": null,
+        "href": "/pipeline/insights",
+        "title": null,
+        "tabindex": null
+      }
+    ]
+  }
+}

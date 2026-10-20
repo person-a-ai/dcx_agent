@@ -1,0 +1,213 @@
+{
+  "time": "2026-10-20T07:49:36.001863+00:00",
+  "preprocessedExists": false,
+  "manifests": [
+    {
+      "path": ".harness/qa-data/derived/s3bee57561d744ff8a5cf63fc5bff34f9/c1/p_8d4420d74b0b/manifest.json",
+      "data": {
+        "collectionId": "c1",
+        "prepKey": "p_8d4420d74b0b",
+        "config": {
+          "adFilter": [],
+          "excludeSources": [],
+          "excludeChannels": [],
+          "minBodyChars": 10,
+          "boilerplate": {
+            "naver_cafe": [
+              "카페 회원이 되시면 전체 내용을 볼 수 있습니다.",
+              "카페 가입하기"
+            ],
+            "naver_blog": [
+              "공감",
+              "이웃추가"
+            ],
+            "clien": [],
+            "ppomppu": [],
+            "youtube": []
+          },
+          "analyzer": "kiwi",
+          "tokenPos": [
+            "NNG",
+            "NNP",
+            "VV",
+            "VA",
+            "XR"
+          ],
+          "embedder": "fake",
+          "embedModel": "voyage-4",
+          "embedDim": 1024
+        },
+        "collectionFinalized": true,
+        "embedder": {
+          "name": "fake",
+          "model": "voyage-4",
+          "dim": 1024
+        },
+        "analyzer": "kiwi-0.24.0",
+        "createdAt": "2026-10-20T07:49:06.776604+00:00",
+        "counts": {
+          "original": 6,
+          "after": 6,
+          "removed": {
+            "ad": 0,
+            "excluded_source": 0,
+            "duplicate": 0,
+            "too_short": 0,
+            "excluded_channel": 0
+          },
+          "boilerplate_replaced": {},
+          "tokens_written": 6,
+          "embedded": 6,
+          "embed_failed_zero_vector": 0,
+          "prepKey": "p_8d4420d74b0b",
+          "embedder": "fake",
+          "analyzer": "kiwi-0.24.0",
+          "at": "2026-10-20T07:49:09.457330+00:00"
+        },
+        "progress": {
+          "done_shards": 1,
+          "total_shards": 1,
+          "docs_written": 6,
+          "tokens_written": 6,
+          "vectors_written": 6
+        },
+        "embedderName": "fake",
+        "status": "done"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "file": ".harness/qa-data/derived/s3bee57561d744ff8a5cf63fc5bff34f9/c1/p_8d4420d74b0b/docs/part-00001.jsonl",
+      "line": 1,
+      "keys": [
+        "body",
+        "cafe",
+        "comments",
+        "desc",
+        "doc_id",
+        "fetch_level",
+        "idx",
+        "link",
+        "source",
+        "src_meta",
+        "title",
+        "url"
+      ],
+      "descLength": 44,
+      "desc": "에어컨 냉방 사용 경험이 충분히 긴 본문입니다 0. 여름에 시원했습니다.\n좋아요",
+      "cafe": "QA카페",
+      "link": "https://example.test/qa0"
+    },
+    {
+      "file": ".harness/qa-data/derived/s3bee57561d744ff8a5cf63fc5bff34f9/c1/p_8d4420d74b0b/docs/part-00001.jsonl",
+      "line": 2,
+      "keys": [
+        "body",
+        "cafe",
+        "comments",
+        "desc",
+        "doc_id",
+        "fetch_level",
+        "idx",
+        "link",
+        "source",
+        "src_meta",
+        "title",
+        "url"
+      ],
+      "descLength": 44,
+      "desc": "에어컨 냉방 사용 경험이 충분히 긴 본문입니다 1. 여름에 시원했습니다.\n좋아요",
+      "cafe": "QA카페",
+      "link": "https://example.test/qa1"
+    },
+    {
+      "file": ".harness/qa-data/derived/s3bee57561d744ff8a5cf63fc5bff34f9/c1/p_8d4420d74b0b/docs/part-00001.jsonl",
+      "line": 3,
+      "keys": [
+        "body",
+        "cafe",
+        "comments",
+        "desc",
+        "doc_id",
+        "fetch_level",
+        "idx",
+        "link",
+        "source",
+        "src_meta",
+        "title",
+        "url"
+      ],
+      "descLength": 44,
+      "desc": "에어컨 냉방 사용 경험이 충분히 긴 본문입니다 2. 여름에 시원했습니다.\n좋아요",
+      "cafe": "QA카페",
+      "link": "https://example.test/qa2"
+    },
+    {
+      "file": ".harness/qa-data/derived/s3bee57561d744ff8a5cf63fc5bff34f9/c1/p_8d4420d74b0b/docs/part-00001.jsonl",
+      "line": 4,
+      "keys": [
+        "body",
+        "cafe",
+        "comments",
+        "desc",
+        "doc_id",
+        "fetch_level",
+        "idx",
+        "link",
+        "source",
+        "src_meta",
+        "title",
+        "url"
+      ],
+      "descLength": 44,
+      "desc": "에어컨 냉방 사용 경험이 충분히 긴 본문입니다 3. 여름에 시원했습니다.\n좋아요",
+      "cafe": "QA카페",
+      "link": "https://example.test/qa3"
+    },
+    {
+      "file": ".harness/qa-data/derived/s3bee57561d744ff8a5cf63fc5bff34f9/c1/p_8d4420d74b0b/docs/part-00001.jsonl",
+      "line": 5,
+      "keys": [
+        "body",
+        "cafe",
+        "comments",
+        "desc",
+        "doc_id",
+        "fetch_level",
+        "idx",
+        "link",
+        "source",
+        "src_meta",
+        "title",
+        "url"
+      ],
+      "descLength": 44,
+      "desc": "에어컨 냉방 사용 경험이 충분히 긴 본문입니다 4. 여름에 시원했습니다.\n좋아요",
+      "cafe": "QA카페",
+      "link": "https://example.test/qa4"
+    },
+    {
+      "file": ".harness/qa-data/derived/s3bee57561d744ff8a5cf63fc5bff34f9/c1/p_8d4420d74b0b/docs/part-00001.jsonl",
+      "line": 6,
+      "keys": [
+        "body",
+        "cafe",
+        "comments",
+        "desc",
+        "doc_id",
+        "fetch_level",
+        "idx",
+        "link",
+        "source",
+        "src_meta",
+        "title",
+        "url"
+      ],
+      "descLength": 44,
+      "desc": "에어컨 냉방 사용 경험이 충분히 긴 본문입니다 5. 여름에 시원했습니다.\n좋아요",
+      "cafe": "QA카페",
+      "link": "https://example.test/qa5"
+    }
+  ]
+}

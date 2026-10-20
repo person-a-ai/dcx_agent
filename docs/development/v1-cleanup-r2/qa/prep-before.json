@@ -1,0 +1,59 @@
+{
+  "time": "2026-10-20T07:45:44.538519+00:00",
+  "preprocessedExists": false,
+  "session": {
+    "schemaVersion": 2,
+    "sid": "s3bee57561d744ff8a5cf63fc5bff34f9",
+    "step": "start",
+    "drafts": {},
+    "projectContext": {
+      "bk": "QA 전처리 실행",
+      "oneLiner": "QA용 세션",
+      "researchQuestion": {
+        "text": "냉방 경험은?",
+        "template": null
+      },
+      "projectType": {
+        "choice": "new",
+        "note": ""
+      },
+      "taskMode": null,
+      "analysisGoal": {
+        "choice": "needs",
+        "note": ""
+      },
+      "keyMetrics": [
+        {
+          "name": "만족",
+          "source": "",
+          "item": ""
+        }
+      ],
+      "constraints": [],
+      "positioning": {
+        "price": "value",
+        "market": "new",
+        "priceText": "",
+        "marketText": ""
+      },
+      "personaSeeds": null,
+      "channels": [
+        "fixture"
+      ],
+      "knownInsights": [],
+      "productCategory": {
+        "l1": "가전",
+        "l2": null,
+        "l3": null,
+        "source": "user"
+      },
+      "targetScope": null,
+      "futureCustomer": null,
+      "schemaVersion": 1
+    },
+    "knownInsights": [],
+    "version": "v1",
+    "updatedAt": "2026-10-20T07:16:59.496659+00:00",
+    "collectionId": "c1"
+  }
+}
