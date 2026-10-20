@@ -17,7 +17,7 @@ from app.crawl.filters import FilterConfig
 from app.crawl.ratelimit import ChannelLimiter
 from app.crawl.writer import read_docs
 from app.model.features import INPUT_DIM, build_features
-from app.services.preprocessing import filter_documents
+from app.prep.documents import filter_documents
 
 
 def fake(source):

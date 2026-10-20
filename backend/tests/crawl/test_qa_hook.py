@@ -19,7 +19,7 @@ from app.crawl.filters import FilterConfig
 from app.crawl.ratelimit import ChannelLimiter
 from app.crawl.schema import Doc
 from app.crawl.writer import read_docs
-from app.services.preprocessing import filter_documents
+from app.prep.documents import filter_documents
 
 
 HOOK_MODULE = 'channel_expansion_qa'
