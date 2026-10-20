@@ -18,7 +18,7 @@ from app.prep.clean import clean_html, strip_boilerplate, token_text
 from app.prep.config import PrepConfig, analyzer_version, prep_key
 from app.prep.report import stage3_report
 from app.prep.tokens import tokenize
-from app.services.preprocessing import _crawl_docs, filter_documents
+from app.prep.documents import crawl_docs, filter_documents
 from app.vectors.embedder import EmbedderUnconnected, FakeEmbedder, VoyageEmbedder, get_embedder, embedder_name
 from app.vectors.store import VectorStore
 
@@ -192,7 +192,7 @@ def run_prep(ctx, sid: str, version: str) -> Path:
         manifest['status'] = 'running'
         store.write_json(root / 'manifest.json', manifest)
         try:
-            documents = _crawl_docs(sid, session=session)
+            documents = crawl_docs(sid, session)
             return _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnected)
         except Exception as error:
             if isinstance(error, EmbedderUnconnected):

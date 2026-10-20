@@ -186,7 +186,7 @@ def test_done_cache_does_not_read_collection_again(setup, monkeypatch):
     root = pipeline.run_prep(Context(), 's', 'v1')
     def forbidden(*args, **kwargs):
         raise AssertionError('completed cache must return without collection IO')
-    monkeypatch.setattr(pipeline, '_crawl_docs', forbidden)
+    monkeypatch.setattr(pipeline, 'crawl_docs', forbidden)
     assert pipeline.run_prep(Context(), 's', 'v1') == root
 
 

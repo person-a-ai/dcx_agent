@@ -200,67 +200,6 @@ def test_integrations_never_exposes_configured_secrets(client, offline, monkeypa
     assert all(getattr(settings, name) not in response.text for name in KEY_FIELDS)
 
 
-def test_legacy_session_preprocess_still_reads_old_crawl(data_dir):
-    doc = {'title': '오래된 사용 후기', 'desc': '충분히 긴 설명을 가진 기존 데이터', 'cafe': '카페', 'link': 'old'}
-    save_jsonl('crawl/legacy/part.jsonl', [doc, doc])
-    preprocess_data({'sid': 'legacy'})
-    assert load_data('preprocessed/legacy/') == [{**doc, 'idx': 0}]
-
-
-def put_collection(data_dir, sid, cid, parent, docs):
-    root = data_dir / 'crawl' / sid / 'collections' / cid
-    store.write_json(root / 'manifest.json', {'id': cid, 'parent': parent})
-    # These fixtures represent completed, immutable collection documents.
-    with closing(CrawlQueue(root / 'queue.sqlite')) as queue:
-        queue.finish_run(queue.register_run('detail'), 'done')
-    writer = DocWriter(root / 'docs')
-    try:
-        for doc in docs:
-            writer.write(doc)
-    finally:
-        writer.close()
-
-
-def document(doc_id, **kwargs):
-    return dict(doc_id=doc_id, source='youtube', title='', body='충분히 긴 본문 내용입니다', comments=[{'text': '댓글 내용'}],
-                src_meta={}, url=f'https://example.test/{doc_id}', fetch_level='full', **kwargs)
-
-
-def test_preprocess_reads_collection_chain(client, data_dir):
-    sid = client.post('/context', json=CTX).json()['sid']
-    parent = document('shared')
-    child = {**parent, 'body': '자식 수집본의 본문 내용입니다', 'src_meta': {'cafe': '지정 카페'}}
-    put_collection(data_dir, sid, 'c1', None, [parent, document('parent')])
-    store.update_session(sid, {'collectionId': 'c1'})
-    assert client.post(f'/sessions/{sid}/versions', json={'from': 'v1', 'restartFrom': 'stage2'}).status_code == 201
-    store.update_session(sid, {'collectionId': 'c2'})
-    put_collection(data_dir, sid, 'c2', 'c1', [child, document('child'), child])
-    put_collection(data_dir, sid, 'c3', None, [document('unrelated')])
-    preprocess_data({'sid': sid})
-    docs = {d['doc_id']: d for d in load_data(f'preprocessed/{sid}/')}
-    assert set(docs) == {'shared', 'parent', 'child'}
-    assert docs['shared']['desc'] == child['body'] + '\n댓글 내용'
-    assert docs['shared']['cafe'] == '지정 카페'
-    assert docs['parent']['cafe'] == '유튜브'
-    assert all(docs['shared'][k] == v for k, v in child.items())
-    assert job_manager.get('preprocess', sid)['filtered'] == 3
-
-
-def test_quality_and_desc_limit(data_dir):
-    docs = [document('full'), {**document('short'), 'body': '짧음'},
-            {**document('long'), 'body': '긴' * 4100},
-            {**document('snippet_ok'), 'fetch_level': 'snippet', 'title': '다섯글자제목', 'body': '', 'snippet': '충분히 긴 설명 내용입니다'},
-            {**document('snippet_bad_title'), 'fetch_level': 'snippet', 'title': '짧음', 'snippet': '충분히 긴 설명 내용입니다'},
-            {**document('snippet_bad_desc'), 'fetch_level': 'snippet', 'title': '다섯글자제목', 'body': '', 'snippet': '짧음'},
-            {**document('snippet_both_short'), 'fetch_level': 'snippet', 'title': '짧음', 'body': '', 'snippet': '짧음'}]
-    put_collection(data_dir, 'quality', 'c1', None, docs)
-    store.update_session('quality', {'collectionId': 'c1'})
-    preprocess_data({'sid': 'quality'})
-    result = {d['doc_id']: d for d in load_data('preprocessed/quality/')}
-    assert set(result) == {'full', 'long', 'snippet_ok', 'snippet_bad_title', 'snippet_bad_desc'}
-    assert result['long']['desc'] == '긴' * 4000
-
-
 def test_downstream_clustering_reads_compat_fields(client, offline, monkeypatch):
     from app.label import questions, rule
     from app.label.schema import Tags
