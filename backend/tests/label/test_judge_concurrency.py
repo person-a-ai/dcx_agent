@@ -306,3 +306,26 @@ def test_api_backend_still_pauses_immediately(concurrent_judge, monkeypatch):
     env = concurrent_judge
     assert run_failure_case(env, monkeypatch, backend_failure, backend='openai_api') == ['API 실패']
     assert rows(env)['d000']['attempts'] == 1
+
+
+def test_failed_chunk_does_not_starve_peers(concurrent_judge, monkeypatch):
+    env = concurrent_judge
+    calls = Counter()
+
+    def judge(docs, *a, **kw):
+        key = docs[0]['doc_id']
+        calls[key] += 1
+        if key == 'd000':
+            return backend_failure()
+        return votes(docs)
+
+    assert run_failure_case(env, monkeypatch, judge, concurrency=1, resumes=0) == [env.judge.BREAKER_MESSAGE]
+    result = rows(env)
+    assert all(result[f'd{i:03}']['status'] == 'done' for i in range(2, 8))
+    assert cache_for(env, 'gpt').counts() == dict(done=6, pending=2, bad=0)
+    for doc_id in ('d000', 'd001'):
+        assert result[doc_id]['status'] == 'pending'
+        assert result[doc_id]['attempts'] == 1
+        assert result[doc_id]['last_error'] == 'gpt_backend_failed'
+        assert result[doc_id]['run_id'] is None
+    assert calls == Counter(d000=6, d002=1, d004=1, d006=1)

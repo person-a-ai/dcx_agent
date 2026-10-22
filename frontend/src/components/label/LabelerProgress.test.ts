@@ -52,3 +52,9 @@ it('formats failure counts with Korean thousands separators', () => {
  expect(render({bad:1234}, true)).toContain('판정 실패 1,234건 · 검수 큐로 보냄');
  expect(render({state:'done',bad:1234}, true)).toContain('1,234건은 판정하지 못해 검수 큐로 보냈습니다.');
 });
+
+it.each(['failed', 'interrupted', 'cancelled'])('shows %s failures before the stopped status', state => {
+ const html = render({state}, true);
+ expect(html).toContain(failure);
+ expect(html.indexOf(failure)).toBeLessThan(html.indexOf('판정이 멈췄습니다.'));
+});

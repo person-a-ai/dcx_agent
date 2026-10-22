@@ -157,3 +157,20 @@ def test_release_docs_keeps_attempts(lease_env):
     after = rows(cache)
     assert after['a'] == {**before['a'], 'run_id': None}
     assert all(after[i] == before[i] for i in ('b', 'c', 'd'))
+
+
+def test_release_docs_defers_relase(tmp_path, monkeypatch):
+    now = [1000.0]
+    monkeypatch.setattr('app.label.votes.time.time', lambda: now[0])
+    cache = VoteCache(tmp_path / 'votes')
+    cache.seed(['a', 'b'])
+    assert cache.lease(1, 'run') == ['a']
+    before = rows(cache)['a']
+    now[0] += 10
+    cache.release_docs(['a'])
+    after = rows(cache)['a']
+    assert {k: after[k] for k in ('attempts', 'status', 'last_error')} == {
+        k: before[k] for k in ('attempts', 'status', 'last_error')}
+    assert after['run_id'] is None
+    assert after['at'] == now[0]
+    assert cache.lease(1, 'run') == ['b']
