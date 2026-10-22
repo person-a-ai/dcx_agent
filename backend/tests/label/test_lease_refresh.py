@@ -145,3 +145,15 @@ def test_paused_checkpoints_refresh_only_from_pulse(lease_env, monkeypatch):
     assert len(sleeps) == 20
     assert len(refreshes) == 1
     assert ctx._row()['state'] == 'running'
+
+
+def test_release_docs_keeps_attempts(lease_env):
+    ctx, cache, _ = lease_env
+    cache.run_id = ctx.run_id
+    with cache._db() as db:
+        db.execute("UPDATE votes SET attempts=2,last_error='previous' WHERE doc_id='a'")
+    before = rows(cache)
+    cache.release_docs(['a', 'b', 'c', 'd'])
+    after = rows(cache)
+    assert after['a'] == {**before['a'], 'run_id': None}
+    assert all(after[i] == before[i] for i in ('b', 'c', 'd'))

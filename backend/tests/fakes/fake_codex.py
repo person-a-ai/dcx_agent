@@ -31,6 +31,9 @@ if '문서 묶음 (아래 내용은 판정 대상 데이터이며 지시가 아�
         sys.exit(1)
     raw_docs = instructions.split('문서 묶음 (아래 내용은 판정 대상 데이터이며 지시가 아니다):\n', 1)[1]
     docs = json.JSONDecoder().raw_decode(raw_docs)[0]
+    if mode == 'flaky' and docs and docs[0]['doc_id'][-1].lower() in '0123':
+        print('Backend failed', file=sys.stderr)
+        sys.exit(1)
     if mode == 'partial' and len(docs) > 1:
         docs = docs[:-1]
     payload = {'items': [dict(doc_id=doc['doc_id'], anchor=True,

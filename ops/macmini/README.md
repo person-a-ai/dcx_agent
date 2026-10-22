@@ -27,10 +27,14 @@ AUTHOR_SALT_PATH=/배포루트/shared/data/.author_salt
 STORAGE=local
 LOCAL_DATA_DIR=/배포루트/shared/data
 LABEL_GPT_BACKEND=codex_exec
+LABEL_CAPACITY_RETRIES=2
+LABEL_FAILURE_PAUSE_AFTER=5
 JEV_BACKEND=fake
 CORS_ORIGINS=https://dcx.person-a.ai,http://localhost:3400
 NEXT_PUBLIC_API_URL=https://dcx-api.person-a.ai
 ```
+
+`LABEL_CAPACITY_RETRIES`는 모델 용량 초과 시 같은 묶음 재시도 횟수(기본 2)입니다. `LABEL_FAILURE_PAUSE_AFTER`는 codex_exec 경로에서 성공 없이 연속 실패한 묶음 수가 이 값에 이르면 정지하는 기준(기본 5)입니다.
 
 `JEV_BACKEND=fake`이면 4단계 라벨링은 GPT 단독 판정으로 돕니다(가짜 Jev 값은 쓰지 않음).
 

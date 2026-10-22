@@ -144,23 +144,28 @@ def test_insufficient_credit_pauses(setup_judge, monkeypatch):
     assert cache_for(env).counts() == dict(pending=3, done=0, bad=0)
 
 
-@pytest.mark.parametrize('failure', ['missing', 'paused'])
+@pytest.mark.parametrize('failure', ['missing', 'paused', 'paused_codex'])
 def test_gpt_failures_bounded_per_document(setup_judge, monkeypatch, failure):
     from app.label.gpt import LabelerPaused
     env = setup_judge
     env.prepare()
+    monkeypatch.setattr(settings, 'label_gpt_backend', 'openai_api' if failure == 'paused' else 'codex_exec')
+    monkeypatch.setattr(settings, 'label_failure_pause_after', 5)
     calls = []
     def fail(docs, *args, **kwargs):
         calls.append([d['doc_id'] for d in docs])
-        if failure == 'paused':
+        if failure.startswith('paused'):
             raise LabelerPaused('safe reason')
         return {}, [d['doc_id'] for d in docs]
     monkeypatch.setattr(env.judge.gpt, 'judge_batch', fail)
     monkeypatch.setattr(env.judge, '_pause', lambda ctx, *a: setattr(ctx, 'stopped', True))
     for _ in range(4):
         env.judge.run_worker(Context('gpt'))
-    assert len(calls) == 3
-    assert cache_for(env, 'gpt').counts() == dict(pending=0, done=0, bad=3)
+    assert len(calls) == (20 if failure == 'paused_codex' else 3)
+    assert cache_for(env, 'gpt').counts() == (dict(pending=3, done=0, bad=0) if failure == 'paused_codex' else dict(pending=0, done=0, bad=3))
+    if failure == 'paused_codex':
+        with cache_for(env, 'gpt')._db() as db:
+            assert all(r[0] == 0 for r in db.execute('SELECT attempts FROM votes'))
 
 
 def test_partial_batch_keeps_successes(setup_judge, monkeypatch):
@@ -216,7 +221,7 @@ def test_real_context_pause_resume(setup_judge, monkeypatch):
     def judge(*args, **kwargs):
         calls.append(1)
         if len(calls) == 1:
-            raise LabelerPaused('사용량 한도')
+            raise LabelerPaused('사용량 한도', usage_limit=True)
         return original(*args, **kwargs)
     monkeypatch.setattr(env.judge.gpt, 'judge_batch', judge)
     with transaction('session') as db:

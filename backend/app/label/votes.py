@@ -119,6 +119,12 @@ class VoteCache:
                 last_error=?, run_id=NULL, at=?
                 WHERE doc_id=? AND status='pending' AND run_id IS ?""", (reason, time.time(), doc_id, self.run_id))
 
+    def release_docs(self, doc_ids: list[str]) -> None:
+        """Release selected pending leases owned by this cache's current run."""
+        with self._db() as db:
+            db.executemany("UPDATE votes SET run_id=NULL WHERE doc_id=? AND status='pending' AND run_id=?",
+                           ((doc_id, self.run_id) for doc_id in doc_ids))
+
     def release(self):
         with self._db() as db:
             db.execute("UPDATE votes SET run_id=NULL WHERE status='pending' AND run_id=?", (self.run_id,))

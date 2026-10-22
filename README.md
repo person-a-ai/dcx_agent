@@ -327,6 +327,8 @@ sudo certbot renew --dry-run
 | `LABEL_FAKE_JEV_CROSS` | - | 기본 `false`; 테스트 · 오프라인 QA 전용: fake Jev를 실제 교차 판정 라벨러로 취급 |
 | `LABEL_GPT_BACKEND` | - | `codex_exec` (기본), `openai_api`, 오프라인 `fake` |
 | `LABEL_BATCH_SIZE` / `LABEL_CONCURRENCY` | - | GPT 배치 문서 수 (`20`) / 동시에 처리하는 GPT 묶음 수 (`4`) |
+| `LABEL_CAPACITY_RETRIES` | - | 모델 용량 초과 시 같은 묶음 재시도 횟수 (`2`) |
+| `LABEL_FAILURE_PAUSE_AFTER` | - | `codex_exec` 경로에서 성공 없이 연속 실패한 묶음 수가 이 값에 이르면 정지 (`5`) |
 | `LABEL_PRIORITY_SOURCES` | - | 먼저 판정할 채널 JSON 목록 (`["naver_blog","naver_cafe"]`) |
 | `SEGMENT_CONCURRENCY` | - | 6단계 경험 차원 묶음 · 이름 초안을 동시에 처리하는 수 (`4`) |
 | `EVIDENCE_LLM_CONCURRENCY` | - | 7단계 근거 탐색 LLM 동시 호출 수 (`4`, `1`이면 순차 실행) |
