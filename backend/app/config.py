@@ -54,6 +54,8 @@ class Settings(BaseSettings):
     jev_backend: Literal["http", "fake"] = "http"
     label_gpt_backend: Literal["codex_exec", "openai_api", "fake"] = "codex_exec"
     label_fake_jev_cross: bool = False
+    label_capacity_retries: int = Field(default=2, ge=0)
+    label_failure_pause_after: int = Field(default=5, ge=1)
     label_batch_size: int = 20
     label_concurrency: int = 4
     segment_concurrency: int = 4
@@ -75,6 +77,7 @@ class Settings(BaseSettings):
     @field_validator(
         "embed_backend", "embed_model", "embed_dim", "jev_model", "jev_rate_per_min",
         "jev_backend", "label_gpt_backend", "label_fake_jev_cross", "label_batch_size", "label_concurrency", "segment_concurrency", "label_priority_sources",
+        "label_capacity_retries", "label_failure_pause_after",
         "known_theta", "model_cut_low", "model_cut_high", "monitor_rate", "monitor_warn",
         "head_min_samples", "audit_first", "audit_every", "audit_size", "audit_reissue",
         "kappa_floor", mode="before",
