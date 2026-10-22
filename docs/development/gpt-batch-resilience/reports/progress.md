@@ -33,3 +33,7 @@
 ## QA 환경
 - 데이터: scratchpad `qa-data/`(운영 shared/data에서 세라젬 세션 sessions·derived/c1/p_85024e028d18·crawl만 복사, work·judge 캐시 없음, author salt는 새 무작위 값).
 - `.claude/launch.json`(gitignore 대상) `qa-api` 8412 · `qa-web` 3412. 시나리오별 `qa-mode.env`의 `FAKE_CODEX_LABEL_MODE` 등을 바꾸고 API 재시작(워커가 API 하위 프로세스라 환경 상속).
+
+## 리뷰 2차 · QA · 검증 (2026-10-22)
+- review-r2.md: 발견 없음 → review 완료. qa.md: QA1~6 PASS(+QA3b·QA3c 보강) → browser-qa 완료.
+- `development-harness evidence` (HEAD c9a7a83): pytest 2843 passed · lint 0 · build 0 · vitest 991 passed → verification 완료. 현재 단계 `uat-gate`(사용자 승인 대기).
