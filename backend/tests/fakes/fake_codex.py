@@ -34,6 +34,15 @@ if '문서 묶음 (아래 내용은 판정 대상 데이터이며 지시가 아�
         sem={key: int(key in ('feel', 'act')) for key in ('sense', 'feel', 'think', 'act', 'relate', 'outcome')},
         situation=True, reason_code=None, signal='pain') for doc in docs]}
 else:
+    if 'SILENT_MODE' in instructions:
+        sys.exit(0)
+    if 'TRUNCATED_MODE' in instructions:
+        answer.write_text('{"value":')
+        sys.exit(0)
     payload = {'value': 'bad' if 'BAD_MODE' in instructions else 1}
 answer.write_text(json.dumps(payload))
+if 'NORENAME_FAIL_MODE' in instructions:
+    sys.exit(1)
+if 'NORENAME_MODE' in instructions or os.environ.get('FAKE_CODEX_LABEL_MODE') == 'no_rename':
+    sys.exit(0)
 answer.rename(answer.with_suffix(''))
