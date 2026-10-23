@@ -59,3 +59,49 @@ def test_existing_parse_error_quarantined(task, data_dir):
     assert run_many([task], 'parse', 1)[0].error.kind == 'parse'
     assert (root / 'answers/bad/task-0.json').read_text() == 'broken'
     assert not (root / 'invocations').exists()
+
+
+def test_unrenamed_part_is_adopted(task, data_dir):
+    result = run_many([task.model_copy(update={'instructions': 'NORENAME_MODE'})], 'unrenamed', 1)[0]
+    assert result.ok
+    assert result.data.value == 1
+    root = data_dir / 'llm_runs/unrenamed/answers'
+    assert (root / 'task-0.json').exists()
+    assert not (root / 'task-0.json.part').exists()
+
+
+def test_part_ignored_on_nonzero_exit(task, data_dir):
+    result = run_many([task.model_copy(update={'instructions': 'NORENAME_FAIL_MODE'})], 'nonzero', 1)[0]
+    assert result.error.kind == 'backend'
+    root = data_dir / 'llm_runs/nonzero/answers'
+    assert not (root / 'task-0.json').exists()
+    assert (root / 'task-0.json.part').exists()
+
+
+def test_truncated_part_quarantined(task, data_dir):
+    result = run_many([task.model_copy(update={'instructions': 'TRUNCATED_MODE'})], 'truncated', 1)[0]
+    assert result.error.kind == 'parse'
+    root = data_dir / 'llm_runs/truncated/answers'
+    assert (root / 'bad/task-0.json').read_text() == '{"value":'
+    assert not (root / 'task-0.json.part').exists()
+
+
+def test_instruction_names_final_file(task, data_dir):
+    run_many([task], 'instruction', 1)
+    first_line = (data_dir / 'llm_runs/instruction/prompts/task-0.txt').read_text().splitlines()[0]
+    assert '`answers/task-0.json.part`' in first_line
+    assert 'answers/task-0.json으로 이름을 바꿔라' in first_line
+
+
+def test_stale_part_not_adopted(task, data_dir):
+    root = data_dir / 'llm_runs/stale'
+    (root / 'answers').mkdir(parents=True)
+    stale = root / 'answers/task-0.json.part'
+    stale.write_text('{"value":7}')
+    result = run_many([task.model_copy(update={'instructions': 'SILENT_MODE'})], 'stale', 1)[0]
+    assert result.error.kind == 'backend'
+    quarantined = list((root / 'answers/bad').glob('task-0.json.part.*'))
+    assert len(quarantined) == 1
+    assert quarantined[0].read_text() == '{"value":7}'
+    assert not stale.exists()
+    assert not (root / 'answers/task-0.json').exists()

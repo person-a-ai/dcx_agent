@@ -175,3 +175,100 @@ def test_build_task_truncates_long_body():
     assert '가' * (GPT_BODY_LIMIT + 1) not in task.instructions
     assert '짧은 본문' in task.instructions
     assert len(long['body']) == GPT_BODY_LIMIT + 500
+
+
+@pytest.fixture
+def capacity_sleep(gpt, monkeypatch):
+    calls = []
+    monkeypatch.setattr(gpt.time, 'sleep', calls.append)
+    return calls
+
+
+def invocation_count(root):
+    runs = list((root / 'llm_runs').iterdir())
+    assert len(runs) == 1
+    return len((runs[0] / 'invocations').read_text().splitlines())
+
+
+def test_capacity_retried_then_succeeds(gpt, fake_codex, monkeypatch, capacity_sleep):
+    monkeypatch.setenv('FAKE_CODEX_LABEL_MODE', 'capacity_once')
+    votes, missing = judge(gpt, docs('a'))
+    assert set(votes) == {'a'} and missing == []
+    assert invocation_count(fake_codex) == 2
+    assert len(capacity_sleep) == 1
+
+
+def test_capacity_gives_up_after_retries(gpt, fake_codex, monkeypatch, capacity_sleep):
+    monkeypatch.setenv('FAKE_CODEX_LABEL_MODE', 'capacity')
+    monkeypatch.setattr(settings, 'label_capacity_retries', 2)
+    with pytest.raises(gpt.LabelerPaused) as exc:
+        judge(gpt, docs('a'))
+    assert exc.value.usage_limit is False
+    assert '사용량 한도' not in str(exc.value)
+    assert invocation_count(fake_codex) == 3
+    assert len(capacity_sleep) == 2
+
+
+def test_capacity_retries_zero(gpt, fake_codex, monkeypatch, capacity_sleep):
+    monkeypatch.setenv('FAKE_CODEX_LABEL_MODE', 'capacity')
+    monkeypatch.setattr(settings, 'label_capacity_retries', 0)
+    with pytest.raises(gpt.LabelerPaused):
+        judge(gpt, docs('a'))
+    assert invocation_count(fake_codex) == 1
+    assert capacity_sleep == []
+
+
+def test_usage_limit_not_retried(gpt, fake_codex, monkeypatch, capacity_sleep):
+    monkeypatch.setenv('FAKE_CODEX_LABEL_MODE', 'usage_limit')
+    with pytest.raises(gpt.LabelerPaused) as exc:
+        judge(gpt, docs('a'))
+    assert exc.value.usage_limit is True
+    assert str(exc.value) == gpt._USAGE_MESSAGE
+    assert invocation_count(fake_codex) == 1
+    assert capacity_sleep == []
+
+
+def test_capacity_setting_defaults(monkeypatch):
+    from app.config import Settings
+    for name in ('LABEL_CAPACITY_RETRIES', 'LABEL_FAILURE_PAUSE_AFTER'):
+        monkeypatch.delenv(name, raising=False)
+    config = Settings(_env_file=None)
+    assert config.label_capacity_retries == 2
+    assert config.label_failure_pause_after == 5
+    for name in ('LABEL_CAPACITY_RETRIES', 'LABEL_FAILURE_PAUSE_AFTER'):
+        monkeypatch.setenv(name, '')
+    config = Settings(_env_file=None)
+    assert config.label_capacity_retries == 2
+    assert config.label_failure_pause_after == 5
+
+
+@pytest.mark.parametrize('name,value', [
+    ('LABEL_CAPACITY_RETRIES', '-1'), ('LABEL_FAILURE_PAUSE_AFTER', '0'),
+])
+def test_capacity_setting_validation(monkeypatch, name, value):
+    from app.config import Settings
+    from pydantic import ValidationError
+    monkeypatch.setenv(name, value)
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None)
+
+
+@pytest.mark.parametrize('k,base', [(0, 5), (1, 10), (2, 20), (3, 30), (8, 30)])
+@pytest.mark.parametrize('jitter', [0, 3])
+def test_capacity_wait(gpt, monkeypatch, k, base, jitter):
+    def uniform(low, high):
+        assert (low, high) == (0, 3)
+        return jitter
+    monkeypatch.setattr(gpt.random, 'uniform', uniform)
+    assert gpt._capacity_wait(k) == base + jitter
+
+
+def test_latest_attempt_ignores_previous_failures(gpt, data_dir):
+    assert gpt._latest_attempt('missing') == ''
+    log = data_dir / 'llm_runs/run/logs/worker-0.log'
+    log.parent.mkdir(parents=True)
+    log.write_text('--- attempt ---\nusage limit\n--- attempt ---\nAT CAPACITY')
+    assert gpt._latest_attempt('run') == '\nat capacity'
+    assert gpt._pause_message('run') != gpt._USAGE_MESSAGE
+    log.write_text(log.read_text() + '\n--- attempt ---\nOther failure')
+    assert gpt._latest_attempt('run') == '\nother failure'

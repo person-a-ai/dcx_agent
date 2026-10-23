@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import signal
 import subprocess
+import time
 import uuid
 
 from app.config import settings
@@ -52,6 +53,7 @@ def _stop(process):
 
 def _worker(task, root, n):
     answer = root / f'answers/task-{n}.json'
+    part = answer.with_name(answer.name + '.part')
     lock = root / f'locks/task-{n}.pid'
     process = None
     owned = False
@@ -71,11 +73,15 @@ def _worker(task, root, n):
             system, user = compose(task)
             schema = json.dumps(task.output_schema.model_json_schema(), ensure_ascii=False)
             prompt = f'{system}\n\n{user}\n\n출력 JSON 스키마:\n{schema}'
-            instructions = f'답만 `answers/task-{n}.json.part`에 쓰고 rename하라\n{prompt}'
+            instructions = f'답 JSON만 `answers/task-{n}.json.part`에 쓴 뒤 answers/task-{n}.json으로 이름을 바꿔라 (mv answers/task-{n}.json.part answers/task-{n}.json)\n{prompt}'
             (root / f'prompts/task-{n}.txt').write_text(instructions)
             with (root / f'logs/worker-{n}.log').open('a') as log:
                 log.write('\n--- attempt ---\n')
                 log.flush()
+                if part.exists():
+                    bad = answer.parent / 'bad'
+                    bad.mkdir(parents=True, exist_ok=True)
+                    part.replace(bad / f'{part.name}.{time.time_ns()}')
                 process = subprocess.Popen(
                     [settings.codex_bin, 'exec', '--profile', settings.codex_profile,
                      '--skip-git-repo-check', '-C', str(root), instructions],
@@ -91,6 +97,8 @@ def _worker(task, root, n):
                 log.write(_safe(output))
                 if process.returncode != 0:
                     return failure('backend', 'Codex worker failed')
+            if not answer.exists() and part.exists():
+                part.replace(answer)
             if not answer.exists():
                 return failure('backend', 'Codex worker did not write an answer')
             return _answer(task, answer)

@@ -3,7 +3,9 @@ from collections import Counter
 import hashlib
 import json
 from pathlib import Path
+import random
 import re
+import time
 
 from pydantic import BaseModel, Field, ValidationError, field_validator
 
@@ -104,14 +106,22 @@ def _run_id(ids, sid, qver, ctx_key):
     return f'lbl-{sid}-{qver}-{ctx_key}-{digest}'
 
 
-def _pause_message(run_id):
+def _latest_attempt(run_id: str) -> str:
     # The shared runner deliberately hides provider output in its error result.
     # Inspect only this batch's latest attempt, never expose the log to callers.
     path = Path(settings.local_data_dir) / 'llm_runs' / run_id / 'logs/worker-0.log'
     try:
-        latest = path.read_text(encoding='utf-8').rsplit('--- attempt ---', 1)[-1].lower()
+        return path.read_text(encoding='utf-8').rsplit('--- attempt ---', 1)[-1].lower()
     except OSError:
-        latest = ''
+        return ''
+
+
+def _capacity_wait(k: int) -> float:
+    return min(5 * 2**k, 30) + random.uniform(0, 3)
+
+
+def _pause_message(run_id):
+    latest = _latest_attempt(run_id)
     if any(marker in latest for marker in ('usage limit', 'usage_limit', 'quota exceeded', '사용량 한도')):
         return _USAGE_MESSAGE
     return 'GPT 판정을 완료하지 못해 멈췄습니다. 잠시 뒤 이어서 진행하거나 설정에서 API 경로로 바꾸세요.'
@@ -137,6 +147,12 @@ def judge_batch(docs: list[dict], one_liner: str, *, sid: str, ctx_key: str,
     backend = settings.label_gpt_backend
     if backend == 'codex_exec':
         result = run_many([task], run_id=run_id, concurrency=1)[0]
+        for k in range(settings.label_capacity_retries):
+            if (result.ok or 'at capacity' not in _latest_attempt(run_id)
+                    or _pause_message(run_id) == _USAGE_MESSAGE):
+                break
+            time.sleep(_capacity_wait(k))
+            result = run_many([task], run_id=run_id, concurrency=1)[0]
     elif backend == 'openai_api':
         result = OpenAIApiBackend().run(task)
     elif backend == 'fake':

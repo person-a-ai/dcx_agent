@@ -1,0 +1,50 @@
+{
+  "verdict": "PASS",
+  "head": "11ec88386c177fc6dfea19ac42a13908a9fae7d3",
+  "fingerprint": "e06ac1ebacfaeaba2a97becafc46c03f38e2619c53fe83629106472a6e833dbe",
+  "commands": [
+    {
+      "command": "preview_start qa-api (uvicorn :8412, fake_codex) / qa-web (next dev :3412)",
+      "exitCode": 0
+    }
+  ],
+  "findings": [],
+  "scenarios": [
+    {
+      "id": "QA1",
+      "url": "http://localhost:3412/pipeline/labeling?sid=s1ef426ca23624027b2acddff133fa4b1",
+      "result": "PASS",
+      "evidence": "reports/qa.md#QA1; reports/qa-screens/qa1-done.jpg; 285 runs task-0.json, .part 0"
+    },
+    {
+      "id": "QA2",
+      "url": "http://localhost:3412/pipeline/labeling?sid=s1ef426ca23624027b2acddff133fa4b1",
+      "result": "PASS",
+      "evidence": "reports/qa.md#QA2; reports/qa-screens/qa2-done.jpg; 285 runs invocations=2"
+    },
+    {
+      "id": "QA3",
+      "url": "http://localhost:3412/pipeline/labeling?sid=s1ef426ca23624027b2acddff133fa4b1",
+      "result": "PASS",
+      "evidence": "reports/qa.md#QA3/QA3b/QA3c; qa3-done.jpg, qa3c-running-failures.jpg, qa3c-done.jpg; bad=queue=card (144/128/114)"
+    },
+    {
+      "id": "QA4",
+      "url": "http://localhost:3412/pipeline/labeling?sid=s1ef426ca23624027b2acddff133fa4b1",
+      "result": "PASS",
+      "evidence": "reports/qa.md#QA4; qa4-breaker-paused.jpg; pending 5688 attempts 0, bad 0"
+    },
+    {
+      "id": "QA5",
+      "url": "http://localhost:3412/pipeline/labeling?sid=s1ef426ca23624027b2acddff133fa4b1",
+      "result": "PASS",
+      "evidence": "reports/qa.md#QA5; qa5-375-paused-failures.jpg; scrollWidth=clientWidth=375"
+    },
+    {
+      "id": "QA6",
+      "url": "http://localhost:3412/pipeline/labeling?sid=s1ef426ca23624027b2acddff133fa4b1",
+      "result": "PASS",
+      "evidence": "reports/qa.md#QA6; qa6-resumed-done.jpg; done 5688 attempts 0, bad 0"
+    }
+  ]
+}

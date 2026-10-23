@@ -53,3 +53,21 @@ it('exposes labeling tabs with selected state and linked panels', () => {
  expect(html.match(/aria-selected="true"/g)).toHaveLength(1);
  expect(html.match(/role="tabpanel"/g)).toHaveLength(3);
 });
+
+import { Overview } from './label/Overview';
+import type { Overview as OverviewData } from '@/lib/api/label';
+const summary = {n:0,fields:{},grade:{n:0,accuracy:null,kappa:null}};
+const gptOnlyOverview: OverviewData = {
+ started:false, mode:'llm', modelId:null, labelerMode:'gpt_only',
+ progress:{gpt:{state:'none',pending:0}},
+ definitionCheck:{needed:false,reason:null}, queue:{total:0,estimatedSeconds:0,byReason:{}},
+ now:{state:'before_start'}, merged:0,total:0,accepted:0,escalated:0,mismatchRate:null,
+ levelDistribution:{core:0,supporting:0,non:0},audit:[],
+ labelerAccuracy:{jev:null,gpt:summary,n:0},selfConsistency:{...summary,accuracy:null,agree:null},
+ changes:{judged:0,merged:0,accepted:0,queued:0},lastSeenAt:null,
+};
+it('shows GPT judgement failures in the Overview review queue caption', () => {
+ const overview = {...gptOnlyOverview,started:true,progress:{gpt:{state:'running',pending:0,bad:3}}};
+ const html = renderToStaticMarkup(createElement(Overview, {sid:'s',overview,onRefresh:()=>{},onNavigate:()=>{}}));
+ expect(html).toContain('판정 실패 3건 · 검수 큐로 보냄');
+});

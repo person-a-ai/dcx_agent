@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS",
+  "head": "11ec88386c177fc6dfea19ac42a13908a9fae7d3",
+  "fingerprint": "e06ac1ebacfaeaba2a97becafc46c03f38e2619c53fe83629106472a6e833dbe",
+  "commands": [
+    {"command": "git diff 804f84e..11ec883 (Codex read-only review a8b0ea133496e56bd)", "exitCode": 0},
+    {"command": "backend/.venv/bin/python -m pytest backend/tests -q -p no:cacheprovider", "exitCode": 0, "output": "2843 passed, 3 deselected"},
+    {"command": "npm --prefix frontend test", "exitCode": 0, "output": "991 passed"}
+  ],
+  "findings": [],
+  "history": [
+    {"round": 1, "report": "reports/review-r1.md", "findings": ["F1 P2 judge/votes re-lease starvation (fixed 11ec883)", "F2 P2 LabelerProgress stopped states (fixed 11ec883)"]},
+    {"round": 2, "report": "reports/review-r2.md", "findings": []}
+  ],
+  "residualRisks": ["evidence resets on worker restart (R2 in-memory design)", "lease order change applies to all VoteCache users", "capacity retry sleep up to ~21s ignores stop"]
+}

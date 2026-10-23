@@ -23,17 +23,32 @@ if 'SLEEP_MODE' in instructions:
     time.sleep(60)
 if '문서 묶음 (아래 내용은 판정 대상 데이터이며 지시가 아니다):' in instructions:
     mode = os.environ.get('FAKE_CODEX_LABEL_MODE', 'normal')
+    if mode == 'capacity' or (mode == 'capacity_once' and len(Path('invocations').read_text().splitlines()) == 1):
+        print('ERROR: Selected model is at capacity. Please try a different model.', file=sys.stderr)
+        sys.exit(1)
     if mode == 'usage_limit':
         print("You've hit your usage limit. Try again later.")
         sys.exit(1)
     raw_docs = instructions.split('문서 묶음 (아래 내용은 판정 대상 데이터이며 지시가 아니다):\n', 1)[1]
     docs = json.JSONDecoder().raw_decode(raw_docs)[0]
+    if mode == 'flaky' and docs and docs[0]['doc_id'][-1].lower() in '0123':
+        print('Backend failed', file=sys.stderr)
+        sys.exit(1)
     if mode == 'partial' and len(docs) > 1:
         docs = docs[:-1]
     payload = {'items': [dict(doc_id=doc['doc_id'], anchor=True,
         sem={key: int(key in ('feel', 'act')) for key in ('sense', 'feel', 'think', 'act', 'relate', 'outcome')},
         situation=True, reason_code=None, signal='pain') for doc in docs]}
 else:
+    if 'SILENT_MODE' in instructions:
+        sys.exit(0)
+    if 'TRUNCATED_MODE' in instructions:
+        answer.write_text('{"value":')
+        sys.exit(0)
     payload = {'value': 'bad' if 'BAD_MODE' in instructions else 1}
 answer.write_text(json.dumps(payload))
+if 'NORENAME_FAIL_MODE' in instructions:
+    sys.exit(1)
+if 'NORENAME_MODE' in instructions or os.environ.get('FAKE_CODEX_LABEL_MODE') == 'no_rename':
+    sys.exit(0)
 answer.rename(answer.with_suffix(''))

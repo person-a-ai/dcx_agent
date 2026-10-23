@@ -92,7 +92,8 @@ class VoteCache:
             if owner and owner['pid'] != os.getpid():
                 raise ValueError('Run already owned by another process')
             db.execute('INSERT OR IGNORE INTO owners VALUES (?,?)', (run_id, os.getpid()))
-            ids = [r['doc_id'] for r in db.execute("SELECT doc_id FROM votes WHERE status='pending' AND run_id IS NULL ORDER BY priority, attempts, doc_id LIMIT ?", (n,))]
+            # Untouched peers precede previously leased rows at equal priority/attempts.
+            ids = [r['doc_id'] for r in db.execute("SELECT doc_id FROM votes WHERE status='pending' AND run_id IS NULL ORDER BY priority, attempts, (at IS NOT NULL), doc_id LIMIT ?", (n,))]
             db.executemany('UPDATE votes SET run_id=?, at=? WHERE doc_id=?', ((run_id, time.time(), i) for i in ids))
             return ids
 
@@ -118,6 +119,12 @@ class VoteCache:
                 status=CASE WHEN attempts+1>=3 THEN 'bad' ELSE 'pending' END,
                 last_error=?, run_id=NULL, at=?
                 WHERE doc_id=? AND status='pending' AND run_id IS ?""", (reason, time.time(), doc_id, self.run_id))
+
+    def release_docs(self, doc_ids: list[str]) -> None:
+        """Release owned pending leases, deferring them behind untouched peers."""
+        with self._db() as db:
+            db.executemany("UPDATE votes SET run_id=NULL, at=? WHERE doc_id=? AND status='pending' AND run_id=?",
+                           ((time.time(), doc_id, self.run_id) for doc_id in doc_ids))
 
     def release(self):
         with self._db() as db:

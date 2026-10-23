@@ -1,0 +1,68 @@
+{
+  "verdict": "PASS",
+  "head": "11ec88386c177fc6dfea19ac42a13908a9fae7d3",
+  "fingerprint": "e06ac1ebacfaeaba2a97becafc46c03f38e2619c53fe83629106472a6e833dbe",
+  "commands": [
+    {
+      "command": "backend/.venv/bin/python -m pytest backend/tests -q -p no:cacheprovider",
+      "exitCode": 0,
+      "output": "2843 passed, 3 deselected"
+    },
+    {
+      "command": "npm --prefix frontend test",
+      "exitCode": 0,
+      "output": "991 passed"
+    },
+    {
+      "command": "npm --prefix frontend run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "npm --prefix frontend run build",
+      "exitCode": 0
+    }
+  ],
+  "findings": [],
+  "tasks": [
+    {
+      "id": "T1",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue agent a949fbc170a19edb2",
+      "red": "reports/T1.md#RED (4 failed, 6 passed; test_part_ignored_on_nonzero_exit already passing on old code)",
+      "green": "reports/T1.md#GREEN (10 passed; label+llm 296 passed)",
+      "review": "reports/progress.md#Task 리뷰 메모 (T1), commit 6444003"
+    },
+    {
+      "id": "T2",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue agent a5b843e9ff6bf8752",
+      "red": "reports/T2.md#RED (6 failed, 21 passed)",
+      "green": "reports/T2.md#GREEN (test_gpt 38 passed; label+llm 314 passed)",
+      "review": "reports/progress.md#Task 리뷰 메모 (T2), commit 6720eb0"
+    },
+    {
+      "id": "T3",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue agent a0916be9a3aff9934 (runtime background jobs b6r5fllif, bjn8tjohr)",
+      "red": "reports/T3.md#RED (10 failed, 280 passed)",
+      "green": "reports/T3.md#GREEN (label 290 passed x3; full 2841 passed)",
+      "review": "reports/progress.md#Task 리뷰 메모 (T3), commit 83bc051"
+    },
+    {
+      "id": "T4",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue agent a7864b727846e70fa",
+      "red": "reports/T4.md#RED (5 new tests failed)",
+      "green": "reports/T4.md#GREEN (17 targeted, 988 total passed)",
+      "review": "reports/T4.md#Main Claude 확인, commit 48efea3"
+    },
+    {
+      "id": "FIX-R1",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue agent aebb8e23792244695 (runtime bg bkfbmgubq; final turn ended with capacity error, Main verified diff and ran full regression)",
+      "red": "reports/fix-r1.md#F1 RED 2 failed/290 passed; #F2 RED 3 failed/9 passed",
+      "green": "reports/fix-r1.md#GREEN label 292 passed, LabelerProgress 12 passed; Main full 2843 passed",
+      "review": "reports/review-r1.md findings F1,F2; commit 11ec883"
+    }
+  ]
+}

@@ -17,6 +17,8 @@ from app.label.votes import VoteCache
 from app.work.status import transaction
 
 
+BREAKER_MESSAGE = 'GPT 판정이 연속으로 실패해 멈췄습니다. 잠시 뒤 이어서 진행하거나 설정에서 API 경로로 바꾸세요.'
+
 JEV_TRANSIENT_LIMIT = 5
 JEV_BACKOFF_CAP_S = 30
 LEASE_WAIT_LIMIT = 6000  # At most ten minutes of 0.1-second lease polling.
@@ -124,6 +126,10 @@ def run_worker(ctx):
         lease_waits = 0
         pool = ThreadPoolExecutor(max_workers=concurrency) if labeler == 'gpt' else None
         inflight = {}
+        resilient = settings.label_gpt_backend == 'codex_exec'
+        consecutive_failures = 0
+        evidence = 0
+        failed_at: dict[str, int] = {}
         while True:
             counts = cache.counts()
             progress = (counts['done'] + counts['bad']) / len(docs) if docs else 1
@@ -171,7 +177,12 @@ def run_worker(ctx):
                 paused = error = None
 
                 def collect(finished):
-                    nonlocal paused, error
+                    nonlocal paused, error, consecutive_failures, evidence
+                    # Only the main thread collects. Count all available successes
+                    # before failures, including when draining before a pause.
+                    finished = list(finished)
+                    if resilient:
+                        finished.sort(key=lambda future: future.exception() is not None)
                     for future in finished:
                         chunk = inflight.pop(future)
                         try:
@@ -179,13 +190,26 @@ def run_worker(ctx):
                         except gpt.LabelerPaused as exc:
                             if not exc.usage_limit:
                                 for doc in chunk:
-                                    cache.fail(doc['doc_id'], 'gpt_backend_failed')
-                            if paused is None or exc.usage_limit and not paused.usage_limit:
+                                    doc_id = doc['doc_id']
+                                    if not resilient or (evidence > 0 and evidence > failed_at.get(doc_id, -1)):
+                                        cache.fail(doc_id, 'gpt_backend_failed')
+                                    else:
+                                        cache.release_docs([doc_id])
+                                    failed_at[doc_id] = evidence
+                                if resilient:
+                                    consecutive_failures += 1
+                                    if consecutive_failures >= settings.label_failure_pause_after:
+                                        if paused is None or not paused.usage_limit:
+                                            paused = gpt.LabelerPaused(BREAKER_MESSAGE)
+                            if (not resilient or exc.usage_limit) and (paused is None or exc.usage_limit and not paused.usage_limit):
                                 paused = exc
                         except Exception as exc:
                             if error is None:
                                 error = exc
                         else:
+                            if resilient:
+                                evidence += 1
+                                consecutive_failures = 0
                             for doc_id, vote in votes.items():
                                 cache.put(doc_id, vote.model_dump())
                             for doc_id in missing:
@@ -202,6 +226,9 @@ def run_worker(ctx):
                     cache.release()
                     sync(labels, caches['jev'], caches['gpt'], mode=labeler_mode(session))
                     _pause(ctx, str(paused), detail)
+                    if resilient and not ctx.should_stop():
+                        consecutive_failures = 0
+                        evidence += 1
                     continue
                 if not finished:
                     continue
