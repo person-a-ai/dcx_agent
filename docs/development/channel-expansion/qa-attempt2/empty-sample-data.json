@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Error\nError: locator.waitFor: Error: strict mode violation: getByRole('heading', { name: /확정 키워드/ }) resolved to 2 elements:\n    1) <h1 class=\"ds-t-screen\">확정 키워드 1개로 목록을 수집합니다</h1> aka getByRole('heading', { name: '확정 키워드 1개로 목록을 수집합니다' })\n    2) <h2 class=\"ds-t-card\">확정 키워드</h2> aka getByRole('heading', { name: '확정 키워드', exact: true })\n\nCall log:\n  - waiting for getByRole('heading', { name: /확정 키워드/ }) to be visible\n"
+    }
+  ],
+  "isError": true
+}

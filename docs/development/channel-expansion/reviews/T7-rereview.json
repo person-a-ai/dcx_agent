@@ -1,0 +1,68 @@
+{
+  "task": "T7",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh (new session, independent re-review)",
+  "base_commit": "31ac6ec109381d0eb0b8ae24e7ba239704339224",
+  "review_commit": "04aad8212541d002b96980add32bc9ebbd8077e5",
+  "verdict": "FAIL",
+  "previous_findings": [
+    {
+      "id": "T7-R1",
+      "resolved": true
+    },
+    {
+      "id": "T7-R2",
+      "resolved": true
+    },
+    {
+      "id": "T7-R3",
+      "resolved": true
+    },
+    {
+      "id": "T7-R4",
+      "resolved": "overruled"
+    }
+  ],
+  "commands": [
+    "Read applicable ancestor/repository AGENTS.md candidates (none found), .harness/scope-T7.json, prior T7.json, requested 03-plan.md sections, and 02-design.md section 3.2.",
+    "git status --short; git rev-parse 04aad82",
+    "git diff 31ac6ec109381d0eb0b8ae24e7ba239704339224..04aad82 -- backend/",
+    "git diff --stat 31ac6ec109381d0eb0b8ae24e7ba239704339224..04aad82 -- backend/",
+    "git log --oneline 31ac6ec..04aad82; git show --stat --oneline b956293; git show --format=fuller --stat 04aad82",
+    "SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive 04aad82 backend | tar -x -C \"$SNAP\"",
+    "Inspect exported conftest.py, render fake injection, Threads bridge injection, worker subprocess hooks, and pytest.ini before executing tests. Add reviewer-only backend/sitecustomize.py to the snapshot to deny network/DNS and browser/process launches; permit only existing Python worker and ps subprocesses.",
+    "export PYTHONPATH=/var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.XMduvYmJso/backend; export PYTHONDONTWRITEBYTECODE=1; cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.XMduvYmJso && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.XMduvYmJso && env -u VOYAGE_API_KEY PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=\"$PWD/backend\" /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_lifecycle.py",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.XMduvYmJso && env -u VOYAGE_API_KEY PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=\"$PWD/backend\" /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_privacy.py",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.XMduvYmJso && env -u VOYAGE_API_KEY PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=\"$PWD/backend\" /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_failure_retry.py",
+    "Read installed Crawl4AI browser_manager.py startup/close and Playwright _connection.py/_transport.py shutdown implementations as text only; neither package was launched.",
+    "Aggregate snapshot isolation.jsonl event categories: 14 GUARD_ACTIVE, 4 ALLOWED_PROCESS, zero denied network/process events.",
+    "git diff --check 31ac6ec..04aad82 -- backend/; git status --short"
+  ],
+  "findings": [
+    {
+      "id": "T7-R5",
+      "severity": "P2",
+      "must_fix": true,
+      "file": "backend/app/crawl/render.py:157-178",
+      "issue": "Shutdown abandons its live event-loop thread and pending tasks when startup cancellation cleanup stalls. The close timeout bounds only the calling thread, and subsequent close calls cannot finish teardown.",
+      "evidence": "Independent reviewer_lifecycle.py uses an offline fake whose start awaits forever and whose cancellation finally block awaits a controllable cleanup event. fetch_html(timeout_s=0.025) times out promptly. With cleanup still pending, close() raises TimeoutError after 35.009 seconds, while bridge._thread.is_alive() remains true and asyncio.all_tasks(bridge._loop) contains two tasks. A second close() returns in 0.000 seconds without stopping either task because _closed is already true. The loop stops only after the reviewer explicitly releases the fake cleanup event; no probe threads remain afterward. This is not a fake that suppresses cancellation indefinitely: its cleanup uses ordinary cancellable async waits, but shutdown never cancels/drains it after its grace period. shutdown() awaits the previous completion without a timeout, and loop.stop() is called only when shutdown finishes. Installed Crawl4AI BrowserManager.start() awaits rollback close()/playwright.stop(); BrowserManager.close() awaits browser.close()/playwright.stop() without an overall deadline. Playwright Connection.stop_async() awaits transport.wait_until_stopped(), backed by driver IO/process completion. A stalled driver therefore provides a realistic production trigger. An associated concurrent probe after _closed became true received TimeoutError after 0.065 seconds instead of an immediate closed RuntimeError because close holds the lock throughout its wait.",
+      "fix": "Give teardown an overall bounded lifecycle, including pending-operation rollback and crawler shutdown. After a bounded cleanup grace period, cancel and drain the outstanding tasks and ensure the loop/thread terminate, including on timeout/error; also bound the final task drain in _serve. Preserve serialization during ordinary rollback. Keep repeated close calls attached to unfinished teardown rather than treating a merely requested close as completed, and reject fetches immediately once closing begins. Add offline regressions for stalled cancellation cleanup and stalled crawler.close, asserting no live loop thread or pending tasks after close returns/raises and after a second close."
+    }
+  ],
+  "notes": [
+    "This is a brand-new independent review session. This session did not participate in implementing T7 or in any earlier review of T7. No sub-agents were used.",
+    "Only docs/development/channel-expansion/reviews/T7-rereview.json was created by this session in the repository. Product/test files, Git index and refs were not changed. All test execution and reviewer probes used the fresh exported snapshot at /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.XMduvYmJso. Temporary files were retained; no rm command was run. Other concurrently appearing untracked repository files were left untouched.",
+    "The full required crawl suite passed: 3764 passed, 1 existing Pydantic config deprecation warning, 69.95 seconds. VOYAGE_API_KEY was removed for every test/probe invocation. PYTHONDONTWRITEBYTECODE prevented writes through the shared virtualenv.",
+    "Offline verification combined static inspection with a Python audit guard in the snapshot, inherited by actual worker subprocesses through the exported backend path. It prohibited socket connections, DNS, sendto, browser/unrelated subprocess launches and direct exec/spawn/system APIs. Render tests inject a fake crawl4ai module; Threads tests forbid constructing a real bridge; actual worker subprocesses use fixture adapters. The guarded suite and probes recorded zero prohibited attempts. No network was used and no browser was launched. Real-browser behavior was not exercised.",
+    "R1 resolution refers specifically to the original double-start/rollback race. Independent probes exercised slow start, slow cancellation cleanup and explicit close, timeout then immediate retry, eight fetches from four concurrent callers, close during active work, close during rollback, repeated close, fetch after completed close, a forever-awaiting start with cooperative cancellation, and arun raising after a timeout. Ordinary cleanup serialized correctly; stale startup instances were discarded; successful crawler instances started only once. Bounded fetch deadlines held, ordinary shutdown stopped the loop with zero tasks, and no unexpected loop exception was observed. The distinct stalled-shutdown defect is T7-R5.",
+    "R2 resolution: independent factory/start/arun OSError probes and unsuccessful/empty results raised ValueError with a cause. Original TimeoutError instances from start/arun were preserved. Additional independent retries verified failed/timed-out start discards its instance even when best-effort close also raises; the next instance starts once and succeeds. Fetch after completed close raises RuntimeError immediately. Fetch while close is still in progress has the limitation documented in T7-R5.",
+    "R3 and hardening: independent probes rejected 360 raw/entity/double-percent/Unicode/hex/mixed encoded constructions across CDATA (including empty and synthetic), malformed markup, split text, attributes, JSON scalar/type substitutions and duplicate/decoded-duplicate keys. Eighteen additional encoded-field injections were rejected. Lexical validation consumes markup tokens and rejects malformed closing tags, declarations and unbalanced structure; the tag-stripped scan reconstructs category identifiers across adjacent nodes; JSON checking is field-specific. No independent bypass was accepted.",
+    "Privacy comparison was recomputed directly from both ignored recordings in memory, with an independent fixed-point decoder. Extracted 19 unique usernames and 35 distinct code-field values; zero occurrences were found in decoded committed Threads fixtures. Independently derived identifier hashes exactly matched the committed test hash set. All 324 raw/encoded injections of these recording values into fixture identity fields were rejected. Recording values were never printed, copied into scripts, or included in this report; only aggregate counts were retained. Committed captions are synthetic and at most 80 characters.",
+    "Adapter review: decision order remains parsed posts > explicit no-results marker > login wall > ValueError. Normal results may include a Log in link. AdapterBlocked host remains threads.com. src_meta is exactly post_code/like_count/reply_count; fetch derives author_raw from the public URL and makes no request. Only default popular search is requested, matching the approved plan deviation. No login/cookie/proxy/stealth configuration or second rate limiter was added.",
+    "Scope: the cumulative backend range has 15 changed files. Fourteen are in scope-T7.json. The sole additional file, backend/tests/crawl/adapters/test_cook82.py, is entirely attributable to the intervening separate 82cook privacy fix b956293, not either T7 implementation commit. T7 commits 369b686 and 04aad82 stay within the allowlist. Existing API/final/fixture tests change expected sets/counts and deterministic availability only. R4 is explicitly overruled; its test placement is required by T7 Step 1 and is not re-raised. git diff --check passed.",
+    "FAIL is based solely on the realistic shutdown task/thread leak in T7-R5, not on theoretical privacy constructions, the overruled R4, or the intervening 82cook commit."
+  ]
+}

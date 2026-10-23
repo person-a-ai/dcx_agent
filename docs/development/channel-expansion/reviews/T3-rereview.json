@@ -1,0 +1,141 @@
+{
+  "task": "T3",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh (new session, independent re-review)",
+  "base_commit": "d8df6561a23530b8382af886b1b4fd533183690b",
+  "review_commit": "ec0939e5da48ee6351aac7da2d76fad35ac9ab94",
+  "verdict": "PASS",
+  "previous_findings": [
+    {
+      "id": "T3-P2-terminal-cue",
+      "resolved": true
+    }
+  ],
+  "commands": [
+    {
+      "command": "git status --short; git rev-parse HEAD; git diff d8df6561a23530b8382af886b1b4fd533183690b..ec0939e5da48ee6351aac7da2d76fad35ac9ab94 -- backend/",
+      "exitCode": 0,
+      "summary": "Initial worktree clean. Reviewed complete cumulative backend diff: captions.py and test_captions.py only. Current HEAD is 155a8a4187bfb663c388e6da766574ce3b653db9, later than the review commit."
+    },
+    {
+      "command": "git diff ec0939e5da48ee6351aac7da2d76fad35ac9ab94 -- backend/app/crawl/captions.py backend/tests/crawl/test_captions.py",
+      "exitCode": 0,
+      "summary": "No diff: both tested T3 files exactly match the requested review commit. Read Task T3, the approved design deviations, design section 3.1, and prior T3.json; independently inspected the original-to-fix diff."
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTEST_ADDOPTS='-p no:cacheprovider' env -u VOYAGE_API_KEY backend/.venv/bin/python -m pytest backend/tests/crawl/test_captions.py backend/tests/crawl -q",
+      "exitCode": 0,
+      "summary": "554 passed, 1 warning in 56.16s. Warning: existing Pydantic class-based configuration deprecation at backend/app/config.py:12. VOYAGE_API_KEY explicitly unset; bytecode/cache writes disabled. Suite includes later checkout tests; T3 source/tests match review_commit."
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=backend env -u VOYAGE_API_KEY backend/.venv/bin/python \"$TMPDIR/t3_independent_rereview_probe.py\" > \"$TMPDIR/t3_independent_rereview_probe_result.json\"",
+      "exitCode": 0,
+      "summary": "Independent probes use unique cue tokens, count conservation, exact half-open interval membership, ordered nonoverlapping integer boundaries, repeat determinism, custom valid length settings, invalid embeddings, subprocess hash seeds, and one-hour benchmarks. Original source loaded through read-only git show and executed in memory reproduced lost terminal cue and IndexError.",
+      "results": {
+        "terminal_and_boundary_cases": 280,
+        "invalid_embedding_cases": 17,
+        "randomized_cases": 1800,
+        "tie_boundaries": [
+          [
+            0,
+            100
+          ],
+          [
+            100,
+            220
+          ],
+          [
+            220,
+            320
+          ]
+        ],
+        "hash_seeds": [
+          0,
+          1,
+          42,
+          999
+        ],
+        "length_contract": "Semantic cuts respect min_s; fixed fallback can leave short tail; one-window input is single even above max_s, as specified.",
+        "performance": [
+          {
+            "cues": 720,
+            "windows": 180,
+            "embedding": "constant",
+            "runs": 40,
+            "segments": 40,
+            "median_ms": 1.376,
+            "max_ms": 1.793
+          },
+          {
+            "cues": 720,
+            "windows": 180,
+            "embedding": "structured",
+            "runs": 40,
+            "segments": 49,
+            "median_ms": 1.847,
+            "max_ms": 2.065
+          },
+          {
+            "cues": 720,
+            "windows": 180,
+            "embedding": "random_1024d",
+            "runs": 40,
+            "segments": 48,
+            "median_ms": 1.997,
+            "max_ms": 2.181
+          },
+          {
+            "cues": 3600,
+            "windows": 180,
+            "embedding": "constant",
+            "runs": 40,
+            "segments": 40,
+            "median_ms": 5.394,
+            "max_ms": 5.984
+          },
+          {
+            "cues": 3600,
+            "windows": 180,
+            "embedding": "structured",
+            "runs": 40,
+            "segments": 51,
+            "median_ms": 6.695,
+            "max_ms": 6.952
+          },
+          {
+            "cues": 3600,
+            "windows": 180,
+            "embedding": "random_1024d",
+            "runs": 40,
+            "segments": 48,
+            "median_ms": 6.687,
+            "max_ms": 7.866
+          }
+        ],
+        "original_failure_reproduced": [
+          "fixed terminal cue lost",
+          "embedding IndexError"
+        ]
+      }
+    },
+    {
+      "command": "git status --short; git diff --exit-code; git diff --cached --exit-code",
+      "exitCode": 0,
+      "summary": "After tests and temporary probes, worktree and index remained clean before creating this review artifact."
+    }
+  ],
+  "findings": [],
+  "notes": [
+    "Session provenance: this is a brand-new independent review session. This session did not implement T3 and did not take part in any earlier review of T3. Reading the earlier review was used to identify the regression to verify, not as verification evidence.",
+    "P2 resolved: captions.py:64-68 places the exclusive whole-second final bound strictly after every cue start, including terminal missing/null/zero durations. captions.py:50 assigns nonnegative-start cues by half-open intervals; every tested cue appears exactly once in fixed, embedding, and single modes. Boundary tests include 0s, 20s windows, 45s minimum, 90s fixed cuts, a selected 120s semantic cut, 180s, 300s, 3600s, and fractional neighbors. The prior three-cue IndexError reproducer now returns one embedding segment [0,181) containing all three cues.",
+    "Index safety: captions.py:91-92 excludes candidates at or outside the outer bounds before indexing both neighbors. Recursive splitting also requires a strictly internal boundary at lines 103-105. No IndexError occurred in edge or randomized probes.",
+    "Determinism: windows and candidate boundaries are sorted; equal depths break toward earlier times at captions.py:90 and :108. Competing equal-depth boundaries at 100/160/220s with min_s=90 yield [0,100), [100,220), [220,320), identical including text across repeats and PYTHONHASHSEED 0,1,42,999.",
+    "Length semantics follow the specified algorithm: semantic cuts require min_s on both sides; segments longer than max_s are recursively split or use fixed_s. With default settings and tested valid custom settings (fixed_s <= max_s), nonsingle segments stayed within max_s. Fixed splitting may leave a final tail shorter than min_s, and fewer than two windows deliberately returns single even for a long cue. Thus min_s/max_s are not unconditional bounds across all modes. These exceptions match Task T3 and design 3.1, rather than constituting new must-fix defects.",
+    "Fallback verified against the exact None-embedder result for exceptions, None/scalar/empty/ragged/nonnumeric results, wrong row count, wrong rank, zero columns, NaN, positive/negative infinity, all-zero embeddings and a single zero-norm row. All yield fixed mode when the single-mode precondition does not apply.",
+    "Performance: 3600s inputs contain 180 windows with either 720 or 3600 cues. Forty runs per case cover constant, structured, and 1024-dimensional random embeddings. Median times range from 1.376 to 6.695ms; largest observed run is 7.866ms. This measures local segmentation with fake/precomputed embeddings, not remote embedding latency. Quadratic depth scans and cue scans are small at this configured duration/window size.",
+    "Tests are meaningful: exact segment locations and content, parsing/filtering/sorting, minimum semantic length, forced fixed splitting, malformed embedding fallback, fractional boundary assignment, and nine missing/null/zero-duration regression cases are asserted. Independent old-source reproduction confirms the regression cases distinguish the broken behavior. Committed tests do not explicitly lock cross-process ties, one-hour performance, or zero-duration single mode; independent temporary probes cover those gaps. No must-fix test deficiency found.",
+    "Scope: normal JSON3 nonnegative cue times and positive segmentation parameters. Repository source, tests, index, and Git refs were not modified. Probe scripts and output were written under TMPDIR; the only repository file created is this requested review JSON."
+  ]
+}

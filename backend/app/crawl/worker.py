@@ -25,7 +25,8 @@ from app.context.store import load_session, read_json, write_json
 from app.crawl.adapters import REGISTRY, available_sources, managed_adapter
 from app.crawl.adapters.naver_common import NaverAdapter
 from app.crawl.adapters.community import DEFAULT_INTERVAL_S
-from app.crawl.adapters.base import AdapterBlocked, FetchedDoc, ListItem, ListPage
+from app.crawl.adapters.base import AdapterBlocked, AdapterSkipped, FetchedDoc, ListItem, ListPage
+from app.crawl.channels import channel_defaults
 from app.crawl.filters import FilterConfig, check_doc, check_list
 from app.crawl.hashing import author_hash
 from app.crawl.queue import CrawlQueue, HEARTBEAT_INTERVAL, KwMeta, LeaseLost
@@ -116,7 +117,7 @@ class _Run:
         self.completed_docs = self.q.counts()['doc_count'] if kind == 'detail' else 0
         self.limiters = {}
         for s in sources:
-            defaults = (2, 0) if s == 'youtube' else ((1, 0.5) if s in ('clien', 'ppomppu', 'naver_blog', 'naver_cafe') else (4, 0))
+            defaults = channel_defaults(s)
             opts = config.get('perChannel', config.get('channel_limits', {})).get(s, {})
             self.limiters[s] = (limiters or {}).get(s) or ChannelLimiter(
                 opts.get('concurrency', defaults[0]), opts.get('min_interval_s', defaults[1]))
@@ -157,6 +158,8 @@ class _Run:
         caps = [opts.get(task.source, {}).get('max_per_keyword') or 0]
         if task.source == 'youtube':
             caps.append(self.config.get('youtube', {}).get('videos_per_keyword') or 0)
+        if task.source == 'youtube_vlog':
+            caps.append(self.config.get('youtube_vlog', {}).get('videos_per_keyword', 20))
         caps = [cap for cap in caps if cap > 0]
         if not caps:
             return None
@@ -178,6 +181,8 @@ class _Run:
         return self.channels[source]['status'] == 'running'
 
     def outcome(self, source, error):
+        if isinstance(error, AdapterSkipped):
+            return  # Intentional skips are neither attempts nor failures.
         c = self.channels[source]
         c['attempts'] += 1
         c['blocked'] = c['blocked'] + 1 if isinstance(error, AdapterBlocked) else 0
@@ -212,6 +217,11 @@ class _Run:
                             pass  # Preserve injected legacy adapter contracts.
                         else:
                             options['videos_per_keyword'] = limit
+                    if source == 'youtube_vlog':
+                        vlog = self.config.get('youtube_vlog', {})
+                        options = {'videos_per_keyword': vlog.get('videos_per_keyword', 20),
+                                   'min_duration_s': vlog.get('min_duration_s', 60),
+                                   'max_duration_s': vlog.get('max_duration_s', 3600)}
                     page = adapter.list_page(job.kw, job.cursor, **options)
                     if not isinstance(page, ListPage) or any(not isinstance(i, ListItem) for i in page.items):
                         raise AdapterParseError('Expected ListPage containing ListItem records')
@@ -467,6 +477,9 @@ def run_detail(sid, snapshot_id, *, collection=None, filters=None, limiters=None
         run.q.lease_urls(snapshot_id, 0, LEASE_SECONDS)  # Validate snapshot, apply exclusions.
         with _stop_event() as stop:
             for row, fetched, error in _detail_results(run, adapters, stop, batch, commit):
+                if isinstance(error, AdapterSkipped):
+                    run.q.mark_skipped(row.url_norm, row.source, error.reason)
+                    continue
                 last_error = safe_error(row.last_error) if row.last_error else None
                 if error:
                     last_error = _error(error)

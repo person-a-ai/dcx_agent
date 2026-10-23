@@ -1,0 +1,59 @@
+{
+  "task": "T1",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "base_commit": "f883cfec75757e849835f4e381da4ddd5229ec42",
+  "review_commit": "8cfe1f9668b601e4309c8d58b1eb8ecd291864a5",
+  "verdict": "PASS",
+  "commands": [
+    {
+      "command": "git status --short && git rev-parse HEAD && git diff --stat f883cfec75757e849835f4e381da4ddd5229ec42..8cfe1f9668b601e4309c8d58b1eb8ecd291864a5 && git diff --name-only f883cfec75757e849835f4e381da4ddd5229ec42..8cfe1f9668b601e4309c8d58b1eb8ecd291864a5",
+      "exitCode": 0,
+      "summary": "Initially clean worktree; HEAD is the requested review commit. Exactly the six T1 files changed (124 insertions, 4 deletions)."
+    },
+    {
+      "command": "git diff f883cfec75757e849835f4e381da4ddd5229ec42..8cfe1f9668b601e4309c8d58b1eb8ecd291864a5",
+      "exitCode": 0,
+      "summary": "Read the complete product/test diff and the T1/Global Constraints and design 2.2/5 specifications; inspected queue, worker, report, control, writer and related tests with numbered lines."
+    },
+    {
+      "command": "env -u VOYAGE_API_KEY PYTHONDONTWRITEBYTECODE=1 backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+      "exitCode": 0,
+      "summary": "446 passed, 1 existing Pydantic class-based-config deprecation warning, in 61.86 seconds. Bytecode and pytest cache writes disabled to honor read-only review. VOYAGE_API_KEY unset as requested."
+    },
+    {
+      "command": "env -u VOYAGE_API_KEY PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=backend backend/.venv/bin/python -",
+      "exitCode": 1,
+      "summary": "First inline, network-blocked probe: terminal skips, no re-lease/recount, mixed reason aggregation, SQL parameter binding (quote-containing reason), zero progress target, finalization and legacy keys all passed. The subsequent probe stopped because the review harness omitted a temporary subdirectory; sqlite could not open its test database. This was a review-script setup error, not a product failure; corrected in the next command."
+    },
+    {
+      "command": "env -u VOYAGE_API_KEY PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=backend backend/.venv/bin/python -",
+      "exitCode": 0,
+      "summary": "Corrected inline probes used temporary directories, fake adapters and blocked sockets. Verified foreign-lease/fenced-run rejection without URL mutation; all-skipped detail completion and repeated run with zero documents/attempts; unexpected list-stage AdapterSkipped becomes a failed task after three attempts and a failed channel; LeaseLost during skip with a pending document batch propagates, leaves zero done/skipped completions and prevents finalization."
+    },
+    {
+      "command": "git diff --check f883cfec75757e849835f4e381da4ddd5229ec42..8cfe1f9668b601e4309c8d58b1eb8ecd291864a5",
+      "exitCode": 0,
+      "summary": "No whitespace errors."
+    },
+    {
+      "command": "git status --short",
+      "exitCode": 0,
+      "summary": "Worktree remained clean after the test suite and inline probes, before writing this report."
+    }
+  ],
+  "findings": [],
+  "notes": [
+    "Scope/spec: backend/app/crawl/adapters/base.py:45 implements AdapterSkipped(reason) and .reason; backend/app/crawl/adapters/__init__.py:9 and :60 export it. backend/app/crawl/queue.py:482 uses the same transactional ownership check as mark_excluded at :475, stores skipped/reason and clears lease/retry fields. Changes match docs/development/channel-expansion/03-plan.md:111 and the global constraints at :13; no unrelated product changes or new network use.",
+    "Worker semantics: backend/app/crawl/worker.py:180 excludes AdapterSkipped from channel attempts, blocked counts and parse-error counts. At :472 it records the skip and continues before fallback creation or document writing. Queue-level urls.attempts still reflects the lease increment (backend/app/crawl/queue.py:396); the specified exemption is in worker.outcome, and the explicit T1 mark_skipped design does not refund queue lease attempts.",
+    "Terminal state/data integrity: backend/app/crawl/queue.py:385 leases only pending URLs; :542 reclaims only leased URLs, and :319 preserves existing URL records. worker.py:348 and :258 consider only pending/leased work, and report.py:31 removes skipped/excluded rows from the target. report.py:87 permits finalization after the detail run finishes with no pending/leased snapshot rows. Read-only inspection and runtime probes found no re-lease, double-count or finalization blocker.",
+    "Fencing/batch ordering: backend/app/crawl/queue.py:413 checks an active registered run and matching lease inside the same transaction as mark_skipped. A successful skip commits independently because it has no document durability dependency. Pending document completions remain leased until worker.py:457 flushes/fsyncs and calls mark_done_many. LeaseLost from mark_skipped propagates; worker.py:520 does not commit the pending completion batch in cleanup. The runtime probe confirmed interruption and no premature finalization. Writer cleanup can flush already-written document bytes (writer.py:53), which is existing crash-recovery behavior, not a new completion commit.",
+    "Aggregation/compatibility: backend/app/crawl/report.py:24 counts skipped rows plus restricted exclusions once, grouped by source/reason; :51 preserves skipped and skip_reason while adding skip_reasons. finish_partial at backend/app/crawl/control.py:529 changes only pending/leased URLs, preserving prior intentional skips; its blocked/parse_error reasons enter the new aggregation. Existing finish_partial tests at backend/tests/crawl/test_final_w5.py:40 passed for both reasons, including legacy keys, target and finalization. Mixed reason aggregation was also exercised by the inline probe.",
+    "SQL safety: backend/app/crawl/queue.py:485 binds reason, URL and source; new reporting SQL at backend/app/crawl/report.py:25 is static. No user values are interpolated into added SQL. A quote-containing reason round-tripped without changing the schema.",
+    "Unexpected list-stage exception: worker.py:246 captures AdapterSkipped, worker.py:312 calls mark_list_failed, and queue.py:282 retries up to three attempts before failed. worker.py:322 marks the channel failed. The inline probe observed last_error=AdapterSkipped, task attempts=3 and channel status=failed. Channel counters stay zero because outcome ignores this exception globally as specified. This unsupported adapter usage is surfaced as failure, not silently treated as a successful empty page.",
+    "Tests: backend/tests/crawl/test_skipped.py:44, :54, :63 and :72 assert observable status/reason, document count, worker counters, report/progress and restricted exclusions. Without the change the new exception import fails; removing worker skip handling would produce fallback documents/status differences, removing outcome handling would alter attempts, and removing report additions would fail key/count assertions. This is source-based sensitivity analysis, not a mutation-test run.",
+    "Optional regression coverage: committed tests do not directly cover mark_skipped fencing, all-skipped completion/resume, several reasons within one channel, a skip with a pending document batch, or unexpected list-stage usage. These paths were reviewed and exercised by temporary inline probes during this review; no essential missing test or must-fix defect was identified. Persisting these cases would strengthen later regressions.",
+    "The real-VOYAGE_API_KEY test_final_w5.py::test_finish_partial issue was excluded as instructed; the required crawl suite passed with the key unset. No repository source or Git state was modified. The only retained review artifact is this JSON report."
+  ]
+}

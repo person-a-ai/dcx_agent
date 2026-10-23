@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\"time\":\"2026-10-20T09:29:53.051Z\",\"url\":\"http://localhost:3010/pipeline/start\",\"selected\":\"- group \\\"수집 채널\\\":\\n  - button \\\"네이버 카페\\\"\\n  - button \\\"네이버 블로그\\\"\\n  - button \\\"유튜브\\\"\\n  - button \\\"뽐뿌\\\"\\n  - button \\\"클리앙\\\"\\n  - button \\\"개발용 샘플\\\"\\n  - button \\\"유튜브 브이로그\\\"\\n  - button \\\"Threads\\\" [pressed]\\n  - button \\\"지식iN\\\"\\n  - button \\\"82쿡\\\"\",\"after\":\"- group \\\"수집 채널\\\":\\n  - button \\\"네이버 카페\\\"\\n  - button \\\"네이버 블로그\\\"\\n  - button \\\"유튜브\\\"\\n  - button \\\"뽐뿌\\\"\\n  - button \\\"클리앙\\\"\\n  - button \\\"개발용 샘플\\\"\\n  - button \\\"유튜브 브이로그\\\"\\n  - button \\\"Threads\\\"\\n  - button \\\"지식iN\\\"\\n  - button \\\"82쿡\\\"\",\"browser\":\"155.0.8059.85\"}\n### Ran Playwright code\n```js\nawait (async(page)=>{const c=page.getByRole('group',{name:'수집 채널',exact:true});await c.getByRole('button',{name:'Threads',exact:true}).click();const selected=await c.ariaSnapshot();await c.getByRole('button',{name:'Threads',exact:true}).click();await page.screenshot({path:'/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/resume-preflight.png'});return {time:new Date().toISOString(),url:page.url(),selected,after:await c.ariaSnapshot(),browser:page.context().browser().version()};})(page);\n```"
+    }
+  ]
+}

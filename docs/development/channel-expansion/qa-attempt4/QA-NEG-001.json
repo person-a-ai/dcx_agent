@@ -1,0 +1,3 @@
+{
+  "raw": "### Error\nError: Tool \"browser_run_code_unsafe\" does not handle the modal state.\n### Modal state\n- [\"beforeunload\" dialog with message \"\"]: can be handled by browser_handle_dialog"
+}

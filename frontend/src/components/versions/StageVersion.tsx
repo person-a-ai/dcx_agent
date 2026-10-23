@@ -1,10 +1,11 @@
 'use client';
-import { useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Banner, Button, Card, Input, Popover } from '@/components/ds';
 import { createVersion, getVersionSession, type Stage, type VersionSession } from '@/lib/api/versions';
 import { useSessionStore } from '@/stores/useSessionStore';
-import type { CrawlConfig, CrawlStatus } from '@/lib/api/crawl';
+import { getCrawlReport, type CrawlConfig, type CrawlStatus, type SavedCrawlReport } from '@/lib/api/crawl';
+import { CrawlReportSummary } from '@/components/crawl/Progress';
 import { contextLabels } from '@/lib/contextLabels';
 import { INTERNAL_TOOLS } from '@/lib/internalTools';
 import { stalePageStage } from '@/lib/logic/qaFix';
@@ -55,11 +56,23 @@ export function VersionStage({stage, children, showBanner = true}: {stage: Stage
   const [openedReadonly] = useState(view.readonly);
   return <div className="space-y-4">{showBanner && <VersionBanner stage={stage} />}<fieldset disabled={view.readonly} className="min-w-0" onClickCapture={e => {if(view.readonly){e.preventDefault();e.stopPropagation();}}} onDragStartCapture={e => {if(view.readonly)e.preventDefault();}} onDropCapture={e => {if(view.readonly){e.preventDefault();e.stopPropagation();}}}>{stage === 'stage2' && openedReadonly ? <HistoricalCrawl /> : children}</fieldset></div>;
 }
-function HistoricalCrawl() {
-  const {session} = useVersion();
+export function HistoricalCrawl() {
+  const {sid, version, session} = useVersion();
+  const [loaded, setLoaded] = useState<{sid:string;data:SavedCrawlReport} | null>(null);
+  useEffect(() => {
+    if (!sid || !version) return;
+    let cancelled = false;
+    getCrawlReport(sid, version).then(data => {
+      if (!cancelled) setLoaded({sid, data});
+    }).catch(() => {
+      if (!cancelled) setLoaded(null);
+    });
+    return () => { cancelled = true; };
+  }, [sid, version]);
+  const report = loaded?.sid === sid && loaded?.data.version === version ? loaded.data.report : null;
   const config = session?.crawlConfig as Partial<CrawlConfig> | undefined;
   const channelName = (channel: string) => contextLabels.channels[channel as keyof typeof contextLabels.channels] ?? channel;
-  return <div className="space-y-6"><header><StageVersionAction stage="stage2" /><p className="ds-eyebrow">2단계 · 크롤링</p><h1 className="ds-t-screen">저장된 수집 설정을 확인합니다</h1></header><Card><h2 className="ds-t-card">크롤링 수집본</h2><p>{session?.collectionId ? '기존 수집본 사용 중' : '연결된 수집본이 없습니다.'}</p>{INTERNAL_TOOLS && session?.collectionId && <p>{session.collectionId}</p>}<p className="ds-t-caption">과거 버전의 실시간 수집 상태는 제공되지 않습니다. 버전 비교에서 수집본 차이를 확인하세요.</p></Card>{config ? <Card className="space-y-4"><h2 className="ds-t-card">수집 설정</h2><Input label="수집 채널" value={config.channels?.filter(c => INTERNAL_TOOLS || c !== 'fixture').map(channelName).join(' · ') ?? ''} readOnly /><div className="grid gap-4 md:grid-cols-2"><Input label="시작일" value={config.dateFrom ? new Date(`${config.dateFrom}T00:00:00`).toLocaleDateString('ko-KR') : ''} readOnly /><Input label="종료일" value={config.dateTo ? new Date(`${config.dateTo}T00:00:00`).toLocaleDateString('ko-KR') : ''} readOnly /></div><Input label="목표 건수" value={config.target_total ?? '제한 없음'} readOnly /><Input label="광고 제외어" value={config.adWords?.join(' · ') ?? ''} readOnly /><Input label="제외 출처" value={config.excludeSources?.join(' · ') ?? ''} readOnly /><Input label="제품명 필터" value={config.product_name_filter ? '사용' : '사용하지 않음'} readOnly />{Object.entries(config.perChannel ?? {}).filter(([channel])=>INTERNAL_TOOLS || channel !== 'fixture').map(([channel,limits])=><div key={channel}><h3 className="ds-t-label">{channelName(channel)}</h3><Input label="동시 수집 수" value={limits.concurrency} readOnly /><Input label="수집 간격(초)" value={limits.min_interval_s} readOnly /><Input label="키워드별 최대 수집 수" value={limits.max_per_keyword} readOnly /></div>)}</Card> : <Banner>저장된 수집 설정이 없습니다.</Banner>}</div>;
+  return <div className="space-y-6"><header><StageVersionAction stage="stage2" /><p className="ds-eyebrow">2단계 · 크롤링</p><h1 className="ds-t-screen">저장된 수집 설정을 확인합니다</h1></header>{report && <CrawlReportSummary report={report} heading />}<Card><h2 className="ds-t-card">크롤링 수집본</h2><p>{session?.collectionId ? '기존 수집본 사용 중' : '연결된 수집본이 없습니다.'}</p>{INTERNAL_TOOLS && session?.collectionId && <p>{session.collectionId}</p>}<p className="ds-t-caption">과거 버전의 실시간 수집 상태는 제공되지 않습니다. 버전 비교에서 수집본 차이를 확인하세요.</p></Card>{config ? <Card className="space-y-4"><h2 className="ds-t-card">수집 설정</h2><Input label="수집 채널" value={config.channels?.filter(c => INTERNAL_TOOLS || c !== 'fixture').map(channelName).join(' · ') ?? ''} readOnly /><div className="grid gap-4 md:grid-cols-2"><Input label="시작일" value={config.dateFrom ? new Date(`${config.dateFrom}T00:00:00`).toLocaleDateString('ko-KR') : ''} readOnly /><Input label="종료일" value={config.dateTo ? new Date(`${config.dateTo}T00:00:00`).toLocaleDateString('ko-KR') : ''} readOnly /></div><Input label="목표 건수" value={config.target_total ?? '제한 없음'} readOnly /><Input label="광고 제외어" value={config.adWords?.join(' · ') ?? ''} readOnly /><Input label="제외 출처" value={config.excludeSources?.join(' · ') ?? ''} readOnly /><Input label="제품명 필터" value={config.product_name_filter ? '사용' : '사용하지 않음'} readOnly />{Object.entries(config.perChannel ?? {}).filter(([channel])=>INTERNAL_TOOLS || channel !== 'fixture').map(([channel,limits])=><div key={channel}><h3 className="ds-t-label">{channelName(channel)}</h3><Input label="동시 수집 수" value={limits.concurrency} readOnly /><Input label="수집 간격(초)" value={limits.min_interval_s} readOnly /><Input label="키워드별 최대 수집 수" value={limits.max_per_keyword} readOnly /></div>)}</Card> : <Banner>저장된 수집 설정이 없습니다.</Banner>}</div>;
 }
 
 // Later-stage endpoints only read active data. Never mount their live editors in history mode.

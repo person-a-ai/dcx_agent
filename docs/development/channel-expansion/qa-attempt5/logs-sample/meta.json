@@ -1,0 +1,25 @@
+{
+  "id": "c1",
+  "parent": null,
+  "createdAt": "2026-10-20T13:26:51.091938+00:00",
+  "keywords": [
+    {
+      "id": "manual-87ed8ef1900c4a8a9a706edb4753f1e2",
+      "kw": "에어컨",
+      "axis": "physical",
+      "sub": "product_physical",
+      "round": 1,
+      "origin": "manual",
+      "status": "approved",
+      "reject": null,
+      "volume": {
+        "monthly": null,
+        "source": "unconnected",
+        "at": null
+      },
+      "badges": [],
+      "crawlExcluded": false
+    }
+  ],
+  "status": "done"
+}

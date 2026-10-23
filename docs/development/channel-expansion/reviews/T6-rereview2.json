@@ -1,0 +1,57 @@
+{
+  "task": "T6",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh (new session, independent re-review round 2)",
+  "base_commit": "ddbb89e1123e94881d9bb0485630d2a550a574ca",
+  "review_commit": "b9562931048d63c054e11c050533a16a5753526d",
+  "verdict": "PASS",
+  "previous_findings": [
+    {
+      "id": "T6-R1",
+      "resolved": true
+    },
+    {
+      "id": "T6-R2",
+      "resolved": true
+    },
+    {
+      "id": "T6-R3",
+      "resolved": true
+    }
+  ],
+  "commands": [
+    "Checked ancestor AGENTS.md locations and searched backend, docs and .harness for AGENTS.md; none were found.",
+    "Read docs/development/channel-expansion/03-plan.md Global Constraints and Task T6; reports/T0.md Step 5 and T6 handoff; .harness/scope-T6.json; reviews/T6.json; reviews/T6-rereview.json; .harness/reports/T6.json.",
+    "git rev-parse b956293; git log --oneline ddbb89e1123e94881d9bb0485630d2a550a574ca..b956293; git show --stat b956293; git show --stat 31ac6ec",
+    "git diff ddbb89e1123e94881d9bb0485630d2a550a574ca..b956293 -- backend/; git diff --name-only ddbb89e1123e94881d9bb0485630d2a550a574ca..b956293 -- backend/; inspected T6 original registration/integration changes and subsequent T7 changes separately.",
+    "git ls-tree d43e793 backend/app/crawl/adapters/cook82.py backend/tests/fixtures/http/cook82; git ls-tree b956293 backend/app/crawl/adapters/cook82.py backend/tests/fixtures/http/cook82",
+    "SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive b956293 backend | tar -x -C \"$SNAP\"",
+    "cd \"$SNAP\" && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+    "Snapshot was /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.jkbBiT9z9t. All review scripts, logs, salts, fixture mutations and generated test artifacts were confined to temporary directories.",
+    "From the snapshot, env -u VOYAGE_API_KEY PYTHONPATH=backend /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python independent_probes.py: socket-blocked runpy import of the exported checker, with independently generated malformed markup, attributes, duplicate/nested JSON, split-field values, numeric-field restrictions and legitimate-input probes; nine encoding forms; 4347 expected rejections and 117 expected acceptances.",
+    "From the snapshot, env -u VOYAGE_API_KEY PYTHONPATH=backend /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python independent_privacy.py: independently decode all six recording HTML files and all seven fixtures; derive nickname/IP sets; compare raw and rendered fixture views and author fields; classify collisions without printing identifiers; independently compare derived nickname hashes/lengths with checker sentinels; parse recorded lists/articles offline.",
+    "From the snapshot, env -u VOYAGE_API_KEY PYTHONPATH=backend /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python independent_mutations.py: separately mutate actual exported fixtures with invented duplicate JSON, closing-tag extras, split numeric text, double-percent closing-tag content and entity-encoded attribute content; run the full test_cook82.py suite for each using the repository venv interpreter, -q -p no:cacheprovider and VOYAGE_API_KEY removed; restore original bytes in finally.",
+    "Python compared restored exported cook82.py, test_cook82.py and all seven fixture files byte-for-byte with git show b956293:<path>; all matched.",
+    "Python compared per-commit backend path sets against .harness/scope-T6.json and attributed cumulative extras to 369b686; AST comparison of d43e793 and b956293 confirmed all 23 original test functions unchanged, none removed, and 11 added.",
+    "git diff --check ddbb89e1123e94881d9bb0485630d2a550a574ca..b956293 -- backend/; read-only working-tree/status checks; JSON schema/content validation of this report after writing."
+  ],
+  "findings": [],
+  "notes": [
+    "This is a brand-new independent review session. This session did not take part in implementing T6 or in any earlier review of T6. Prior reports were read as evidence and their findings were independently verified.",
+    "The only repository file created or edited by this session is docs/development/channel-expansion/reviews/T6-rereview2.json. No implementation edit, index operation, Git ref update or deletion was performed. Tests ran only against the fresh exported snapshot, with VOYAGE_API_KEY unset. No real recording identifier is reproduced in this report.",
+    "Unmodified b956293 snapshot: 3227 crawl tests passed in 69.27 seconds, with one existing Pydantic class-based-config deprecation warning. The crawl conftest blocks socket connect/connect_ex; independent probes also blocked sockets.",
+    "T6-R1 resolved: duplicate JSON keys are rejected recursively by object_pairs_hook before dictionary construction. Independent probes included escaped duplicate key spellings, objects inside arrays, depths 0/1/2/5/20/100, otherwise allowed duplicate values, and invented nickname/email/IP/phone values. All were rejected in nine encoding forms. A duplicate injected into the actual exported manifest failed the privacy test and full adapter suite (7 failed, 1443 passed), as expected.",
+    "T6-R2 resolved: the lexical scanner must consume every decoded character. It rejects closing-tag attributes/extras, incomplete tags, stray angle brackets, comments, processing instructions, unknown declarations, alternate doctypes, CDATA, unquoted attributes, duplicate attributes, and identifier-bearing entities in tag names. Independently tested both whole-input and value-only encodings: raw, entities, percent, double percent, Unicode escapes, hex escapes, escaped slashes, and two nested combinations. The actual-fixture closing-tag and encoded-closing-tag mutations each failed the privacy test and full adapter suite (127 failed, 1323 passed).",
+    "T6-R3 resolved: author, content, title and count fields are checked using concatenated descendant text; ordinary inline tags no longer independently authorize numbers. Independent two-piece and character-level splits of invented identifiers were rejected in author cells, comment authors, article bodies, titles, individual counts and adjacent count nodes. The actual-fixture split-phone mutation failed the privacy test and full adapter suite (127 failed, 1323 passed).",
+    "Numeric exceptions are tied to known fields: title-cell comment counts, photolink text matching its article number, pagination text matching its page query, comment-row data-rn, and manifest list_count/comment_count/num/notice_nums. Dates have their own field restrictions. Independent probes rejected numeric values in generic tags and unrelated JSON fields. Distinct table cells retain boundaries; legitimate adjacent counts and split synthetic fields passed. All seven committed fixtures passed in all nine encoding forms. The full independent matrix had 4464 cases and zero unexpected results.",
+    "An additional entity-encoded attribute identifier inserted into the actual exported list fixture failed its privacy test and full adapter suite (128 failed, 1322 passed). The many expected failures in mutated runs include tests that require the baseline fixture to be clean; they are not failures of the unmodified commit. Every mutated fixture was restored and verified against the target commit.",
+    "Independent recording comparison derived 59 distinct non-placeholder nicknames and 34 distinct IP values from td.user_function, ul.reples > li.rp h5 strong, #writerIP and em.ip across six recordings. The independently derived nickname hash set and length set exactly match the new sentinels. No recorded nickname remains in fixture author fields, and no recorded IP occurs in decoded source or rendered fixture text. Three nickname substring collisions remain solely in approved search/article URL scaffolding, dates and numbers; every collision was classified, with none unexplained. These scaffold coincidences are not retained author identifiers.",
+    "Cook82 adapter behavior and fixtures are unchanged since the T6.json target d43e793: cook82.py retains blob 8acd7cb52d328572e8d03a22a5c6510b6027434c and the cook82 fixture directory retains tree 16c80c50373446466cc019dedf48547724b6a26d. All 23 original test functions are AST-identical. Each T6 fix commit changes only test_cook82.py.",
+    "Independent offline recording parsing produced 25 items and next cursor 2 for each populated recorded search, zero items/no cursor for the empty search, and 6/7/26 comments for the articles. Recorded list dates and article comment dates match the manifest. Document metadata keys are exactly board, comment_count and num, and no recorded IP occurs in serialized parsed documents. Source inspection and passing tests retain title-only SEARCH_SCOPE=1, photolink deduplication, deletion-placeholder handling, punctuation-only author behavior, changed-markup errors, cursor validation, inherited blocking behavior and channel-default spacing.",
+    "Scope qualification: the literal cumulative backend range contains 23 paths, not just the 14 T6 allowed paths. Original T6 commit d43e793 exactly matches all 14 allowed paths; both T6 fixes touch only the allowed test file. All nine additional paths belong to intervening T7 commit 369b686: threads.py, render.py, their two test files, and five Threads fixtures. Its edits to shared registration/integration tests are also attributable to T7. Thus the assertion that only test_cook82.py changed after d43e793 holds for T6 fixes, not for the entire repository range. No T6 scope violation was found. This PASS does not supersede the separate T7 review.",
+    "The non-backend cumulative range also contains T5-rereview3.json, T6.json, T6-rereview.json and T7.json review artifacts. They were disclosed rather than attributed to adapter implementation. During the review, unrelated untracked test_channel_expansion_flow.py, test_qa_hook.py and backend/tests/qa_hooks/ appeared in the working tree; this session did not create, edit or remove them.",
+    "PASS: T6-R1, T6-R2 and T6-R3 are resolved by category. No reproducible realistic identifier-leak regression, current fixture privacy leak, adapter regression or T6 scope violation requiring a fix was found."
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "log_bytes": {
+    "list.log": 33,
+    "detail.log": 0
+  },
+  "login_url_found_in_logs": false,
+  "queue_contains_threads_login": false,
+  "queue_source": "/private/tmp/claude-501/-Users-yunho--claude-spares-spare-d69SsJ/9251127c-9663-4223-85bb-09f9c61d81cd/scratchpad/qa-data-r6neg003/crawl/sfefd956accfd45ee9027334e8ae4b3e8/collections/c1",
+  "network_free_hook": "qa-hook-inspected.py: fetch raises AdapterBlocked before returning any data; no network request code"
+}

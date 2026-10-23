@@ -1,0 +1,14 @@
+{
+  "kind": "design",
+  "surface": "web",
+  "document": "docs/development/channel-expansion/02-design.md",
+  "mockup": {
+    "provider": "Claude (local HTML using copied app CSS @4444a50)",
+    "invocation": "none: /claude-design installed but not used, reason recorded in 02-design.md section 0",
+    "entry": "docs/development/channel-expansion/mockup/index.html",
+    "files": [
+      "docs/development/channel-expansion/mockup/index.html",
+      "docs/development/channel-expansion/mockup/app.css"
+    ]
+  }
+}

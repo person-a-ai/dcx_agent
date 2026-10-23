@@ -1,0 +1,95 @@
+{
+  "verdict": "PASS",
+  "head": "8d99f5323e800a0860f363751c783a4551b69714",
+  "fingerprint": "3bae4a00deb67d67b3ed5f9ab6c8a9907a2795857b93e93c8e9ab9700c5731fc",
+  "executor": "codex",
+  "role": "code-review",
+  "dispatch": "codex:codex-rescue --wait --fresh (whole-branch review round 4: UI delta c597b2a..8d99f53 on top of the round-2 whole-branch PASS at c597b2a)",
+  "freshSession": true,
+  "base_commit": "56c1387031986d6a48a16ee08656f534b030814e",
+  "review_commit": "8d99f5323e800a0860f363751c783a4551b69714",
+  "previous_findings": [
+    {
+      "id": "WB-R1",
+      "resolved": true
+    },
+    {
+      "id": "WB-R3-1",
+      "resolved": true
+    },
+    {
+      "id": "WB-R3-2",
+      "resolved": true
+    }
+  ],
+  "history": [
+    {
+      "round": 2,
+      "review_commit": "c597b2a678231016e51b0d3644f3d6df921810c2",
+      "verdict": "PASS"
+    },
+    {
+      "round": 3,
+      "review_commit": "99606c7b8501a9da55a13299969e4a2fbf63e214",
+      "verdict": "FAIL",
+      "record": "reviews/final-review-3.json"
+    }
+  ],
+  "commands": [
+    {
+      "command": "git status --short; git rev-parse HEAD 56c1387; git diff --stat c597b2a678231016e51b0d3644f3d6df921810c2..8d99f5323e800a0860f363751c783a4551b69714; git diff c597b2a678231016e51b0d3644f3d6df921810c2..8d99f5323e800a0860f363751c783a4551b69714",
+      "exitCode": 0,
+      "result": "HEAD matches requested commit. Exactly four modified files: Settings.tsx, Progress.tsx, crawl.css, channelExpansion.test.ts; 46 insertions, 5 deletions."
+    },
+    {
+      "command": "git diff --check c597b2a..8d99f53; git log --format='%H %s' c597b2a..8d99f53",
+      "exitCode": 0,
+      "result": "Whitespace check passed; only commits 99606c7b8501a9da55a13299969e4a2fbf63e214 and 8d99f5323e800a0860f363751c783a4551b69714 follow the round-2 PASS."
+    },
+    {
+      "command": "SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive 8d99f53 | tar -x -C \"$SNAP\" && ln -s /Users/yunho/Documents/dcx_agent-channels-build/frontend/node_modules \"$SNAP/frontend/node_modules\" && printf '%s\\n' \"$SNAP\"",
+      "exitCode": 0,
+      "result": "Retained exported snapshot: /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.LfUbkNEd3A."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.LfUbkNEd3A && npm --prefix frontend test && npm --prefix frontend run lint",
+      "exitCode": 0,
+      "result": "77 test files and 969 tests passed, including all 24 channelExpansion tests; ESLint passed."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.LfUbkNEd3A && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+      "exitCode": 0,
+      "result": "3792 passed, 1 existing Pydantic class-based Config deprecation warning, in 232.99s."
+    },
+    {
+      "command": "Snapshot frontend: node inline PostCSS/assert probe over ds.css and crawl.css at widths 375, 768, 769, 1024, 1100, 1101, 1200, 1286, 1440",
+      "exitCode": 0,
+      "result": "All nine source-level assertions passed: region min-width:0 and overflow-x:auto; table width:100% and fixed layout; channel minimum 600px only through 768px; normal/anywhere cell wrapping; one column through 1100px and 2fr/1fr thereafter; progress-status minimum remains 600px at every width. This is parsed CSS evidence, not a browser layout measurement."
+    },
+    {
+      "command": "Snapshot: backend/.venv Python via its absolute repository path; inline playwright.sync_api Chromium headless launch and set_content smoke probe",
+      "exitCode": 1,
+      "result": "Browser launch blocked before page creation: macOS bootstrap_check_in MachPortRendezvousServer Permission denied (1100), SIGTRAP / TargetClosedError. No app browser measurements or keyboard checks obtained. No running server was started or stopped."
+    },
+    {
+      "command": "git rev-parse HEAD; git diff --exit-code; git diff --cached --exit-code; git status --short; test ! -e docs/development/channel-expansion/review.json",
+      "exitCode": 0,
+      "result": "Before report creation: HEAD remains 8d99f5323e800a0860f363751c783a4551b69714; tracked working tree and index unchanged; review.json absent. Existing/concurrent untracked artifacts left untouched."
+    }
+  ],
+  "findings": [],
+  "notes": [
+    "This brand-new independent code-review session took no part in implementing or reviewing any task of this branch. No sub-agents were used. Historical reports were read solely as evidence for this independent delta review.",
+    "The unchanged portion of the branch carries forward the round-2 whole-branch PASS at c597b2a supplied in the dispatch. This session reviewed the complete two-commit UI delta; it did not repeat the earlier whole-branch implementation review. No other committed files changed after c597b2a through the requested head.",
+    "WB-R1 remains resolved: report.py still aggregates unique done URL rows by source, and Progress uses report.channels.youtube_vlog.urls_done. The overlapping-keyword, legacy-report and explicit-zero frontend regressions passed; neither reporting logic nor those assertions changed in this delta.",
+    "WB-R3-1 is resolved at crawl.css:4-6: the settings and skipped-items tables use crawl-channel-scroll, whose 600px minimum is inside max-width:768px. They no longer inherit the unconditional crawl-status-scroll minimum. Desktop width:100% plus table-layout:fixed fits the available card width with normal cell wrapping.",
+    "WB-R3-2 is resolved: the ineffective table-level nowrap declaration was removed. ds.css:170 explicitly preserves white-space:normal and overflow-wrap:anywhere on cells. Long Korean descriptions, the unavailable-Threads explanation and switch labels retain their wrapping behavior. The new test explicitly calls its CSS checks a source contract, not a computed-style check.",
+    "At 375px, minmax(0,...) tracks and min-width:0 on the screen, stack, cards and scroll regions prevent the 600px table minimum from expanding its ancestors. overflow-x:auto contains the table inside each region. This agrees with the controller's supplied 221/600 clientWidth/scrollWidth for both new regions and document width 375. Those numerical browser measurements were supplied by the controller, not independently measured in this session.",
+    "The 769-1100px range has no new channel-table minimum and uses one grid column; above 1100px it uses minmax(0,2fr)/minmax(0,1fr), still without a channel-table minimum. The shared sidebar also collapses through 1100px. Thus the former desktop regression at 1101-1286px is removed without changing the layout breakpoint. Independent parsed-CSS assertions covered both sides of 768 and 1100. Controller settings measurements 1101:466/466, 1200:532/532, 1286:589/589 and skipped-items measurements 1024:823/823, 1200:847/847, 1440:1087/1087 corroborate the no-needless-scroll assessment.",
+    "Both wrappers have role=region, distinct descriptive aria-label values and tabIndex=0, consistent with the existing progress-status region; nested tables retain their accessible names. The global focus-visible outline applies. No key handler or focus trap was added. Native keyboard scrolling was not independently exercised because the browser launch was blocked.",
+    "An independent read-only comparison verified Settings.tsx and Progress.tsx are byte-identical to c597b2a after removing only their new wrapper opening/closing tags. Content, counts, switches, availability/disabled behavior, callbacks and the empty skipped-items state are preserved. The new CSS class is limited to the two intended tables.",
+    "The added tests meaningfully protect the rendered named/focusable wrappers for both tables, the mobile-only minimum, absence of nowrap, existing cell wrapping and unchanged progress-status minimum. Their regular expressions are source contracts and cannot establish actual browser geometry or keyboard behavior; the report does not overstate that coverage. No realistic must-fix issue was found.",
+    "All executable suites and the independent CSS/browser probes ran from the retained exported snapshot. Only docs/development/channel-expansion/review.json is intentionally written in the repository by this session; product sources, repository tests, index and Git refs are untouched. No rm command was run and no existing server was started or stopped.",
+    "Initial untracked entries were build.json, qa-attempt2/, qa-attempt3-orphan/, qa-attempt3-stopped/ and reviews/final-review-3.json. Later read-only status also showed .playwright-mcp/ and docs/development/channel-expansion/qa/ from concurrent activity; this session did not create, edit or remove them. The tracked worktree and index were clean before report creation."
+  ]
+}

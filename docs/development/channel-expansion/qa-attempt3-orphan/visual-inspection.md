@@ -1,0 +1,1 @@
+Opened saved preflight,E2E001/002/003/005/006,NEG001/002/003 pause+result,REG001 result,REG002,EDGE004,original375px settings left/right and result middle/right,EDGE002 through view_image. Mobile scroll clipping and displayed content agree with DOM. Some fullPage captures only show internal scrolling viewport; offscreen assertions use DOM/API. No prior-run screenshots used.

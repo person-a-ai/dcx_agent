@@ -5,7 +5,8 @@ import re
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 
-_PREFIXES = {"naver_cafe":"nc","naver_blog":"nb","youtube":"yt","ppomppu":"pp","clien":"cl","fixture":"fx"}
+_PREFIXES = {"naver_cafe":"nc","naver_blog":"nb","youtube":"yt","ppomppu":"pp","clien":"cl","fixture":"fx",
+             "youtube_vlog":"yv","threads":"th","naver_kin":"kn","cook82":"c8"}
 _TRACKERS = {"fbclid", "gclid"}
 _NAVER_TRACKERS = {"art", "query", "where", "sm"}
 _YOUTUBE_TRACKERS = {"si", "feature", "t", "pp"}
@@ -27,7 +28,7 @@ def normalize_url(url: str, source: str) -> str:
     trackers = _TRACKERS
     if source in {"naver_cafe", "naver_blog"}:
         trackers = trackers | _NAVER_TRACKERS
-    elif source == "youtube":
+    elif source in {"youtube", "youtube_vlog"}:
         trackers = trackers | _YOUTUBE_TRACKERS
     params = [
         (key, value) for key, value in parse_qsl(parts.query, keep_blank_values=True)
@@ -40,13 +41,21 @@ def normalize_url(url: str, source: str) -> str:
             path = path.removeprefix("/ca-fe")
     elif source == "naver_blog" and host in {"m.blog.naver.com", "blog.naver.com"}:
         scheme, netloc = "https", "blog.naver.com"
-    elif source == "youtube" and host in {"youtu.be", "m.youtube.com", "youtube.com", "www.youtube.com"}:
+    elif source in {"youtube", "youtube_vlog"} and host in {"youtu.be", "m.youtube.com", "youtube.com", "www.youtube.com"}:
         scheme, netloc = "https", "www.youtube.com"
         if host == "youtu.be" and path.strip("/"):
             video_id = path.strip("/").split("/")[0]
             path = "/watch"
             params = [(key, value) for key, value in params if key != "v"]
             params.append(("v", video_id))
+
+    if source == "naver_kin" and host == "kin.naver.com":
+        params = [(k, v) for k, v in params if k in {"dirId", "docId"}]
+    elif source == "cook82" and host in {"www.82cook.com", "82cook.com"}:
+        netloc = "www.82cook.com"
+        params = [(k, v) for k, v in params if k in {"bn", "num"}]
+    elif source == "threads" and host in {"threads.net", "www.threads.net", "threads.com", "www.threads.com"}:
+        scheme, netloc, params = "https", "www.threads.com", []
 
     return urlunsplit((scheme, netloc, path, urlencode(sorted(params)), ""))
 

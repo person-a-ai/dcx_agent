@@ -479,6 +479,13 @@ class CrawlQueue:
                 lease_until=NULL,lease_run_id=NULL,retry_at=NULL WHERE url_norm=? AND source=?""",
                        (reason, url_norm, source))
 
+    def mark_skipped(self, url_norm: str, source: str, reason: str) -> None:
+        with self._write() as db:
+            self._owns_completion(db, url_norm, source)
+            db.execute("""UPDATE urls SET status='skipped',last_error=?,
+                lease_until=NULL,lease_run_id=NULL,retry_at=NULL WHERE url_norm=? AND source=?""",
+                       (reason, url_norm, source))
+
     def exclude_keywords(self, snapshot_id: str, kws: Iterable[str]) -> int:
         with self._write() as db:
             self._snapshot(db, snapshot_id)

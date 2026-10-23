@@ -1,0 +1,3 @@
+{
+  "raw": "### Ran Playwright code\n```js\nawait (async(page)=>{await page.getByRole('button',{name:'여기까지로 마치기',exact:true}).click();return await page.qaSave('QA-NEG-003-confirm');})(page);\n```\n### Page\n- Page URL: http://localhost:3012/pipeline/crawling\n- Console: 0 errors, 1 warnings\n### Modal state\n- [\"confirm\" dialog with message \"Threads 50건 미수집(차단)\n남은 URL을 건너뛰고 지금까지 모은 결과로 마치시겠습니까?\"]: can be handled by browser_handle_dialog"
+}

@@ -1,0 +1,20 @@
+{
+  "time": "2026-10-20T07:51:17.887041+00:00",
+  "head": "99606c7b8501a9da55a13299969e4a2fbf63e214",
+  "expectedFingerprint": "62e956bf42696bff97263fdaad8481743bfc7129c2d2cc9df13bf7786f57aef7",
+  "actualFingerprint": "3bae4a00deb67d67b3ed5f9ab6c8a9907a2795857b93e93c8e9ab9700c5731fc",
+  "gitStatus": " M frontend/src/components/crawl/Progress.tsx\n M frontend/src/components/crawl/Settings.tsx\n M frontend/src/components/crawl/crawl.css\n M frontend/src/lib/logic/channelExpansion.test.ts\n?? docs/development/channel-expansion/build.json\n?? docs/development/channel-expansion/qa-attempt2/\n?? docs/development/channel-expansion/qa-attempt3-stopped/\n?? docs/development/channel-expansion/qa/\n?? docs/development/channel-expansion/reviews/final-review-3.json\n",
+  "modifiedFiles": [
+    "frontend/src/components/crawl/Progress.tsx",
+    "frontend/src/components/crawl/Settings.tsx",
+    "frontend/src/components/crawl/crawl.css",
+    "frontend/src/lib/logic/channelExpansion.test.ts"
+  ],
+  "workerProductWrites": false,
+  "serverProbe": "2026-10-20T07:49:23Z curl localhost:8000 connection refused HTTP 000",
+  "finalCheckTime": "2026-10-20T07:54:42.873653+00:00",
+  "finalHead": "8d99f5323e800a0860f363751c783a4551b69714",
+  "finalFingerprint": "3bae4a00deb67d67b3ed5f9ab6c8a9907a2795857b93e93c8e9ab9700c5731fc",
+  "finalStatus": "?? docs/development/channel-expansion/build.json\n?? docs/development/channel-expansion/qa-attempt2/\n?? docs/development/channel-expansion/qa-attempt3-orphan/\n?? docs/development/channel-expansion/qa-attempt3-stopped/\n?? docs/development/channel-expansion/qa/\n?? docs/development/channel-expansion/reviews/final-review-3.json\n",
+  "evidenceMovement": "External moves to qa-attempt3-stopped at07:43Z and qa-attempt3-orphan at07:51Z; worker copied own evidence back to qa. No product/Git writes or server lifecycle actions by worker."
+}

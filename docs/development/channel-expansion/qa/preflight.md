@@ -1,0 +1,13 @@
+# Independent browser QA preflight — PASS
+
+- UTC start: 2026-10-20T13:35:08Z. Runtime dispatch: `01a15985-5ca6-76a2-84dc-0a2a9040839c` (CODEX_THREAD_ID / CODEX_SESSION_ID).
+- Skill read first: `/Users/yunho/.codex/skills/harness-browser-qa/SKILL.md`.
+- HEAD `ff4d4d163021e0c476897be0abecdb440f3996f1`, branch `feature/channel-expansion`, fingerprint `3e73f4f996f1e1ad1b2152feacc356506d51ba32d37cd722e73f060fd931c86f`; no tracked changes. Existing untracked evidence listed in integrity-before.txt.
+- Tool: Playwright MCP, Chrome, fresh isolated context launched by this worker. Configuration `--browser chrome --isolated` (no headless flag; default visible window). Live metadata exposed methods via functions tools. Tool-search discovery returned unsupported; live metadata worked.
+- Opened `http://localhost:3010`, rendered `/pipeline/start`. Collapsed sidebar and expanded it again. First expansion locator incorrectly used 펼치기; DOM showed 펴기 and retry succeeded. An initial settings readiness locator incorrectly treated a native summary as a button; corrected after inspecting DOM. Both failed locator attempts preserved in preflight-browser*.json.
+- Screenshot `/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/preflight.png` exists and visually inspected. Sidebar, project list, and input page rendered correctly. No browser access or launch failure.
+- Controller-started servers, never started/stopped by QA: main 3010→8010; missing Chromium 3011→8011; blocked Threads 3012→8012; fixture 3013→8013. These substitute for section 8 server restarts as explicitly authorized. Environment and paths are those in controller dispatch; launcher copied with logs later.
+- Writable evidence is qa/ and ../qa.json. Test data created through approved API/UI. MCP automatically created `.playwright-mcp/page-2026-10-20T13-35-10-197Z.yml` and `.playwright-mcp/console-2026-10-20T13-35-08-291Z.log` outside qa; they are tool artifacts, not product edits. Isolated browser temporary profile is also tool-managed.
+- Seed helper copied only after reading attempt-5 helper; all execution and verdicts are new. Seed responses are in seed-output.json. Manual keyword API normalizes whitespace; exact Given investigation is recorded with QA-E2E-003.
+
+Final verification 2026-10-20T13:54:04.613890+00:00: HEAD and fingerprint unchanged; tracked and staged diffs empty. Own browser tab closed; controller servers untouched. All 17 scenarios passed. Browser warnings also included the existing logo aspect-ratio warning; no errors. See integrity-after.json and visual-inspection.md.

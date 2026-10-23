@@ -1,0 +1,65 @@
+{
+  "task": "T5",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh (new session, independent re-review)",
+  "base_commit": "02d0a9ce9855fae949389cd52cf6a52318f69f24",
+  "review_commit": "155a8a4187bfb663c388e6da766574ce3b653db9",
+  "verdict": "FAIL",
+  "previous_findings": [
+    {
+      "id": "T5-P2-fixture-identifiers",
+      "resolved": false
+    },
+    {
+      "id": "T5-P2-repeated-pages",
+      "resolved": true
+    }
+  ],
+  "commands": [
+    "git status --short",
+    "git rev-parse HEAD",
+    "git diff --stat 02d0a9ce9855fae949389cd52cf6a52318f69f24..155a8a4187bfb663c388e6da766574ce3b653db9 -- backend/",
+    "git diff --name-only 02d0a9ce9855fae949389cd52cf6a52318f69f24..155a8a4187bfb663c388e6da766574ce3b653db9 -- backend/",
+    "git diff 02d0a9ce9855fae949389cd52cf6a52318f69f24..155a8a4187bfb663c388e6da766574ce3b653db9 -- backend/app backend/tests/crawl",
+    "git diff 3bf797a3dfdffd8850fffc512b34a513bca886fa..155a8a4187bfb663c388e6da766574ce3b653db9 -- backend/tests/fixtures/http/naver_kin/",
+    "git diff --check 02d0a9ce9855fae949389cd52cf6a52318f69f24..155a8a4187bfb663c388e6da766574ce3b653db9 -- backend/",
+    "export PYTHONDONTWRITEBYTECODE=1 PYTEST_ADDOPTS='-p no:cacheprovider'\nenv -u VOYAGE_API_KEY backend/.venv/bin/python -m pytest backend/tests/crawl -q",
+    "PYTHONDONTWRITEBYTECODE=1 backend/.venv/bin/python - <<'PY' [inline read-only audit: recursively decode HTML entities, percent encoding, escaped slashes, Unicode and hex escapes in all nine fixture files; inspect email/phone/starred-ID patterns, account-bearing URLs and JSON, profile names, profile text, and unique URLs] PY",
+    "PYTHONDONTWRITEBYTECODE=1 backend/.venv/bin/python - <<'PY' [inline mutation probe: AST-load the committed privacy test without decorators; call it against all current fixtures and in-memory mutations for plain/encoded blog IDs, store IDs, profile IDs, emails, phones, names and member JSON] PY",
+    "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=backend env -u VOYAGE_API_KEY backend/.venv/bin/python - <<'PY' [inline offline adapter probes: repeated pages, retries, interleaved keywords, restart, missing markup/title/IDs, no-result markers and head-only deletion variants] PY",
+    "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=backend env -u VOYAGE_API_KEY backend/.venv/bin/python - <<'PY' [inline corrected detail probe using Node.replace_with: insert answer sentinels into all three detail fixtures; verify question-only bodies and dates; remove 작성일 labels and verify date=None] PY",
+    "nl -ba backend/tests/fixtures/http/naver_kin/question-2.html | sed -n '1350,1379p'",
+    "nl -ba backend/tests/crawl/adapters/test_naver_kin.py | sed -n '192,235p'"
+  ],
+  "findings": [
+    {
+      "id": "T5-P2-fixture-identifiers",
+      "severity": "P2",
+      "file": "backend/tests/fixtures/http/naver_kin/question-2.html:1375",
+      "issue": "The answerer profile renamed to user19 still contains the identifying profile text '[redacted business name and contact number]'. Its business name and contact number remain inside the same profile link at lines 1353-1379, defeating the account anonymization despite the synthetic nickname, profile URL and avatar. The committed privacy test accepts this fixture because it checks selected URL patterns and a fixed denylist, but does not check profile career text or generic phone/email patterns. Thus the earlier fixture-identifiers finding is only partially resolved.",
+      "evidence": [
+        "The independently decoded scan found the contact number in question-2.html:1375, inside .profile_card .career_list, next to the identifying business name.",
+        "Calling test_fixture_identifiers_are_synthetic directly on every current fixture succeeds, including question-2.html.",
+        "In-memory mutation probes confirm the test detects restored plain and percent-encoded blog identifiers, plain store identifiers and percent-encoded profile identifiers.",
+        "The same test misses a restored account in blog\\u002enaver\\u002ecom/[redacted], an added email, an added mobile number, a non-synthetic visible profile name and a memberId in embedded JSON. Its decoding loop at test_naver_kin.py:204-205 does not decode Unicode escapes."
+      ],
+      "fix": "Replace the remaining identifying profile career text with consistent synthetic values while preserving the markup. Extend the privacy regression check to cover profile names/career text and contact details, decode Unicode escapes as well as HTML entities, percent encoding and escaped slashes, and add mutation cases proving these checks fail when identifiers are reintroduced. Distinguish generic site boilerplate and UUID fragments from account contact information."
+    }
+  ],
+  "notes": [
+    "This is a brand-new independent review session. This session did not participate in implementing T5 or in any earlier review of T5. The earlier review was read only as input to this re-review.",
+    "HEAD matched review_commit. The initial working tree was clean. The cumulative backend diff contains exactly the 16 approved files; test_crawl_api.py, test_final_w4.py and test_fixture_adapter.py change only the approved channel-set/count expectations. git diff --check passed.",
+    "The requested crawl suite completed successfully: 554 passed, 1 existing Pydantic deprecation warning in 56.53 seconds. VOYAGE_API_KEY was unset using env -u. Python bytecode and pytest cache writes were disabled; pytest used writable temporary storage.",
+    "All nine files under backend/tests/fixtures/http/naver_kin were independently scanned after repeated HTML-entity, percent, escaped-slash, Unicode-escape and hex-escape decoding. Inspection included URL attributes, embedded JSON, blog/profile/member/store/product identifiers, visible names and profile text. The earlier named blog, expert store/product, profile URL and recommendation-name leaks are now synthetic. No email or genuine starred-account matches were found. Other phone-shaped matches were generic site help text or UUID fragments; the remaining account contact is the finding above.",
+    "The privacy regression test is meaningful for several original regressions, as demonstrated by mutations that it rejects, but is incomplete for the requested identifier coverage. This is not merely a hypothetical testing concern: the existing identifying career text passes it.",
+    "Repeated-page termination is resolved. The implementation tracks the normalized URL-set signature per keyword and retains the first cursor for a repeated signature. Committed tests and independent MockTransport probes confirm that a later repeated page terminates, retrying that terminal page remains terminal, retrying the original cursor preserves its next cursor, interleaved keywords remain independent, and restarting at page 1 is allowed. History is bounded to 256 keywords, matching the established adapter approach.",
+    "No silent empty-page path was found: absent rows without a recognized no-result marker raise ValueError, as do missing title links and missing question IDs. Recognized no-result text/selectors and the captured list-noresult.html produce an empty terminal page. The T0 correction is respected.",
+    "Deleted-question detection checks the full HTML, including head scripts. Independent probes for '게시물이 삭제되어', '삭제된 게시물' and '존재하지 않는 게시물' all raised AdapterSkipped with reason='deleted'. Missing question bodies without such a marker raise ValueError.",
+    "Independent mutations of all three question fixtures replaced answer bodies with a sentinel; fetched bodies excluded it and comments stayed empty. Dates matched each question's 작성일 and did not use the supplied search date. Removing 작성일 yielded date=None instead of borrowing an answer/search date. The first probe attempted unsupported selectolax Node.inner_html assignment; it was corrected to Node.replace_with and all three detail cases passed.",
+    "The adapter reuses CommunityAdapter request blocking and the channel defaults limiter. Committed tests cover 403/429 without retry, question metadata and decoded tags, normalized URLs, invalid cursors and request spacing. No authentication or bypass mechanism was introduced.",
+    "Only docs/development/channel-expansion/reviews/T5-rereview.json was created by this session in the repository. No implementation, test, fixture, index or Git-ref changes were made. An unrelated untracked docs/development/channel-expansion/reviews/T3-rereview.json appeared during review; this session did not create or modify it.",
+    "Controller redaction (2026-10-20, before first push): real account/business identifiers that the reviewer quoted from the fixtures were replaced with [redacted]; findings and verdict are otherwise unchanged."
+  ]
+}

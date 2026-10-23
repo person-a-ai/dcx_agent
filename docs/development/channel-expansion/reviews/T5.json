@@ -1,0 +1,48 @@
+{
+  "task": "T5",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh",
+  "base_commit": "02d0a9ce9855fae949389cd52cf6a52318f69f24",
+  "review_commit": "3bf797a3dfdffd8850fffc512b34a513bca886fa",
+  "verdict": "FAIL",
+  "commands": [
+    "git status --short",
+    "git rev-parse HEAD",
+    "git diff --stat 02d0a9ce9855fae949389cd52cf6a52318f69f24..3bf797a3dfdffd8850fffc512b34a513bca886fa",
+    "git diff --name-only 02d0a9ce9855fae949389cd52cf6a52318f69f24..3bf797a3dfdffd8850fffc512b34a513bca886fa",
+    "git diff 02d0a9ce9855fae949389cd52cf6a52318f69f24..3bf797a3dfdffd8850fffc512b34a513bca886fa -- backend/app backend/tests/crawl",
+    "git diff --check 02d0a9ce9855fae949389cd52cf6a52318f69f24..3bf797a3dfdffd8850fffc512b34a513bca886fa",
+    "export PYTHONDONTWRITEBYTECODE=1 PYTEST_ADDOPTS='-p no:cacheprovider'\nenv -u VOYAGE_API_KEY backend/.venv/bin/python -m pytest backend/tests/crawl -q",
+    "rg -n 'repeat|signature|fingerprint|seen|next_cursor' backend/app/crawl/worker.py backend/app/crawl/adapters/naver_common.py"
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "file": "backend/tests/fixtures/http/naver_kin/question-1.html:1539",
+      "issue": "Fixture masking leaves the real blog account [redacted] in answer hyperlinks and embedded data-linkdata/data-module JSON. Another answerer remains identifiable through the expert profile storeId=[redacted] at backend/tests/fixtures/http/naver_kin/question-3.html:1287, despite its visible nickname being replaced with user21. Other recommendation profile IDs/names also remain, for example question-1.html:3840. This violates the requested removal of real personal identifiers; masking only visible names and KiN profile u parameters is insufficient.",
+      "fix": "Replace account-bearing URLs, expert profile/product identifiers, associated names, and their embedded JSON/attribute copies with consistent synthetic values while retaining markup structure. Add a fixture privacy check covering URL attributes and embedded data, not only visible nicknames, emails, or phone patterns."
+    },
+    {
+      "severity": "P2",
+      "file": "backend/app/crawl/adapters/naver_kin.py:71",
+      "issue": "Repeated pages do not terminate pagination, contrary to 02-design.md:81. A MockTransport returning list-1.html for both page 1 and page 2 produces identical normalized URL sets but next_cursor=\"3\" for page 2. The seen set is local to one page, and CommunityAdapter has no cross-page repeat detection. The worker forwards next_cursor (backend/app/crawl/worker.py:324), and the queue schedules it (backend/app/crawl/queue.py:338), so duplicate results trigger unnecessary later requests and may keep advancing when pagination links advance too.",
+      "fix": "Track the preceding normalized URL-set signature and cursor per keyword, following the existing Naver search adapter behavior, and set next_cursor=None on a repeated later page. Keep same-cursor retries and different keywords independent. Add a regression test returning the same captured results for two consecutive cursors and asserting termination."
+    }
+  ],
+  "notes": [
+    "HEAD matched the requested review commit; the initial working tree was clean. The diff contains exactly the 16 approved files, including the three controller-approved channel-set/count changes. git diff --check passed.",
+    "Requested crawl suite completed with exit code 0: 541 passed, 1 existing Pydantic deprecation warning in 56.80 seconds. VOYAGE_API_KEY was unset. Bytecode and pytest cache writes were disabled; test temporary files used the normal writable temporary directory.",
+    "List implementation uses query/page URL parameters and positive page cursors; captured pages each yield 10 unique dirId+docId-normalized URLs. Tests cover page 2 and termination without later links (backend/tests/crawl/adapters/test_naver_kin.py:47, :104, :114). Cross-page repetition is the missing essential case described above.",
+    "No rows without a no-result marker raise ValueError; rows lacking a title link or either question ID also raise ValueError (backend/app/crawl/adapters/naver_kin.py:29). The true empty fixture is list-noresult.html, as required by T0; list-changed.html exercises structural failure.",
+    "Detail tests check exact question titles/dates, no comments, answer counts, metadata and decoded tags for all three captures (backend/tests/crawl/adapters/test_naver_kin.py:134). Tags are percent-decoded via unquote (backend/app/crawl/adapters/naver_kin.py:85). The body selector isolates the question and removes image placeholders/scripts/styles; author_raw is None.",
+    "Deletion detection reads the entire HTML, including the head script (backend/app/crawl/adapters/naver_kin.py:77). Additional in-memory probes confirmed AdapterSkipped(reason=\"deleted\") for 게시물이 삭제되어, 삭제된 게시물, and 존재하지 않는 게시물. Only the first captured variant has a committed regression test; covering the others would improve robustness.",
+    "An in-memory question-1 mutation removing every 작성일 label returned date=None, even with item.date populated (backend/app/crawl/adapters/naver_kin.py:88). This does not borrow an answer date or search date. Unknown dates are supported by the existing filter behavior (backend/app/crawl/filters.py:53); add a test documenting this choice. No mandatory missing-date error is specified.",
+    "403 and 429 are converted to AdapterBlocked by CommunityAdapter; tests cover both list and detail with one request only (backend/tests/crawl/adapters/test_naver_kin.py:162). The limiter reads app.crawl.channels defaults and has a monkeypatched-default spacing test (:184).",
+    "Privacy scans covered raw and percent-decoded fixture text, starred IDs, emails, mobile phone patterns, account/profile URLs and visible profile names. No starred IDs, email addresses, or mobile phone matches were found. Account/profile URL leaks are documented in the finding. Visible answerer names and KiN u parameters are synthetic; question and answer text lengths measured 22-80 characters while real parsing classes and nested markup remain.",
+    "The added adapter tests exercise real captured markup through MockTransport and would fail without the new module/registration. Existing suite success does not cover the privacy leaks or repeated-page termination.",
+    "Only docs/development/channel-expansion/reviews/T5.json was created in the repository; no product, test, fixture, index, or Git-ref changes were made.",
+    "Controller redaction (2026-10-20, before first push): real account/business identifiers that the reviewer quoted from the fixtures were replaced with [redacted]; findings and verdict are otherwise unchanged."
+  ]
+}

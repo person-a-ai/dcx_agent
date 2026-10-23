@@ -1,0 +1,108 @@
+{
+  "verdict": "FAIL",
+  "head": "f22e495fa7946d5d5d18b6283049b62de95bf71a",
+  "fingerprint": "3e1e169979028b3760d3a23b12305431c54955f07f6ad5064931dc51690e902f",
+  "executor": "codex",
+  "role": "code-review",
+  "dispatch": "codex:codex-rescue --wait --fresh (whole-branch final review; not an implementer or task reviewer)",
+  "freshSession": true,
+  "base_commit": "56c1387031986d6a48a16ee08656f534b030814e",
+  "review_commit": "f22e495fa7946d5d5d18b6283049b62de95bf71a",
+  "commands": [
+    {
+      "command": "git status --short && git rev-parse HEAD 56c1387 && git diff --stat 56c1387..f22e495fa7946d5d5d18b6283049b62de95bf71a",
+      "exitCode": 0,
+      "result": "Initially clean; HEAD matched the requested review commit. Whole range: 91 files, 7025 insertions, 55 deletions."
+    },
+    {
+      "command": "SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive f22e495fa7946d5d5d18b6283049b62de95bf71a | tar -x -C \"$SNAP\" && ln -s /Users/yunho/Documents/dcx_agent-channels-build/frontend/node_modules \"$SNAP/frontend/node_modules\"",
+      "exitCode": 0,
+      "result": "Complete export at /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.pkdnedExkk. All executable tests and reviewer probes ran in this snapshot. No temporary directories were removed."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.pkdnedExkk && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl backend/tests/context backend/tests/keywords backend/tests/prep -q -p no:cacheprovider",
+      "exitCode": 0,
+      "result": "4478 passed, 2 warnings, 152.67s. Existing Pydantic deprecation and joblib physical-core detection fallback warnings. Collection began before reviewer-only tests were added."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.pkdnedExkk && npm --prefix frontend test && npm --prefix frontend run lint",
+      "exitCode": 0,
+      "result": "77 files / 962 tests passed; ESLint passed. Unmodified committed tests."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.pkdnedExkk && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl/test_whole_branch_review_probe.py -q -s -p no:cacheprovider",
+      "exitCode": 0,
+      "result": "1 independent integration probe passed. Actual four adapter classes, actual RenderBridge, worker, queue, report and document writer; synthetic yt-dlp/crawler and committed HTTP fixtures; no network. Unique completed vlog videos=2, frontend matrix sum=4, unique vlog documents=6. Probe deliberately asserts these observed quantities and exports the actual report for frontend reproduction."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.pkdnedExkk && npm --prefix frontend test -- src/lib/logic/wholeBranchReview.test.ts",
+      "exitCode": 1,
+      "result": "Expected reviewer regression failure: actual Progress component rendered the actual backend report as 영상 4개 → 구간 6; expected 영상 2개 → 구간 6. This temporary test establishes WB-R1; it is not an existing-suite failure."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.pkdnedExkk && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_privacy.py",
+      "exitCode": 0,
+      "result": "Initial independent fixed-point HTML/entity/percent/Unicode/hex/escaped-slash decoding audit covered 21 fixture files plus inline vlog and caption test data. Extracted candidate identity sets from ignored recordings; only three benign matches in approved search URL scaffolding, no identity-field leak."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.pkdnedExkk && env -u VOYAGE_API_KEY PYTHONPATH=backend /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_privacy.py",
+      "exitCode": 1,
+      "result": "First extended audit used the KiN HTML-only checker on manifest.json and rejected JSON as HTML text. Reviewer harness misuse, not a fixture defect; corrected the checker dispatch while retaining the manifest in the independent decoded scan and manual audit."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.pkdnedExkk && env -u VOYAGE_API_KEY PYTHONPATH=backend /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_privacy.py",
+      "exitCode": 0,
+      "result": "Corrected audit passed. All applicable committed whole-source checkers also passed on independently decoded fixtures. Derived 59 distinct non-placeholder 82cook nicknames and 35 IP-node values; no recorded nickname in fixture identity fields and no recorded IP-node value in decoded fixture source. No raw identifier values were printed or retained in this report."
+    },
+    {
+      "command": "python3 inline read-only scan of backend/tests/test_*.py import names, respecting parent __init__.py packages",
+      "exitCode": 0,
+      "result": "No duplicate pytest import-module names across the entire backend test tree."
+    },
+    {
+      "command": "git diff --check 56c1387..f22e495fa7946d5d5d18b6283049b62de95bf71a && git diff --exit-code 56c1387..f22e495fa7946d5d5d18b6283049b62de95bf71a -- backend/app/model/features.py backend/app/crawl/adapters/community.py",
+      "exitCode": 0,
+      "result": "Whitespace check passed; model/features.py and community.py are unchanged from the base."
+    },
+    {
+      "command": "python3 inline AST comparison of git show 56c1387:backend/app/crawl/adapters/youtube.py and git show f22e495fa7946d5d5d18b6283049b62de95bf71a:backend/app/crawl/adapters/youtube.py",
+      "exitCode": 0,
+      "result": "Existing YoutubeAdapter._extract body is AST-identical to the extracted module-level extract_info body."
+    },
+    {
+      "command": "git diff --name-status f22e495fa7946d5d5d18b6283049b62de95bf71a..HEAD && git status --porcelain=v1 && git diff --name-only && git diff --cached --name-only",
+      "exitCode": 0,
+      "result": "Concurrent HEAD advanced to 4e29b449cb00ff6f942b84efedf52154762a040a, adding only reviews/T7-rereview3.json. Concurrent untracked qa.json and qa/ were left untouched. No tracked working-tree or index modifications before this report."
+    }
+  ],
+  "findings": [
+    {
+      "id": "WB-R1",
+      "severity": "P2",
+      "must_fix": true,
+      "file": "frontend/src/components/crawl/Progress.tsx:19",
+      "issue": "The vlog distribution double-counts completed videos shared by multiple keywords. The backend matrix is a keyword-attribution table, not a partition of unique URLs; summing its urls_done cells inflates the video count while the displayed segment count remains deduplicated. Overlapping search results are an ordinary production case.",
+      "evidence": [
+        "backend/app/crawl/gate.py:44-49 joins url_hits to urls and groups by keyword/source. A completed URL discovered for two keywords contributes once to each keyword cell. backend/app/crawl/queue.py:_insert_urls keeps one URL row but inserts both keyword hits.",
+        "The independent offline run used actual YoutubeVlogAdapter, ThreadsAdapter, NaverKinAdapter and Cook82Adapter with two keywords, configured caps, synthetic transport responses and committed fixtures. There were exactly two done youtube_vlog URL rows, six written vlog segment documents, and one no_ko_captions skip. Both keyword matrix cells reported urls_done=2.",
+        "Rendering that real report with the unchanged Progress component produced 영상 4개 → 구간 6. The reviewer-only Vitest assertion expecting 영상 2개 → 구간 6 failed with that exact mismatch.",
+        "The existing frontend test supplies separate per-keyword counts, and T9 uses disjoint QA keyword URLs or a single keyword. Neither covers a shared completed URL. This is a whole-branch contract mismatch, not a previously resolved task finding. The implementation follows the T8 summation sketch, but that sketch assumes additivity the backend does not provide."
+      ],
+      "fix": "Expose a unique completed-URL count per source in report.channels (aggregate the urls table once, filtered to status=done), add it to the frontend report type, and use it for the vlog video label. Preserve per-keyword matrix attribution. Add an integration regression with at least two keywords sharing videos and verify the rendered video count equals unique completed videos while segment and skip counts remain correct. Do not substitute the matrix unique field directly: it counts first-keyword ownership without restricting to completed URLs."
+    }
+  ],
+  "notes": [
+    "This is a brand-new independent whole-branch review session. This session took no part in implementing or reviewing any task of this branch. Reading historical task reports for this review does not make this session a task reviewer. No sub-agents were used.",
+    "Reviewed the requested immutable base-to-head range, approved brainstorm/design/plan including Global Constraints, deviations, task interfaces and Plan Eng Review, QA plan, relevant mockup copy, every historical task review, and controller reports/T9-manual.md. T7-R4 remains overruled as instructed. Resolved T3/T5/T6/T7 findings and existing P3 hardening observations were not re-reported.",
+    "Only docs/development/channel-expansion/review.json was created in the repository by this session. Product files, repository tests, index and Git refs were never changed. Reviewer scripts/tests/results reside only in the retained temporary snapshot. The verdict remains pinned to f22e495 even though another session added a review commit and QA artifacts during this review.",
+    "End-to-end probe: all four real adapters produced yv/th/kn/c8 documents through normalization, queue deduplication and writing. Custom vlog videos/duration options reached yt-dlp search and filtered a too-short video; per-channel list caps were honored. No-key Voyage initialization fell back to fixed segments without network. KiN deleted content and missing Korean captions became terminal skips without fallback documents; question bodies excluded answers. 82cook document metadata was limited to board/num/comment_count and contained no IP nodes. Threads retained the synthetic author only in the public post URL, with author_hash and metadata limited to post_code/like_count/reply_count.",
+    "The two-keyword/four-channel probe completed with 14 documents, 10 done URLs, target=10, and exactly one deleted plus one no_ko_captions skip. Report reason maps agreed with progress and unique queue counts. Existing restricted-exclusion tests passed; restricted excluded rows enter the new reason map once, while legacy skipped fields retain their documented status=skipped-only meaning. Status API forwards progress/report maps without renaming, and the frontend reason table consumes those maps with legacy fallback.",
+    "Backend/frontend defaults match: vlog 2/0, Threads 1/2, KiN and 82cook 1/0.5, with existing defaults preserved. The backend validates positive integer video count, nonnegative integer minimum duration and ordered duration bounds; normal UI minute inputs round to integer seconds and block invalid ranges. Legacy configs/drafts receive vlog defaults. Availability is a class-level check without browser allocation; unavailable Threads remains visible with its disabled switch and approved explanation.",
+    "Lifecycle/resource review: managed_adapter closes resources from both worker finally paths. The real RenderBridge plus an offline crawler was created once for list work, reused across both keyword calls and closed; detail created no browser, and both loop threads were stopped. Existing timeout/cancellation/repeated-close tests passed. Threads uses the worker limiter only, with default concurrency 1 and nominal 2-second spacing (shared limiter jitter); KiN/82cook retain CommunityAdapter spacing. yt-dlp uses per-call extractors, skip_download=True/download=False and in-memory captions. No login, explicit cookies, captcha bypass, proxies, stealth or PO-token tool was introduced.",
+    "Read-only inspection of the installed Crawl4AI defaults confirmed enable_stealth, simulate_user, override_navigator, magic and persistent context default off. CrawlerRunConfig defaults to cache BYPASS, whose should_write is false, so the configured render path does not implicitly persist raw Threads HTML in its crawl cache. No real Chromium or live network request was made by this review.",
+    "Privacy: independently decoded all 21 committed HTTP fixture files and inline vlog/caption test data to a fixed point. Compared identifier categories extracted in memory from ignored recordings, inspected the minimized fixture structure and manifest values, and ran the relevant whole-source assertions. Candidate raw-set intersections were confined to three approved search URL scaffold occurrences; no retained raw account/contact/IP identifier was established. Public KiN/82cook article IDs and structural dates/counts follow the approved fixture contract. No raw recording values are reproduced here.",
+    "Test hygiene: no duplicate importable test module names remain across backend/tests, including the renamed crawl/test_render_bridge.py. Crawl tests prohibit socket connections; new browser tests inject crawl4ai and temporary browser-directory checks, and vlog tests inject yt-dlp/embedders. Required suites passed without a local Chromium or real Voyage-key dependency. No flaky failure was observed in this run; prior task reports document repeated lifecycle runs. Arbitrary injected-crawler hardening limitations remain P3, not new release blockers.",
+    "Existing-channel regression review: community.py and features.py are unchanged; INPUT_DIM remains 1032 and the integration test confirms new channel one-hot values remain zero. Existing YouTube extraction behavior is preserved by AST comparison. The required combined backend suite and frontend suite/lint passed; controller owns the full backend execution and frontend build, which this review did not duplicate.",
+    "Korean UI copy matches the approved settings/gate/progress/result changes, including the plan-approved 약 20건 replacement for older mockup copy. Browser viewport/interactive QA and live-site behavior were not independently rerun. Controller T9 manual evidence reports successful four-channel collection with fixed segmentation; it explicitly does not establish live Voyage embedding segmentation. WB-R1 is the one newly reproduced must-fix defect."
+  ]
+}

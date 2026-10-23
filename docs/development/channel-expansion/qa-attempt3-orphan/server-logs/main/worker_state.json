@@ -1,0 +1,33 @@
+{
+  "sid": "s022667b4b6674eef9f3c2747db878043",
+  "kind": "detail",
+  "run_id": "ca59e9bfc8a64cedb17ff5f14fd4306e",
+  "snapshot_id": "e7c99d92569f48b1b40e72904b80e2ae",
+  "channels": {
+    "cook82": {
+      "status": "done",
+      "attempts": 16,
+      "parse_errors": 0,
+      "blocked": 0
+    },
+    "naver_kin": {
+      "status": "done",
+      "attempts": 8,
+      "parse_errors": 0,
+      "blocked": 0
+    },
+    "threads": {
+      "status": "done",
+      "attempts": 50,
+      "parse_errors": 0,
+      "blocked": 0
+    },
+    "youtube_vlog": {
+      "status": "done",
+      "attempts": 8,
+      "parse_errors": 0,
+      "blocked": 0
+    }
+  },
+  "paused_channels": []
+}

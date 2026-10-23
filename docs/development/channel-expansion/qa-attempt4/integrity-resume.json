@@ -1,0 +1,8 @@
+{
+  "time": "2026-10-20T09:34:07.407351+00:00",
+  "head": "8d99f5323e800a0860f363751c783a4551b69714",
+  "fingerprint": "3bae4a00deb67d67b3ed5f9ab6c8a9907a2795857b93e93c8e9ab9700c5731fc",
+  "tracked_diff": "",
+  "status": "?? docs/development/channel-expansion/build.json\n?? docs/development/channel-expansion/qa-attempt2/\n?? docs/development/channel-expansion/qa-attempt3-orphan/\n?? docs/development/channel-expansion/qa-attempt3-stopped/\n?? docs/development/channel-expansion/qa/\n?? docs/development/channel-expansion/review.json\n?? docs/development/channel-expansion/reviews/final-review-3.json\n",
+  "dispatch": "01a1583f-bc1a-7ba2-af7a-590ba8288a20"
+}

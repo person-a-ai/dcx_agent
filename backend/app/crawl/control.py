@@ -20,10 +20,12 @@ from uuid import uuid4
 
 from app.config import settings
 from app.work.proc import pid_alive
-from app.context import store
+from app.context import store, versions
 from app.crawl.adapters import available_sources
+from app.crawl.channels import channel_defaults
 from app.crawl.filters import DEFAULT_AD_WORDS, DEFAULT_EXCLUDE_SOURCES
 from app.keywords.normalize import norm_key
+from app.keywords import display
 from app.crawl.queue import CrawlQueue, KwMeta, STALE_AFTER_S
 from app.crawl import gate, report
 
@@ -37,8 +39,12 @@ def collection_dir(sid):
     session = store.load_session(sid)
     if session is None:
         raise store.StoreError('Session not found', 404, 'not_found')
+    return _collection_dir(sid, session)
+
+
+def _collection_dir(sid, session):
     cid = session.get('collectionId')
-    if not cid or not re.fullmatch(r'c[1-9][0-9]*', cid):
+    if not isinstance(cid, str) or not re.fullmatch(r'c[1-9][0-9]*', cid):
         raise store.StoreError('No crawl collection', 409)
     return Path(settings.local_data_dir).resolve() / 'crawl' / sid / 'collections' / cid
 
@@ -351,13 +357,33 @@ def _status_settings(session):
         config = manifest.get('config', {})
         limits = config.get('perChannel', config.get('channel_limits', {}))
         # Match worker._Run's limiter precedence and default request spacing.
-        intervals = {source: limits.get(source, {}).get(
-            'min_interval_s', 0.5 if source in ('clien', 'ppomppu', 'naver_blog', 'naver_cafe') else 0)
-            for source in channels}
+        intervals = {source: limits.get(source, {}).get('min_interval_s', channel_defaults(source)[1])
+                     for source in channels}
     return dict(defaults=dict(adWords=DEFAULT_AD_WORDS.copy(), excludeSources=DEFAULT_EXCLUDE_SOURCES.copy()),
                 available_sources=available_sources(), collection_keywords=keywords,
                 collection_channels=channels, min_interval_s=intervals,
                 added_keywords_count=len(added) if session.get('collectionId') else 0)
+
+
+def _keyword_display(session, *, keywords=(), rows=(), result=None):
+    """Response-only labels; raw keys remain the identity everywhere else."""
+    keys = {k.get('kw', k.get('text', '')) for k in session.get('keywords', [])}
+    keys.update(keywords)
+    keys.update(row['kw'] for row in rows or ())
+    for field in ('matrix', 'counts'):
+        keys.update((result or {}).get(field, {}))
+    return {kw: display.display_form(kw) for kw in sorted(keys) if kw}
+
+
+def saved_report(sid, version):
+    """Read only the selected snapshot and its durable report, never live state."""
+    session = versions._data(sid, version)
+    root = _collection_dir(sid, session)
+    result = store.read_json(root / 'report.json')
+    if result is None:
+        raise store.StoreError('Crawl report not found', 404, 'not_found')
+    return dict(version=version, collectionId=root.name, report=result,
+                keywordDisplay=_keyword_display(session, result=result))
 
 
 def status(sid):
@@ -366,7 +392,8 @@ def status(sid):
         raise store.StoreError('Session not found', 404, 'not_found')
     settings_payload = _status_settings(session)
     if not session.get('collectionId'):
-        return dict(**settings_payload, status='idle', resumable=False, kind=None, progress=None, gate=None, report=None, channels={}, updatedAt=session.get('updatedAt'))
+        return dict(**settings_payload, keywordDisplay=_keyword_display(session),
+                    status='idle', resumable=False, kind=None, progress=None, gate=None, report=None, channels={}, updatedAt=session.get('updatedAt'))
     root = collection_dir(sid)
     queue = ReadQueue(root / 'queue.sqlite')
     run = latest_run(queue)
@@ -394,13 +421,17 @@ def status(sid):
             except store.StoreError as exc:
                 if exc.status != 409:
                     raise
-    return dict(**settings_payload, status=state,
+    rows = table.get('rows') if isinstance(table, dict) else table
+    return dict(**settings_payload,
+                keywordDisplay=_keyword_display(session, keywords=settings_payload['collection_keywords'],
+                                                rows=rows, result=result),
+                status=state,
                 resumable=state != 'running' and _unfinished_run(queue, run),
                 remaining_by_channel=remaining_by_channel(queue),
                 kind=run['kind'] if run else None, collectionId=root.name,
                 progress=p, channels=p['channels'], paused_channels=worker_state.get('paused_channels', []),
                 stopReason=worker_state.get('stopReason'), snapshot_id=snapshot[0] if snapshot else None,
-                gate=table.get('rows') if isinstance(table, dict) else table,
+                gate=rows,
                 estimate=table.get('estimate') if isinstance(table, dict) else None,
                 report=result, updatedAt=datetime.fromtimestamp(run['heartbeat_at'], timezone.utc).isoformat() if run else session.get('updatedAt'))
 

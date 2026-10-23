@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Error\nTimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: '규칙 수정하고 다시 실행', exact: true })\n"
+    }
+  ],
+  "isError": true
+}

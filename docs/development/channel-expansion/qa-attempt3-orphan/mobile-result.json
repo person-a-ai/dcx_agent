@@ -1,0 +1,94 @@
+{
+  "time": "2026-10-20T07:44:22.575Z",
+  "url": "http://localhost:3000/pipeline/crawling",
+  "layout": {
+    "width": 375,
+    "scrollWidth": 375,
+    "tables": [
+      {
+        "name": "채널별 수집 상태",
+        "width": 598,
+        "parentWidth": 256,
+        "parentScroll": 600,
+        "overflow": "auto"
+      },
+      {
+        "name": "채널별 건너뛴 사유",
+        "width": 598,
+        "parentWidth": 206,
+        "parentScroll": 600,
+        "overflow": "auto"
+      },
+      {
+        "name": "키워드별 수집 결과",
+        "width": 254,
+        "parentWidth": 256,
+        "parentScroll": 256,
+        "overflow": "visible"
+      }
+    ]
+  },
+  "states": [
+    {
+      "scrollLeft": 0,
+      "headers": [
+        {
+          "text": "채널",
+          "left": 114,
+          "right": 313.328125
+        },
+        {
+          "text": "사유",
+          "left": 313.328125,
+          "right": 512.65625
+        },
+        {
+          "text": "건수",
+          "left": 512.65625,
+          "right": 712
+        }
+      ]
+    },
+    {
+      "scrollLeft": 150,
+      "headers": [
+        {
+          "text": "채널",
+          "left": -36,
+          "right": 163.328125
+        },
+        {
+          "text": "사유",
+          "left": 163.328125,
+          "right": 362.65625
+        },
+        {
+          "text": "건수",
+          "left": 362.65625,
+          "right": 562
+        }
+      ]
+    },
+    {
+      "scrollLeft": 394,
+      "headers": [
+        {
+          "text": "채널",
+          "left": -280,
+          "right": -80.671875
+        },
+        {
+          "text": "사유",
+          "left": -80.671875,
+          "right": 118.65625
+        },
+        {
+          "text": "건수",
+          "left": 118.65625,
+          "right": 318
+        }
+      ]
+    }
+  ],
+  "prepInitial": "- main:\n  - paragraph: 3단계 · 전처리 · 임베딩\n  - heading \"라벨링에 쓸 문서와 벡터를 만듭니다\" [level=1]\n  - paragraph: 규칙은 명백한 광고 · 중복 · 너무 짧은 글만 뺍니다. 대상과 관련 있는지는 4단계에서 판단합니다.\n  - button \"3단계부터 다시\"\n  - button \"임시 저장\" [disabled]\n  - button \"전처리 실행\" [disabled]\n  - status \"전처리 설정을 불러오는 중\""
+}

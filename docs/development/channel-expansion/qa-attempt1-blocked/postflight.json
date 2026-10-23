@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-10-20T06:29:08.569101+00:00",
+  "head": "4e29b449cb00ff6f942b84efedf52154762a040a",
+  "fingerprint": "3e1e169979028b3760d3a23b12305431c54955f07f6ad5064931dc51690e902f",
+  "trackedDiff": "",
+  "gitStatus": "?? docs/development/channel-expansion/qa/",
+  "dispatch": "01a157fb-ba1b-7503-8188-485cc9f82a59",
+  "backendProcessesExited": [
+    6049,
+    7059
+  ],
+  "browserTabClosed": true,
+  "requestedHead": "f22e495fa7946d5d5d18b6283049b62de95bf71a",
+  "headMatchesRequested": false,
+  "committedChangesDuringQa": "docs/development/channel-expansion/reviews/T7-rereview3.json"
+}

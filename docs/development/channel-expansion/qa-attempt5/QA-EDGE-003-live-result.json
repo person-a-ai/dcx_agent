@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\"time\":\"2026-10-20T13:26:03.924Z\",\"url\":\"http://localhost:3012/pipeline/crawling\",\"type\":\"active result\",\"measurements\":[{\"name\":\"채널\",\"box\":{\"x\":114,\"y\":386.5,\"width\":199.328125,\"height\":39},\"scroll\":0},{\"name\":\"사유\",\"box\":{\"x\":119.828125,\"y\":386.5,\"width\":199.328125,\"height\":39},\"scroll\":193.5},{\"name\":\"건수\",\"box\":{\"x\":118.65625,\"y\":386.5,\"width\":199.34375,\"height\":39},\"scroll\":394}],\"width\":{\"inner\":375,\"scroll\":375}}\n### Ran Playwright code\n```js\nawait (async(page)=>{const measurements=[];await page.setViewportSize({width:375,height:812});const table=page.getByRole('table',{name:'채널별 건너뛴 사유',exact:true});for(const name of ['채널','사유','건수']){const th=table.getByRole('columnheader',{name,exact:true});await th.scrollIntoViewIfNeeded();await page.screenshot({path:page.qaDir+'QA-EDGE-003-live-result-375-'+name+'.png'});measurements.push({name,box:await th.boundingBox(),scroll:await table.evaluate(e=>e.parentElement.scrollLeft)});}return {time:new Date().toISOString(),url:page.url(),type:'active result',measurements,width:await page.evaluate(()=>({inner:innerWidth,scroll:document.documentElement.scrollWidth}))};})(page);\n```"
+    }
+  ]
+}

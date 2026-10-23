@@ -1,0 +1,489 @@
+{
+  "main": {
+    "QA 채널 확장": {
+      "sid": "s49f9566b6c284076b111a8c5fd79acf1",
+      "requestedKeywords": [
+        "에어컨 청소",
+        "제습기",
+        "qa-empty"
+      ],
+      "keywords": [
+        {
+          "id": "manual-58eef5f4d9d849c8b6def7747df2eb8d",
+          "kw": "에어컨청소",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        },
+        {
+          "id": "manual-e4dbc70d2ce14de188ed99a6f29afd62",
+          "kw": "제습기",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        },
+        {
+          "id": "manual-df740a672de64ddca13d15af19dfcc9f",
+          "kw": "qa-empty",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "youtube_vlog",
+        "threads",
+        "naver_kin",
+        "cook82"
+      ]
+    },
+    "QA 빈 결과": {
+      "sid": "s29ff068743014ad59d2ba2b1aa2cf0e9",
+      "requestedKeywords": [
+        "qa-empty"
+      ],
+      "keywords": [
+        {
+          "id": "manual-83e35dc90b91457280f4157ebc35c984",
+          "kw": "qa-empty",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "youtube_vlog",
+        "threads",
+        "naver_kin",
+        "cook82"
+      ]
+    },
+    "QA 샘플": {
+      "sid": "s5a182b6e89834f4ab7797978553b4c60",
+      "requestedKeywords": [
+        "에어컨 청소"
+      ],
+      "keywords": [
+        {
+          "id": "manual-b57ff2010c4e43669404bbc03ba9ab84",
+          "kw": "에어컨청소",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "fixture"
+      ]
+    }
+  },
+  "unavailable": {
+    "QA 채널 확장": {
+      "sid": "s186a8534b8a74bc4a8acb993c725d4ea",
+      "requestedKeywords": [
+        "에어컨 청소",
+        "제습기",
+        "qa-empty"
+      ],
+      "keywords": [
+        {
+          "id": "manual-2421bda7f61646e99dadd4e3e81ee5bb",
+          "kw": "에어컨청소",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        },
+        {
+          "id": "manual-5b275d02c012464eb200925069513dd1",
+          "kw": "제습기",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        },
+        {
+          "id": "manual-adbd3a024a404fba8f62396635290920",
+          "kw": "qa-empty",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "youtube_vlog",
+        "naver_kin",
+        "cook82"
+      ]
+    },
+    "QA 빈 결과": {
+      "sid": "sa6f4bd42bbc548898334fd337078dcb6",
+      "requestedKeywords": [
+        "qa-empty"
+      ],
+      "keywords": [
+        {
+          "id": "manual-473935aaf2644d7b84e71f589548742f",
+          "kw": "qa-empty",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "youtube_vlog",
+        "naver_kin",
+        "cook82"
+      ]
+    },
+    "QA 샘플": {
+      "sid": "s32b021760c8c41ce99b5479a26ebda70",
+      "requestedKeywords": [
+        "에어컨 청소"
+      ],
+      "keywords": [
+        {
+          "id": "manual-75f43b7eaf3b4f429ccfe2efa7eed588",
+          "kw": "에어컨청소",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "fixture"
+      ]
+    }
+  },
+  "blocked": {
+    "QA 채널 확장": {
+      "sid": "sfefd956accfd45ee9027334e8ae4b3e8",
+      "requestedKeywords": [
+        "에어컨 청소",
+        "제습기",
+        "qa-empty"
+      ],
+      "keywords": [
+        {
+          "id": "manual-16f4361cd3144713a9a6671541cfc7a4",
+          "kw": "에어컨청소",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        },
+        {
+          "id": "manual-5cec0b2b5d564717bed3cc2c96b572c6",
+          "kw": "제습기",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        },
+        {
+          "id": "manual-7e732e8a0f9942d1887a45646b0de7f9",
+          "kw": "qa-empty",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "threads"
+      ]
+    },
+    "QA 빈 결과": {
+      "sid": "sca0db65b4cbd4779ab106f4ca6ea3bfc",
+      "requestedKeywords": [
+        "qa-empty"
+      ],
+      "keywords": [
+        {
+          "id": "manual-e8a6e26a5ddb4abe9858f88f476adb7f",
+          "kw": "qa-empty",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "youtube_vlog",
+        "threads",
+        "naver_kin",
+        "cook82"
+      ]
+    },
+    "QA 샘플": {
+      "sid": "s59896a50a03845148c534d4f70b799df",
+      "requestedKeywords": [
+        "에어컨 청소"
+      ],
+      "keywords": [
+        {
+          "id": "manual-5195bbb0439b4cfb967a7b77cb2be887",
+          "kw": "에어컨청소",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "fixture"
+      ]
+    }
+  },
+  "sample": {
+    "QA 채널 확장": {
+      "sid": "s4c143d67cf294d9cae9cc894975a6c74",
+      "requestedKeywords": [
+        "에어컨 청소",
+        "제습기",
+        "qa-empty"
+      ],
+      "keywords": [
+        {
+          "id": "manual-1a68b25af3574496b255cd9f1165bd2e",
+          "kw": "에어컨청소",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        },
+        {
+          "id": "manual-f3a2c47607e64744b8fa07622620bcd5",
+          "kw": "제습기",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        },
+        {
+          "id": "manual-d30bdd16740b48b2ab1216e272d7665c",
+          "kw": "qa-empty",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "youtube_vlog",
+        "threads",
+        "naver_kin",
+        "cook82"
+      ]
+    },
+    "QA 빈 결과": {
+      "sid": "s72eb03b9e30c4821b574f9b28c9593e8",
+      "requestedKeywords": [
+        "qa-empty"
+      ],
+      "keywords": [
+        {
+          "id": "manual-9ddd9f9c75154f98a39e117f339b3916",
+          "kw": "qa-empty",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "youtube_vlog",
+        "threads",
+        "naver_kin",
+        "cook82"
+      ]
+    },
+    "QA 샘플": {
+      "sid": "s5b4b47f1a96942da8d2a983b846fa7fc",
+      "requestedKeywords": [
+        "에어컨 청소"
+      ],
+      "keywords": [
+        {
+          "id": "manual-4a05421abfa34e5e8c210bf320f80b3b",
+          "kw": "에어컨청소",
+          "axis": "physical",
+          "sub": "product_physical",
+          "round": 1,
+          "origin": "manual",
+          "status": "approved",
+          "reject": null,
+          "volume": {
+            "monthly": null,
+            "source": "unconnected",
+            "at": null
+          },
+          "badges": []
+        }
+      ],
+      "channels": [
+        "fixture"
+      ]
+    }
+  }
+}

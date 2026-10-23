@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Error\nTimeoutError: locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: '수집 결과를 확인합니다', exact: true }) to be visible\n"
+    }
+  ],
+  "isError": true
+}

@@ -1,0 +1,180 @@
+{
+  "verdict": "FAIL",
+  "head": "8d99f5323e800a0860f363751c783a4551b69714",
+  "fingerprint": "3bae4a00deb67d67b3ed5f9ab6c8a9907a2795857b93e93c8e9ab9700c5731fc",
+  "executor": "codex",
+  "role": "browser-qa",
+  "freshSession": true,
+  "dispatch": "01a1583f-bc1a-7ba2-af7a-590ba8288a20",
+  "browser": {
+    "tool": "Playwright MCP (browser_run_code_unsafe, isolated headed Chrome 155.0.8059.85)",
+    "session": "01a1583f-bc1a-7ba2-af7a-590ba8288a20: independent QA browser from 09:11Z; resumed isolated browser context from 09:29Z",
+    "preflight": "PASS",
+    "evidence": "docs/development/channel-expansion/qa/preflight.md"
+  },
+  "servers": "controller-started (see preflight.md)",
+  "scenarios": [
+    {
+      "id": "QA-E2E-001",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- 채널 표에 \"유튜브 브이로그\", \"Threads\", \"지식iN\", \"82쿡\" 행이 각각 1개씩 보인다\n  - 네 행 모두 \"새 채널\" 배지가 보인다\n  - 네 행 모두 \"사용 불가\" 배지가 없고 \"사용하기\" 스위치를 켤 수 있다\n  - \"유튜브 브이로그\" 행의 수집 방식 칸에 \"한국어 자막을 화제 단위로 나눠 문서화\" 문구가 보인다\n  - \"Threads\" 행의 수집 방식 칸에 \"키워드당 약 20건\" 문구가 보인다\n  - 기존 채널 행(네이버 카페 · 네이버 블로그 · 유튜브 댓글 · 뽐뿌 · 클리앙)이 그대로 보인다",
+      "actual": "Each of 유튜브 브이로그, Threads, 지식iN, 82쿡 occurs once. All four have 새 채널. All four switches are enabled and checked; no unavailable badge. The vlog row contains 한국어 자막을 화제 단위로 나눠 문서화. The Threads row contains 키워드당 약 20건. All five existing channel rows remain.",
+      "evidence": "docs/development/channel-expansion/qa/QA-E2E-001.md"
+    },
+    {
+      "id": "QA-E2E-002",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- 새로고침 후 세 칸 값이 5 · 2 · 30으로 보인다\n  - GET /session/{sid} 응답의 `crawlConfig.youtube_vlog`가 `{\"videos_per_keyword\": 5, \"min_duration_s\": 120, \"max_duration_s\": 1800}`이다\n  - \"1분 미만 쇼츠와 60분이 넘는 영상은 목록에서 뺍니다\" 안내 문구가 보인다\n  - \"유튜브 브이로그\"를 끄면 이 칸 묶음이 사라진다",
+      "actual": "Reloaded values are 5, 2, 30. GET session returns videos_per_keyword=5, min_duration_s=120, max_duration_s=1800. The exact shorts/60-minute exclusion notice is present. Turning vlog off removes its settings group (hidden=true).",
+      "evidence": "docs/development/channel-expansion/qa/QA-E2E-002.md"
+    },
+    {
+      "id": "QA-E2E-003",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "FAIL",
+      "expected": "- 화면 제목이 \"본문 수집 전에 키워드를 정리합니다\"로 바뀐다\n  - \"Threads는 로그인 없이 볼 수 있는 결과만 모아 키워드당 약 20건입니다\" 배너가 보인다\n  - 상세 수집 예상 카드 아래 \"유튜브 브이로그는 영상마다 자막 구간을 나누므로\" 문구가 보인다\n  - 키워드 표에 `qa-empty` 행이 \"0건\" 배지와 함께 보인다\n  - `에어컨 청소` 행을 펼치면 유튜브 브이로그 · Threads · 지식iN · 82쿡 네 채널 이름이 보인다",
+      "actual": "The heading becomes 본문 수집 전에 키워드를 정리합니다. The required Threads notice is present. The required vlog segmentation notice is present. qa-empty has the 0건 badge. FAIL against the literal plan: there is no 에어컨 청소 row. The API stores and UI displays 에어컨청소. Expanding that normalized row does show all four new channels.",
+      "evidence": "docs/development/channel-expansion/qa/QA-E2E-003.md"
+    },
+    {
+      "id": "QA-E2E-004",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- 채널 상태 표 머리에 \"건너뜀\" 열이 있다\n  - 수집이 끝난 뒤 \"유튜브 브이로그\" 행 \"건너뜀\" 칸에 0보다 큰 숫자와 \"(자막 없음)\"이 보인다\n  - \"지식iN\" 행 \"건너뜀\" 칸에 0보다 큰 숫자가 보인다\n  - \"Threads\" 행 상태가 \"완료\"다\n  - GET /crawl/{sid}/status 응답의 `progress.skipped.youtube_vlog.no_ko_captions`가 0보다 크다",
+      "actual": "Progress table includes 건너뜀. Completed vlog row shows 2 (자막 없음). Completed 지식iN row shows 2 (삭제된 글). Threads shows 완료. progress.skipped.youtube_vlog.no_ko_captions=2 (>0).",
+      "evidence": "docs/development/channel-expansion/qa/QA-E2E-004.md"
+    },
+    {
+      "id": "QA-E2E-005",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- \"건너뛴 항목\" 표에 \"유튜브 브이로그 · 한국어 자막 없음 · N개 영상\" 행이 있다(N = status 응답 `report.channels.youtube_vlog.skip_reasons.no_ko_captions`)\n  - 같은 표에 \"지식iN · 삭제된 글 · M건\" 행이 있다(M = `report.channels.naver_kin.skip_reasons.deleted`)\n  - \"채널 분포\"에 네 새 채널 이름이 모두 보인다\n  - \"유튜브 브이로그\" 분포 줄에 \"영상 … → 구간 …\" 표기가 보인다\n  - \"전처리로 이동하기\" 버튼이 보인다",
+      "actual": "Vlog row: 한국어 자막 없음, 2개 영상; report skip_reasons.no_ko_captions=2. 지식iN row: 삭제된 글, 2건; report skip_reasons.deleted=2. Distribution includes all four new channels (16 vlog segments, 50 Threads, 8 지식iN, 16 82쿡). Vlog distribution says 영상 8개 → 구간 16. 전처리로 이동하기 is present.",
+      "evidence": "docs/development/channel-expansion/qa/QA-E2E-005.md"
+    },
+    {
+      "id": "QA-E2E-006",
+      "url": "http://localhost:3010/pipeline/preprocess",
+      "result": "PASS",
+      "expected": "- 전처리 화면이 오류 배너 없이 완료 상태가 된다\n  - 전처리 결과의 원본 문서 수가 결과 화면 \"수집 문서\" 수와 같다\n  - 전처리 채널 목록(제외 소스 선택)에 \"유튜브 브이로그\", \"Threads\", \"지식iN\", \"82쿡\"이 보인다",
+      "actual": "Completed preprocessing result, no error banner; 90 tokenized and 90 embedded documents. Original documents=90, exactly equal to collection result's 90. The exclusion-channel checkbox list includes 유튜브 브이로그, Threads, 지식iN and 82쿡.",
+      "evidence": "docs/development/channel-expansion/qa/QA-E2E-006.md"
+    },
+    {
+      "id": "QA-NEG-001",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- \"저장\" 버튼과 \"목록 수집 시작\" 버튼이 비활성화된다\n  - PUT /crawl/{sid}/config에 `youtube_vlog: {\"min_duration_s\": 1800, \"max_duration_s\": 600}`을 직접 보내면 422 응답과 `error.code: \"invalid_request\"`가 온다\n  - GET /session/{sid}의 `crawlConfig.youtube_vlog`는 이전 저장값 그대로다",
+      "actual": "saveDisabled=true and startDisabled=true. PUT returns HTTP 422, error.code=invalid_request. Before and after saved config both equal 5 / 120 / 1800.",
+      "evidence": "docs/development/channel-expansion/qa/QA-NEG-001.md"
+    },
+    {
+      "id": "QA-NEG-002",
+      "url": "http://localhost:3011/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- \"Threads\" 행에 \"사용 불가\" 배지가 보인다\n  - \"Threads\" 행에 \"Crawl4AI 브라우저가 설치돼 있지 않아 사용할 수 없습니다.\" 문구가 보인다\n  - \"Threads\" 스위치가 비활성화돼 있다\n  - GET /crawl/{sid}/status의 `available_sources`에 `threads`가 없다\n  - `threads`를 포함한 설정을 PUT /crawl/{sid}/config로 보내면 422와 `error.code: \"sources_unavailable\"`이 온다",
+      "actual": "Threads has 사용 불가. The exact Crawl4AI browser-not-installed message is present. Threads switch disabled=true. available_sources excludes threads. PUT returns HTTP 422, error.code=sources_unavailable.",
+      "evidence": "docs/development/channel-expansion/qa/QA-NEG-002.md"
+    },
+    {
+      "id": "QA-NEG-003",
+      "url": "http://localhost:3012/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- 멈춤 배너 \"수집이 멈췄습니다\"가 보인다\n  - 배너에 \"Threads\" 배지가 보인다\n  - 배너에 \"Threads가 로그인 화면을 보여 주어 멈췄습니다. 로그인은 시도하지 않습니다.\" 문구가 보인다\n  - \"여기까지로 마치기\" 후 결과 화면 \"건너뛴 항목\" 표에 \"Threads · 차단으로 여기까지 마침\" 행이 있다\n  - 서버 로그와 네트워크 기록에 threads.com 로그인 주소 요청이 없다",
+      "actual": "The stopped banner contains 수집이 멈췄습니다. Threads badge is visible in the banner. Banner includes Threads가 로그인 화면을 보여 주어 멈췄습니다. 로그인은 시도하지 않습니다. Result row says Threads · 차단으로 여기까지 마침 · 50건. Recorded browser network requests and copied list/detail logs contain no threads.com login request; queue has 50 synthetic qa.invalid Threads URLs skipped with blocked reason.",
+      "evidence": "docs/development/channel-expansion/qa/QA-NEG-003.md"
+    },
+    {
+      "id": "QA-NEG-004",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- 422 응답과 `error.code: \"invalid_request\"`가 온다",
+      "actual": "HTTP 422 with error.code=invalid_request.",
+      "evidence": "docs/development/channel-expansion/qa/QA-NEG-004.md"
+    },
+    {
+      "id": "QA-EDGE-001",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- 게이트 화면 인사이트에 \"수집된 목록이 없습니다\"가 보인다\n  - 상세 수집 예상 대상 URL이 0이다\n  - 화면에 오류 배너가 없다",
+      "actual": "Gate insight contains 수집된 목록이 없습니다. Estimated target URLs=0 in both UI and API. No error banner in the rendered snapshot.",
+      "evidence": "docs/development/channel-expansion/qa/QA-EDGE-001.md"
+    },
+    {
+      "id": "QA-EDGE-002",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "FAIL",
+      "expected": "- 결과 화면의 \"건너뛴 항목\" 표가 보인다\n  - \"일시 정지하기\" · \"다시 수집\" 등 쓰기 버튼이 보이지 않거나 비활성화돼 있다",
+      "actual": "FAIL: no skipped-items/result table exists. The page instead says 저장된 수집 설정을 확인합니다 and only renders saved configuration. Pause is absent; restart is disabled in the captured Playwright assertion. Read-only fields are disabled.",
+      "evidence": "docs/development/channel-expansion/qa/QA-EDGE-002.md"
+    },
+    {
+      "id": "QA-EDGE-003",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- 문서 가로 스크롤 폭(`document.documentElement.scrollWidth`)이 화면 폭과 같다(표만 자체 가로 스크롤)\n  - 새 채널 네 행과 \"건너뛴 항목\" 표의 모든 열 이름을 가로 스크롤로 볼 수 있다",
+      "actual": "Settings and results: viewport=375 and document.scrollWidth=375. Table scroll containers are 206px wide with scrollWidth=600, overflow-x:auto, scrollLeft reaches 394. Settings left capture shows all four new rows. Skipped-table headers 채널, 사유, 건수 are visible at left, middle and right positions.",
+      "evidence": "docs/development/channel-expansion/qa/QA-EDGE-003.md"
+    },
+    {
+      "id": "QA-EDGE-004",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- 저장에 성공한다\n  - GET /session/{sid}의 `crawlConfig.youtube_vlog`가 `min_duration_s: 0`, `max_duration_s: 60`이다",
+      "actual": "Save succeeds with HTTP 200 and unchanged/clean UI state. Saved min_duration_s=0 and max_duration_s=60.",
+      "evidence": "docs/development/channel-expansion/qa/QA-EDGE-004.md"
+    },
+    {
+      "id": "QA-REG-001",
+      "url": "http://localhost:3013/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- 결과 화면 \"수집 문서\"가 0보다 크다\n  - \"건너뛴 항목이 없습니다.\" 문구가 보인다\n  - \"전처리로 이동하기\" 버튼이 보인다",
+      "actual": "First attempt: 0 documents, so the >0 Then FAILED. Fresh matching-keyword retry: 2,000 documents, so >0 PASSED. Both attempts show 건너뛴 항목이 없습니다.; retry status has empty skip_reasons. Both results expose 전처리로 이동하기.",
+      "evidence": "docs/development/channel-expansion/qa/QA-REG-001.md"
+    },
+    {
+      "id": "QA-REG-002",
+      "url": "http://localhost:3010/pipeline/crawling",
+      "result": "PASS",
+      "expected": "- \"키워드당 영상 수\", \"영상당 최대 댓글\" 칸이 기존대로 보인다\n  - 기존 채널(네이버 카페 · 블로그 · 뽐뿌 · 클리앙)의 동시성 · 요청 간격 기본값이 바뀌지 않았다(블로그 1 · 0.5)",
+      "actual": "YouTube comments has 키워드당 영상 수=20 and 영상당 최대 댓글=500. Cafe, blog, ppomppu and clien each display concurrency=1 and request interval=0.5 seconds, including blog 1 / 0.5.",
+      "evidence": "docs/development/channel-expansion/qa/QA-REG-002.md"
+    },
+    {
+      "id": "QA-REG-003",
+      "url": "http://localhost:3010/pipeline/start",
+      "result": "PASS",
+      "expected": "- 기존 채널 선택지가 그대로 있다\n  - 새 채널 4개가 선택지에 보이고, 하나를 골라 저장하면 GET /session/{sid}의 `projectContext.channels`에 그 값이 들어간다",
+      "actual": "Existing choices remain (cafe, blog, YouTube, ppomppu, clien; fixture also visible). All four new choices appear; saved projectContext.channels contains youtube_vlog.",
+      "evidence": "docs/development/channel-expansion/qa/QA-REG-003.md"
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-001",
+      "severity": "P1",
+      "scenario": "QA-EDGE-002",
+      "issue": "Historical completed collection does not display its skipped-items result table.",
+      "reproduction": "Complete collection c1 in s33a213de835b40fb8085e04e41d7e104; create v2 from stage2; open v1 through version history on /pipeline/crawling. Saved settings appear and no result table exists.",
+      "evidence": "docs/development/channel-expansion/qa/QA-EDGE-002.md"
+    },
+    {
+      "id": "F-002",
+      "severity": "P2",
+      "scenario": "QA-E2E-003",
+      "issue": "Literal approved keyword Given/row expectation is unmet: 에어컨 청소 is normalized to 에어컨청소.",
+      "reproduction": "POST manual keyword 에어컨 청소, GET session, run list collection and inspect gate. The exact spaced row is absent; normalized row expands correctly. Exact session keyword PATCH is rejected with HTTP 400.",
+      "evidence": "docs/development/channel-expansion/qa/QA-E2E-003.md"
+    },
+    {
+      "id": "OBS-001",
+      "severity": "INFO",
+      "scenario": "QA-REG-001",
+      "issue": "Initial fixture-only seed met the written Given but returned zero documents and failed the >0 Then; corpus-matching fresh retry returned 2,000 and met all Then clauses.",
+      "reproduction": "Compare preserved initial 에어컨청소 session and fresh 에어컨 session on 3013/8013.",
+      "evidence": "docs/development/channel-expansion/qa/QA-REG-001.md"
+    }
+  ]
+}

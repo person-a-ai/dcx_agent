@@ -1,0 +1,148 @@
+{
+  "id": "c1",
+  "parent": null,
+  "createdAt": "2026-10-20T13:26:51.091938+00:00",
+  "keywords": [
+    {
+      "id": "manual-87ed8ef1900c4a8a9a706edb4753f1e2",
+      "kw": "에어컨",
+      "axis": "physical",
+      "sub": "product_physical",
+      "round": 1,
+      "origin": "manual",
+      "status": "approved",
+      "reject": null,
+      "volume": {
+        "monthly": null,
+        "source": "unconnected",
+        "at": null
+      },
+      "badges": [],
+      "crawlExcluded": false
+    }
+  ],
+  "status": "done",
+  "channels": [
+    "fixture"
+  ],
+  "config": {
+    "channels": [
+      "fixture"
+    ],
+    "dateFrom": "2025-10-20",
+    "dateTo": "2026-10-20",
+    "adWords": [
+      "협찬",
+      "광고",
+      "제공받",
+      "원고료",
+      "체험단",
+      "서포터즈",
+      "중고",
+      "판매",
+      "거래",
+      "체험단",
+      "협찬",
+      "원고료",
+      "소정의",
+      "제공받아",
+      "서포터즈"
+    ],
+    "excludeSources": [
+      "중고나라",
+      "번개장터",
+      "당근",
+      "세컨웨어",
+      "헬로마켓",
+      "중고",
+      "장터",
+      "부동산",
+      "판매",
+      "팝니다",
+      "삽니다",
+      "택배",
+      "무료배송",
+      "할인코드",
+      "쿠폰",
+      "홍보",
+      "광고",
+      "업체",
+      "시공",
+      "인테리어업체",
+      "이사",
+      "용달",
+      "대출",
+      "보험설계사",
+      "설계사모집",
+      "모집"
+    ],
+    "includeSources": [],
+    "product_name_filter": false,
+    "perChannel": {},
+    "youtube": {
+      "videos_per_keyword": 20,
+      "max_comments": 500
+    },
+    "youtube_vlog": {
+      "videos_per_keyword": 20,
+      "min_duration_s": 60,
+      "max_duration_s": 3600
+    },
+    "target_total": null,
+    "gateExclusions": [],
+    "filters": {
+      "date_from": "2025-10-20",
+      "date_to": "2026-10-20",
+      "ad_words": [
+        "협찬",
+        "광고",
+        "제공받",
+        "원고료",
+        "체험단",
+        "서포터즈",
+        "중고",
+        "판매",
+        "거래",
+        "체험단",
+        "협찬",
+        "원고료",
+        "소정의",
+        "제공받아",
+        "서포터즈"
+      ],
+      "exclude_sources": [
+        "중고나라",
+        "번개장터",
+        "당근",
+        "세컨웨어",
+        "헬로마켓",
+        "중고",
+        "장터",
+        "부동산",
+        "판매",
+        "팝니다",
+        "삽니다",
+        "택배",
+        "무료배송",
+        "할인코드",
+        "쿠폰",
+        "홍보",
+        "광고",
+        "업체",
+        "시공",
+        "인테리어업체",
+        "이사",
+        "용달",
+        "대출",
+        "보험설계사",
+        "설계사모집",
+        "모집"
+      ],
+      "include_sources": [],
+      "product_name_filter": false,
+      "bk": "QA 샘플 일치"
+    },
+    "channel_limits": {}
+  },
+  "snapshotId": "f342248d7fb74fff9b20333e1559fbc4"
+}

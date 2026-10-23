@@ -1,0 +1,46 @@
+{
+  "task": "T4",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh",
+  "base_commit": "b2d0dc30d57496af60ea1cbc5616e2b6d1c475f9",
+  "review_commit": "2955470f96887a713d9ed3801527789532cd455f",
+  "verdict": "PASS",
+  "commands": [
+    "git status --short",
+    "git rev-parse HEAD",
+    "git diff --stat b2d0dc30d57496af60ea1cbc5616e2b6d1c475f9..2955470f96887a713d9ed3801527789532cd455f",
+    "git diff --name-only b2d0dc30d57496af60ea1cbc5616e2b6d1c475f9..2955470f96887a713d9ed3801527789532cd455f",
+    "git diff b2d0dc30d57496af60ea1cbc5616e2b6d1c475f9..2955470f96887a713d9ed3801527789532cd455f",
+    "git diff --check b2d0dc30d57496af60ea1cbc5616e2b6d1c475f9..2955470f96887a713d9ed3801527789532cd455f",
+    "PYTHONDONTWRITEBYTECODE=1 PYTEST_ADDOPTS='-p no:cacheprovider' env -u VOYAGE_API_KEY backend/.venv/bin/python -m pytest backend/tests/crawl -q",
+    "PYTHONDONTWRITEBYTECODE=1 env -u VOYAGE_API_KEY backend/.venv/bin/python -"
+  ],
+  "findings": [
+    {
+      "severity": "P3",
+      "file": "backend/tests/crawl/adapters/test_youtube_vlog.py:84",
+      "issue": "Optional regression coverage: the list test uses videos_per_keyword=1, so it stops at the first eligible video before reaching the fixture entries for None, excessive duration, and missing duration. It also does not exercise inclusive duration endpoints, missing IDs, or rejection of a non-None cursor. Malformed JSON and invalid UTF-8 caption bodies are not covered by the committed tests. Independent offline probes confirmed the implementation currently handles these cases correctly, so this is not a release blocker.",
+      "fix": "Add parameterized list tests that reach every invalid entry and both duration endpoints, plus cursor rejection and fetch tests asserting JSONDecodeError/UnicodeDecodeError propagate instead of becoming AdapterSkipped. Assert skip_download=True and download=False in the vlog fake as well."
+    }
+  ],
+  "notes": [
+    "No must-fix issues found. Reviewed exactly the requested commit range; HEAD matched the review commit and the initial working tree was clean.",
+    "Scope PASS: exactly the 8 approved files changed. test_crawl_api.py:677 and test_fixture_adapter.py:82 only add youtube_vlog to expected sets; test_final_w4.py:37 only changes the expected count from 6 to 7. No other edits occur in those three files. git diff --check passed.",
+    "Verification: 520 passed, 1 warning in 56.61s. The warning is the existing Pydantic class-based config deprecation at backend/app/config.py:12. VOYAGE_API_KEY was removed as requested. Bytecode writes and pytest cache were disabled to preserve repository files; normal pytest temporary files remained available.",
+    "The final python stdin command ran independent in-memory probes with fake YoutubeDL, blocked socket connect/connect_ex, and no output files. It checked malformed JSON, invalid UTF-8, actual yt-dlp networking HTTPError 403/429, None information, duration endpoints, missing entries/IDs/durations, cap, cursor validation, metadata keys, segment document identity, author hashing, and translated-track selection. All assertions passed.",
+    "Conformance PASS: youtube_vlog.py:45-62 uses ytsearch{2N}:{kw} 브이로그, extract_flat=True, inclusive duration limits, skips None/missing ID/missing duration entries, caps accepted items at N, and returns no continuation cursor. Non-None input cursors are rejected.",
+    "Caption priority PASS: youtube_vlog.py:13-20 selects manual ko, then automatic ko-orig, then automatic ko, requiring json3 and a URL. This agrees with reports/T0.md. No selected track or no parsed cues raises AdapterSkipped(no_ko_captions) at lines 70-81. Existing added tests cover empty cues, non-json3 tracks, ko-orig priority, and urlopen HTTP 403/429.",
+    "Parse errors PASS: youtube_vlog.py:72 does not swallow JSONDecodeError or UnicodeDecodeError; both propagate through line 78 and are ValueError subclasses counted by worker.py:189. Independent probes confirmed this. Actual yt-dlp urlopen HTTPError 403/429 is recognized by _blocked and converted to AdapterBlocked at youtube_vlog.py:75-77.",
+    "None information behavior: fetch at youtube_vlog.py:69 converts None to an empty mapping and consequently reports no_ko_captions. The worker marks it skipped without an attempt or parse error. list_page instead rejects None through youtube.py:68-69. The fetch behavior matches the approved T4 implementation sketch; recorded as a robustness caveat rather than a must-fix deviation.",
+    "Translated-track caveat (note only): youtube_vlog.py:14 accepts automatic_captions[ko] even when it is a translated track for a non-Korean video. It does not inspect source language or tlang. ko-orig wins when available, but this is not a Korean-original-language filter.",
+    "Documents PASS: youtube_vlog.py:85-90 emits one FetchedDoc per segment, integer start-end thread keys, all nine required src_meta keys, public access, empty comments, and channel_id as author_raw (with the plan-prescribed uploader_id fallback). worker.py:346-353 uses thread_key for distinct document IDs and hashes author_raw; worker.py:480-482 handles AdapterSkipped before document creation. Independent probes verified two segments yield distinct IDs and channel_id is passed to author_hash.",
+    "Embedding fallback PASS: youtube_vlog.py:37-43 caches a factory failure as None, and captions.segment produces fixed segments for multi-window captions. The approved single-segment exception remains applicable to short or single-window captions. The committed test verifies fixed 90-second segments after a factory failure.",
+    "Safety PASS: both extraction paths set skip_download=True and call extract_info(download=False); captions are decoded directly from urlopen into memory. No media/caption file writes, PO-token generation, login, cookie injection, or bot-check bypass were added. The crawl suite forbids socket connections and uses fake providers.",
+    "The high-level design mentions subtitle-writing selection options, but the approved T4 implementation reads subtitles/automatic_captions directly and filters tracks itself. Inspection of installed yt-dlp confirms those dictionaries are retained separately from requested_subtitles; explicit subtitle file-writing options are unnecessary for this in-memory path.",
+    "YoutubeAdapter compatibility PASS: an AST comparison confirmed the extracted module function body is identical to the baseline _extract body. The method now delegates to it; all other existing adapter behavior is unchanged and the existing YouTube tests passed.",
+    "Test relevance: the new adapter module does not exist in the base commit, so the added behavioral tests depend on this change. They assert concrete segmentation, caption selection, skip/block classification, fallback, and lazy embedder reuse. A separate baseline pytest run was not performed; baseline/new source comparison was read-only.",
+    "Repository write scope: only docs/development/channel-expansion/reviews/T4.json was created by the review. No product/test/spec files were edited and no state-changing Git commands were run."
+  ]
+}

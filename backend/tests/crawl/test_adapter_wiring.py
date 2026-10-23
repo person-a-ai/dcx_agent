@@ -37,24 +37,33 @@ def test_probe_closes_adapters(monkeypatch, failure):
 def test_real_registry_availability_is_offline(monkeypatch):
     from app.config import settings
     from app.crawl.adapters.youtube import YoutubeAdapter
+    from app.crawl.adapters.youtube_vlog import YoutubeVlogAdapter
     from app.crawl.adapters.clien import ClienAdapter
     from app.crawl.adapters.ppomppu import PpomppuAdapter
     from app.crawl.adapters.naver_blog import NaverBlogAdapter
     from app.crawl.adapters.naver_cafe import NaverCafeAdapter
+    from app.crawl.adapters.naver_kin import NaverKinAdapter
     import httpx
     import yt_dlp
     def forbidden(*args, **kwargs):
         pytest.fail('availability must not make requests')
     monkeypatch.setattr(httpx.Client, 'send', forbidden)
     monkeypatch.setattr(yt_dlp.YoutubeDL, 'extract_info', forbidden)
+    monkeypatch.setattr('app.crawl.render.RenderBridge.available', classmethod(lambda cls: True))
     monkeypatch.setattr(settings, 'enable_fixture_channel', False)
-    assert set(available_sources()) == {'youtube', 'clien', 'ppomppu', 'naver_blog', 'naver_cafe'}
-    for source, cls in [('youtube', YoutubeAdapter), ('clien', ClienAdapter),
+    assert set(available_sources()) == {'youtube', 'youtube_vlog', 'clien', 'ppomppu', 'naver_blog', 'naver_cafe', 'naver_kin', 'cook82', 'threads'}
+    for source, cls in [('youtube', YoutubeAdapter), ('youtube_vlog', YoutubeVlogAdapter), ('clien', ClienAdapter),
                         ('ppomppu', PpomppuAdapter), ('naver_blog', NaverBlogAdapter),
-                        ('naver_cafe', NaverCafeAdapter)]:
+                        ('naver_cafe', NaverCafeAdapter), ('naver_kin', NaverKinAdapter)]:
         adapter = REGISTRY[source]()
         try:
             assert isinstance(adapter, cls)
         finally:
             if hasattr(adapter, 'close'):
                 adapter.close()
+
+
+def test_threads_is_absent_when_render_bridge_unavailable(monkeypatch):
+    monkeypatch.setattr('app.crawl.render.RenderBridge.available', classmethod(lambda cls: False))
+    assert 'threads' in REGISTRY
+    assert 'threads' not in available_sources()

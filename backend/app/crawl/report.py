@@ -19,11 +19,18 @@ def progress(queue):
         restricted = db.execute("SELECT count(*) FROM urls WHERE status='done' AND access='restricted'").fetchone()[0]
         run = db.execute("SELECT * FROM runs WHERE kind='detail' ORDER BY started_at DESC LIMIT 1").fetchone()
         tasks = {r[0]: {'done': r[1], 'target': r[2]} for r in db.execute("SELECT source,sum(status='done'),count(*) FROM list_tasks GROUP BY source")}
+        skipped = {}
+        # Members-only cafe posts are 'excluded' with reason 'restricted'; show them with the skips.
+        for source, reason, count in db.execute(
+                """SELECT source,coalesce(last_error,''),count(*) FROM urls
+                   WHERE status='skipped' OR (status='excluded' AND last_error='restricted')
+                   GROUP BY source,last_error"""):
+            skipped.setdefault(source, {})[reason] = count
     done = counts.get('done', 0)
     elapsed = max(1, ((run['heartbeat_at'] if run['status'] == 'done' else time.time()) - run['started_at'])) if run else 1
     return dict(done=done, target=sum(counts.values())-counts.get('filtered', 0)-counts.get('excluded', 0)-counts.get('skipped', 0),
                 full=levels.get('full', 0), snippet=levels.get('snippet', 0), restricted=restricted,
-                per_minute=done * 60 / elapsed, channels=channels(queue), list_tasks=tasks)
+                per_minute=done * 60 / elapsed, channels=channels(queue), list_tasks=tasks, skipped=skipped)
 
 
 def build_report(queue):
@@ -38,11 +45,13 @@ def build_report(queue):
         run = db.execute("SELECT * FROM runs WHERE kind='detail' ORDER BY started_at DESC LIMIT 1").fetchone()
         snap = db.execute('SELECT snapshot_id FROM snapshots ORDER BY created_at DESC LIMIT 1').fetchone()
         distribution = {}
-        for source, docs in db.execute('SELECT source,sum(doc_count) FROM urls GROUP BY source'):
+        # urls is unique by (url_norm, source); keyword attribution can overlap.
+        for source, docs, urls_done in db.execute("SELECT source,sum(doc_count),sum(status='done') FROM urls GROUP BY source"):
             errors = [{'error': safe_error(r[0]), 'count': r[1]} for r in db.execute('SELECT last_error,count(*) FROM urls WHERE source=? AND last_error IS NOT NULL GROUP BY last_error ORDER BY count(*) DESC LIMIT 5', (source,))]
             skipped = db.execute("SELECT count(*),max(last_error) FROM urls WHERE source=? AND status='skipped'", (source,)).fetchone()
-            distribution[source] = dict(skipped=skipped[0], skip_reason=skipped[1], docs=docs, share=docs / totals['doc_count'] if totals['doc_count'] else 0,
-                status=p['channels'].get(source, {}).get('status', 'idle'), errors_top=errors)
+            distribution[source] = dict(skipped=skipped[0], skip_reason=skipped[1], docs=docs, urls_done=urls_done, share=docs / totals['doc_count'] if totals['doc_count'] else 0,
+                status=p['channels'].get(source, {}).get('status', 'idle'), errors_top=errors,
+                skip_reasons=p['skipped'].get(source, {}))
     state = store.read_json(queue.path.parent / 'worker_state.json') or {}
     return dict(matrix=cells, channels=distribution, totals=totals,
                 counts={kw: {s: v['full'] + v['snippet'] for s, v in sources.items()} for kw, sources in cells.items()},

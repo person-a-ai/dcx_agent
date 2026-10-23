@@ -1,0 +1,232 @@
+[
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-001-supplemental-v2-channels.png",
+    "bytes": 78943,
+    "sha256": "d7f3df3a51c8a36f97344f662440dfde484c5003e21746772f599041a69ff7c0"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-001.png",
+    "bytes": 252356,
+    "sha256": "9da98071d80a8869631fe36dbcabb77fca42b958bb617ab481dbf91889017057"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-002-supplemental-v2-values.png",
+    "bytes": 83505,
+    "sha256": "7db6acfb50249ef8cb8def7667eed3605000ded58204406beb75eb37057fec00"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-002.png",
+    "bytes": 232130,
+    "sha256": "b50c705e066a61820d5c34e5e595472a872d6a5251746db407b6af2bb46657b9"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-003.png",
+    "bytes": 270829,
+    "sha256": "702bc466c137b49c60f2734377eef032d5aafc2acf84c8c1d3dc932203f6a057"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-004-complete.png",
+    "bytes": 183796,
+    "sha256": "a6ef00643b67331a9a43ca4f8c0d3b7ff09ca2c631f822432e5c8a5cc54d6173"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-004-progress.png",
+    "bytes": 196264,
+    "sha256": "5e6af2a259939a4b32fcb2f168a0ec67770ac2e9761d1c08ee2a3e2db25d78a9"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-005-skip-table.png",
+    "bytes": 203668,
+    "sha256": "fc9d4cfb3d47a19f646d12951dd52fb8b10c86d854145d8f56b71d87d1b3c91d"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-005.png",
+    "bytes": 183796,
+    "sha256": "a6ef00643b67331a9a43ca4f8c0d3b7ff09ca2c631f822432e5c8a5cc54d6173"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-006-channels.png",
+    "bytes": 312159,
+    "sha256": "f767138973b4b562849a27fb9b7b717a671904a81dce6dc07b4097fcc9306c21"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-E2E-006-result.png",
+    "bytes": 265128,
+    "sha256": "ce20e3897421552ad22dbc752ae6174cffead618742cff5ac258d5892e98e64d"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-001.png",
+    "bytes": 122911,
+    "sha256": "e8db2fd8ba9b28180647cbf0acaec0566ef95067c5fae5caf58899e8a71ba876"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-002-saved-result-table.png",
+    "bytes": 8784,
+    "sha256": "b48aa4036be5574766902846a1ab2df0284a7fc2e3105ac0203cd99a7b06ce6e"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-002.png",
+    "bytes": 236314,
+    "sha256": "fcde88d4e581c616ec256761f1d59b784578ff2fc070cde872efc472e08935ab"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-live-result-375-건수.png",
+    "bytes": 32714,
+    "sha256": "df4a0d02198515a32325bc596cf025222b57f1f03116e5800d7f62445a2f5057"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-live-result-375-사유.png",
+    "bytes": 34095,
+    "sha256": "58bd4e4a138836d913a6804bc6c6ebc304e2a6b6d24653fd135fe831794bc77b"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-live-result-375-채널.png",
+    "bytes": 33006,
+    "sha256": "a37166b358352ae7efffa8f6731c558962cce83c69c7e87ed9ff13b66e7d4439"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-result-1100-left.png",
+    "bytes": 60640,
+    "sha256": "0bd930ecd3e5c3e01b9f9990066d73c2f0da3a45c4f0c9fff376cd1c49824624"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-result-1100-right.png",
+    "bytes": 60640,
+    "sha256": "0bd930ecd3e5c3e01b9f9990066d73c2f0da3a45c4f0c9fff376cd1c49824624"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-result-1200-left.png",
+    "bytes": 93600,
+    "sha256": "077369e96cb773e4d5bc22c6c607e039c5b965b07c670a78c40938271756bc4d"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-result-1200-right.png",
+    "bytes": 93602,
+    "sha256": "4ebe1e80368a10fdb17df6a18734fbb8c46a52af82c8bc8230ebd8ce15e35f37"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-result-1300-left.png",
+    "bytes": 94244,
+    "sha256": "221d6d77ff7ded4bbf1b36c2697f7cb6e925925b5084a7b0e52fbc9b10d968db"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-result-1300-right.png",
+    "bytes": 94244,
+    "sha256": "8fd51e1539d4b71f2544881a82cb113670e44c56931f2ded58ad8599f5abc72f"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-result-375-left.png",
+    "bytes": 45529,
+    "sha256": "ab36ce89d486ff8b2b431c2843e333e211a2d2dc6d19f2cc79808ce51b1cb3b6"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-result-375-right.png",
+    "bytes": 45084,
+    "sha256": "d26d13b2dbec34a0740e770c6ad304db7ea0477f2a2d3a28c23d4adc7ca24ceb"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-1100-left.png",
+    "bytes": 100610,
+    "sha256": "b7c3b4346c7608e2b1b27b68581921127a0433979f471d0cf7d506dfb96f9bfc"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-1100-right.png",
+    "bytes": 100610,
+    "sha256": "b7c3b4346c7608e2b1b27b68581921127a0433979f471d0cf7d506dfb96f9bfc"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-1200-left.png",
+    "bytes": 127764,
+    "sha256": "7f738804c5ad69d83ac71ee01d0e62beeccf18739230dae2c594d4ebfa140d43"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-1200-right.png",
+    "bytes": 127764,
+    "sha256": "7f738804c5ad69d83ac71ee01d0e62beeccf18739230dae2c594d4ebfa140d43"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-1300-left.png",
+    "bytes": 128744,
+    "sha256": "c3e592ebe1d286a5ba7506daa1b49064f56ea018b017f2650a01e82510c8cc4a"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-1300-right.png",
+    "bytes": 128740,
+    "sha256": "0776fb7ca9120ed57af105c8da6ee24401ce43ea37ed09c1d6e098787fbe9a43"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-375-82쿡.png",
+    "bytes": 52541,
+    "sha256": "f70701437477dbc367a929e43fb19ad5b11d0e03d3404707cac34b853963537a"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-375-Threads.png",
+    "bytes": 52541,
+    "sha256": "f70701437477dbc367a929e43fb19ad5b11d0e03d3404707cac34b853963537a"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-375-left.png",
+    "bytes": 52541,
+    "sha256": "f70701437477dbc367a929e43fb19ad5b11d0e03d3404707cac34b853963537a"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-375-right.png",
+    "bytes": 49838,
+    "sha256": "7aaf9b4d115ae4ab669146fdd9d9146d2fb9210c2e55ea6b66af84a4c8fb317d"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-375-유튜브 브이로그.png",
+    "bytes": 52541,
+    "sha256": "f70701437477dbc367a929e43fb19ad5b11d0e03d3404707cac34b853963537a"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-003-settings-375-지식iN.png",
+    "bytes": 52541,
+    "sha256": "f70701437477dbc367a929e43fb19ad5b11d0e03d3404707cac34b853963537a"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-EDGE-004.png",
+    "bytes": 189849,
+    "sha256": "e800aa2eda4d275290d582b45adc559b418e544bf067785aab33be8b00c865cb"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-NEG-001.png",
+    "bytes": 213628,
+    "sha256": "bf828770f6b306ff8ad846e743b629159261965eb5bbc2a6e1d7d5ac99bf1d20"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-NEG-002.png",
+    "bytes": 151647,
+    "sha256": "266a8d43bbd67d97836172a0c049cd8807def77d2709a281efebeb5e14b880e1"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-NEG-003-paused.png",
+    "bytes": 112186,
+    "sha256": "2e75103c5666ca6ce49fc6d16dc98f5fb13ede86e9b75d2b282cf5fc640ea5b6"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-NEG-003-result.png",
+    "bytes": 94585,
+    "sha256": "cedff34d1b599c91d82ce3c6d9b5a4747bc4aca42691683c7fd091be8f6d5f43"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-REG-001.png",
+    "bytes": 104942,
+    "sha256": "f716662c3d2439552d3d9dd8e36210a0a288386a056605197dfef95fec35e8da"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-REG-002.png",
+    "bytes": 81743,
+    "sha256": "180c728a994092ea1825619f69954ea9fa830327fda5da0a34d8f40d42e5ce95"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/QA-REG-003.png",
+    "bytes": 11034,
+    "sha256": "8ed7cb4dd22221946da00cc8219b7b43dfb82aa1dca209d6e0e9076dffbb30a7"
+  },
+  {
+    "absolute_path": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/preflight.png",
+    "bytes": 268602,
+    "sha256": "840c097dde17e9fb25c02e0bf37dcb2c326a1c60d6fe8185b4fcc10ad60d88b9"
+  }
+]

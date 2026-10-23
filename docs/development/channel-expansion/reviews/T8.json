@@ -1,0 +1,67 @@
+{
+  "task": "T8",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh (independent reviewer; not the T8 implementer)",
+  "base_commit": "04aad8212541d002b96980add32bc9ebbd8077e5",
+  "review_commit": "3835a66eeaee9a95420802c42fd2d0c498377c44",
+  "verdict": "PASS",
+  "commands": [
+    {
+      "command": "git rev-parse 04aad82 3835a66; git diff 04aad82..3835a66; git diff --name-only 04aad82..3835a66",
+      "result": "Read-only inspection of the full requested diff and commit identities. All 11 changed files are within .harness/scope-T8.json, including the expressly approved finalW4.test.ts assertion change."
+    },
+    {
+      "command": "SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive 3835a66 | tar -x -C \"$SNAP\" && ln -s /Users/yunho/Documents/dcx_agent-channels-build/frontend/node_modules \"$SNAP/frontend/node_modules\"",
+      "exit_code": 0,
+      "result": "Exported snapshot: /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.7lObZMrdrd. All executable review checks ran in exported snapshots. No temporary directories were removed."
+    },
+    {
+      "command": "cd \"$SNAP\" && npm --prefix frontend test && npm --prefix frontend run lint",
+      "exit_code": 0,
+      "result": "77 test files and 962 tests passed; ESLint passed."
+    },
+    {
+      "command": "cd \"$SNAP\" && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl/test_channel_defaults_parity.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "result": "1 passed. One existing Pydantic class-based configuration deprecation warning."
+    },
+    {
+      "command": "cd \"$SNAP\" && npm --prefix frontend run build",
+      "exit_code": 1,
+      "result": "Attempted. Turbopack terminated with: 'Symlink node_modules is invalid, it points out of the filesystem root'. This is a limitation of the required exported-snapshot dependency layout, not a demonstrated T8 defect. It did not stall. The controller's successful build outside the sandbox is acknowledged as supplied evidence, not independently reproduced."
+    },
+    {
+      "command": "cd \"$SNAP/frontend\" && ./node_modules/.bin/tsc --noEmit --incremental false",
+      "exit_code": 2,
+      "result": "Original review snapshot produced five diagnostics: components/persona/components.test.ts:268 TS18046 and components/persona/insightCharts.test.ts:74-75 four TS7006 diagnostics. No T8 file diagnostics. Ran before adding the snapshot-only reviewer test."
+    },
+    {
+      "command": "BASE_SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive 04aad8212541d002b96980add32bc9ebbd8077e5 | tar -x -C \"$BASE_SNAP\" && ln -s /Users/yunho/Documents/dcx_agent-channels-build/frontend/node_modules \"$BASE_SNAP/frontend/node_modules\" && cd \"$BASE_SNAP/frontend\" && ./node_modules/.bin/tsc --noEmit --incremental false",
+      "exit_code": 2,
+      "result": "Baseline snapshot /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.4iBvqoLisB reproduced all five persona diagnostics, plus two duplicate max_per_keyword diagnostics in crawlConfig.test.ts that T8 removes. The review introduced no new type-check diagnostic."
+    },
+    {
+      "command": "cd \"$SNAP/frontend\" && npm test -- src/lib/logic/t8IndependentReview.test.ts",
+      "exit_code": 0,
+      "result": "13 additional reviewer checks passed. This test file exists only in the temporary snapshot. Invoked actual Settings input onChange handlers for 2 minutes -> 120 seconds, 30 minutes -> 1800 seconds, zero minimum, 1 minute maximum, fractional-minute rounding, blank minimum -> zero, blank videos/maximum rejection, and fractional video-count rejection. Also checked NaN and positive/negative Infinity rejection for each vlog setting."
+    }
+  ],
+  "findings": [],
+  "notes": [
+    "This fresh, independent session did not implement T8. The only repository file created by this session is docs/development/channel-expansion/reviews/T8.json; product files, the index, and Git refs were not changed.",
+    "Reviewed Global Constraints, the approved design deviation requiring Threads copy '약 20건', all T8 Interfaces and implementation requirements in 03-plan.md, the UI table and copy in 02-design.md, approved mockup/index.html and app.css, and QA-E2E-001..005, QA-NEG-001..002, QA-EDGE-004. No must-fix issue was identified.",
+    "CrawlConfig.youtube_vlog and nested progress.skipped/report skip_reasons types match the supplied backend contracts. limits, VLOG_DEFAULTS, skipReasonLabel, skipRows positive-count filtering and descending sort, absent-map legacy fallback, unknown-reason fallback, channelDescriptions, and vlogDocsLabel match the plan.",
+    "deriveCrawlLoad supplies independent default objects for legacy saved configurations and legacy/partial drafts without youtube_vlog, preserves explicit zero minimums, and preserves saved values separately from draft values.",
+    "Settings.tsx:29-36 shows vlog inputs only for the selected vlog channel and inherits disabled state from the outer fieldset. Input labels use generated IDs. The error is outside collapsed details with role=alert and a fieldset description reference. crawling/page.tsx:71-81 includes both version readonly and session readonly in write guards; invalid vlog configuration prevents saving and starting.",
+    "Duration input handlers use Math.round(Number(value) * 60) and render seconds / 60, matching the approved implementation. Clearing minimum normalizes to the permitted zero minimum; clearing video count or maximum produces an invalid zero and blocks saving/start. Non-finite values are rejected. The 0-to-1-minute boundary is accepted.",
+    "New channel labels, descriptions and badges match the approved text. Product crawling code contains no stale '20~60건' or '회원 전용 글은 요약'. The mockup's older Threads estimate is superseded by the explicitly approved plan deviation. The finalW4.test.ts change is the approved single assertion replacement.",
+    "Unavailable Threads remains visible with its specific browser-installation reason and a disabled, unchecked switch. Gate Threads copy is conditional on Threads selection; the document-count caption is conditional on vlog selection. Threads pause copy is inside the existing resumable pause banner and conditional on Threads appearing in pausedChannels.",
+    "Progress.tsx sums positive per-source skip counts and shows the leading reason, renders the channel-by-reason result table and empty state, retains legacy skipped/skip_reason fallback through skipRows, and derives vlog video totals from matrix youtube_vlog.urls_done rather than document totals.",
+    "CSS inspection found no new definite document-width overflow at 375px: crawl grids use minmax(0, ...) and min-width:0, inputs collapse to one column, shared tables use fixed layout with overflow-wrap:anywhere, the expanded status table has its own focusable horizontal scroll region, and vlog distribution values move to a separate row on mobile. Shared input/switch labeling and global focus-visible styling remain in place. This is code inspection, not a measured browser viewport result.",
+    "The suite provides meaningful helper, legacy-config and rendered-output coverage. Some page integration assertions inspect source strings; the independent snapshot-only handler checks supplement conversion and numeric-boundary coverage. Browser save/reload, live API journeys and measured mobile layout remain for controller/T9 QA.",
+    "Backend implementation facts supplied by the controller were accepted without re-reviewing backend code. Only the scoped frontend/backend defaults parity test was inspected and executed.",
+    "Missing implementer self-check screenshots are not a failure: the controller will perform the visual check after T9 as instructed. No browser screenshots or live E2E completion are claimed by this review."
+  ]
+}

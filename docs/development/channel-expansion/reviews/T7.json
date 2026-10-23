@@ -1,0 +1,74 @@
+{
+  "task": "T7",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh (independent reviewer; not the T7 implementer)",
+  "base_commit": "31ac6ec109381d0eb0b8ae24e7ba239704339224",
+  "review_commit": "369b686a23bff366ae47fb4f8bdeb094fdd16a6c",
+  "verdict": "FAIL",
+  "commands": [
+    "Read ancestor/repository AGENTS.md candidates; no applicable AGENTS.md was found. Read .harness/scope-T7.json and the requested sections of 03-plan.md, 02-design.md, and reports/T0.md.",
+    "git diff --stat 31ac6ec109381d0eb0b8ae24e7ba239704339224..369b686a23bff366ae47fb4f8bdeb094fdd16a6c -- backend/",
+    "git diff 31ac6ec109381d0eb0b8ae24e7ba239704339224..369b686a23bff366ae47fb4f8bdeb094fdd16a6c -- backend/app backend/tests/crawl/test_render.py backend/tests/crawl/test_adapter_wiring.py backend/tests/crawl/test_crawl_api.py backend/tests/crawl/test_final_w4.py backend/tests/crawl/test_fixture_adapter.py",
+    "SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive 369b686a23bff366ae47fb4f8bdeb094fdd16a6c backend | tar -x -C \"$SNAP\"",
+    "Read exported backend/tests/crawl/adapters/test_threads.py, fixtures, conftest.py files, pytest.ini, and subprocess test hooks; inspected installed Crawl4AI startup/rollback source without importing or launching it.",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.bvSTXTnjja && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.bvSTXTnjja && env -u VOYAGE_API_KEY PYTHONDONTWRITEBYTECODE=1 /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_probe.py",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.bvSTXTnjja && env -u VOYAGE_API_KEY PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=\"$PWD/backend\" PLAYWRIGHT_BROWSERS_PATH=\"$PWD/reviewer-browsers-present\" /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.bvSTXTnjja && env -u VOYAGE_API_KEY PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=\"$PWD/backend\" /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_lifecycle.py",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.bvSTXTnjja && env -u VOYAGE_API_KEY PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=\"$PWD/backend\" PLAYWRIGHT_BROWSERS_PATH=\"$PWD/reviewer-browsers-absent\" /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl/test_render.py backend/tests/crawl/adapters/test_threads.py backend/tests/crawl/test_adapter_wiring.py backend/tests/crawl/test_crawl_api.py backend/tests/crawl/test_final_w4.py backend/tests/crawl/test_fixture_adapter.py -q -p no:cacheprovider",
+    "git diff --check 31ac6ec109381d0eb0b8ae24e7ba239704339224..369b686a23bff366ae47fb4f8bdeb094fdd16a6c -- backend/",
+    "git diff --name-only 31ac6ec109381d0eb0b8ae24e7ba239704339224..369b686a23bff366ae47fb4f8bdeb094fdd16a6c -- backend/",
+    "Read aggregate event counts from /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.bvSTXTnjja/reviewer-isolation.jsonl; no DENIED_NETWORK or DENIED_PROCESS events."
+  ],
+  "findings": [
+    {
+      "id": "T7-R1",
+      "severity": "P2",
+      "must_fix": true,
+      "file": "backend/app/crawl/render.py:61-78",
+      "issue": "A timeout releases the bridge lock before the cancelled asyncio task finishes cleanup. Retrying a timed-out start can start the same crawler again while the first start is still rolling back, breaking subsequent use.",
+      "evidence": "The exported-snapshot fake-crawler probe timed out start(), waited for its asynchronous finally block to begin, then retried. The second start overlapped the first cleanup and fetch returned successfully. The first cleanup then cleared crawler readiness; the next fetch raised OSError while bridge._started remained True. future.cancel() requests cancellation but does not wait for task cleanup. Installed Crawl4AI BrowserManager.start() likewise performs awaited close()/driver cleanup and clears browser state on cancellation, making this a relevant lifecycle pattern. The existing test waits for an immediate cancellation signal from arun and never exercises delayed start rollback.",
+      "fix": "Track completion of the underlying asyncio task, including cancellation cleanup, and prevent another start/arun/close from entering the crawler while cleanup is pending. Safely clean up/reset failed startup state before retrying. Add an offline delayed-start-rollback regression covering timeout, retry, a later fetch, and final thread/loop cleanup; preserve bounded timeout behavior."
+    },
+    {
+      "id": "T7-R2",
+      "severity": "P2",
+      "must_fix": true,
+      "file": "backend/app/crawl/render.py:69-91",
+      "issue": "Crawler exceptions are not normalized to the required ValueError failure contract.",
+      "evidence": "An injected arun() raising OSError propagated OSError from fetch_html() in reviewer_probe.py. Only returned results with success=False or empty html are converted to ValueError. Exceptions from factory/start/arun/config construction bypass that conversion. Existing failure tests cover returned FakeResult objects only.",
+      "fix": "Wrap non-timeout crawler/render failures as ValueError with exception chaining. Preserve TimeoutError and the intentional immediate error for a closed bridge. Add tests for raised startup and rendering errors, in addition to unsuccessful result objects."
+    },
+    {
+      "id": "T7-R3",
+      "severity": "P2",
+      "must_fix": true,
+      "file": "backend/tests/crawl/adapters/test_threads.py:312-316,494-498",
+      "issue": "The privacy checker accepts CDATA even though the controller requires CDATA to be rejected.",
+      "evidence": "The independent synthetic probe _fixture_identifier_violations(\"<html><body><![CDATA[user1]]></body></html>\") returned []. unknown_decl() routes CDATA content through the text allowlist, and test_privacy_checker_scans_synthetic_cdata_as_text explicitly asserts acceptance for all six encodings. This contradicts the requested rejection rule; passing tests currently enforce the wrong behavior.",
+      "fix": "Reject every CDATA declaration regardless of whether its decoded payload appears synthetic. Replace the acceptance test with rejection tests for empty, synthetic, and invented identity payloads across the existing encodings. Keep duplicate-key and decoded-value checks."
+    },
+    {
+      "id": "T7-R4",
+      "severity": "P2",
+      "must_fix": true,
+      "file": "backend/tests/crawl/test_adapter_wiring.py:65-69",
+      "issue": "The new availability test exceeds the controller-approved edit restriction for this existing test file.",
+      "evidence": "The commit adds test_threads_is_absent_when_render_bridge_unavailable with new registry/availability assertions. The current review instruction permits only expected channel sets/counts and a RenderBridge.available determinism monkeypatch in this file. The 14 changed paths are all allowlisted, but this added test is outside that narrower content restriction. The other three restricted test files contain only the permitted edits.",
+      "fix": "Move this new test to backend/tests/crawl/adapters/test_threads.py or backend/tests/crawl/test_render.py, leaving only the permitted expected-set update and deterministic availability monkeypatch in test_adapter_wiring.py."
+    }
+  ],
+  "notes": [
+    "This independent fresh session did not implement T7. Product code, repository tests, index, and Git refs were not edited by this review; the only repository artifact written is this report. All execution used an exported commit snapshot. Temporary files were retained; nothing was removed.",
+    "Exported snapshot: /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.bvSTXTnjja. Reviewer probes and the isolation guard exist only there. The initial required test command ran before adding reviewer-only instrumentation.",
+    "Required crawl suite: 2150 passed in 59.84s. A second full run with the audit guard and a synthetic Chromium directory: 2150 passed in 60.46s. Relevant new/modified tests with an empty browser directory: 534 passed in 6.00s. Each run emitted only the existing Pydantic class-based-config deprecation warning. VOYAGE_API_KEY was unset for every test/probe execution.",
+    "Offline/browser isolation: existing crawl fixtures block socket connect/connect_ex; render tests replace crawl4ai with a fake module, and Threads tests reject construction of a real bridge. Existing worker subprocess tests use fixture adapters. The reviewer-only sitecustomize audit guard was also inherited by worker subprocesses and forbade socket connection/DNS events, non-Python/non-ps subprocesses, and direct process-launch APIs. The guarded runs completed with no prohibited attempts (15 guard activations and 6 permitted worker/ps launches observed). No browser was launched and no network was used.",
+    "Read both ignored recordings locally and derived identifiers in memory: 19 unique username strings and 35 distinct code-field strings. Repeatedly decoded fixture contents contained zero matches. No recording values were copied into this report or the reviewer scripts. Fixture usernames/codes/captions are synthetic; captions meet the 80-character limit. Existing duplicate-key and raw/entity/percent/Unicode/hex/mixed-encoding mutation tests passed. Independent duplicate-key and encoded-attribute probes were rejected. An extra invented unknown-closing-tag probe was accepted; malformed closing tags are another checker-hardening opportunity, separate from the mandatory CDATA finding.",
+    "The adapter implements posts > no-results marker > login marker > ValueError, including a normal results page with a Log in link; AdapterBlocked uses threads.com. src_meta keys are exactly post_code, like_count, reply_count. fetch() makes no request and derives author_raw from the public URL. No added login/cookie/proxy/user-agent/stealth configuration or second adapter rate limiter was found.",
+    "Normal close, repeated close, close before first fetch, raised close errors, and fetch-after-close terminate/reject as expected in offline tests/probes. One crawler is reused during successful requests on a private event-loop thread. Delayed cancellation cleanup is the unresolved lifecycle case in T7-R1. No claim is made about real-browser behavior because browser execution was forbidden.",
+    "available() is a non-launching find_spec/filesystem capability check, catches failures, and tests macOS/Linux/explicit cache roots. Relevant tests passed with Chromium-directory presence and absence independent of the actual installation.",
+    "All 14 changed backend paths match .harness/scope-T7.json; the narrower content-scope violation is T7-R4. git diff --check passed. Naming/comments otherwise follow the surrounding adapter conventions. FAIL is based only on the four must-fix findings above."
+  ]
+}

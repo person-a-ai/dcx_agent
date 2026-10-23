@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Error\nTimeoutError: locator.evaluate: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('term', { name: '수집 문서', exact: true })\n"
+    }
+  ],
+  "isError": true
+}

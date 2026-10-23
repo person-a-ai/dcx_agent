@@ -1,0 +1,65 @@
+{
+  "task": "T7",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh (new session, independent re-review round 2)",
+  "base_commit": "31ac6ec109381d0eb0b8ae24e7ba239704339224",
+  "review_commit": "cc260751782be7b9aed29f4ca5f4c24345f8644e",
+  "verdict": "PASS",
+  "previous_findings": [
+    {"id": "T7-R1", "resolved": true},
+    {"id": "T7-R2", "resolved": true},
+    {"id": "T7-R3", "resolved": true},
+    {"id": "T7-R4", "resolved": "overruled"},
+    {"id": "T7-R5", "resolved": true}
+  ],
+  "commands": [
+    "Read ancestor/repository AGENTS.md candidates and searched backend/docs scope for nested AGENTS.md; none found. Read .harness/scope-T7.json, T7.json, T7-rereview.json, and 03-plan.md Task T7 and Plan Eng Review.",
+    "git status --short; git rev-parse cc26075",
+    "git diff --stat 31ac6ec109381d0eb0b8ae24e7ba239704339224..cc26075 -- backend/",
+    "git show --stat --oneline 369b686 04aad82 cc26075",
+    "git diff 31ac6ec109381d0eb0b8ae24e7ba239704339224..cc26075 -- backend/app/crawl/render.py backend/app/crawl/adapters/threads.py",
+    "git diff 31ac6ec..cc26075 -- backend/app/crawl/adapters/__init__.py backend/tests/crawl/test_adapter_wiring.py backend/tests/crawl/test_crawl_api.py backend/tests/crawl/test_final_w4.py backend/tests/crawl/test_fixture_adapter.py",
+    "git diff 04aad82..cc26075 -- backend/",
+    "git diff 04aad82 cc26075 -- backend/app/crawl/adapters/threads.py backend/tests/crawl/adapters/test_threads.py backend/tests/fixtures/http/threads",
+    "SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive cc26075 backend | tar -x -C \"$SNAP\"",
+    "Inspect exported pytest.ini, conftest.py files, render fake injection, Threads fake bridge enforcement, and worker subprocess hooks. Add reviewer-only backend/sitecustomize.py in the exported snapshot to forbid network/DNS and browser/unrelated process launches.",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.462LmRB6dV; export PYTHONDONTWRITEBYTECODE=1; export PYTHONPATH=\"$PWD/backend\"; env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+    "In the same exported snapshot and guarded environment: env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_probes.py",
+    "Read installed Crawl4AI BrowserManager.start/close, AsyncWebCrawler.start/close, AsyncPlaywrightCrawlerStrategy.start/close, and Playwright connection/transport teardown as source text only.",
+    "In the same exported snapshot and guarded environment: for iteration in {1..12}; do env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl/test_render.py -q -p no:cacheprovider; done",
+    "git -C /Users/yunho/Documents/dcx_agent-channels-build archive cc26075 frontend/src/lib/logic/crawlConfig.ts | tar -x -C /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.462LmRB6dV",
+    "In the same exported snapshot and guarded environment: env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl/test_channel_defaults_parity.py -q -p no:cacheprovider",
+    "In the same exported snapshot and guarded environment: env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_actual_rollback.py",
+    "In the same exported snapshot and guarded environment: env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python reviewer_active_background.py",
+    "sort reviewer-isolation.log | uniq -c",
+    "git diff --check 31ac6ec109381d0eb0b8ae24e7ba239704339224..cc26075 -- backend/; git status --short"
+  ],
+  "findings": [
+    {
+      "id": "T7-R6",
+      "severity": "P3",
+      "must_fix": false,
+      "file": "backend/app/crawl/render.py:62-65",
+      "issue": "The final cancellation pass does not guarantee quiescence for an arbitrary injected crawler with multiple successive cancellation-cleanup stages.",
+      "evidence": "The independent realistic_layered_startup exploration in reviewer_probes.py made start cancellation enter a stalled close, then suppressed that cancellation to enter a stalled driver-stop stage, then let the bridge's best-effort close stall again. close(0.04) raised TimeoutError in 0.251s and stopped the thread, but one _fetch task remained pending on the closed loop; a second close preserved the timeout and the pending task. This construction overstates the default Crawl4AI path: its actual startup rollback clears browser/playwright references before the bridge's subsequent close. Executing the installed BrowserManager.start and close method bodies, extracted via AST and bound only to offline fakes, passed with and without a browser reference: 0 pending tasks, stopped thread, completed fetch future, and approximately 0.243s teardown. No realistic default-path leak was established, so this is non-blocking hardening under the requested severity guidance.",
+      "fix": "Consider a bounded cancel-and-drain loop that rechecks tasks created or re-suspended during cleanup, and explicitly document the limit for injected crawlers that continue asynchronous cleanup after repeated cancellation. Add a layered custom-crawler regression if that stronger lifecycle guarantee is intended."
+    }
+  ],
+  "notes": [
+    "This is a brand-new independent review session. This session did not participate in implementing T7 or in any earlier review of T7. No sub-agents were used.",
+    "The only repository file created by this session is docs/development/channel-expansion/reviews/T7-rereview2.json. Product files, repository tests, Git index, and Git refs were not edited. All tests and reviewer probes ran in the exported snapshot /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.462LmRB6dV. Temporary artifacts were retained and no rm command was run. The working tree was initially clean; unrelated deletion of backend/tests/crawl/test_render.py and appearance of backend/tests/crawl/test_render_bridge.py became visible later and were left untouched. This review remains pinned to cc26075.",
+    "The required backend-only full crawl run produced 3790 passed and 1 failed in 75.47s. The sole failure was test_ts_channel_defaults_match_python: the backend-only archive lacks frontend/src/lib/logic/crawlConfig.ts. That unrelated parity test passed after exporting just its dependency from the same cc26075 commit into the snapshot. This is an export limitation, not a T7 defect; no test was modified or skipped.",
+    "test_render.py passed all 12 separate repeated runs: 35 passed each, 420 successful test executions total, with run times from 1.42s to 2.02s. No flaky failure was observed. Pytest emitted the existing Pydantic configuration deprecation warning.",
+    "R5 original scenarios passed independent fake-crawler probes. Stalled startup cancellation cleanup and stalled crawler.close each timed out in about 0.042s with a 0.04s grace period, leaving no live loop thread or pending tasks. Second close calls preserved the same TimeoutError and returned within 0.00002s. Concurrent close callers joined the same teardown; fetch during closing raised RuntimeError in about 0.000004s.",
+    "Additional independent probes passed: close while a fetch held the operation lock cancelled the fetch and stopped the loop in 0.042s; a background task with stalled cancellation-finally cleanup drained in 0.201s; a raised crawler-close OSError was preserved on repeated close with no remaining tasks. Synchronously blocked startup was the documented daemon exception: close timed out in 0.433s, then releasing the synchronous wait and calling close again joined the thread in 0.002s with no pending tasks. All lifecycle probes had bounded wall time.",
+    "To distinguish realistic startup rollback from the P3 custom-crawler case, reviewer_actual_rollback.py extracted only the installed BrowserManager.start and close AST method bodies and executed them with fake resources and default-path configuration. Crawl4AI and Playwright were never imported or launched by that probe. Both browser-allocation variants completed teardown with no pending tasks; repeated close preserved the timeout.",
+    "R1 remained resolved: a retry during held startup rollback timed out without a second start or overlapping close; releasing rollback discarded the stale crawler and allowed two later successful fetches on one fresh crawler. Failed startup also discarded the crawler when best-effort cleanup raised. R2 remained resolved across factory/start/arun/config probes: OSError became ValueError with the original __cause__, and original TimeoutError objects were preserved.",
+    "R3 remained resolved: 24 independent whole-payload CDATA probes covering empty, synthetic username/code, and invented text across all six encodings were rejected. The complete privacy and adapter tests also passed in the full suite. Git comparison confirmed that the Threads adapter, privacy checker, and Threads fixtures are unchanged since 04aad82. No new realistic fixture/privacy regression was found.",
+    "R4 remains overruled and was not re-raised. T7 was assessed using its allowlisted files and the three specified commits; unrelated Cook82, integration-flow, frontend-parity, and QA-hook changes in the cumulative range were not attributed to T7. The adapter contract remains posts before empty-result marker before login-wall handling before ValueError, with the specified metadata and no network in fetch(). git diff --check passed.",
+    "All test and probe invocations removed VOYAGE_API_KEY and set PYTHONDONTWRITEBYTECODE. The snapshot audit guard also covered worker subprocesses: 27 guard activations, 4 allowed fixture-worker/ps process events, zero denied network or process events. No browser was launched and no network was used.",
+    "Some cancellation probes emitted an unretrieved CancelledError future diagnostic after otherwise successful teardown; the corresponding original R5 scenarios still had zero pending tasks and no live thread. The deliberately layered P3 probe additionally emitted the expected pending-task destruction diagnostic. These observations are not hidden by the PASS verdict.",
+    "PASS means no must-fix issue was established under the requested realistic-failure severity guidance. The arbitrary injected-crawler limitation is recorded as P3 rather than reopening the resolved production-relevant R5 scenarios. No real-browser behavior was exercised."
+  ]
+}

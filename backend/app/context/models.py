@@ -79,6 +79,10 @@ class Channel(str, Enum):
     ppomppu = "ppomppu"
     clien = "clien"
     fixture = "fixture"
+    youtube_vlog = "youtube_vlog"
+    threads = "threads"
+    naver_kin = "naver_kin"
+    cook82 = "cook82"
 
 
 class CategorySource(str, Enum):

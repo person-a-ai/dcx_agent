@@ -1,0 +1,85 @@
+{
+  "verdict": "PASS",
+  "head": "ff4d4d163021e0c476897be0abecdb440f3996f1",
+  "fingerprint": "3e73f4f996f1e1ad1b2152feacc356506d51ba32d37cd722e73f060fd931c86f",
+  "executor": "codex",
+  "role": "code-review",
+  "dispatch": "codex:codex-rescue --wait --fresh (whole-branch review round 6: delta 6955ba0..ff4d4d1 on top of the round-5 whole-branch PASS)",
+  "freshSession": true,
+  "base_commit": "56c1387031986d6a48a16ee08656f534b030814e",
+  "review_commit": "ff4d4d163021e0c476897be0abecdb440f3996f1",
+  "previous_findings": [
+    {"id": "WB-R1", "resolved": true},
+    {"id": "WB-R3-1", "resolved": true},
+    {"id": "WB-R3-2", "resolved": true},
+    {"id": "WB-R5-1", "resolved": true}
+  ],
+  "history": [
+    {
+      "round": 4,
+      "review_commit": "8d99f5323e800a0860f363751c783a4551b69714",
+      "verdict": "PASS",
+      "record": "reviews/final-review-4.json"
+    },
+    {
+      "round": 5,
+      "review_commit": "6955ba0256d60043b1410871a3f56445e578c6b2",
+      "verdict": "PASS",
+      "record": "reviews/final-review-5.json"
+    }
+  ],
+  "commands": [
+    {
+      "command": "git rev-parse HEAD; git rev-parse 56c1387; git diff --stat 6955ba0256d60043b1410871a3f56445e578c6b2..ff4d4d163021e0c476897be0abecdb440f3996f1; git diff 6955ba0256d60043b1410871a3f56445e578c6b2..ff4d4d163021e0c476897be0abecdb440f3996f1",
+      "exitCode": 0,
+      "result": "HEAD matches the requested review commit; base_commit expands to the recorded full SHA. Reviewed the complete delta: 42 insertions and 2 deletions in Progress.tsx and crawlDisplayHistory.test.ts only."
+    },
+    {
+      "command": "rg --files -g AGENTS.md -g '!node_modules' -g '!vendor'",
+      "exitCode": 1,
+      "result": "No repository AGENTS.md found. Separate read-only checks also found no applicable ancestor AGENTS.md."
+    },
+    {
+      "command": "git diff --check 6955ba0256d60043b1410871a3f56445e578c6b2..ff4d4d163021e0c476897be0abecdb440f3996f1; git diff --name-status 6955ba0256d60043b1410871a3f56445e578c6b2..ff4d4d163021e0c476897be0abecdb440f3996f1; git log --format='%H %s' 6955ba0256d60043b1410871a3f56445e578c6b2..ff4d4d163021e0c476897be0abecdb440f3996f1",
+      "exitCode": 0,
+      "result": "Whitespace check passed. Exactly the two authorized source/test files changed in the single commit ff4d4d163021e0c476897be0abecdb440f3996f1."
+    },
+    {
+      "command": "git grep -n -E 'keywordDisplay|function BarList' ff4d4d163021e0c476897be0abecdb440f3996f1 -- frontend/src",
+      "exitCode": 0,
+      "result": "Audited the matching sites and read the crawling route, all crawl components, HistoricalCrawl, CrawlReportSummary, shared BarList, and relevant tests. No keyword list in the requested screens still uses display labels as React keys."
+    },
+    {
+      "command": "SNAP=$(mktemp -d) && git -C /Users/yunho/Documents/dcx_agent-channels-build archive ff4d4d163021e0c476897be0abecdb440f3996f1 | tar -x -C \"$SNAP\" && ln -s /Users/yunho/Documents/dcx_agent-channels-build/frontend/node_modules \"$SNAP/frontend/node_modules\"\nprintf 'Snapshot: %s\\n' \"$SNAP\"\ncd \"$SNAP\" && npm --prefix frontend test && npm --prefix frontend run lint",
+      "exitCode": 0,
+      "result": "All 78 test files / 975 tests passed; ESLint passed. Retained snapshot: /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.4vPtaTIvci."
+    },
+    {
+      "command": "Snapshot-only Python mutation probe: replace the sole key={item.kw} in Progress.tsx with key={item.label}; run npm --prefix frontend test -- src/lib/logic/crawlDisplayHistory.test.ts; restore original source in finally",
+      "exitCode": 0,
+      "result": "Probe confirmed the expected failing test subprocess (exit 1): the new regression rejected ['같은 표시명', '같은 표시명'] instead of the two stored raw keywords at crawlDisplayHistory.test.ts:74. The other two tests passed."
+    },
+    {
+      "command": "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/tmp.4vPtaTIvci && npm --prefix frontend test -- src/lib/logic/crawlDisplayHistory.test.ts",
+      "exitCode": 0,
+      "result": "After restoring the snapshot source, all 3 focused tests passed. A Python byte comparison confirmed restored Progress.tsx exactly matches git show of the review commit."
+    },
+    {
+      "command": "git --no-optional-locks status --short; git diff --exit-code; git diff --cached --exit-code; git rev-parse HEAD; test ! -e docs/development/channel-expansion/review.json",
+      "exitCode": 0,
+      "result": "Before creating this report, tracked working tree and index were clean, HEAD remained the requested commit, and review.json was absent. Existing untracked QA/build/review artifacts were left untouched."
+    }
+  ],
+  "findings": [],
+  "notes": [
+    "This brand-new independent code-review session took no part in implementing or reviewing any task of this branch before this round-6 review. No sub-agents were used.",
+    "This review covers the complete delta 6955ba0256d60043b1410871a3f56445e578c6b2..ff4d4d163021e0c476897be0abecdb440f3996f1 on top of the recorded round-5 whole-branch PASS. Historical review records were read as evidence; this session did not repeat the earlier whole-branch backend review.",
+    "WB-R5-1 is resolved. Progress.tsx:27 retains raw kw separately from keywordDisplay[kw] ?? kw. Both top and bottom lists use KeywordBarList, whose row key at line 18 is item.kw and whose visible text at line 19 is item.label. Counts, sorting, slicing, bottom-list reversal, number formatting, bar widths, classes and accessibility markup preserve the previous behavior.",
+    "GateTable.tsx:29-31 retains raw r.kw in Fragment keys, expansion state, row measurement identity, exclusion membership and callbacks, while labels and accessible names use the display form. Progress result-matrix rows retain raw kw plus source as their key and display keywordDisplay[kw] ?? kw. Crawling-page saved exclusions, drafts and comparisons remain raw and unchanged.",
+    "HistoricalCrawl in StageVersion.tsx:60-78 renders saved settings and CrawlReportSummary; it does not render a keyword matrix, keyword list or keyword top/bottom bars. Its per-channel settings rows key by raw channel. CrawlReportSummary's remaining shared BarList contains channel totals, not keywords, so its display-based channel keys are not an unresolved keyword finding. No missing historical keyword-key fix was found.",
+    "The added regression directly inspects actual React element keys and visible label children for both bar orders, using two raw keywords with colliding display labels, a partial display mapping, and no mapping. The snapshot mutation proves it detects display-based identity, while the existing static-render regression still checks display text in the matrix and both bars and preserves raw report keys. This is element-level regression evidence, not browser reconciliation instrumentation.",
+    "WB-R1 remains resolved: CrawlReportSummary still reads report.channels.youtube_vlog.urls_done and backend report.py still aggregates completed URL rows by source. WB-R3-1 and WB-R3-2 remain resolved: crawl-channel-scroll keeps the 600px minimum inside the mobile media query and no table-level nowrap was reintroduced. Those implementations were unchanged by this delta; the relevant frontend regression suites passed.",
+    "Only docs/development/channel-expansion/review.json was created in the repository by this session. Product files, repository tests, Git refs and index were not modified. All executable checks and the mutation ran in the retained fresh exported snapshot; the snapshot mutation was restored. No rm command was run, no temporary directory was removed, and no server was started or stopped. No browser QA was performed or claimed.",
+    "The supplied fingerprint is recorded as requested; the review is pinned to the full immutable commit SHA. No realistic defect or additional P3 hardening change is recommended."
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "calls": [
+    {
+      "time": "2026-10-20T09:25:20.183Z",
+      "method": "POST",
+      "path": "/context",
+      "http": 422,
+      "body": {
+        "status": "error",
+        "error": {
+          "kind": "validation",
+          "message": "입력값을 확인하세요"
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T09:25:20.186Z",
+      "method": "POST",
+      "path": "/keywords/undefined/manual",
+      "http": 404,
+      "body": {
+        "status": "error",
+        "error": {
+          "kind": "not_found",
+          "message": "Session not found"
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T09:25:20.188Z",
+      "method": "PUT",
+      "path": "/crawl/undefined/config",
+      "http": 404,
+      "body": {
+        "status": "error",
+        "error": {
+          "kind": "not_found",
+          "code": "session_not_found",
+          "message": "Session not found"
+        }
+      }
+    },
+    {
+      "time": "2026-10-20T09:25:20.190Z",
+      "method": "PATCH",
+      "path": "/session/undefined",
+      "http": 404,
+      "body": {
+        "status": "error",
+        "error": {
+          "kind": "not_found",
+          "code": "context_error",
+          "message": "Session not found"
+        }
+      }
+    }
+  ]
+}

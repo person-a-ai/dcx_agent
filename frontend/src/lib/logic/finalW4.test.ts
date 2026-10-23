@@ -14,7 +14,7 @@ it('renders channel status from availability and keyless Naver copy', () => {
   const settings = readFileSync('src/components/crawl/Settings.tsx', 'utf8');
   expect(settings).toContain("available ? '사용 가능'");
   expect(settings).toContain('검색 결과 화면 · 본문');
-  expect(settings).toContain('회원 전용 글은 요약');
+  expect(settings).toContain('회원 전용 글은 제외');
   expect(settings).not.toContain('naver_search');
 });
 it('shows terminated shopping and dynamic integration counts', () => {

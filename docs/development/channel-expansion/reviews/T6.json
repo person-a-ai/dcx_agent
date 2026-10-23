@@ -1,0 +1,47 @@
+{
+  "task": "T6",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh (independent reviewer; not the T6 implementer)",
+  "base_commit": "ddbb89e1123e94881d9bb0485630d2a550a574ca",
+  "review_commit": "d43e7934bedd752866d3ae898a84962a94d11718",
+  "verdict": "FAIL",
+  "commands": [
+    "git rev-parse d43e793",
+    "git diff --stat ddbb89e1123e94881d9bb0485630d2a550a574ca..d43e793 -- backend/",
+    "git diff ddbb89e1123e94881d9bb0485630d2a550a574ca..d43e793 -- backend/app backend/tests/crawl",
+    "git diff --name-only ddbb89e1123e94881d9bb0485630d2a550a574ca..d43e793 -- backend/",
+    "Read .harness/scope-T6.json, 03-plan.md Global Constraints / Task T6 / Plan Eng Review, 02-design.md section 3.4, and reports/T0.md Step 5 / T6 handoff; checked applicable AGENTS.md locations.",
+    "SNAP=$(mktemp -d \"${TMPDIR%/}/t6snap-review.XXXXXX\") && git -C /Users/yunho/Documents/dcx_agent-channels-build archive d43e793 backend | tar -x -C \"$SNAP\"",
+    "cd \"$SNAP\" && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+    "From the exported snapshot, env -u VOYAGE_API_KEY PYTHONPATH=backend /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python: independently decoded all six recording HTML files to a fixed point; extracted nickname sets from td.user_function and ul.reples > li.rp h5 strong, and IP sets from #writerIP and em.ip; compared against all seven decoded fixture files and classified collisions without printing identifiers.",
+    "From the exported snapshot, offline Python probes compared recording selector counts and parsed recorded lists/details; emitted only counts, metadata key names, and IP-presence booleans.",
+    "From the exported snapshot, runpy.run_path('backend/tests/crawl/adapters/test_cook82.py'): tested invented duplicate-JSON-key, CDATA, malformed-end-tag and incomplete-attribute payloads through _fixture_identifier_violations in raw, entities, percent, unicode, hex and mixed encodings.",
+    "In the exported snapshot only, inserted an invented email as an earlier duplicate keyword field in manifest.json, ran env -u VOYAGE_API_KEY python -m pytest backend/tests/crawl/adapters/test_cook82.py -q -p no:cacheprovider using the repository venv interpreter, and restored the original fixture in finally: 181 passed.",
+    "In the exported snapshot only, inserted an invented email inside CDATA in article-1.html, ran the same adapter suite, and restored the original fixture in finally: 180 passed, 1 failed in the minimal-markup test.",
+    "Programmatically compared the changed backend paths with allowed_files in .harness/scope-T6.json: exact match, 14 files."
+  ],
+  "findings": [
+    {
+      "id": "T6-R1",
+      "severity": "P2",
+      "file": "backend/tests/crawl/adapters/test_cook82.py:381",
+      "issue": "The fixture privacy checker silently loses earlier duplicate JSON object values before applying its allowlist. An unapproved identifier can remain in the committed manifest while every T6 test passes, violating the required fail-closed privacy check.",
+      "evidence": "json.loads(content) constructs a dict before check_json walks it, so the last occurrence of each key overwrites earlier occurrences. With invented data only, _fixture_identifier_violations('{\"keyword\":\"leaked@example.test\",\"keyword\":\"user1\"}') returns []. The same bypass succeeds with all six supported raw/encoded forms. More concretely, prepending an invented email-valued keyword entry to the exported manifest, before its existing keyword entry, produces no checker violations and all 181 adapter tests pass. The existing mutation cases contain no duplicate JSON keys.",
+      "fix": "Reject duplicate keys during JSON decoding with an object_pairs_hook, or validate every decoded key/value pair before constructing dictionaries. Apply this recursively to nested objects. Add raw and encoded duplicate-key mutations with invented nickname, IP, email and phone values, including a mutation of an otherwise valid manifest, and require the privacy check to reject them."
+    }
+  ],
+  "notes": [
+    "This fresh, independent review session did not implement T6. The only repository file created by this session is this review report; implementation files, index and Git refs were not modified.",
+    "The requested rm-based snapshot setup was rejected by command policy. A fresh mktemp directory provided the same exported-commit isolation without deleting anything. All pytest executions used the exported snapshot and env -u VOYAGE_API_KEY.",
+    "Unmodified target snapshot: 1520 crawl tests passed in 58.19 seconds, with one pre-existing Pydantic deprecation warning. Crawl tests install the shared socket-blocking no_network fixture. Review probes were offline.",
+    "Scope matches all 14 approved files. test_adapter_wiring.py, test_crawl_api.py, test_final_w4.py and test_fixture_adapter.py change only expected channel sets/counts.",
+    "Recording comparison confirmed 25 non-notice search rows, duplicate photolinks, title anchors, regdate title attributes, article title/body selectors, and 6/7/26 comment rows with first-em dates. Offline parsing produced the same counts and dates, an empty page only for the recorded no-result page, and the expected next cursor for recorded populated search pages.",
+    "Both recorded delReple rows contain comment content and are retained. Whole-paragraph deletion notices, punctuation-only authors, exact document metadata keys, title-only SEARCH_SCOPE semantics, changed-list errors, invalid cursors, absent later-page links, and inherited 403/429 handling are covered by the implementation and tests.",
+    "Independent masking comparison derived 59 distinct non-placeholder nickname strings and 34 distinct IP values from the recordings. No recorded IP value remained in decoded fixtures or parsed recorded documents. Three nickname substring collisions were confined to approved search/URL scaffolding and date/count values; one matched the approved search keyword exactly. These were not retained author identifiers. No real identifiers are reproduced here.",
+    "Fixtures contain minimized parser markup and synthetic author/content values. The privacy checker covers ordinary nodes, attributes, comments, scripts, URL query additions and repeated encodings, but the duplicate-key bypass in T6-R1 remains a must-fix regression gap.",
+    "CDATA also bypasses the standalone identifier checker, but the independent minimal-markup test rejects that mutated HTML fixture; it is not a separate must-fix finding.",
+    "No login, cookie injection, stealth, captcha bypass or proxy code was added. The adapter follows surrounding CommunityAdapter conventions and uses channel-default rate limiting. No additional production-code must-fix issue was found."
+  ]
+}

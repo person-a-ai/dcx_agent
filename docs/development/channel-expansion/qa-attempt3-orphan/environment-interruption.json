@@ -1,0 +1,3994 @@
+{
+  "time": "2026-10-20T07:49:37.785Z",
+  "url": "http://localhost:3000/pipeline/crawling",
+  "readonlyDom": "- alert\n- complementary \"파이프라인\":\n  - button \"사이드바 펴기\"\n  - navigation \"파이프라인 단계\":\n    - link \"1. 시작 완료\":\n      - /url: /pipeline/start\n    - link \"2. 키워드 완료\":\n      - /url: /pipeline/keywords\n    - link \"3. 크롤링 완료\":\n      - /url: /pipeline/crawling\n    - link \"4. 전처리 완료\":\n      - /url: /pipeline/preprocess\n    - link \"5. 라벨링\":\n      - /url: /pipeline/labeling\n    - link \"6. 학습\":\n      - /url: /pipeline/training\n    - link \"7. 클러스터링\":\n      - /url: /pipeline/clustering\n    - link \"8. 근거 탐색\":\n      - /url: /pipeline/evidence\n    - link \"9. 페르소나\":\n      - /url: /pipeline/personas\n    - link \"10. 인사이트\":\n      - /url: /pipeline/insights\n  - button \"v1 · 읽기 전용 버전 목록 열기\" [expanded]\n  - paragraph:\n    - text: 새 활성 버전 v2가 있습니다.\n    - button \"v2 열기\"\n  - dialog \"버전 기록\":\n    - heading \"버전 기록\" [level=2]\n    - button \"닫기\"\n    - list:\n      - listitem:\n        - strong: v2\n        - text: 활성\n        - paragraph: 2단계부터 다시 · 2026. 10. 20.\n        - paragraph: QA-EDGE-002 과거 버전 열람 검증\n        - paragraph: 수집본 c1\n        - button \"v2 열기\"\n      - listitem:\n        - strong: v1\n        - text: 읽기 전용\n        - paragraph: 처음 · 2026. 10. 20.\n        - paragraph: 수집본 c1\n        - button \"v1 열기\" [disabled]\n    - button \"이 버전에서 새로 시작하기\"\n    - text: 기준 버전\n    - combobox \"기준 버전\":\n      - option \"v1\" [selected]\n      - option \"v2\"\n    - text: 비교 버전\n    - combobox \"비교 버전\":\n      - option \"v1\"\n      - option \"v2\" [selected]\n    - button \"선택한 버전 비교하기\"\n  - text: 검토 대기\n  - button \"Known Insight · 0\"\n  - button \"외부 API · 0/2 연결 열기\"\n- main:\n  - status:\n    - text: v1 · 읽기 전용 ·\n    - button \"이 버전에서 새로 시작하기\"\n  - group:\n    - button \"이 단계부터 다시\" [disabled]\n    - paragraph: 2단계 · 크롤링\n    - heading \"저장된 수집 설정을 확인합니다\" [level=1]\n    - heading \"크롤링 수집본\" [level=2]\n    - paragraph: 기존 수집본 사용 중\n    - paragraph: c1\n    - paragraph: 과거 버전의 실시간 수집 상태는 제공되지 않습니다. 버전 비교에서 수집본 차이를 확인하세요.\n    - heading \"수집 설정\" [level=2]\n    - text: 수집 채널\n    - textbox \"수집 채널\" [disabled]: Threads · 지식iN · 82쿡 · 유튜브 브이로그\n    - text: 시작일\n    - textbox \"시작일\" [disabled]: 2025. 10. 20.\n    - text: 종료일\n    - textbox \"종료일\" [disabled]: 2026. 10. 20.\n    - text: 목표 건수\n    - textbox \"목표 건수\" [disabled]: 제한 없음\n    - text: 광고 제외어\n    - textbox \"광고 제외어\" [disabled]: 협찬 · 광고 · 제공받 · 원고료 · 체험단 · 서포터즈 · 중고 · 판매 · 거래 · 체험단 · 협찬 · 원고료 · 소정의 · 제공받아 · 서포터즈\n    - text: 제외 출처\n    - textbox \"제외 출처\" [disabled]: 중고나라 · 번개장터 · 당근 · 세컨웨어 · 헬로마켓 · 중고 · 장터 · 부동산 · 판매 · 팝니다 · 삽니다 · 택배 · 무료배송 · 할인코드 · 쿠폰 · 홍보 · 광고 · 업체 · 시공 · 인테리어업체 · 이사 · 용달 · 대출 · 보험설계사 · 설계사모집 · 모집\n    - text: 제품명 필터\n    - textbox \"제품명 필터\" [disabled]: 사용하지 않음\n    - heading \"Threads\" [level=3]\n    - text: 동시 수집 수\n    - textbox \"동시 수집 수\" [disabled]: \"1\"\n    - text: 수집 간격(초)\n    - textbox \"수집 간격(초)\" [disabled]: \"2\"\n    - text: 키워드별 최대 수집 수\n    - textbox \"키워드별 최대 수집 수\" [disabled]: \"1000\"\n    - heading \"지식iN\" [level=3]\n    - text: 동시 수집 수\n    - textbox \"동시 수집 수\" [disabled]: \"1\"\n    - text: 수집 간격(초)\n    - textbox \"수집 간격(초)\" [disabled]: \"0.5\"\n    - text: 키워드별 최대 수집 수\n    - textbox \"키워드별 최대 수집 수\" [disabled]: \"1000\"\n    - heading \"82쿡\" [level=3]\n    - text: 동시 수집 수\n    - textbox \"동시 수집 수\" [disabled]: \"1\"\n    - text: 수집 간격(초)\n    - textbox \"수집 간격(초)\" [disabled]: \"0.5\"\n    - text: 키워드별 최대 수집 수\n    - textbox \"키워드별 최대 수집 수\" [disabled]: \"1000\"\n    - heading \"유튜브 브이로그\" [level=3]\n    - text: 동시 수집 수\n    - textbox \"동시 수집 수\" [disabled]: \"2\"\n    - text: 수집 간격(초)\n    - textbox \"수집 간격(초)\" [disabled]: \"0\"\n    - text: 키워드별 최대 수집 수\n    - textbox \"키워드별 최대 수집 수\" [disabled]: \"1000\"\n- button \"챗봇 열기\"",
+  "create": {
+    "time": "2026-10-20T07:46:49.576Z",
+    "status": 201,
+    "body": {
+      "version": "v2"
+    }
+  },
+  "startDom": "- complementary \"파이프라인\":\n  - img \"Person A\"\n  - button \"사이드바 접기\" [expanded]\n  - text: 파이프라인\n  - navigation \"파이프라인 단계\":\n    - link \"1. 시작\":\n      - /url: /pipeline/start\n      - text: 시작 진행 중\n    - link \"2. 키워드\":\n      - /url: /pipeline/keywords\n      - text: 키워드\n    - link \"3. 크롤링\":\n      - /url: /pipeline/crawling\n      - text: 크롤링\n    - link \"4. 전처리\":\n      - /url: /pipeline/preprocess\n      - text: 전처리\n    - link \"5. 라벨링\":\n      - /url: /pipeline/labeling\n      - text: 라벨링\n    - link \"6. 학습\":\n      - /url: /pipeline/training\n      - text: 학습\n    - link \"7. 클러스터링\":\n      - /url: /pipeline/clustering\n      - text: 클러스터링\n    - link \"8. 근거 탐색\" [disabled]: 근거 탐색\n    - link \"9. 페르소나\":\n      - /url: /pipeline/personas\n      - text: 페르소나\n    - link \"10. 인사이트\":\n      - /url: /pipeline/insights\n      - text: 인사이트\n  - text: 세션 없음\n  - button \"Known Insight · 0\" [disabled]\n  - button \"외부 API · 0/2 연결 열기\"\n  - text: 내부용\n- main:\n  - heading \"최근 세션\" [level=2]\n  - button \"Controller 화면 확인 열기\"\n  - text: 2026. 10. 20. · sc7ca2ce995a24d628de45fe4fe86f95d 검토 대기\n  - button \"QA 채널 확장 열기\"\n  - text: 2026. 10. 20. · s022667b4b6674eef9f3c2747db878043 검토 대기\n  - button \"QA 빈 결과 열기\"\n  - text: 2026. 10. 20. · sc9d9fd0c1eaf4733a883deac400537f5 검토 대기\n  - button \"QA 샘플 열기\"\n  - text: 2026. 10. 20. · s96621a86a802455cbe2cc63726cc5f3b 검토 대기\n  - paragraph: 주의가 필요한 세션이 위에 옵니다. 구버전 세션은 0~2단계를 편집할 수 없습니다.\n  - group:\n    - paragraph: 0단계 · 입력\n    - heading \"새 프로젝트를 설정합니다\" [level=1]\n    - paragraph: 0-A는 이후 모든 단계가 참고하는 프로젝트 개요입니다. 0-B는 분석 결과와 대조할 초기 기준선이며 전부 선택 입력입니다.\n    - group:\n      - heading \"과제 유형 *\" [level=2]\n      - paragraph: 프로젝트 성격(브랜딩 · 리뉴얼 등)과는 따로 고릅니다.\n      - radiogroup \"과제 유형 *\":\n        - 'radio \"지표 개선형 외부·사내 평가 지표를 올리는 과제입니다. 예: 환자경험평가 점수 개선\"':\n          - strong: 지표 개선형\n          - text: \"외부·사내 평가 지표를 올리는 과제입니다. 예: 환자경험평가 점수 개선\"\n        - 'radio \"탐색·기획형 아직 드러나지 않은 맥락과 기회를 찾는 과제입니다. 예: 새 주거 컨셉 발굴\" [checked]':\n          - strong: 탐색·기획형\n          - text: \"아직 드러나지 않은 맥락과 기회를 찾는 과제입니다. 예: 새 주거 컨셉 발굴\"\n      - status: 핵심 지표 선택\n      - heading \"0-A 프로젝트 개요\" [level=2]\n      - paragraph: 필수 · 지켜지는 값. 어긋나는 결과는 막지 않고 방향성과 맞지 않을 수 있음으로 표시합니다.\n      - text: 가드레일 제품명*\n      - textbox \"제품명*\" [invalid]\n      - text: 제품명을 입력하세요. 한줄 정의*\n      - textbox \"한줄 정의*\" [invalid]\n      - text: 한줄 정의를 입력하세요.\n      - group \"프로젝트 성격 *\":\n        - heading \"프로젝트 성격 *\" [level=3]\n        - radiogroup \"프로젝트 성격\":\n          - radio \"브랜딩\"\n          - radio \"신규기획\"\n          - radio \"리뉴얼\"\n          - radio \"UX개선\"\n        - paragraph: 프로젝트 성격을 선택하세요.\n        - text: 프로젝트 성격 보충 설명\n        - textbox \"프로젝트 성격 보충 설명\"\n      - button \"사용 중 불편 탐색하기\"\n      - button \"비사용자의 망설임 탐색하기\"\n      - button \"대체 방법과 이유 탐색하기\"\n      - button \"드러나지 않은 맥락 탐색하기\"\n      - text: 리서치 질문*\n      - textbox \"리서치 질문*\" [invalid]\n      - text: 리서치 질문을 입력하세요.\n      - group \"핵심 지표 (선택)\":\n        - heading \"핵심 지표 (선택)\" [level=3]\n        - paragraph: 선택 입력입니다. 방향을 잡는 지표가 있으면 적으세요.\n        - text: 지표명\n        - textbox \"지표명\"\n        - text: 출처\n        - textbox \"출처\"\n        - text: 관련 설문 문항\n        - textbox \"관련 설문 문항\"\n        - button \"지표 추가하기\" [disabled]\n      - text: 사내 제약\n      - textbox \"사내 제약\"\n      - text: 한 줄씩 추가하세요.\n      - button \"사내 제약 추가하기\"\n      - heading \"브랜드 포지셔닝 (선택)\" [level=3]\n      - heading \"가격대\" [level=4]\n      - radiogroup \"가격대\":\n        - radio \"프리미엄\"\n        - radio \"가성비\"\n      - button \"+ 직접 입력\"\n      - heading \"시장 위치\" [level=4]\n      - radiogroup \"시장 위치\":\n        - radio \"시장 선도자\"\n        - radio \"시장 도전자\"\n        - radio \"신규 진입자\"\n      - button \"+ 직접 입력\"\n      - paragraph: 고른 칩을 다시 누르면 해제됩니다.\n      - group \"수집 채널 *\":\n        - heading \"수집 채널 *\" [level=3]\n        - group \"수집 채널\":\n          - button \"네이버 카페\"\n          - button \"네이버 블로그\"\n          - button \"유튜브\"\n          - button \"뽐뿌\"\n          - button \"클리앙\"\n          - button \"개발용 샘플\"\n          - button \"유튜브 브이로그\"\n          - button \"Threads\"\n          - button \"지식iN\"\n          - button \"82쿡\"\n        - paragraph: 채널을 하나 이상 선택하세요.\n      - text: 이미 아는 것\n      - textbox \"이미 아는 것\"\n      - text: 한 줄씩 추가하세요.\n      - button \"이미 아는 것 추가하기\"\n      - heading \"생각하는 페르소나 (선택)\" [level=2]\n      - paragraph: 떠오르는 사람을 한 줄씩 적으세요. 결과는 이 목록을 넘어서도록 지시합니다.\n      - text: 시드 페르소나\n      - textbox \"페르소나\":\n        - /placeholder: \"예: 초진 보호자\"\n      - button \"추가하기\"\n      - checkbox \"예시와 다른 페르소나를 우선 발굴\" [checked]\n      - text: 예시와 다른 페르소나를 우선 발굴\n      - heading \"0-B 분석 대상 · 초기 기준선\" [level=2]\n      - paragraph: 선택 · 대조되는 값. 우선 탐색하되 범위 밖 발견도 배제하지 않습니다.\n      - text: 기준선\n      - heading \"제품군 대 › 중 › 소\" [level=3]\n      - button \"자동 제안하기\" [disabled]\n      - text: 대분류\n      - textbox \"대분류\"\n      - text: 중분류\n      - textbox \"중분류\"\n      - text: 소분류\n      - textbox \"소분류\"\n      - heading \"연령대\" [level=3]\n      - group \"연령대\":\n        - button \"20대\"\n        - button \"30대\"\n        - button \"40대\"\n        - button \"50대+\"\n      - paragraph: 미선택은 전체입니다.\n      - heading \"성별\" [level=3]\n      - group \"성별\":\n        - button \"남성\"\n        - button \"여성\"\n      - paragraph: 미선택은 전체입니다.\n      - heading \"가구 형태\" [level=3]\n      - group \"가구 형태\":\n        - button \"1인 가구\"\n        - button \"신혼 가구\"\n        - button \"영유아 자녀 가구\"\n        - button \"학령기 자녀 가구\"\n        - button \"고령자 동거 가구\"\n      - paragraph: 미선택은 전체입니다.\n      - heading \"생애주기\" [level=3]\n      - group \"생애주기\":\n        - button \"학생\"\n        - button \"사회 초년기\"\n        - button \"자녀 양육기\"\n        - button \"자녀 독립기\"\n        - button \"은퇴기\"\n      - paragraph: 미선택은 전체입니다.\n      - text: 분석 대상 보충 설명\n      - textbox \"분석 대상 보충 설명\"\n      - heading \"미래 고객 정의\" [level=3]\n      - group \"미래 고객 정의\":\n        - button \"경쟁 제품 사용자\"\n        - button \"구매 관망자\"\n        - button \"이탈 고객\"\n        - button \"인접 니즈 고객\"\n      - text: 미래 고객 보충 설명\n      - textbox \"미래 고객 보충 설명\"\n    - region \"저장 작업\":\n      - status: 변경 사항 없음\n      - button \"임시 저장\"\n      - button \"저장\"\n      - button \"키워드 생성 시작하기\"\n    - complementary:\n      - group:\n        - text: project_context.md 미리보기\n        - paragraph: 서버 저장 맥락을 바탕으로 만든 미리보기입니다.\n        - text: \"## 0-A 프로젝트 개요 - 제품명: - 과제 유형: 탐색·기획형 — 아직 드러나지 않은 맥락과 기회를 찾는 과제. 넓게 탐색 - 한줄 정의: - 리서치 질문: - 프로젝트 유형: - 핵심 지표 (방향 지시자, 측정값 아님): 없음 - 사내 제약: 없음 - 수집 채널: 없음 - 제품 분류: - 제품 분류 출처: 사용자 입력 ## 생각하는 페르소나 · 디멘션 - 없음 디멘션: 사회적 외부 페르소나 · 개인 취향·활동 · 신체 외부 동선 · 내부 바이오 예시는 출발점일 뿐이다. 네 디멘션 각각에서 예시와 비슷한 페르소나에 머물지 말고, 예시와 다른 페르소나와 맥락을 우선 발굴할 것 ## 0-B 분석 대상 · 초기 기준선 분석 대상 초기 기준선 — 우선 탐색하되 범위 밖 발견도 배제하지 말 것, 해석을 조정하지 말 것 - 연령대: 전체 - 성별: 전체 - 가구 유형: 전체 - 생애 단계: 전체 - 분석 대상 메모: 없음 - 미래 고객: 전체 ## 이미 아는 것 - 없음\"\n- button \"챗봇 열기\"\n- alert",
+  "network": {
+    "network": [
+      {
+        "time": "2026-10-20T07:41:04.426Z",
+        "url": "http://localhost:3000/pipeline/crawling",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.578Z",
+        "url": "http://localhost:3000/_next/image?url=%2Fperson-a-logo.png&w=256&q=75",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.578Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_globals_91e4631d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.578Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_known_KnownInsightsDrawer_module_f6259c5d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.578Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_956a0d3a._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.578Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.578Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.578Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.578Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.579Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.580Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.580Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_%40swc_helpers_cjs_d80fb378._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.580Z",
+        "url": "http://localhost:3000/_next/static/chunks/_a0ff3932._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.580Z",
+        "url": "http://localhost:3000/_next/static/chunks/turbopack-_23a915ee._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.580Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_be32b49c._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.580Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.580Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_layout_tsx_1cf6b850._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.584Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_4baf2bfe._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.584Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_fbef865f._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.584Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_layout_tsx_8e9f1618._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.585Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_9fe68a03._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.586Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_crawling_page_tsx_7b1924c6._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.586Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_1cf6b850.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.586Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_crawl_crawl_0e79c3b6.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.600Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Bold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.600Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Regular.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.600Z",
+        "url": "http://localhost:3000/fonts/Pretendard-SemiBold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.662Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.662Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c7192189._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.696Z",
+        "url": "http://localhost:3000/favicon.ico?favicon.0b3bf435.ico",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.700Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.701Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.730Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.730Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.730Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.730Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.730Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.730Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.730Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.827Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.845Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.845Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.845Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.846Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.846Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.846Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.846Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.846Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.854Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.854Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.854Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:04.867Z",
+        "url": "http://localhost:3000/fonts/Pretendard-ExtraBold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:14.731Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:14.845Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:14.852Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:14.888Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:24.735Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:24.846Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:24.852Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:24.894Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.547Z",
+        "url": "http://localhost:3000/pipeline/start",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/image?url=%2Fperson-a-logo.png&w=256&q=75",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_globals_91e4631d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_known_KnownInsightsDrawer_module_f6259c5d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_956a0d3a._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_%40swc_helpers_cjs_d80fb378._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/_a0ff3932._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.713Z",
+        "url": "http://localhost:3000/_next/static/chunks/turbopack-_23a915ee._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.714Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_be32b49c._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.714Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.714Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_layout_tsx_1cf6b850._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.714Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_4baf2bfe._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.714Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_fbef865f._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.714Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_layout_tsx_8e9f1618._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.714Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_fcb18369._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.714Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_start_page_tsx_7b1924c6._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.714Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_1cf6b850.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.735Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Bold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.735Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Regular.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.735Z",
+        "url": "http://localhost:3000/fonts/Pretendard-SemiBold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.959Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:27.959Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c7192189._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.022Z",
+        "url": "http://localhost:3000/favicon.ico?favicon.0b3bf435.ico",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.022Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.022Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.334Z",
+        "url": "http://localhost:3000/pipeline/crawling",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.338Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.338Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.338Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.338Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.338Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.338Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.338Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.388Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.439Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.439Z",
+        "url": "http://localhost:8000/context/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.439Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.439Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.439Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.439Z",
+        "url": "http://localhost:8000/context/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.565Z",
+        "url": "http://localhost:3000/_next/image?url=%2Fperson-a-logo.png&w=256&q=75",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.565Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_globals_91e4631d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.565Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_known_KnownInsightsDrawer_module_f6259c5d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.565Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_956a0d3a._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.565Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.565Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.565Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_%40swc_helpers_cjs_d80fb378._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/_a0ff3932._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/turbopack-_23a915ee._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_be32b49c._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_layout_tsx_1cf6b850._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_4baf2bfe._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_fbef865f._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_layout_tsx_8e9f1618._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_9fe68a03._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_crawling_page_tsx_7b1924c6._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_1cf6b850.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.566Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_crawl_crawl_0e79c3b6.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.614Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Bold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.614Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Regular.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.614Z",
+        "url": "http://localhost:3000/fonts/Pretendard-SemiBold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.712Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.712Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c7192189._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.740Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.740Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.741Z",
+        "url": "http://localhost:3000/favicon.ico?favicon.0b3bf435.ico",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.753Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.753Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.753Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.753Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.753Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.753Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.753Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.770Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.794Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.796Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.796Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.798Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.798Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.798Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.798Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.801Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.801Z",
+        "url": "http://localhost:3000/fonts/Pretendard-ExtraBold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.813Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.813Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:28.827Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.038Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/config?version=v1",
+        "method": "PUT"
+      },
+      {
+        "time": "2026-10-20T07:41:29.066Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "PATCH"
+      },
+      {
+        "time": "2026-10-20T07:41:29.070Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.098Z",
+        "url": "http://localhost:3000/pipeline/crawling",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/image?url=%2Fperson-a-logo.png&w=256&q=75",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_globals_91e4631d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_known_KnownInsightsDrawer_module_f6259c5d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_956a0d3a._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_%40swc_helpers_cjs_d80fb378._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/_a0ff3932._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/turbopack-_23a915ee._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_be32b49c._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_layout_tsx_1cf6b850._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_4baf2bfe._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_fbef865f._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_layout_tsx_8e9f1618._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_9fe68a03._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_crawling_page_tsx_7b1924c6._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.244Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_1cf6b850.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.245Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_crawl_crawl_0e79c3b6.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.276Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Bold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.277Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Regular.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.277Z",
+        "url": "http://localhost:3000/fonts/Pretendard-SemiBold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.462Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.462Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c7192189._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.480Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.480Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.485Z",
+        "url": "http://localhost:3000/favicon.ico?favicon.0b3bf435.ico",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.515Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.515Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.515Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.515Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.515Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.515Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.515Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.528Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.545Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.546Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.547Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.548Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.549Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.549Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.549Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.549Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.559Z",
+        "url": "http://localhost:3000/fonts/Pretendard-ExtraBold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.561Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.561Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:29.563Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:30.171Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/config?version=v1",
+        "method": "PUT"
+      },
+      {
+        "time": "2026-10-20T07:41:30.196Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "PATCH"
+      },
+      {
+        "time": "2026-10-20T07:41:30.201Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:30.435Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/config?version=v1",
+        "method": "PUT"
+      },
+      {
+        "time": "2026-10-20T07:41:30.462Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "PATCH"
+      },
+      {
+        "time": "2026-10-20T07:41:30.468Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:30.998Z",
+        "url": "http://localhost:3000/pipeline/crawling",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.074Z",
+        "url": "http://localhost:3000/_next/image?url=%2Fperson-a-logo.png&w=256&q=75",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.074Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_globals_91e4631d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.074Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_known_KnownInsightsDrawer_module_f6259c5d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_956a0d3a._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_%40swc_helpers_cjs_d80fb378._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/_a0ff3932._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/turbopack-_23a915ee._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_be32b49c._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_layout_tsx_1cf6b850._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_4baf2bfe._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_fbef865f._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_layout_tsx_8e9f1618._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_9fe68a03._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_crawling_page_tsx_7b1924c6._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_1cf6b850.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.075Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_crawl_crawl_0e79c3b6.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.085Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Bold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.085Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Regular.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.085Z",
+        "url": "http://localhost:3000/fonts/Pretendard-SemiBold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.178Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.178Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c7192189._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.201Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.201Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.205Z",
+        "url": "http://localhost:3000/favicon.ico?favicon.0b3bf435.ico",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.221Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.222Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.222Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.222Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.222Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.222Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.225Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.233Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.252Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.252Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.253Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.253Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.253Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.253Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.253Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.264Z",
+        "url": "http://localhost:3000/fonts/Pretendard-ExtraBold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.265Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.265Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.265Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:31.326Z",
+        "url": "http://localhost:3000/_next/image?url=%2Fperson-a-logo.png&w=128&q=75",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:34.727Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:34.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:34.848Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:34.899Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:41.229Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:41.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:41.254Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:41.293Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:44.727Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:44.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:44.847Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:44.903Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:51.232Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:51.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:51.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:51.298Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:51.412Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/list?version=v1",
+        "method": "POST"
+      },
+      {
+        "time": "2026-10-20T07:41:51.472Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:51.480Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:54.730Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:54.843Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:54.847Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:54.908Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:54.915Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:57.923Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:41:57.952Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:01.226Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:01.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:01.255Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:01.302Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:01.312Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:04.726Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:04.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:04.847Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:07.959Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:11.230Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:11.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:11.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:11.317Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:14.135Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/detail?version=v1",
+        "method": "POST"
+      },
+      {
+        "time": "2026-10-20T07:42:14.165Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:14.728Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:14.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:14.847Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:17.972Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:20.983Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:21.225Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:21.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:21.258Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:21.331Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:24.001Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:24.341Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:24.728Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:24.845Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:24.852Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:27.009Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:27.356Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:30.025Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:30.365Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:31.226Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:31.250Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:31.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:33.053Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:33.377Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:34.730Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:34.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:34.848Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:36.065Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:36.389Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:39.073Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:39.399Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:41.228Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:41.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:41.255Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:42.083Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:42.412Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:44.727Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:44.845Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:44.852Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:45.095Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:45.426Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:48.107Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:48.439Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:51.128Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:51.222Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:51.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:51.254Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:51.448Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:54.142Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:54.461Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:54.726Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:54.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:54.847Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:57.161Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:42:57.473Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:00.171Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:00.494Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:01.223Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:01.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:01.254Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:03.181Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:03.504Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:04.725Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:04.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:04.846Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:06.235Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:06.516Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:09.248Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:09.529Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:11.226Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:11.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:11.255Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:12.260Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:12.542Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:14.728Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:14.845Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:14.848Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:15.273Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:15.554Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:18.292Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:18.568Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:21.224Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:21.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:21.255Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:21.307Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:21.585Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:24.318Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:24.592Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:24.725Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:24.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:24.847Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:27.342Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:27.606Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:30.366Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:30.621Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:31.222Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:31.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:31.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:33.381Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:33.633Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:34.727Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:34.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:34.847Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:36.391Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:36.643Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:39.407Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:39.653Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:41.226Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:41.252Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:41.258Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:42.434Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:42.670Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:44.725Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:44.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:44.849Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:45.447Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:45.679Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:48.455Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:48.689Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:51.222Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:51.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:51.255Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:51.467Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:51.697Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:54.726Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:54.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:43:54.846Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:01.226Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:01.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:01.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:01.495Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:01.707Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:04.756Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:04.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:04.847Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:11.227Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:11.252Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:11.255Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:11.517Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:11.716Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:14.726Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:14.845Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:14.849Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:21.227Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:21.250Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:21.258Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:21.540Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:21.731Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.402Z",
+        "url": "http://localhost:3000/pipeline/preprocess?_rsc=16om0",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.542Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_e75dccbd._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.542Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_preprocess_page_tsx_7b1924c6._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.542Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_prep_prep_7797b4cd.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.578Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_e75dccbd._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.578Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_preprocess_page_tsx_7b1924c6._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.579Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.579Z",
+        "url": "http://localhost:8000/prep/s022667b4b6674eef9f3c2747db878043/status?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.580Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.581Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.581Z",
+        "url": "http://localhost:8000/prep/s022667b4b6674eef9f3c2747db878043/status?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.582Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:22.585Z",
+        "url": "http://localhost:3000/favicon.ico?favicon.0b3bf435.ico",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:24.726Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:24.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:24.846Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:31.225Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:31.250Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:31.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:31.557Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:34.725Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:34.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:34.846Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:41.227Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:41.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:41.256Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:41.576Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:44.107Z",
+        "url": "http://localhost:8000/prep/s022667b4b6674eef9f3c2747db878043/config?version=v1",
+        "method": "PUT"
+      },
+      {
+        "time": "2026-10-20T07:44:44.134Z",
+        "url": "http://localhost:8000/prep/s022667b4b6674eef9f3c2747db878043/run?version=v1",
+        "method": "POST"
+      },
+      {
+        "time": "2026-10-20T07:44:44.170Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "PATCH"
+      },
+      {
+        "time": "2026-10-20T07:44:44.183Z",
+        "url": "http://localhost:8000/prep/s022667b4b6674eef9f3c2747db878043/status?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:44.724Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:44.843Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:44.845Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:47.246Z",
+        "url": "http://localhost:8000/prep/s022667b4b6674eef9f3c2747db878043/status?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:50.266Z",
+        "url": "http://localhost:8000/prep/s022667b4b6674eef9f3c2747db878043/status?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:51.223Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:51.250Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:51.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:51.595Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:53.280Z",
+        "url": "http://localhost:8000/prep/s022667b4b6674eef9f3c2747db878043/status?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:53.286Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:54.726Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:54.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:44:54.849Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:01.225Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:01.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:01.254Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:01.609Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:04.728Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:04.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:04.846Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:06.828Z",
+        "url": "http://localhost:3000/__nextjs_font/geist-latin.woff2",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:06.828Z",
+        "url": "http://localhost:3000/__nextjs_font/geist-latin.woff2",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:11.222Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:11.250Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:11.252Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:11.637Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:14.725Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:14.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:14.848Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:21.223Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:21.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:21.252Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:21.670Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:24.725Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:24.843Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:24.845Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:25.919Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_crawl_crawl_0e79c3b6.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:25.919Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_crawl_crawl_0e79c3b6.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:25.934Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_crawl_crawl_0e79c3b6.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:25.934Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_crawl_crawl_0e79c3b6.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:31.227Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:31.251Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:31.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:31.682Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:32.208Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:32.208Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:32.208Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:34.728Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:34.845Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:34.851Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:41.728Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:41.729Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:41.739Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:42.201Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:44.727Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:44.858Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:44.859Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:51.228Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:51.249Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:51.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:52.219Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:54.727Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:54.843Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:45:54.845Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:01.225Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:01.250Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:01.252Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:02.244Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:04.770Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:04.848Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:04.854Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:11.224Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:11.249Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:11.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:12.285Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:14.734Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:14.843Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:14.848Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:21.225Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:21.250Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:21.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:22.312Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:24.748Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:24.844Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:24.853Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.716Z",
+        "url": "http://localhost:3000/pipeline/crawling",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/image?url=%2Fperson-a-logo.png&w=256&q=75",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_globals_91e4631d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_known_KnownInsightsDrawer_module_f6259c5d.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_956a0d3a._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_%40swc_helpers_cjs_d80fb378._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/_a0ff3932._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/turbopack-_23a915ee._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_be32b49c._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_layout_tsx_1cf6b850._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_4baf2bfe._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_fbef865f._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.964Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_layout_tsx_8e9f1618._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.965Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_9fe68a03._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.965Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_app_pipeline_crawling_page_tsx_7b1924c6._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.965Z",
+        "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_1cf6b850.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.965Z",
+        "url": "http://localhost:3000/_next/static/chunks/src_components_crawl_crawl_0e79c3b6.css",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.965Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Bold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.965Z",
+        "url": "http://localhost:3000/fonts/Pretendard-Regular.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:28.966Z",
+        "url": "http://localhost:3000/fonts/Pretendard-SemiBold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.167Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.168Z",
+        "url": "http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c7192189._.js",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.261Z",
+        "url": "http://localhost:3000/favicon.ico?favicon.0b3bf435.ico",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.318Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.319Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.396Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.396Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.396Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.396Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.396Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.396Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.396Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.418Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.476Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.476Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.478Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.478Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.478Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.478Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.479Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.479Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.486Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.502Z",
+        "url": "http://localhost:3000/fonts/Pretendard-ExtraBold.otf",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.736Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:29.763Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:31.228Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:31.250Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:31.257Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:39.397Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:39.469Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:39.476Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:39.817Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:41.231Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:41.253Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:41.260Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.285Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "POST"
+      },
+      {
+        "time": "2026-10-20T07:46:49.404Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.471Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.581Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v2",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.582Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.641Z",
+        "url": "http://localhost:3000/pipeline/crawling?_rsc=16om0",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.641Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043?version=v2",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.641Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.665Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v2",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.686Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v2",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.687Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.687Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.695Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v2",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.695Z",
+        "url": "http://localhost:8000/integrations",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.695Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:49.726Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v2",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:54.595Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:54.600Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:59.413Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:59.487Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:59.678Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:46:59.893Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:00.421Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v2",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:02.206Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:02.207Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:02.307Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:09.784Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:09.785Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:09.842Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v2",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:11.271Z",
+        "url": "http://localhost:8000/crawl/s022667b4b6674eef9f3c2747db878043/status",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:11.272Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:11.272Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:11.370Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:14.751Z",
+        "url": "http://localhost:8000/known/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:14.753Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:14.985Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:19.401Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:21.389Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:21.389Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:21.419Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:24.757Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:24.768Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:32.969Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:33.470Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:33.470Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:33.828Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:36.576Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:38.762Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:40.217Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:42.978Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:42.978Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:43.037Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:45.365Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:45.495Z",
+        "url": "http://localhost:3000/__nextjs_font/geist-latin.woff2",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:47:45.703Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:05.892Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:05.892Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:07.473Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:07.587Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:07.611Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:07.677Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:13.606Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:13.894Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:13.894Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:13.967Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:32.563Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:37.187Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:37.187Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:37.191Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:37.191Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:37.220Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:37.370Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:56.633Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:56.633Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:56.633Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:56.782Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:56.830Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:57.287Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:48:57.835Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:03.917Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:03.917Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:03.926Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:04.268Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:05.427Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:05.695Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:09.670Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:12.225Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:12.225Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:12.261Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:14.749Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:14.755Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:19.397Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:21.226Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:21.250Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:21.253Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:24.745Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:24.747Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:29.398Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:31.224Z",
+        "url": "http://localhost:8000/sessions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:31.252Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:31.254Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:34.748Z",
+        "url": "http://localhost:8000/sessions/s022667b4b6674eef9f3c2747db878043/versions",
+        "method": "GET"
+      },
+      {
+        "time": "2026-10-20T07:49:34.749Z",
+        "url": "http://localhost:8000/session/s022667b4b6674eef9f3c2747db878043?version=v1",
+        "method": "GET"
+      }
+    ],
+    "console": [
+      {
+        "time": "2026-10-20T07:41:04.643Z",
+        "type": "info",
+        "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+      },
+      {
+        "time": "2026-10-20T07:41:04.682Z",
+        "type": "log",
+        "text": "[HMR] connected"
+      },
+      {
+        "time": "2026-10-20T07:41:04.702Z",
+        "type": "warning",
+        "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+      },
+      {
+        "time": "2026-10-20T07:41:27.913Z",
+        "type": "info",
+        "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+      },
+      {
+        "time": "2026-10-20T07:41:27.978Z",
+        "type": "log",
+        "text": "[HMR] connected"
+      },
+      {
+        "time": "2026-10-20T07:41:28.707Z",
+        "type": "info",
+        "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+      },
+      {
+        "time": "2026-10-20T07:41:28.720Z",
+        "type": "log",
+        "text": "[HMR] connected"
+      },
+      {
+        "time": "2026-10-20T07:41:29.444Z",
+        "type": "info",
+        "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+      },
+      {
+        "time": "2026-10-20T07:41:29.466Z",
+        "type": "log",
+        "text": "[HMR] connected"
+      },
+      {
+        "time": "2026-10-20T07:41:31.172Z",
+        "type": "info",
+        "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+      },
+      {
+        "time": "2026-10-20T07:41:31.185Z",
+        "type": "log",
+        "text": "[HMR] connected"
+      },
+      {
+        "time": "2026-10-20T07:44:22.520Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:44:22.526Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:44:22.537Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 120ms"
+      },
+      {
+        "time": "2026-10-20T07:44:22.538Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 111ms"
+      },
+      {
+        "time": "2026-10-20T07:45:06.499Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:45:06.499Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:45:07.149Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 745ms"
+      },
+      {
+        "time": "2026-10-20T07:45:07.149Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 745ms"
+      },
+      {
+        "time": "2026-10-20T07:45:25.776Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:45:25.777Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:45:25.965Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 259ms"
+      },
+      {
+        "time": "2026-10-20T07:45:25.966Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 258ms"
+      },
+      {
+        "time": "2026-10-20T07:45:32.133Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:45:32.134Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:45:32.208Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 151ms"
+      },
+      {
+        "time": "2026-10-20T07:45:32.209Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 154ms"
+      },
+      {
+        "time": "2026-10-20T07:45:44.424Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:45:44.425Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:45:44.457Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 134ms"
+      },
+      {
+        "time": "2026-10-20T07:45:44.457Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 135ms"
+      },
+      {
+        "time": "2026-10-20T07:46:29.086Z",
+        "type": "info",
+        "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+      },
+      {
+        "time": "2026-10-20T07:46:29.228Z",
+        "type": "log",
+        "text": "[HMR] connected"
+      },
+      {
+        "time": "2026-10-20T07:46:29.312Z",
+        "type": "warning",
+        "text": "Image with src \"/person-a-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+      },
+      {
+        "time": "2026-10-20T07:47:44.485Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:47:44.519Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:47:45.496Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 747ms"
+      },
+      {
+        "time": "2026-10-20T07:47:45.497Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 761ms"
+      },
+      {
+        "time": "2026-10-20T07:48:07.612Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:48:07.623Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:48:07.669Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 262ms"
+      },
+      {
+        "time": "2026-10-20T07:48:07.970Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 528ms"
+      },
+      {
+        "time": "2026-10-20T07:48:12.590Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:48:13.606Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:48:13.635Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 380ms"
+      },
+      {
+        "time": "2026-10-20T07:48:13.637Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 2161ms"
+      },
+      {
+        "time": "2026-10-20T07:48:57.478Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:48:57.485Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:48:58.371Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 1083ms"
+      },
+      {
+        "time": "2026-10-20T07:48:58.374Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 1075ms"
+      },
+      {
+        "time": "2026-10-20T07:48:58.474Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:48:58.475Z",
+        "type": "log",
+        "text": "[Fast Refresh] rebuilding"
+      },
+      {
+        "time": "2026-10-20T07:49:03.747Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 187ms"
+      },
+      {
+        "time": "2026-10-20T07:49:03.915Z",
+        "type": "log",
+        "text": "[Fast Refresh] done in 428ms"
+      }
+    ]
+  }
+}

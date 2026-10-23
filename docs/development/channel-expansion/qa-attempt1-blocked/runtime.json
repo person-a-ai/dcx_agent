@@ -1,0 +1,23 @@
+{
+  "startedAt": "2026-10-20T06:26:59.366893+00:00",
+  "command": [
+    "/Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python",
+    "-m",
+    "uvicorn",
+    "app.main:app",
+    "--port",
+    "8000"
+  ],
+  "cwd": "/Users/yunho/Documents/dcx_agent-channels-build/backend",
+  "localDataDir": "/Users/yunho/Documents/dcx_agent-channels-build/docs/development/channel-expansion/qa/local-data-ia6vd16f",
+  "ports": {
+    "frontend": 3000,
+    "backend": 8000
+  },
+  "voyageApiKeyUnset": true,
+  "pid": 7059,
+  "exitCode": 3,
+  "finalExitCode": 3,
+  "seedExitCode": 1,
+  "finishedAt": "2026-10-20T06:27:05.061306+00:00"
+}

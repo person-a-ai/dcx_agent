@@ -1,0 +1,83 @@
+{
+  "task": "T5",
+  "executor": "codex",
+  "role": "code-review",
+  "freshSession": true,
+  "dispatch": "codex:codex-rescue --wait --fresh (new session, independent re-review round 3)",
+  "base_commit": "02d0a9ce9855fae949389cd52cf6a52318f69f24",
+  "review_commit": "ddbb89e1123e94881d9bb0485630d2a550a574ca",
+  "verdict": "PASS",
+  "previous_findings": [
+    {
+      "id": "T5-P2-fixture-identifiers",
+      "resolved": true
+    },
+    {
+      "id": "T5-P2-repeated-pages",
+      "resolved": true
+    },
+    {
+      "id": "T5-P2-privacy-whitelist-boundaries",
+      "resolved": true
+    }
+  ],
+  "commands": [
+    "Read applicable AGENTS.md locations (none found), 03-plan.md Global Constraints / Task T5 / Plan Eng Review item 1, 02-design.md section 3.3, reports/T0.md T5 notes, and all three prior T5 review JSON files.",
+    "git diff --stat 02d0a9ce9855fae949389cd52cf6a52318f69f24..ddbb89e1123e94881d9bb0485630d2a550a574ca -- backend/",
+    "git diff 02d0a9ce9855fae949389cd52cf6a52318f69f24..ddbb89e1123e94881d9bb0485630d2a550a574ca -- backend/app backend/tests/crawl",
+    "git diff dbcd2b482e6b15580f92bcaed929a4a4c1abf3c4..ddbb89e1123e94881d9bb0485630d2a550a574ca -- backend/tests/crawl/adapters/test_naver_kin.py",
+    "git diff --check 02d0a9ce9855fae949389cd52cf6a52318f69f24..ddbb89e1123e94881d9bb0485630d2a550a574ca -- backend/",
+    "Attempted supplied SNAP=$TMPDIR/t5snap3 && rm -rf \"$SNAP\" && mkdir -p \"$SNAP\" export setup; command safety guard rejected rm -f style commands before execution.",
+    "mktemp -d \"$TMPDIR/t5snap3.XXXXXX\"",
+    "git -C /Users/yunho/Documents/dcx_agent-channels-build archive ddbb89e1123e94881d9bb0485630d2a550a574ca backend | tar -x -C /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/t5snap3.Li6fJR",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/t5snap3.Li6fJR && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python -m pytest backend/tests/crawl -q -p no:cacheprovider",
+    "Read every snapshot fixture with line numbers, including manifest.json; read snapshot adapter, tests, CommunityAdapter, URL normalization and crawl network guard.",
+    "/Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python /tmp/t5_rereview3_privacy.py (independent fixed-point decoding and inventory; AST-load exact committed checker; 1,344 category/location/encoding mutations, 256 synthetic positive checks and boundary probes)",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/t5snap3.Li6fJR && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python /tmp/t5_rereview3_behavior.py (30 offline MockTransport behavior checks; real socket connections forbidden)",
+    "cd /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/t5snap3.Li6fJR && env -u VOYAGE_API_KEY /Users/yunho/Documents/dcx_agent-channels-build/backend/.venv/bin/python /tmp/t5_rereview3_boundaries.py (confirm split-number limitation in a mutated snapshot fixture against both exact committed privacy and structure assertions, all eight encodings; distinguish ignored end-tag syntax from DOM attributes)",
+    "git diff --name-status 02d0a9ce9855fae949389cd52cf6a52318f69f24..ddbb89e1123e94881d9bb0485630d2a550a574ca",
+    "git diff --numstat 02d0a9ce9855fae949389cd52cf6a52318f69f24..ddbb89e1123e94881d9bb0485630d2a550a574ca -- backend/tests/crawl/test_crawl_api.py backend/tests/crawl/test_final_w4.py backend/tests/crawl/test_fixture_adapter.py",
+    "Write exclusively docs/development/channel-expansion/reviews/T5-rereview3.json and parse it again to validate JSON and verdict fields."
+  ],
+  "findings": [
+    {
+      "id": "T5-P3-split-numeric-text-hardening",
+      "severity": "P3",
+      "must_fix": false,
+      "file": "backend/tests/crawl/adapters/test_naver_kin.py:279",
+      "related_locations": [
+        "backend/tests/crawl/adapters/test_naver_kin.py:345",
+        "backend/tests/crawl/adapters/test_naver_kin.py:511"
+      ],
+      "issue": "The per-text-node allowlist can accept a contact number assembled from adjacent inline nodes containing individually allowed two-digit values. An invented eight-digit contact split across four spans passes both the privacy assertion and minimized-structure assertion when appended to list-1.html; concatenated DOM text reconstructs the contact. This is a compositional bypass, not the prior whole-element exemption or prefix-match bug.",
+      "evidence": [
+        "Independently reproduced against the exact committed test functions using an in-memory copy of list-1.html; no repository fixture was changed.",
+        "Raw, HTML entities, percent, double percent, Unicode escapes, hex escapes, escaped slashes and nested encodings all pass for the split representation.",
+        "The same complete numeric-contact category placed in a single text node, attribute or script is rejected in all eight encodings. No such split identifier exists in the committed fixtures."
+      ],
+      "assessment": "Non-blocking hardening under the requested full-value, per-node allowlist contract. Every real current fixture value was independently inspected, all direct category mutations are rejected, and no allowed row or attribute set is removed from scanning. This does not leave a previously reported identifier or exemption bug unresolved.",
+      "fix": "Optionally add a rendered-inline-text contact check, or constrain count/page/date text to their expected structural locations, with a split-contact regression while retaining the existing per-node and per-attribute checks."
+    }
+  ],
+  "notes": [
+    "This is a brand-new independent review session. This session did not take part in implementing T5 or in any earlier review of T5. Earlier review artifacts were read only as input.",
+    "PASS means no must-fix issue was identified. The non-blocking split-numeric-text limitation is explicitly reported rather than claiming that the privacy assertion is a universal sanitizer.",
+    "All executable tests and product/fixture inspection used the pinned committed diff or its exported snapshot. No test ran against the concurrent working tree. Only docs/development/channel-expansion/reviews/T5-rereview3.json was created in the repository; no other repository file, index entry or Git ref was modified. Audit scripts/results were written only in temporary storage.",
+    "The supplied destructive snapshot setup was rejected before execution. A fresh mktemp directory provided equivalent isolation: /var/folders/k4/dp8jpl_52w1g8nsm7nqcr12m0000gn/T/t5snap3.Li6fJR. No approval was requested because the non-destructive alternative was sufficient.",
+    "Snapshot crawl suite passed: 1,339 passed, one existing Pydantic class-config deprecation warning, 60.06 seconds, exit code 0. VOYAGE_API_KEY was removed with env -u and pytest cache was disabled.",
+    "Privacy audit covered all nine fixture-directory files (eight HTML files and manifest.json), repeatedly decoding entities, percent escapes, escaped slashes, Unicode and hex escapes to a fixed point. All HTML was short enough for complete line-by-line inspection. The decoded inventory contained 113 nonblank text nodes, 141 attribute values, one deletion script, and zero images.",
+    "No real personal, account or business identifier remains in the reviewed fixtures. Previous list answerer display names/business labels, analytics user keys, profile career/contact text, blog/influencer/expert/store/product/profile/member identifiers, recommendations and account images are absent. Question document IDs and directory IDs are retained as the approved parsing inputs, distinct from account/profile IDs. Question bodies and answer bodies are synthetic and at most 80 characters.",
+    "manifest.json was inspected independently even though the committed HTML allowlist test now globs only *.html (test_naver_kin.py:366). Its request URLs contain only search/page or question IDs. Its historical answer_marker at manifest.json:7 is stale generic/truncated synthetic text, not an identifying business label; tests now assert exclusion of the answer text actually present in every detail fixture (test_naver_kin.py:81 and :155).",
+    "Allowlist boundaries pass: structural attribute values use exact set membership, allowed value patterns use re.fullmatch, and the one script is compared in its entirety. Every parsed attribute, including duplicates and attributes on allowed UI/script elements, is checked (test_naver_kin.py:324-337). Both raw and fully decoded representations are scanned (:353-362). No matching row, element or attribute collection is removed from scanning.",
+    "Independent direct-mutation matrix: 21 identifier categories x 8 encodings x 8 placements = 1,344 rejections with zero misses. Categories included display names, business labels, career text, email/contact formats, blog/mobile-blog/influencer/expert/store/product/profile identifiers, analytics and member assignments/JSON, account image URLs and masked accounts. Placements included ordinary text, list-label text, title/href attributes, attributes on exact allowed UI text, standalone scripts, script suffixes and script attributes. All 256 encoded synthetic text/attribute cases passed.",
+    "Both prior whitelist regressions are resolved: contact attributes on otherwise allowed help rows are rejected, and template-plus-identifier suffixes are rejected in href values and text. Additional checks reject structural-value suffixes, duplicate leaking attributes, nested contact text, images, comments, unclosed scripts and invalid-byte escape suffixes.",
+    "Additional parser limitation: arbitrary payloads inside malformed closing-tag syntax are ignored by HTMLParser and accepted by the checker. Independent DOM parsing confirms those payloads produce neither text nodes nor attributes. This is outside the requested parsed-value contract and is not a current fixture leak; rejecting malformed closing syntax would be optional raw-source hardening.",
+    "Thirty independent behavioral checks passed using MockTransport and a socket prohibition. Empty documents/bodies, changed list containers, missing title classes/hrefs, missing either question ID and retained rows with their title links removed all raise ValueError. Only recognized no-result text/selectors produce an empty terminal page.",
+    "list-changed.html:2 is now a fully empty body. This is acceptable and not a must-fix regression: it directly exercises the missing-rows-without-no-result-marker guard (naver_kin.py:47-54); the separate committed missing-result-title mutation still covers rows whose title selector no longer matches (test_naver_kin.py:202-206). Independent probes also removed the actual title links while retaining all rows and changed only the list container; both raise ValueError.",
+    "Head-only deletion remains meaningful: question-deleted.html:3 contains its sole script in head with no source body, and all three recognized deletion phrases independently produce AdapterSkipped(reason=deleted). All three detail fixtures still contain actual answer nodes; independent probes replaced them with distinct answer text/dates and inserted question script/style/image-placeholder noise. Fetched bodies exclude all those sentinels, comments remain empty, answer counts remain correct and dates use each question 작성일. Removing the fixture 작성일 label returns date=None instead of borrowing the supplied search date.",
+    "List behavior is preserved: both recorded pages yield 10 items with correct directory/document metadata and page cursors. Independent mutations add tracking parameters, reverse query order, use relative URLs and duplicate a row; normalized results stay identical. Removing later-page links terminates pagination. Existing test_channel_identity.py:42-44 also tests removal of non-identity parameters, so normalization remains directly covered despite the minimized fixture URLs already being canonical.",
+    "Repeated pages remain fixed: independently verified reordered results and changed tracking parameters still terminate by normalized URL set; terminal retries stay terminal; original-cursor retries, different keywords and page-1 restarts remain independent. The committed suite additionally covers the 256-keyword history bound. HTTP 403/429 independently raise AdapterBlocked for list and detail after exactly one request.",
+    "Approved backend scope passes: exactly 16 changed files. test_crawl_api.py, test_final_w4.py and test_fixture_adapter.py each change one channel-set/count expectation only. Adapter registration/wiring is limited to naver_kin. git diff --check passes. The unfiltered commit range also contains four review artifacts (T3-rereview.json and the three prior T5 reviews); these are outside the explicitly requested backend review range, with no additional runtime/test implementation changes.",
+    "Two review-harness mistakes were corrected before final results: the first audit regex accidentally matched the influencer hostname inside the KiN hostname, and the first behavior probe passed markup strings to selectolax mutation APIs that treat strings as text. The corrected probes use hostname boundaries and parsed DOM nodes with structural assertions; all stated mutation/behavior totals come from the successful corrected runs."
+  ]
+}

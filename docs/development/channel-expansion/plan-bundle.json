@@ -1,0 +1,6 @@
+{
+  "kind": "plan",
+  "surface": "web",
+  "implementation": "docs/development/channel-expansion/03-plan.md",
+  "qaPlan": "docs/development/channel-expansion/QA_PLAN-channel-expansion.md"
+}

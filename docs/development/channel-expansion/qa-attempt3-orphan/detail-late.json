@@ -1,0 +1,286 @@
+{
+  "time": "2026-10-20T07:42:30.091Z",
+  "url": "http://localhost:3000/pipeline/crawling",
+  "dom": "- main:\n  - group:\n    - button \"이 단계부터 다시\" [disabled]\n    - text: 2단계 · 크롤링\n    - heading \"본문과 댓글을 수집합니다\" [level=1]\n    - checkbox \"크롤링이 끝나면 전처리 · 라벨링(GPT, 블로그 · 카페 먼저)까지 자동으로 시작\" [disabled]\n    - text: 크롤링이 끝나면 전처리 · 라벨링(GPT, 블로그 · 카페 먼저)까지 자동으로 시작\n    - heading \"P3 상세 수집\" [level=2]\n    - paragraph: 실행 중 3초마다 갱신 · 화면을 닫아도 수집은 계속됩니다\n    - progressbar \"상세 수집 진행\"\n    - term: 완료 / 대상 URL\n    - definition: 39 / 82\n    - term: 원문 확보\n    - definition: 100.0%\n    - term: 분당 처리량\n    - definition: \"182.5\"\n    - term: 남은 시간\n    - definition: 약 1분\n    - paragraph: 스니펫 0.0% · 제한글 0.0%\n    - region \"채널별 수집 상태 스크롤\":\n      - table \"채널별 수집 상태\":\n        - rowgroup:\n          - row \"채널 상태 시도 차단 파싱 오류 건너뜀\":\n            - columnheader \"채널\"\n            - columnheader \"상태\"\n            - columnheader \"시도\"\n            - columnheader \"차단\"\n            - columnheader \"파싱 오류\"\n            - columnheader \"건너뜀\"\n        - rowgroup:\n          - row \"82쿡 처리 중… 16 0 0 —\":\n            - rowheader \"82쿡\"\n            - cell \"처리 중…\"\n            - cell \"16\"\n            - cell \"0\"\n            - cell \"0\"\n            - cell \"—\"\n          - row \"지식iN 처리 중… 8 0 0 2 (삭제된 글)\":\n            - rowheader \"지식iN\"\n            - cell \"처리 중…\"\n            - cell \"8\"\n            - cell \"0\"\n            - cell \"0\"\n            - cell \"2 (삭제된 글)\"\n          - row \"Threads 처리 중… 7 0 0 —\":\n            - rowheader \"Threads\"\n            - cell \"처리 중…\"\n            - cell \"7\"\n            - cell \"0\"\n            - cell \"0\"\n            - cell \"—\"\n          - row \"유튜브 브이로그 처리 중… 8 0 0 2 (자막 없음)\":\n            - rowheader \"유튜브 브이로그\"\n            - cell \"처리 중…\"\n            - cell \"8\"\n            - cell \"0\"\n            - cell \"0\"\n            - cell \"2 (자막 없음)\"\n    - paragraph: 내부용 스냅샷 e7c99d92569f48b1b40e72904b80e2ae\n    - button \"일시 정지하기\"",
+  "status": {
+    "defaults": {
+      "adWords": [
+        "협찬",
+        "광고",
+        "제공받",
+        "원고료",
+        "체험단",
+        "서포터즈",
+        "중고",
+        "판매",
+        "거래",
+        "체험단",
+        "협찬",
+        "원고료",
+        "소정의",
+        "제공받아",
+        "서포터즈"
+      ],
+      "excludeSources": [
+        "중고나라",
+        "번개장터",
+        "당근",
+        "세컨웨어",
+        "헬로마켓",
+        "중고",
+        "장터",
+        "부동산",
+        "판매",
+        "팝니다",
+        "삽니다",
+        "택배",
+        "무료배송",
+        "할인코드",
+        "쿠폰",
+        "홍보",
+        "광고",
+        "업체",
+        "시공",
+        "인테리어업체",
+        "이사",
+        "용달",
+        "대출",
+        "보험설계사",
+        "설계사모집",
+        "모집"
+      ]
+    },
+    "available_sources": [
+      "naver_blog",
+      "naver_cafe",
+      "naver_kin",
+      "cook82",
+      "threads",
+      "youtube",
+      "youtube_vlog",
+      "clien",
+      "ppomppu"
+    ],
+    "collection_keywords": [
+      "에어컨청소",
+      "제습기",
+      "qa-empty"
+    ],
+    "collection_channels": [
+      "threads",
+      "naver_kin",
+      "cook82",
+      "youtube_vlog"
+    ],
+    "min_interval_s": {
+      "threads": 2,
+      "naver_kin": 0.5,
+      "cook82": 0.5,
+      "youtube_vlog": 0
+    },
+    "added_keywords_count": 0,
+    "status": "running",
+    "resumable": false,
+    "remaining_by_channel": {
+      "threads": 42
+    },
+    "kind": "detail",
+    "collectionId": "c1",
+    "progress": {
+      "done": 40,
+      "target": 82,
+      "full": 40,
+      "snippet": 0,
+      "restricted": 0,
+      "per_minute": 154.1640858632456,
+      "channels": {
+        "cook82": {
+          "status": "running",
+          "attempts": 16,
+          "parse_errors": 0,
+          "blocked": 0
+        },
+        "naver_kin": {
+          "status": "running",
+          "attempts": 8,
+          "parse_errors": 0,
+          "blocked": 0
+        },
+        "threads": {
+          "status": "running",
+          "attempts": 8,
+          "parse_errors": 0,
+          "blocked": 0
+        },
+        "youtube_vlog": {
+          "status": "running",
+          "attempts": 8,
+          "parse_errors": 0,
+          "blocked": 0
+        }
+      },
+      "list_tasks": {
+        "cook82": {
+          "done": 3,
+          "target": 3
+        },
+        "naver_kin": {
+          "done": 3,
+          "target": 3
+        },
+        "threads": {
+          "done": 3,
+          "target": 3
+        },
+        "youtube_vlog": {
+          "done": 3,
+          "target": 3
+        }
+      },
+      "skipped": {
+        "naver_kin": {
+          "deleted": 2
+        },
+        "youtube_vlog": {
+          "no_ko_captions": 2
+        }
+      }
+    },
+    "channels": {
+      "cook82": {
+        "status": "running",
+        "attempts": 16,
+        "parse_errors": 0,
+        "blocked": 0
+      },
+      "naver_kin": {
+        "status": "running",
+        "attempts": 8,
+        "parse_errors": 0,
+        "blocked": 0
+      },
+      "threads": {
+        "status": "running",
+        "attempts": 8,
+        "parse_errors": 0,
+        "blocked": 0
+      },
+      "youtube_vlog": {
+        "status": "running",
+        "attempts": 8,
+        "parse_errors": 0,
+        "blocked": 0
+      }
+    },
+    "paused_channels": [],
+    "stopReason": null,
+    "snapshot_id": "e7c99d92569f48b1b40e72904b80e2ae",
+    "gate": [
+      {
+        "kw": "qa-empty",
+        "axis": "physical",
+        "sub": "product_physical",
+        "per_source": {
+          "cook82": {
+            "listed": 0,
+            "filtered": 0,
+            "unique": 0
+          },
+          "naver_kin": {
+            "listed": 0,
+            "filtered": 0,
+            "unique": 0
+          },
+          "threads": {
+            "listed": 0,
+            "filtered": 0,
+            "unique": 0
+          },
+          "youtube_vlog": {
+            "listed": 0,
+            "filtered": 0,
+            "unique": 0
+          }
+        },
+        "listed": 0,
+        "after_filter": 0,
+        "unique_ratio": 0,
+        "badges": [
+          "zero",
+          "low"
+        ],
+        "count_unit": "urls"
+      },
+      {
+        "kw": "에어컨청소",
+        "axis": "physical",
+        "sub": "product_physical",
+        "per_source": {
+          "cook82": {
+            "listed": 8,
+            "filtered": 0,
+            "unique": 8
+          },
+          "naver_kin": {
+            "listed": 5,
+            "filtered": 0,
+            "unique": 5
+          },
+          "threads": {
+            "listed": 25,
+            "filtered": 0,
+            "unique": 25
+          },
+          "youtube_vlog": {
+            "listed": 5,
+            "filtered": 0,
+            "unique": 5
+          }
+        },
+        "listed": 43,
+        "after_filter": 43,
+        "unique_ratio": 1,
+        "badges": [],
+        "count_unit": "urls"
+      },
+      {
+        "kw": "제습기",
+        "axis": "physical",
+        "sub": "product_physical",
+        "per_source": {
+          "cook82": {
+            "listed": 8,
+            "filtered": 0,
+            "unique": 8
+          },
+          "naver_kin": {
+            "listed": 5,
+            "filtered": 0,
+            "unique": 5
+          },
+          "threads": {
+            "listed": 25,
+            "filtered": 0,
+            "unique": 25
+          },
+          "youtube_vlog": {
+            "listed": 5,
+            "filtered": 0,
+            "unique": 5
+          }
+        },
+        "listed": 43,
+        "after_filter": 43,
+        "unique_ratio": 1,
+        "badges": [],
+        "count_unit": "urls"
+      }
+    ],
+    "estimate": {
+      "urls": 86,
+      "minutes": 0.8333333333333334
+    },
+    "report": null,
+    "updatedAt": "2026-10-20T07:42:24.551037+00:00"
+  }
+}
