@@ -48,7 +48,7 @@ Codex 판정 동시 수는 `shared/app.env`의 `LABEL_CONCURRENCY=<n>`로 조절
 
 ## 운영 사용자 에이전트(권장)
 
-LaunchDaemon 아래에서는 `codex exec`가 `Failed to synchronize managed preferences` 오류로 실패하고, 사용자 로그인 세션에서는 정상 동작합니다(D-342). Codex 판정을 사용하는 운영 서비스는 `--agent`로 설치합니다. 사용자 `persona1`의 자동 로그인을 계속 켜 두어야 하며, 로그아웃하면 서비스가 중단됩니다.
+LaunchDaemon 아래에서는 `codex exec`가 `Failed to synchronize managed preferences` 오류로 실패하고, 사용자 로그인 세션에서는 정상 동작합니다(D-342). Codex 판정을 사용하는 운영 서비스는 `--agent`로 설치합니다. 운영 사용자(현재 맥미니는 `tech`)의 자동 로그인을 계속 켜 두어야 하며, 로그아웃하면 서비스가 중단됩니다.
 
 운영 에이전트는 sudo 없이 `~/Library/LaunchAgents/ai.person-a.dcx-agent.{deploy,api,web}.plist`를 `gui/<uid>` 도메인에 등록합니다. 운영 루트·라벨·포트(8400/3400)와 공개 주소 설정은 운영 데몬과 같습니다. 전환 전 다음 명령으로 미리볼 수 있습니다.
 
@@ -56,7 +56,7 @@ LaunchDaemon 아래에서는 `codex exec`가 `Failed to synchronize managed pref
 APP_ROOT="$HOME/srv/dcx-agent" /bin/bash "$HOME/srv/dcx-agent/current/ops/macmini/install.sh" --agent --dry-run --output-dir /tmp/dcx-agent-plan
 ```
 
-전환은 `persona1`의 로그인 세션 터미널에서 다음 세 단계로 진행합니다.
+전환은 운영 사용자(현재 맥미니는 `tech`)의 로그인 세션 터미널에서 다음 세 단계로 진행합니다.
 
 1. 기존 운영 데몬을 내리고 plist를 삭제합니다.
 

@@ -1,0 +1,81 @@
+{
+  "verdict": "PASS",
+  "head": "3ab568500e1af76e3938c1c61ba9fe3c127e5913",
+  "fingerprint": "9d1589239210f88c3a11b6380c12c948c65e5e589ab99307ae9d5c1cc8249176",
+  "commands": [
+    {
+      "command": "backend/.venv/bin/python docs/development/docs-refresh/check_docs.py",
+      "exitCode": 0,
+      "output": "OK (logs/T6-all.txt)"
+    },
+    {
+      "command": "backend/.venv/bin/python -m pytest backend/tests -q -p no:cacheprovider -n auto",
+      "exitCode": 0,
+      "output": "6203 passed (logs/T6-regression.txt)"
+    },
+    {
+      "command": "npm --prefix frontend run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "npm --prefix frontend run build",
+      "exitCode": 0
+    },
+    {
+      "command": "npm --prefix frontend test",
+      "exitCode": 0,
+      "output": "1024 passed"
+    }
+  ],
+  "findings": [],
+  "tasks": [
+    {
+      "id": "T1",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue agent a4aef7d92973cbdea; fix agent a148da16230e8e24d (ops install-path false positive)",
+      "red": "logs/T1-red.txt (exit 1, FAILED 140: exists 1, paths 5, api 85, stages 12, banned 29, env 8)",
+      "green": "logs/T6-all.txt (OK after T2-T5)",
+      "review": "reports/review.md#T1, commit 32b2b0a"
+    },
+    {
+      "id": "T2",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue agent a383481610e270bcd",
+      "red": "logs/T1-red.txt (api 85 FAIL for backend/BACKEND.md)",
+      "green": "logs/T2-green.txt (0 FAIL for backend/BACKEND.md, 93 API rows)",
+      "review": "reports/review.md#T2, commit 7159910"
+    },
+    {
+      "id": "T3",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue agent a154d8eb2bea0ee0b",
+      "red": "logs/T1-red.txt (paths/stages FAIL for frontend/PIPELINE.md, frontend/README.md)",
+      "green": "logs/T3-green.txt (0 FAIL for both files)",
+      "review": "reports/review.md#T3 (finding F1 fixed), commits f71afcd, 3ab5685"
+    },
+    {
+      "id": "T4",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue agent ad7b27d5a9dcaacb5",
+      "red": "logs/T1-red.txt (stages/banned/env FAIL for README.md)",
+      "green": "logs/T4-green.txt (0 FAIL for README.md)",
+      "review": "reports/review.md#T4, commit dcced12"
+    },
+    {
+      "id": "T5",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue agent a91407043bbb15ac3 (first dispatch a42f4a137ee52809a blocked by hook before Codex ran)",
+      "red": "logs/T5-red.txt and logs/T1-red.txt (exists CLAUDE.md, banned persona1)",
+      "green": "logs/T5-green.txt (0 FAIL for CLAUDE.md, ops/macmini/README.md)",
+      "review": "reports/review.md#T5 (finding F2 fixed), commits 863ed25, 3ab5685"
+    },
+    {
+      "id": "T6",
+      "executor": "codex",
+      "dispatch": "codex:codex-rescue agent a63398c0ae6568766 (review fixes F1/F2 + full checker run)",
+      "red": "reports/review.md (F1, F2 found in per-task review)",
+      "green": "logs/T6-all.txt (OK), logs/T6-regression.txt (4 commands exit 0)",
+      "review": "reports/review-fixes.md, commit 3ab5685"
+    }
+  ]
+}
