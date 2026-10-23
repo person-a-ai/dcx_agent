@@ -33,8 +33,10 @@ DCX 2.0은 담론을 수집·분석해 페르소나와 인사이트를 만드는
 제품 승인 명령 형식은 다음과 같으며, 마지막 인수는 실제 승인 근거로 바꿉니다.
 
 ```bash
-~/.local/bin/development-harness decide approve '대화 12번 메시지에서 제품 기획 승인'
+~/.local/bin/development-harness decide approve '<승인 근거>'
 ```
+
+설계·계획·UAT 승인 게이트에도 같은 명령 형식을 사용하며, 다른 선택지는 수정 요청 `revise`와 취소 `cancel`입니다.
 
 Claude는 기획·관리·리뷰를 맡습니다.
 Claude는 `docs/development/` 밖 파일을 직접 수정하지 않고 Codex에 위임합니다.
