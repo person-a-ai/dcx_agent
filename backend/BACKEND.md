@@ -2,278 +2,238 @@
 
 > FastAPI 기반 소비자 인사이트 파이프라인 백엔드
 
-## 폴더 구조
-
-```
-backend/app/
-├── main.py                  # FastAPI 앱 설정 (CORS, 라우터 등록)
-├── config.py                # 환경변수 설정 (Pydantic Settings)
-├── __init__.py
-│
-├── models/
-│   ├── schemas.py           # Pydantic 요청/응답 스키마
-│   └── __init__.py
-│
-├── routers/                 # API 엔드포인트 (단계별)
-│   ├── sessions.py          # 세션 관리
-│   ├── keywords_v2.py       # 키워드 생성
-│   ├── crawling.py          # 웹 크롤링
-│   ├── prep.py              # 데이터 전처리
-│   ├── labeling_v2.py       # 라벨링·검수
-│   ├── training_v2.py       # 모델 학습·내보내기
-│   ├── segment.py           # 클러스터링
-│   ├── evidence.py          # 근거 탐색
-│   ├── stage8.py            # 페르소나·인사이트
-│   ├── chat.py              # 챗봇 (파이프라인 + 인사이트)
-│   ├── search.py            # 유사 문서 검색
-│   └── __init__.py
-│
-├── services/                # 비즈니스 로직
-│   ├── claude.py            # Claude API 통합
-│   ├── crawling.py          # Naver Cafe 크롤링 로직
-│   ├── naver.py             # Naver API 래퍼
-│   ├── voyage.py            # Voyage AI 임베딩
-│   ├── pinecone_svc.py      # Pinecone 벡터 검색
-│   ├── s3.py                # AWS S3 파일 입출력
-│   └── __init__.py
-│
-├── jobs/
-│   ├── manager.py           # 스레드 안전 작업 상태 관리
-│   └── __init__.py
-│
-└── utils/
-    └── text.py              # 텍스트 정제 유틸리티
-```
-
----
-
-## main.py — 앱 설정
-
-FastAPI 앱 인스턴스 생성, CORS 미들웨어 설정 (모든 origin 허용), 전체 라우터 등록.
-
-| 함수 | 엔드포인트 | 설명 |
-|------|-----------|------|
-| `health()` | `GET /health` | API 헬스체크 |
-
----
-
-## config.py — 환경변수
-
-Pydantic `BaseSettings`를 상속한 `Settings` 클래스. `.env` 파일에서 로드.
-
-| 변수 | 용도 |
-|------|------|
-| `s3_bucket`, `s3_region` | AWS S3 버킷/리전 |
-| `naver_client_id`, `naver_client_secret` | Naver API 인증 |
-| `claude_api_key` | Claude API 키 |
-| `pinecone_api_key` | Pinecone API 키 |
-| `voyage_api_key` | Voyage AI API 키 |
-
----
-
-## models/schemas.py — 요청/응답 스키마
-
-세션·검색·챗봇 요청에 사용되는 Pydantic `BaseModel` 정의:
-
-| 스키마 | 용도 | 주요 필드 |
-|--------|------|----------|
-| `SessionSaveRequest` | 세션 저장 | `sid`, `data` |
-| `SearchRequest` | 유사 문서 검색 | `sid`, `query`, `topK` |
-| `ChatRequest` | 파이프라인 챗봇 | `sid`, `message`, `context` |
-| `InsightChatRequest` | 인사이트 챗봇 | `sid`, `message`, `personas`, `clusters` |
-
----
-
-## routers/ — API 엔드포인트
-
-### routers/sessions.py — 세션 관리
-
-| 함수 | 엔드포인트 | 설명 |
-|------|-----------|------|
-| `save_session(req)` | `POST /save-session` | 세션 데이터를 S3에 저장 |
-| `get_session(sid)` | `GET /session/{sid}` | S3에서 세션 로드 |
-| `list_sessions()` | `GET /sessions` | 전체 세션 목록 (최근 20개) |
-| `delete_session(sid)` | `DELETE /delete-session/{sid}` | 세션 삭제 |
-| `pipeline_status(sid)` | `GET /pipeline-status/{sid}` | 전체 파이프라인 작업 상태 조회 |
-
-### routers/keywords_v2.py — 키워드 생성
-
-키워드 생성·검토는 `/keywords/{sid}/*` 경로를 사용한다.
-
-### routers/crawling.py — 웹 크롤링
-
-| 함수 | 엔드포인트 | 설명 |
-|------|-----------|------|
-| `start_crawl(req)` | `POST /crawl` | 크롤링 작업 시작 (데몬 스레드) |
-| `get_status(sid)` | `GET /status/{sid}` | 크롤링 진행 상태 + 카페 통계 |
-
-**상태 응답 구조:**
-- `status`: running / done / error / not_found
-- `total`: 수집된 총 건수
-- `cafe_stats`: 카페별 수집 통계
-- S3 폴백: JobManager에 상태 없으면 S3 데이터로 추정
-
-### v2 파이프라인 라우터
-
-전처리는 `/prep/{sid}/*`, 라벨링은 `/label/{sid}/*`, 학습·내보내기는 `/train/{sid}` 및 `/train/{sid}/*`, 클러스터링은 `/segment/{sid}/*`, 근거 탐색은 `/evidence/{sid}/*`, 페르소나는 `/persona/{sid}/*`, 인사이트는 `/insight/{sid}/*`를 사용한다.
-
-구현: `routers/prep.py`, `routers/labeling_v2.py`, `routers/training_v2.py`, `routers/segment.py`, `routers/evidence.py`, `routers/stage8.py`.
-
-### routers/chat.py — 챗봇
-
-| 함수 | 엔드포인트 | 설명 |
-|------|-----------|------|
-| `chat_agent(req)` | `POST /chat` | 파이프라인 챗봇 — RAG 검색 + 키워드 추가 지원 |
-| `insight_chat(req)` | `POST /insight-chat` | 인사이트 챗봇 — 클러스터/페르소나 수정 지원 |
-
-**chat_agent 특수 기능:**
-- Pinecone RAG로 유사 문서 검색 후 컨텍스트 주입
-- `ADDED_KEYWORDS:` 플래그로 키워드 자동 추가
-
-**insight_chat 특수 기능:**
-- 클러스터 병합/이름 변경 지원
-- 페르소나 필드 수정 지원
-- `MODIFIED_DATA` JSON 블록으로 변경사항 반환
-
-### routers/search.py — 유사 문서 검색
-
-| 함수 | 엔드포인트 | 설명 |
-|------|-----------|------|
-| `search_docs(req)` | `POST /search` | Pinecone RAG로 유사 문서 검색 |
-
----
-
-## services/ — 비즈니스 로직
-
-### services/claude.py — Claude API
-
-| 함수 | 파라미터 | 반환 | 설명 |
-|------|---------|------|------|
-| `call_claude(prompt, max_tokens, model, timeout)` | `prompt: str`, `max_tokens: int = 4096`, `model: str = "claude-sonnet-4-20250514"`, `timeout: int = 120` | `str \| None` | Anthropic Claude API 호출. 실패 시 None 반환 |
-
-### services/naver.py — Naver API
-
-| 함수 | 파라미터 | 반환 | 설명 |
-|------|---------|------|------|
-| `search_naver_cafe(query, display, start)` | `query: str`, `display: int = 100`, `start: int = 1` | `dict \| None` | Naver Cafe 검색 API 호출. 인증 헤더 포함 |
-
-### services/crawling.py — 크롤링 로직
-
-| 함수 | 파라미터 | 반환 | 설명 |
-|------|---------|------|------|
-| `crawl_keywords(config)` | `config: dict` (sid, bk, keywords, target, dateFrom, dateTo, includeCafes, excludeCafes, adFilters) | `int` | Naver Cafe 게시글 대량 수집. 키워드별 최대 1,000건, 500건 단위 배치 S3 저장 |
-
-**config 필드:**
-- `sid`: 세션 ID
-- `bk`: 메인 키워드 (제품명)
-- `keywords`: 검색 키워드 목록
-- `target`: 목표 수집 건수
-- `dateFrom/dateTo`: 날짜 범위
-- `includeCafes`: 포함할 카페 목록
-- `excludeCafes`: 제외할 카페 목록
-- `adFilters`: 광고 필터 키워드 목록
-
-**크롤링 필터 순서:**
-1. 날짜 범위 체크
-2. 광고 키워드 필터
-3. 제외 카페 필터
-4. 포함 카페 필터 (지정 시)
-5. 제품명 포함 여부
-6. 링크 기준 중복 제거
-
-### v2 단계별 처리
-
-전처리 문서 읽기·필터링은 `prep/documents.py`, 실행은 `prep/pipeline.py`가 담당한다. 라벨링·학습·내보내기·클러스터링·근거·페르소나·인사이트 처리는 위 v2 경로를 통해 실행한다. 전처리 문서의 `desc`·`cafe`·`link`는 내보내기와 검색을 위해 유지한다.
-
-### services/voyage.py — Voyage AI 임베딩
-
-| 함수 | 파라미터 | 반환 | 설명 |
-|------|---------|------|------|
-| `get_embeddings(texts)` | `texts: list[str]` | `list[list[float]]` | Voyage multilingual-2 모델로 임베딩 생성 (128건 배치, 텍스트 2000자 절삭) |
-
-### services/pinecone_svc.py — Pinecone 검색
-
-| 함수 | 파라미터 | 반환 | 설명 |
-|------|---------|------|------|
-| `search_similar(sid, query, top_k)` | `sid: str`, `query: str`, `top_k: int = 5` | `list[dict]` | 쿼리 임베딩 → Pinecone 검색 → 메타데이터 포함 결과 반환 |
-
-### services/s3.py — AWS S3 입출력
-
-| 함수 | 파라미터 | 반환 | 설명 |
-|------|---------|------|------|
-| `load_data(prefix)` | `prefix: str` | `list[dict]` | S3 프리픽스 하위 모든 JSONL 파일 로드 후 합산 |
-| `save_jsonl(key, data)` | `key: str`, `data: list[dict]` | `None` | JSONL 형식으로 S3 저장 |
-| `save_json(key, data)` | `key: str`, `data: dict` | `None` | JSON 형식으로 S3 저장 |
-| `load_json(key)` | `key: str` | `dict \| None` | S3에서 JSON 로드 |
-| `list_objects(prefix)` | `prefix: str` | `list[dict]` | S3 프리픽스 하위 객체 목록 조회 |
-| `list_prefixes(prefix)` | `prefix: str` | `list[str]` | S3 프리픽스 하위 폴더 목록 조회 |
-| `delete_object(key)` | `key: str` | `None` | S3 객체 삭제 |
-
----
-
-## jobs/ — 작업 상태 관리
-
-### jobs/manager.py — JobManager
-
-스레드 안전한 인메모리 작업 상태 추적 클래스.
-
-| 메서드 | 파라미터 | 반환 | 설명 |
-|--------|---------|------|------|
-| `get(job_type, sid)` | `job_type: str`, `sid: str` | `dict` | 작업 상태 조회. 없으면 `{"status": "not_found"}` |
-| `set(job_type, sid, data)` | `job_type: str`, `sid: str`, `data: dict` | `None` | 작업 상태 설정/교체 |
-| `update(job_type, sid, **kwargs)` | `job_type: str`, `sid: str`, `**kwargs` | `None` | 작업 상태 부분 업데이트 |
-
-**작업 유형 (job_type):**
-- `crawl`, `preprocess`, `train`, `cluster`, `embed`, `persona`
-
-**상태 값 (status):**
-- `running`, `done`, `error`, `not_found`
-
-**전역 싱글턴:** `job_manager = JobManager()`
-
----
-
-## utils/ — 유틸리티
-
-### utils/text.py — 텍스트 정제
-
-| 함수 | 파라미터 | 반환 | 설명 |
-|------|---------|------|------|
-| `clean_text(t)` | `t: str` | `str` | HTML 태그 제거 + HTML 엔티티 디코딩 (&amp;, &lt;, &gt;) |
-
----
-
-## S3 데이터 경로 정리
-
-전처리 결과는 `derived/{sid}/{collectionId}/{prepKey}/`에 저장한다. 기존 `clusters/`, `clusters_refined/`, `personas/` 파일은 챗봇이 읽으므로 그대로 유지한다.
-
-| 경로 패턴 | 단계 | 형식 | 설명 |
-|-----------|------|------|------|
-| `sessions/{sid}/session.json` | 시작~라벨링 | JSON | 세션 메타데이터, 키워드, 라벨 데이터 |
-| `crawl/{sid}/*.jsonl` | 크롤링 | JSONL | 수집된 게시글 (500건 단위 배치) |
-| `classified/{sid}/relevant_{ts}.jsonl` | 학습 | JSONL | 관련 문서 (relevance_score 포함) |
-| `classified/{sid}/irrelevant_{ts}.jsonl` | 학습 | JSONL | 무관 문서 |
-| `clusters/{sid}/cluster_{id}_{ts}.jsonl` | 클러스터링 | JSONL | 초기 클러스터 데이터 |
-| `clusters_refined/{sid}/data_{ts}.jsonl` | 클러스터링 | JSONL | 정제된 클러스터 데이터 |
-| `personas/{sid}/result_{ts}.json` | 페르소나 | JSON | 페르소나 결과 |
-
----
-
-## 전체 API 엔드포인트 요약
-
-| 단계 | Method | Endpoint | 비동기 | 설명 |
-|------|--------|----------|--------|------|
-| 시작 | POST | `/save-session` | - | 세션 저장 |
-| | GET | `/session/{sid}` | - | 세션 로드 |
-| | GET | `/sessions` | - | 세션 목록 |
-| | DELETE | `/delete-session/{sid}` | - | 세션 삭제 |
-| | GET | `/pipeline-status/{sid}` | - | 전체 파이프라인 상태 |
-| 키워드 | POST | `/keywords/{sid}/rounds/{n}` | O | 키워드 생성 |
-| 크롤링 | POST | `/crawl` | O | 크롤링 시작 |
-| | GET | `/status/{sid}` | - | 크롤링 상태 |
-| 챗봇 | POST | `/chat` | - | 파이프라인 챗봇 |
-| | POST | `/insight-chat` | - | 인사이트 챗봇 |
-| 검색 | POST | `/search` | - | 유사 문서 검색 |
-| 공통 | GET | `/health` | - | 헬스체크 |
-
-전처리 이후 단계의 API는 위 **v2 파이프라인 라우터** 안내를 따른다.
+## 1. 개요
+
+`app/main.py`에서 FastAPI 앱과 CORS를 설정하고 라우터 14개를 등록한다: sessions, integrations, context, keywords_v2, crawl_v2, prep, labeling_v2, training_v2, segment, stage8, evidence, chat, search, known.
+
+GET /health는 `{"status": "ok", "release": "…"}`를 반환한다. release는 환경변수 `DCX_RELEASE_SHA` 값이며, 없으면 `dev`다.
+
+## 2. 패키지 구조
+
+단계 번호는 0 시작 → 1 키워드 → 2 크롤링 → 3 전처리 → 4 라벨링 → 5 학습 → 6 클러스터링 → 7 근거 탐색 → 8 페르소나·인사이트다.
+
+| 패키지 | 단계 | 역할 |
+|---|---|---|
+| `app/context/` | 0·공통 | 프로젝트 맥락 검증·Markdown 생성, 세션 버전 관리 |
+| `app/crawl/` | 2 | 채널 어댑터·큐·워커, 수집 문서·URL·작성자 정규화 |
+| `app/evidence/` | 7 | 근거 검색·선택과 Evidence Package 생성 |
+| `app/external/` | 1~2·공통 | 외부 서비스 연동 어댑터 |
+| `app/jobs/` | 공통 | 스레드 안전한 인메모리 작업 상태 관리 |
+| `app/keywords/` | 1 | 키워드 분류·정규화, 라운드 생성·피드백·커버리지 |
+| `app/known/` | 공통 | Known Insight 저장·로컬 검색 및 검색 제외 필터 |
+| `app/label/` | 4 | 라벨 스키마·등급 규칙, 판정·검수·감사 |
+| `app/lexicon/` | 6 | 로컬 KNU 감성사전 로딩·문서 감성 점수 |
+| `app/llm/` | 공통 | LLM 백엔드와 태스크 실행 |
+| `app/model/` | 5 | CPU 멀티태스크 앙상블 학습·보정·저장·추론 |
+| `app/models/` | 공통 | 세션·검색·챗봇 요청의 Pydantic 스키마 |
+| `app/persona/` | 8 | Evidence Package 기반 지표·카드·맵·인사이트·채팅 수정 |
+| `app/prep/` | 3 | 규칙 필터·텍스트 정제·토큰화와 재사용 전처리 산출물 |
+| `app/routers/` | 0~8·공통 | 단계별 REST API와 세션·검색·챗봇 엔드포인트 |
+| `app/segment/` | 6 | 클러스터링·품질·신호 계산, 초안·확정 및 버전별 결과 |
+| `app/services/` | 공통 | 저장소·Claude·네이버·Voyage 서비스 함수 |
+| `app/utils/` | 공통 | HTML 태그·엔티티 등 텍스트 정제 |
+| `app/vectors/` | 3·공통 | 임베딩·로컬 벡터 샤드 저장·코사인 검색 |
+| `app/work/` | 공통 | 긴 작업의 별도 프로세스 워커·SQLite 작업표·heartbeat·이어 하기 |
+
+## 3. LLM 공통 층
+
+`app/llm/registry.py`의 `get_backend(task_name)`가 태스크에 쓸 백엔드를 선택하고, `run_task(task)`가 실행과 출력 스키마 검증을 담당한다. 파싱·스키마 오류는 최대 2회 시도한다.
+
+| 백엔드 이름 | 역할 |
+|---|---|
+| `openai_api` | OpenAI API, 기본 백엔드 |
+| `claude_api` | Claude API |
+| `codex_exec` | Codex 실행 백엔드 |
+| `fake` | 테스트용 가짜 백엔드 |
+
+`app/config.py`의 `LLM_BACKEND` 설정을 기본으로 사용한다. `LLM_BACKEND_OVERRIDES`는 태스크 이름 패턴과 백엔드 이름의 매핑이며, `fnmatchcase`로 처음 일치한 패턴의 설정을 적용한다.
+
+## 4. 저장소와 데이터 경로
+
+`app/services/s3.py`는 `STORAGE=local`이면 `LOCAL_DATA_DIR` 아래 로컬 디스크를, `STORAGE=s3`이면 AWS S3를 사용한다. JSON·JSONL 저장/로드와 객체·접두사 목록, 객체 삭제 함수를 같은 인터페이스로 제공한다. `app/config.py`의 기본값은 `STORAGE=local`, `LOCAL_DATA_DIR=data`다.
+
+아래는 3~5단계·6~8단계 설계 문서 1절의 주요 데이터 경로다. 버전별 결정·사람 확정값은 버전 안에, 재사용할 전처리 결과·판정·모델·LLM 캐시는 버전 밖에 둔다.
+
+| 데이터 경로 | 역할 |
+|---|---|
+| `sessions/{sid}/versions/vN/…` | 버전별 결정·사람 라벨·설정 |
+| `sessions/{sid}/versions/vN/segment/` | 6단계 결과: segment.sqlite·stage_6.json |
+| `sessions/{sid}/versions/vN/evidence/` | 7단계 결과: queries.json·evidence.sqlite·package.json·stage_7.json |
+| `sessions/{sid}/versions/vN/persona/` | 8단계 결과: cards.json·map.json·insights.json·concepts.json·chat.jsonl·stage_8.json |
+| `derived/{sid}/{collectionId}/{prepKey}/` | 버전 간 재사용하는 3단계 전처리 결과 |
+| `judge/{sid}/{prepKey}/{labeler}/{qver}/` | 버전 간 공유하는 LLM 판정 캐시 |
+| `models/{modelId}/` | 세션 밖 분류 모델 저장소 |
+| `work/{sid}/{runId}/` | 워커 작업표·로그 |
+| `llmcache/{sid}/{prepKey}/` | dims·지연 태깅 LLM 캐시 |
+
+## 5. API
+
+`app.openapi()` 기준 93개 operation. 경로 파라미터 이름은 OpenAPI와 같다.
+
+### `app/routers/sessions.py` — 세션 관리
+
+| Method | Path | 설명 |
+|---|---|---|
+| POST | `/save-session` | 세션 저장 |
+| GET | `/session/{sid}` | 세션 조회 |
+| GET | `/sessions` | 세션 목록 조회 |
+| DELETE | `/delete-session/{sid}` | 세션 삭제 |
+| GET | `/pipeline-status/{sid}` | 파이프라인 작업 상태 조회 |
+
+### `app/routers/integrations.py` — 외부 연동
+
+| Method | Path | 설명 |
+|---|---|---|
+| GET | `/integrations` | 외부 서비스 연결 상태 조회 |
+
+### `app/routers/context.py` — 프로젝트 맥락·버전
+
+| Method | Path | 설명 |
+|---|---|---|
+| POST | `/context` | 프로젝트 맥락과 새 세션 생성 |
+| POST | `/context/category-suggest` | 제품군 제안 |
+| GET | `/context/{sid}` | 프로젝트 맥락 조회 |
+| PUT | `/context/{sid}` | 프로젝트 맥락 저장 |
+| PATCH | `/context/{sid}` | 프로젝트 맥락 부분 수정 |
+| PATCH | `/session/{sid}` | 세션 단계·초안 부분 수정 |
+| GET | `/sessions/{sid}/versions` | 버전 목록 조회 |
+| POST | `/sessions/{sid}/versions` | 버전 생성 |
+| PUT | `/sessions/{sid}/active-version` | 활성 버전 변경 |
+| GET | `/sessions/{sid}/compare` | 단계별 버전 비교 |
+
+### `app/routers/keywords_v2.py` — 키워드
+
+| Method | Path | 설명 |
+|---|---|---|
+| POST | `/keywords/{sid}/rounds/{n}` | 키워드 라운드 생성 시작 |
+| GET | `/keywords/{sid}/rounds/{n}` | 라운드 상태·키워드 조회 |
+| POST | `/keywords/{sid}/rounds/{n}/commit` | 라운드 검토 결정 확정 |
+| POST | `/keywords/{sid}/manual` | 수동 키워드 추가 |
+| POST | `/keywords/{sid}/suggest-words` | 분류별 키워드 제안 |
+| POST | `/keywords/{sid}/coverage` | 커버리지 계산 |
+| GET | `/keywords/{sid}` | 키워드·라운드·피드백 조회 |
+| POST | `/keywords/{sid}/events` | 키워드 검토 이벤트 기록 |
+
+### `app/routers/crawl_v2.py` — 크롤링
+
+| Method | Path | 설명 |
+|---|---|---|
+| PUT | `/crawl/{sid}/config` | 크롤링 설정 저장 |
+| POST | `/crawl/{sid}/list` | 목록 수집 시작 |
+| PUT | `/crawl/{sid}/gate` | 수집 제외 목록 저장 |
+| POST | `/crawl/{sid}/detail` | 상세 수집 시작 |
+| GET | `/crawl/{sid}/status` | 크롤링 상태 조회 |
+| GET | `/crawl/{sid}/report` | 버전별 수집 리포트 조회 |
+| POST | `/crawl/{sid}/resume` | 크롤링 재개 |
+| POST | `/crawl/{sid}/stop` | 크롤링 중지 |
+| PUT | `/crawl/{sid}/auto-chain` | 수집 후 전처리·라벨링 자동 실행 설정 |
+| POST | `/crawl/{sid}/finish-partial` | 부분 수집 완료 처리 |
+
+### `app/routers/prep.py` — 전처리
+
+| Method | Path | 설명 |
+|---|---|---|
+| PUT | `/prep/{sid}/config` | 전처리 설정 저장 |
+| POST | `/prep/{sid}/run` | 전처리 실행 또는 완료 산출물 재사용 |
+| GET | `/prep/{sid}/status` | 전처리 상태 조회 |
+
+### `app/routers/labeling_v2.py` — 라벨링·검수
+
+| Method | Path | 설명 |
+|---|---|---|
+| POST | `/label/rule/preview` | 태그 기반 등급 미리보기 |
+| POST | `/label/{sid}/mode` | 라벨링 방식 설정 |
+| POST | `/label/{sid}/judge` | 라벨 판정 또는 모델 추론 시작 |
+| POST | `/label/{sid}/start` | 라벨 판정 또는 모델 추론 시작 |
+| POST | `/label/{sid}/judge/{labeler}/{action}` | 판정·추론 워커 일시정지·재개·중지 |
+| GET | `/label/{sid}/overview` | 라벨링 현황 조회 |
+| GET | `/label/{sid}/next` | 다음 검수 문서 조회 |
+| POST | `/label/{sid}/seen` | 라벨링 방문 시각 기록 |
+| POST | `/label/{sid}/submit` | 사람 검수 결과 제출 |
+| POST | `/label/{sid}/audit` | 감사 라운드 생성 |
+
+### `app/routers/training_v2.py` — 학습·내보내기
+
+| Method | Path | 설명 |
+|---|---|---|
+| GET | `/models` | 호환 분류 모델 목록 조회 |
+| GET | `/models/{model_id}` | 분류 모델 메타데이터 조회 |
+| POST | `/train/{sid}` | 모델 학습 시작 |
+| GET | `/train/{sid}/status` | 학습·추론·감시 상태 조회 |
+| POST | `/train/{sid}/export` | 세션 결과 내보내기 |
+
+### `app/routers/segment.py` — 클러스터링
+
+| Method | Path | 설명 |
+|---|---|---|
+| POST | `/segment/{sid}/run` | 클러스터링 시작 |
+| GET | `/segment/{sid}/status` | 클러스터링 상태 조회 |
+| GET | `/segment/{sid}/clusters` | 클러스터 목록 조회 |
+| GET | `/segment/{sid}/personas` | 페르소나 후보 목록 조회 |
+| GET | `/segment/{sid}/contexts` | 맥락 후보 목록 조회 |
+| PUT | `/segment/{sid}/clusters/{item_id}` | 클러스터 확정 |
+| PUT | `/segment/{sid}/personas/{item_id}` | 페르소나 후보 확정 |
+| PUT | `/segment/{sid}/contexts/{item_id}` | 맥락 확정 |
+| POST | `/segment/{sid}/personas/{item_id}/confirm-contexts` | 페르소나별 맥락 일괄 확정 |
+| POST | `/segment/{sid}/requests` | 요청 메모 저장 |
+| GET | `/segment/{sid}/support-counts` | 지지 문서 수 조회 |
+| GET | `/segment/{sid}/docs` | 필터별 문서 조회 |
+
+### `app/routers/stage8.py` — 페르소나·인사이트
+
+| Method | Path | 설명 |
+|---|---|---|
+| POST | `/persona/{sid}/run` | 페르소나 생성 시작 |
+| GET | `/persona/{sid}/status` | 페르소나 생성 상태 조회 |
+| GET | `/persona/{sid}/cards` | 페르소나 카드 목록 조회 |
+| GET | `/persona/{sid}/cards/{item_id}` | 페르소나 카드 상세 조회 |
+| POST | `/persona/{sid}/cards/{item_id}/retry` | 페르소나 카드 재생성 |
+| GET | `/persona/{sid}/map` | 페르소나 맵 조회 |
+| GET | `/persona/{sid}/tree` | 페르소나 트리 조회 |
+| POST | `/insight/{sid}/run` | 인사이트·콘셉트 생성 시작 |
+| GET | `/insight/{sid}` | 인사이트·콘셉트와 작업 상태 조회 |
+| POST | `/insight/{sid}/concept/{item_id}` | 선택 인사이트의 콘셉트 생성 |
+| POST | `/insight/{sid}/chat` | 채팅으로 결과 수정 |
+| POST | `/insight/{sid}/revert` | 결과를 지정 리비전으로 복원 |
+| PUT | `/insight/{sid}/confirm` | 인사이트 확정 |
+
+### `app/routers/evidence.py` — 근거 탐색
+
+| Method | Path | 설명 |
+|---|---|---|
+| POST | `/evidence/{sid}/run` | 근거 탐색 시작 |
+| GET | `/evidence/{sid}/status` | 근거 탐색 상태 조회 |
+| GET | `/evidence/{sid}/contexts/{context_id}` | 맥락별 선택·반대·희소 근거 조회 |
+| GET | `/evidence/{sid}/personas/{persona_id}` | 페르소나별 Desire 지지 근거 조회 |
+| POST | `/evidence/{sid}/contexts/{context_id}/refresh-new` | 새로운 근거 탭 갱신 |
+| POST | `/evidence/{sid}/contexts/{context_id}/skip` | 맥락 건너뛰기 |
+| GET | `/evidence/{sid}/package` | Evidence Package 조회 |
+
+### `app/routers/chat.py` — 챗봇
+
+| Method | Path | 설명 |
+|---|---|---|
+| POST | `/chat` | 파이프라인 챗봇 질의 |
+| POST | `/insight-chat` | 인사이트 챗봇 분석·수정 질의 |
+
+### `app/routers/search.py` — 검색
+
+| Method | Path | 설명 |
+|---|---|---|
+| POST | `/search` | 로컬 벡터 유사 문서 검색 |
+
+### `app/routers/known.py` — Known Insight
+
+| Method | Path | 설명 |
+|---|---|---|
+| GET | `/known/{sid}` | Known Insight 목록 조회 |
+| GET | `/known/{sid}/suggestions` | Known Insight 후보 조회 |
+| POST | `/known/{sid}` | Known Insight 추가 |
+| PATCH | `/known/{sid}/{item_id}` | Known Insight 수정 |
+| DELETE | `/known/{sid}/{item_id}` | Known Insight 삭제 |
+
+### `app/main.py` — 헬스체크
+
+| Method | Path | 설명 |
+|---|---|---|
+| GET | `/health` | 상태·릴리스 식별자 조회 |
