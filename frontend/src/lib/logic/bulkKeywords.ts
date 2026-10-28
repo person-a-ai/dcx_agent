@@ -7,6 +7,7 @@ export function decodeCsv(buf: ArrayBuffer): string {
   let text: string;
   try { text = new TextDecoder('utf-8', { fatal: true }).decode(buf); }
   catch { text = new TextDecoder('euc-kr').decode(buf); }
+  if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f]/.test(text)) throw new Error('Invalid CSV control character');
   return text.replace(/^\uFEFF/, '');
 }
 export function resolveGroup(axis: string | undefined, sub: string | undefined, groups: Destination[]): Destination | null {

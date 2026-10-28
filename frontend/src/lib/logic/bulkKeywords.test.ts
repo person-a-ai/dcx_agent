@@ -49,6 +49,12 @@ describe('bulkKeywords', () => {
   it('decodes utf-8, BOM and cp949', () => {
     for (const bytes of [new TextEncoder().encode('키워드'), new TextEncoder().encode('\uFEFF키워드'), Uint8Array.from([0xc5, 0xb0, 0xbf, 0xf6, 0xb5, 0xe5])]) expect(decodeCsv(bytes.buffer as ArrayBuffer)).toBe('키워드');
   });
+  it('rejects binary CSV uploads containing NUL or other non-text controls', () => {
+    // PNG signature plus a NUL-bearing chunk length reaches the legacy decoder.
+    for (const bytes of [Uint8Array.from([0x89, 0x50, 0x4e, 0x47, 13, 10, 26, 10, 0]), new TextEncoder().encode('keyword\nhello\u0000world'), new TextEncoder().encode('hello\u0001world')]) {
+      expect(() => decodeCsv(bytes.buffer as ArrayBuffer)).toThrow();
+    }
+  });
   it('view rows, summary, addable and bulk apply', () => {
     const edits = { 3: { to: { axis: 'physical', sub: 'space' } as Destination }, 0: { include: false }, 1: { include: true, to: sense } };
     const rows = viewRows(preview, edits);
