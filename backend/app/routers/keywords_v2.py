@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 from app.context import store
 from app.context import versions
-from app.keywords import rounds
+from app.keywords import bulk, rounds
 from app.keywords.display import with_display
 from app.keywords.events import KeywordEvent, append_event
 from app.keywords.feedback import write_feedback_md
@@ -52,6 +52,16 @@ class ManualRequest(BaseModel):
     axis: Literal['physical', 'psychological', 'behavioral']
     sub: str
     origin: Literal['manual', 'suggested'] = 'manual'
+
+
+class BulkRow(BaseModel):
+    kw: str = Field(min_length=1, max_length=100)
+    axis: str | None = None
+    sub: str | None = None
+
+
+class BulkPreviewRequest(BaseModel):
+    rows: list[BulkRow] = Field(min_length=1, max_length=500)
 
 
 class SuggestRequest(BaseModel):
@@ -99,6 +109,11 @@ def commit_round(sid: str, n: int, body: CommitRequest, version: str | None = No
 def manual(sid: str, body: ManualRequest, version: str | None = None):
     keyword = rounds.add_manual(sid, **body.model_dump(), version=version).model_dump()
     return {**keyword, 'keywords': with_display([keyword])}
+
+
+@router.post('/{sid}/bulk/preview')
+def bulk_preview(sid: str, body: BulkPreviewRequest, version: str | None = None):
+    return bulk.preview(sid, [r.model_dump() for r in body.rows], version=version)
 
 
 @router.post('/{sid}/suggest-words')
