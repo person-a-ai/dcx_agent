@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>키워드 일괄 추가 목업 — 1단계 키워드</title>
+<!-- 실제 앱 CSS 복사본(app.css). 아래 mock-* 스타일은 목업 전환 도구 전용이며 제품에 들어가지 않는다.
+     kwb-* 스타일은 제품에 새로 추가할 클래스 후보(keywords.css)다. -->
+<link rel="stylesheet" href="app.css">
+<style>
+body{margin:0;background:var(--soft);font-family:var(--font);color:var(--ink-strong)}
+.mock-bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 16px;background:#1c1e22;color:#fff;font-size:13px}
+.mock-bar b{margin-right:4px}
+.mock-bar button{border:1px solid #555;background:#2a2d33;color:#fff;border-radius:8px;padding:4px 10px;cursor:pointer;font:inherit}
+.mock-bar button[aria-pressed=true]{background:#0a73b5;border-color:#0a73b5}
+.mock-sep{width:1px;height:20px;background:#555;margin:0 6px}
+.mock-frame{margin:24px auto;max-width:1200px;padding:0 16px}
+.mock-frame.mobile{max-width:375px;border:1px dashed var(--line-strong);background:var(--paper);padding:12px}
+.mock-note{font-size:12px;color:var(--sub);border-left:3px solid var(--line);padding-left:8px;margin:8px 0}
+.mock-ghost{border:1px dashed var(--line-strong);border-radius:var(--r-button);padding:16px;color:var(--sub);font:var(--type-caption)}
+.mobile .kw-layout{display:block}.mobile .kw-side{display:none}
+.st[hidden]{display:none!important}
+
+/* ---- 제품 후보 클래스 (keywords.css에 추가) ---- */
+.kwb-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px;justify-content:space-between}
+.kwb-body>*+*{margin-top:16px}
+.kwb-input textarea{min-height:160px;font-family:var(--font);box-sizing:border-box;width:100%}
+.mobile .kwb-scroll{max-height:none}
+.kwb-row-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.kwb-summary{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.kwb-bulk{display:flex;flex-wrap:wrap;gap:8px;align-items:end}
+.kwb-bulk .ds-field{min-width:220px}
+.kwb-table td select{height:32px;border:1px solid var(--line-strong);border-radius:var(--r-button);background:var(--paper);font:var(--type-label);padding:0 8px;max-width:240px}
+.kwb-table tr.kwb-off td{color:var(--sub);background:var(--sunken)}
+.kwb-table tr.kwb-off td select{opacity:.5}
+.kwb-scroll{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:var(--r-button)}
+.kwb-scroll .ds-tbl{border:0;border-radius:0}
+.kwb-scroll th{position:sticky;top:0;z-index:1}
+@media(max-width:640px){
+  .kwb-table thead{display:none}
+  .kwb-table,.kwb-table tbody,.kwb-table tr,.kwb-table td{display:block;width:100%}
+  .kwb-table tr{border-bottom:1px solid var(--line);padding:8px 0}
+  .kwb-table td{border:0;padding:4px 12px;white-space:normal}
+  .kwb-table td select{max-width:100%;width:100%}
+}
+.mobile .kwb-table thead{display:none}
+.mobile .kwb-table,.mobile .kwb-table tbody,.mobile .kwb-table tr,.mobile .kwb-table td{display:block;width:100%}
+.mobile .kwb-table tr{border-bottom:1px solid var(--line);padding:8px 0}
+.mobile .kwb-table td{border:0;padding:4px 12px;white-space:normal}
+.mobile .kwb-table td select{max-width:100%;width:100%}
+</style>
+</head>
+<body>
+<div class="mock-bar" role="toolbar" aria-label="목업 전환">
+  <b>상태</b>
+  <button data-state="closed">닫힘</button>
+  <button data-state="input">입력</button>
+  <button data-state="loading">분류 중</button>
+  <button data-state="preview" aria-pressed="true">미리보기</button>
+  <button data-state="llmfail">자동 분류 실패</button>
+  <button data-state="error">요청 오류</button>
+  <button data-state="result">추가 결과</button>
+  <button data-state="readonly">읽기 전용</button>
+  <span class="mock-sep"></span>
+  <b>폭</b>
+  <button data-width="desktop" aria-pressed="true">데스크톱</button>
+  <button data-width="mobile">모바일 375</button>
+</div>
+
+<div class="mock-frame" id="frame">
+<div class="kw-screen">
+  <div class="ds-eyebrow">1단계 · 키워드</div>
+  <h1 class="ds-t-screen">R2 인접 확장 결과 42개를 검토합니다</h1>
+  <p>거절할 키워드를 누르고 사유를 남기면 다음 라운드에 반영됩니다. 드래그하거나 M 키로 하위 카테고리를 옮길 수 있습니다.</p>
+  <div class="mock-ghost">라운드 단계 표시(Stepper) · 검토할 라운드 선택 — 기존 그대로</div>
+
+  <div class="kw-layout">
+    <div class="kw-main space-y-4">
+      <div class="mock-ghost">다음 라운드 방향 지시 카드 — 기존 그대로</div>
+
+      <!-- ===== 새 카드: 키워드 일괄 추가 ===== -->
+      <section class="ds-card" aria-labelledby="kwb-title" id="kwb">
+        <div class="kwb-head">
+          <div>
+            <h2 class="ds-t-card" id="kwb-title">키워드 일괄 추가</h2>
+            <p class="ds-t-caption">CSV나 리스트로 정리한 키워드를 한 번에 넣습니다. 분류가 없으면 자동으로 제안합니다.</p>
+          </div>
+          <button type="button" class="ds-btn ds-secondary st" data-show="closed">일괄 추가하기</button>
+          <button type="button" class="ds-btn ds-quiet ds-sm st" data-show="input loading preview llmfail error result">닫기</button>
+        </div>
+
+        <!-- 읽기 전용 -->
+        <div class="ds-note info st" data-show="readonly" role="status" style="margin-top:16px"><span class="ds-ic">ⓘ</span><div>읽기 전용 버전에서는 키워드를 추가할 수 없습니다.</div></div>
+
+        <!-- 입력 -->
+        <div class="kwb-body st" data-show="input error" style="margin-top:16px">
+          <div class="ds-note danger st" data-show="error" role="alert"><span class="ds-ic">!</span><div>파일을 읽지 못했습니다. CSV(UTF-8 또는 엑셀 CSV)인지 확인하세요.</div></div>
+          <div class="ds-field kwb-input">
+            <label for="kwb-text">키워드 리스트</label>
+            <textarea id="kwb-text" class="ds-inp" placeholder="한 줄에 하나씩, 또는 쉼표로 구분해 붙여넣으세요.&#10;엑셀 표를 복사해 붙여넣어도 됩니다.&#10;&#10;키워드,축,하위분류&#10;층간소음,물리,감각&#10;퇴근 후 휴식,물리,시간&#10;불안감">키워드,축,하위분류
+층간소음,물리,감각
+퇴근 후 휴식,물리,시간
+불안감
+수면 방해
+이웃 눈치,심리,심리적 장벽</textarea>
+            <span class="ds-hint">머리글이 있으면 키워드·축·하위분류 열을 인식합니다. 한 번에 최대 500행.</span>
+          </div>
+          <div class="kwb-row-actions">
+            <button type="button" class="ds-btn ds-secondary">CSV 파일 선택하기</button>
+            <span class="ds-t-caption">또는 위에 붙여넣기 · 6행 인식</span>
+            <button type="button" class="ds-btn ds-primary" style="margin-left:auto">미리보기</button>
+          </div>
+        </div>
+
+        <!-- 분류 중 -->
+        <div class="kwb-body st" data-show="loading" style="margin-top:16px">
+          <p role="status" aria-live="polite">처리 중… 분류 없는 키워드 23개를 자동 분류하는 중 · 보통 10~40초 · 경과 0:12</p>
+          <div class="ds-skeleton" style="height:40px"></div><div class="ds-skeleton" style="height:200px"></div>
+          <button type="button" class="ds-btn ds-secondary" disabled>미리보기</button>
+        </div>
+
+        <!-- 미리보기 / 자동 분류 실패 -->
+        <div class="kwb-body st" data-show="preview llmfail" style="margin-top:16px">
+          <div class="ds-note warning st" data-show="llmfail" role="status"><span class="ds-ic">!</span><div>자동 분류에 실패했습니다(원인: 응답 시간 초과). 분류가 필요한 23개는 직접 고르거나 다시 시도하세요.</div><div class="ds-actions"><button type="button" class="ds-btn ds-secondary ds-sm">자동 분류 다시 하기</button></div></div>
+          <div class="ds-note info st" data-show="preview" role="status"><span class="ds-ic">ⓘ</span><div>52행을 읽었습니다. 분류가 없던 23개는 자동 제안입니다. 확인하고 필요하면 바꾸세요.</div></div>
+          <div class="kwb-summary" aria-label="미리보기 요약">
+            <span class="ds-badge ds-info">추가 예정 <b id="cnt-new">44</b></span>
+            <span class="ds-badge">이미 있음 3</span>
+            <span class="ds-badge">리스트 안 중복 2</span>
+            <span class="ds-badge ds-warning" id="cnt-need">분류 필요 <b>1</b></span>
+            <span class="ds-badge">제외 <b id="cnt-off">2</b></span>
+          </div>
+          <div class="kwb-bulk">
+            <div class="ds-field"><label for="kwb-all">선택한 행 분류 일괄 변경</label>
+              <select id="kwb-all" class="ds-inp ds-select"><option>분류 선택</option><option>물리 › 감각</option><option>심리 › 감정</option><option>행동 › 대처·우회</option></select></div>
+            <button type="button" class="ds-btn ds-secondary">모두 이 그룹으로</button>
+          </div>
+          <div class="kwb-scroll">
+          <table class="ds-tbl kwb-table">
+            <thead><tr><th><input type="checkbox" aria-label="전체 선택" checked></th><th>키워드</th><th>분류</th><th>분류 출처</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr><td><input type="checkbox" aria-label="층간소음 포함" checked></td><td>층간소음</td><td><select aria-label="층간소음 분류"><option selected>물리 › 감각</option><option>심리 › 감정</option></select></td><td><span class="ds-badge">입력값</span></td><td><span class="ds-badge ds-info">추가 예정</span></td></tr>
+              <tr><td><input type="checkbox" aria-label="퇴근 후 휴식 포함" checked></td><td>퇴근 후 휴식</td><td><select aria-label="퇴근 후 휴식 분류"><option selected>물리 › 시간</option></select></td><td><span class="ds-badge">입력값</span></td><td><span class="ds-badge ds-info">추가 예정</span></td></tr>
+              <tr><td><input type="checkbox" aria-label="불안감 포함" checked></td><td>불안감</td><td><select aria-label="불안감 분류"><option selected>심리 › 감정</option><option>심리 › 심리적 장벽</option></select></td><td><span class="ds-badge ds-success">자동 제안</span></td><td><span class="ds-badge ds-info">추가 예정</span></td></tr>
+              <tr><td><input type="checkbox" aria-label="수면 방해 포함" checked></td><td>수면 방해</td><td><select aria-label="수면 방해 분류"><option selected>물리 › 신체 상태</option></select></td><td><span class="ds-badge ds-success">자동 제안</span></td><td><span class="ds-badge ds-info">추가 예정</span></td></tr>
+              <tr><td><input type="checkbox" aria-label="이웃 눈치 포함" checked></td><td>이웃 눈치</td><td><select aria-label="이웃 눈치 분류"><option selected>심리 › 심리적 장벽</option></select></td><td><span class="ds-badge">입력값</span></td><td><span class="ds-badge ds-info">추가 예정</span></td></tr>
+              <tr><td><input type="checkbox" aria-label="방음 포함" checked></td><td>방음</td><td><select aria-label="방음 분류" style="border-color:var(--warning)"><option selected>분류 선택</option><option>물리 › 공간</option><option>행동 › 대처·우회</option></select></td><td><span class="ds-badge ds-warning">분류 실패</span></td><td><span class="ds-badge ds-warning">분류 필요</span></td></tr>
+              <tr class="kwb-off"><td><input type="checkbox" aria-label="저소음 포함" disabled></td><td>저 소음</td><td>물리 › 감각</td><td><span class="ds-badge">입력값</span></td><td><span class="ds-badge">이미 있음</span> <span class="ds-t-caption">“저소음” · 물리 › 감각</span></td></tr>
+              <tr class="kwb-off"><td><input type="checkbox" aria-label="층간 소음 포함" disabled></td><td>층간 소음</td><td>—</td><td>—</td><td><span class="ds-badge">리스트 안 중복</span> <span class="ds-t-caption">2행과 같음</span></td></tr>
+              <tr class="kwb-off"><td><input type="checkbox" aria-label="환기 포함"></td><td>환기</td><td><select aria-label="환기 분류"><option selected>행동 › 대처·우회</option></select></td><td><span class="ds-badge ds-success">자동 제안</span></td><td><span class="ds-badge">제외</span></td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p class="ds-t-caption">“이미 있음”과 “리스트 안 중복”은 추가하지 않습니다. “분류 필요”는 분류를 고르기 전까지 추가하지 않습니다.</p>
+          <div class="kwb-row-actions">
+            <button type="button" class="ds-btn ds-secondary">입력으로 돌아가기</button>
+            <button type="button" class="ds-btn ds-primary" style="margin-left:auto">44개 추가하기</button>
+          </div>
+          <p class="mock-note">분류 필요 행이 남아 있어도 버튼은 활성. 그 행만 빼고 추가한다(행 수가 버튼 숫자에 반영).</p>
+        </div>
+
+        <!-- 추가 결과 -->
+        <div class="kwb-body st" data-show="result" style="margin-top:16px">
+          <div class="ds-note success" role="status"><span class="ds-ic">✓</span><div>키워드 43개를 추가했습니다. 1개는 건너뛰었습니다.</div><div class="ds-actions"><button type="button" class="ds-btn ds-secondary ds-sm">추가한 키워드 보기</button></div></div>
+          <table class="ds-tbl kwb-table">
+            <thead><tr><th>키워드</th><th>결과</th></tr></thead>
+            <tbody><tr><td>수면방해</td><td><span class="ds-badge">이미 있음</span> <span class="ds-t-caption">미리보기 이후 다른 화면에서 추가됨 · 물리 › 신체 상태</span></td></tr></tbody>
+            <caption>건너뛴 행만 표시합니다.</caption>
+          </table>
+          <div class="kwb-row-actions"><button type="button" class="ds-btn ds-secondary" style="margin-left:auto">새 리스트 넣기</button></div>
+        </div>
+      </section>
+      <p class="mock-note">위치: 방향 지시 카드와 3축 탭 카드 사이. 라운드 생성 중(running)이거나 편집 불가(ui.canEdit=false)면 카드 대신 읽기 전용 안내 또는 숨김.</p>
+
+      <div class="mock-ghost">3축 탭 · 배지 필터 · 하위분류 그룹(직접 추가하기) — 기존 그대로. “추가한 키워드 보기”는 탭을 ‘전체’, 필터를 ‘전체’로 바꾼다.</div>
+    </div>
+    <aside class="kw-side space-y-4"><div class="mock-ghost">축 분포 · 커버리지 — 기존 그대로(추가 후 숫자 갱신)</div></aside>
+  </div>
+</div>
+</div>
+
+<script>
+const frame=document.getElementById('frame');
+function setState(s){
+  document.querySelectorAll('[data-state]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.state===s));
+  document.querySelectorAll('.st').forEach(el=>{el.hidden=!el.dataset.show.split(' ').includes(s);});
+}
+document.querySelectorAll('[data-state]').forEach(b=>b.onclick=()=>setState(b.dataset.state));
+document.querySelectorAll('[data-width]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-width]').forEach(x=>x.setAttribute('aria-pressed',x===b));frame.classList.toggle('mobile',b.dataset.width==='mobile');});
+// 행 포함/제외 토글 데모
+document.querySelectorAll('.kwb-table tbody input[type=checkbox]:not([disabled])').forEach(c=>c.onchange=()=>{c.closest('tr').classList.toggle('kwb-off',!c.checked);
+  const on=[...document.querySelectorAll('.kwb-table tbody tr')].filter(r=>!r.classList.contains('kwb-off')).length;
+  document.getElementById('cnt-new').textContent=38+on;});
+setState('preview');
+</script>
+</body>
+</html>
