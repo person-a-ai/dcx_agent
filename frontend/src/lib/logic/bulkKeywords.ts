@@ -34,7 +34,7 @@ function splitLine(line: string, delimiters: string): { cells: string[]; hasTab:
       } else cell += c;
     } else if (c === '"') {
       if (atStart) quoted = true;
-      // A stray closing quote (for example after a pasted newline) is dropped.
+      else cell += c;
       atStart = false;
     } else if (delimiters.includes(c)) {
       if (c === '\t') hasTab = true;
@@ -51,7 +51,7 @@ export function parseBulk(text: string, groups: Destination[]): { rows: BulkRowI
   const lines = text.split(/\r\n|\n|\r/);
   const delimiter = lines.some(line => splitLine(line, ',\t').hasTab) ? '\t' : ',';
   const table = lines.map(line => splitLine(line, delimiter).cells).filter(row => row.some(c => c.trim()));
-  const aliases = [['키워드', 'keyword', 'kw'], ['축', 'axis'], ['하위분류', 'sub']];
+  const aliases = [['키워드', 'keyword', 'kw'], ['축', 'axis'], ['하위분류', '하위 카테고리', 'subcategory', 'sub']];
   const header = table[0]?.map(c => c.trim().toLowerCase()) ?? [];
   const kwIndex = header.findIndex(c => aliases[0].includes(c));
   const hasHeader = kwIndex >= 0;

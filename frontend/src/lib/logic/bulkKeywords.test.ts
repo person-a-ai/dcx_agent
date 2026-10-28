@@ -23,11 +23,14 @@ describe('bulkKeywords', () => {
   it('parses Korean and English headers', () => {
     expect(parse('키워드,축,하위분류\n층간소음,물리,감각\n불안감,,').rows).toEqual([{ kw: '층간소음', ...sense }, { kw: '불안감' }]);
     expect(parse('kw\tAXIS\tsub\n소음\tphysical\tsense').rows).toEqual([{ kw: '소음', ...sense }]);
+    expect(parse('키워드,축,하위 카테고리\n소음,물리,감각').rows).toEqual([{ kw: '소음', ...sense }]);
+    expect(parse('keyword,axis,subcategory\n소음,physical,sense').rows).toEqual([{ kw: '소음', ...sense }]);
   });
+  it('keeps literal quotes inside unquoted cells', () => expect(parse('키워드\n27" 모니터').rows).toEqual([{ kw: '27" 모니터' }]));
   it('strips BOM before header detection', () => expect(parse('\uFEFF키워드\n소음').rows).toEqual([{ kw: '소음' }]));
   it('treats a single headerless line as a comma list', () => expect(parse('소음, 환기 ,  ,습도').rows.map(r => r.kw)).toEqual(['소음', '환기', '습도']));
   it('uses first cell per line and tries axis/sub without header', () => expect(parse('소음,물리,감각\n환기').rows).toEqual([{ kw: '소음', ...sense }, { kw: '환기' }]));
-  it('parses excel paste with quotes and trailing tabs', () => expect(parse('"a, b"\t심리\t감정\t\t\n"줄\n바꿈"\t\t').rows).toEqual([{ kw: 'a, b', axis: 'psychological', sub: 'emotion' }, { kw: '줄' }, { kw: '바꿈' }]));
+  it('parses excel paste with quotes and trailing tabs', () => expect(parse('"a, b"\t심리\t감정\t\t\n"줄\n바꿈"\t\t').rows).toEqual([{ kw: 'a, b', axis: 'psychological', sub: 'emotion' }, { kw: '줄' }, { kw: '바꿈"' }]));
   it('resolves sub-only, labels, codes and custom names', () => {
     expect(resolveGroup(undefined, '정보탐색', destinations)).toEqual({ axis: 'behavioral', sub: 'info_search' });
     expect(resolveGroup('심리', 'emotion', destinations)).toEqual({ axis: 'psychological', sub: 'emotion' });
@@ -79,7 +82,7 @@ describe('bulkKeywords', () => {
     expect(parse('"abc\n소음,"물리",감각\n환기').rows).toEqual([{ kw: 'abc' }, { kw: '소음', ...sense }, { kw: '환기' }]);
   });
   it('parses escaped-looking quotes on the next line independently', () => {
-    expect(parse('kw,axis,sub\n"abc\n""def""",physical,sense').rows).toEqual([{ kw: 'abc' }, { kw: 'def', ...sense }]);
+    expect(parse('kw,axis,sub\n"abc\n""def""",physical,sense').rows).toEqual([{ kw: 'abc' }, { kw: 'def"""', ...sense }]);
   });
   it('keeps an unterminated quoted line in one cell', () => expect(parse('"abc,def\n소음').rows.map(r => r.kw)).toEqual(['abc,def', '소음']));
   it('handles escaped quotes and CRLF', () => expect(parse('kw,axis,sub\r\n"a""b",physical,sense\r\n').rows).toEqual([{ kw: 'a"b', ...sense }]));
