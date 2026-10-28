@@ -20,8 +20,19 @@ export function resolveGroup(axis: string | undefined, sub: string | undefined, 
   return matches.length === 1 ? { ...matches[0] } : null;
 }
 
-// A quote only opens at the start of a cell. A missing closing quote is
-// recovered at the next newline; valid quoted cells may contain newlines.
+// A quote opens only at a cell start. It may span lines only if a closing
+// quote followed by a delimiter, newline or EOF occurs before another line
+// starts with a quote. Otherwise recover at the opening line's end.
+// Both delimiter detection and cell parsing use this same boundary rule.
+function closingQuote(text: string, opening: number): number {
+  for (let i = opening + 1; i < text.length; i++) {
+    if ((text[i] === '\n' || text[i] === '\r') && text[i + 1] === '"') return -1;
+    if (text[i] !== '"') continue;
+    if (text[i + 1] === '"') { i++; continue; }
+    if (i + 1 === text.length || ',\t\r\n'.includes(text[i + 1])) return i;
+  }
+  return -1;
+}
 function cells(text: string, delimiter: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [], cell = '', quoted = false;
@@ -30,17 +41,11 @@ function cells(text: string, delimiter: string): string[][] {
     if (quoted) {
       if (c === '"') {
         if (text[i + 1] === '"') { cell += '"'; i++; }
-        else quoted = false;
+        else if (i + 1 === text.length || ',\t\r\n'.includes(text[i + 1])) quoted = false;
+        else cell += c;
       } else cell += c;
     } else if (c === '"' && cell === '') {
-      // Look ahead with escaped quotes accounted for before accepting multiline.
-      let close = i + 1;
-      for (; close < text.length; close++) {
-        if (text[close] !== '"') continue;
-        if (text[close + 1] === '"') { close++; continue; }
-        break;
-      }
-      if (close < text.length) quoted = true;
+      if (closingQuote(text, i) >= 0) quoted = true;
       else {
         while (i + 1 < text.length && text[i + 1] !== '\n' && text[i + 1] !== '\r') cell += text[++i];
       }
@@ -59,7 +64,8 @@ function delimiterFor(text: string): string {
     const c = text[i];
     if (c === '"' && (quoted || start)) {
       if (quoted && text[i + 1] === '"') { i++; continue; }
-      if (!quoted && !text.slice(i + 1).includes('"')) {
+      if (quoted && i + 1 < text.length && !',\t\r\n'.includes(text[i + 1])) continue;
+      if (!quoted && closingQuote(text, i) < 0) {
         while (i + 1 < text.length && text[i + 1] !== '\n' && text[i + 1] !== '\r') i++;
       } else quoted = !quoted;
     } else if (!quoted && c === '\t') return '\t';

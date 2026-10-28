@@ -71,6 +71,10 @@ describe('bulkKeywords', () => {
   });
   it('quoted tab does not switch delimiter', () => expect(parse('키워드,축,하위분류\n"a\tb",물리,감각').rows).toEqual([{ kw: 'a\tb', ...sense }]));
   it('unterminated quote ends at line end', () => expect(parse('"abc\n소음').rows.map(r => r.kw)).toEqual(['abc', '소음']));
+  it('recovers before the next line beginning with a quoted cell', () => {
+    expect(parse('"abc\n"소음",물리,감각\n환기').rows).toEqual([{ kw: 'abc' }, { kw: '소음', ...sense }, { kw: '환기' }]);
+    expect(parse('"abc\n"소음"\t물리\t감각\n환기').rows).toEqual([{ kw: 'abc' }, { kw: '소음', ...sense }, { kw: '환기' }]);
+  });
   it('keeps an unterminated quoted line in one cell', () => expect(parse('"abc,def\n소음').rows.map(r => r.kw)).toEqual(['abc,def', '소음']));
   it('handles escaped quotes and CRLF', () => expect(parse('kw,axis,sub\r\n"a""b",physical,sense\r\n').rows).toEqual([{ kw: 'a"b', ...sense }]));
 });
