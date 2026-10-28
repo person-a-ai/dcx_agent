@@ -1,10 +1,16 @@
-"""Read-only bulk keyword preview and classification."""
+"""Bulk keyword preview, classification, and manual addition."""
 import json
 from concurrent.futures import ThreadPoolExecutor
+from uuid import uuid4
 
 from pydantic import BaseModel
 
 from app.context import store
+from app.keywords import rounds
+from app.keywords.display import with_display
+from app.keywords.events import KeywordEvent, append_event
+from app.keywords.feedback import write_feedback_md
+from app.keywords.models import Keyword
 from app.keywords.normalize import norm_key
 from app.keywords.rounds import _all_keywords
 from app.keywords.taxonomy import AXES, is_valid
@@ -92,3 +98,43 @@ def preview(sid: str, rows: list[dict], version: str | None = None) -> dict:
             if (answer.axis, answer.sub) in allowed_pairs:
                 chunk[index].update(axis=answer.axis, sub=answer.sub, status='new', source='llm')
     return response
+
+
+def add_many(sid: str, items: list[dict], version: str | None = None) -> dict:
+    with store.locked(sid):
+        data = store.assert_writable(sid, version)
+        version = data.get('version')
+
+    results, candidates, indices = [], [], []
+    for index, item in enumerate(items):
+        kw = ''.join(item['kw'].split())
+        results.append({'index': index, 'status': 'invalid'})
+        if not kw or not is_valid(item['axis'], item['sub']):
+            continue
+        indices.append(index)
+        candidates.append(Keyword(id='manual-' + uuid4().hex, kw=kw, axis=item['axis'],
+                                  sub=item['sub'], round=1, origin='manual', status='approved'))
+    candidates = rounds.volumes(candidates) if candidates else []
+
+    added = []
+    with store.locked(sid):
+        data = store.assert_writable(sid, version)
+        directory = store.session_dir(sid)
+        existing = {norm_key(k.kw): k.id for k in rounds._all_keywords(data)}
+        number = rounds.manual_round(data)
+        for index, keyword in zip(indices, candidates):
+            key = norm_key(keyword.kw)
+            if key in existing:
+                results[index] = {'index': index, 'status': 'duplicate', 'duplicateOf': existing[key]}
+                continue
+            keyword.round = number
+            added.append(keyword.model_dump())
+            existing[key] = keyword.id
+            results[index] = {'index': index, 'status': 'added', 'id': keyword.id}
+        if added:
+            store._update_locked(sid, {'keywords': data.get('keywords', []) + added}, confirm_stage='stage1')
+            for keyword in added:
+                append_event(sid, KeywordEvent(ts=store.now(), round=number, type='add',
+                             kwId=keyword['id'], kw=keyword['kw']), directory=directory)
+            write_feedback_md(sid, directory=directory)
+    return {'results': results, 'keywords': with_display(added)}

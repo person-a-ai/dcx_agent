@@ -8,7 +8,10 @@ from fastapi.testclient import TestClient
 
 from app.config import settings
 from app.context import store
-from app.keywords import rounds
+from app.keywords import bulk, rounds
+from app.keywords.events import load_events
+from app.external.base import Unconnected
+from app.keywords import volume
 from app.llm import registry
 from app.llm.base import failure
 from app.llm.fake import FakeBackend
@@ -131,3 +134,93 @@ def test_preview_validation_and_readonly(client):
     before = (version_dir('test', 'v1') / 'session.json').read_bytes()
     assert client.post('/keywords/test/bulk/preview?version=v1', json={'rows': [{'kw': '소음'}]}).status_code == 409
     assert (version_dir('test', 'v1') / 'session.json').read_bytes() == before
+
+
+@pytest.fixture
+def volume_calls(monkeypatch):
+    calls = []
+    def monthly_volume(words):
+        calls.append(words)
+        raise Unconnected('offline')
+    monkeypatch.setattr(volume.naver_searchad, 'monthly_volume', monthly_volume)
+    return calls
+
+
+def test_add_many_matches_single_manual_add(client, volume_calls):
+    response = client.post('/keywords/test/bulk', json={'items': [
+        {'kw': '층간 소음', 'axis': 'physical', 'sub': 'sense'},
+        {'kw': '불안감', 'axis': 'psychological', 'sub': 'emotion'}]})
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert [r['status'] for r in body['results']] == ['added', 'added']
+    saved = {k['kw']: k for k in store.load_session('test')['keywords']}
+    assert saved['층간소음'].items() >= {'origin': 'manual', 'status': 'approved', 'axis': 'physical', 'sub': 'sense'}.items()
+    assert saved['층간소음']['id'].startswith('manual-')
+    assert saved['층간소음']['volume']['source'] == 'unconnected'
+    assert all(k['round'] == rounds.manual_round(store.load_session('test')) for k in body['keywords'])
+    assert all('display' in k for k in body['keywords'])
+    assert [e.type for e in load_events('test')][-2:] == ['add', 'add']
+    assert volume_calls == [['층간소음', '불안감']]
+    assert '층간소음' in (store.session_dir('test') / 'keyword_feedback.md').read_text()
+
+
+def test_add_many_skips_invalid_and_in_request_duplicates(client):
+    response = client.post('/keywords/test/bulk', json={'items': [
+        {'kw': '저 소음', 'axis': 'physical', 'sub': 'sense'},
+        {'kw': '환기', 'axis': 'physical', 'sub': 'emotion'},
+        {'kw': '환기', 'axis': 'behavioral', 'sub': 'coping'},
+        {'kw': '환 기', 'axis': 'behavioral', 'sub': 'coping'}]})
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert [(r['status'], r.get('duplicateOf')) for r in body['results']] == [
+        ('duplicate', 'k1'), ('invalid', None), ('added', None), ('duplicate', body['results'][2]['id'])]
+    assert len(body['keywords']) == 1
+
+
+@pytest.mark.parametrize('items', [
+    [{'kw': '  ', 'axis': 'physical', 'sub': 'sense'}],
+    [{'kw': '저 소음', 'axis': 'physical', 'sub': 'sense'}],
+])
+def test_add_many_without_additions_saves_nothing(client, items):
+    directory = store.session_dir('test')
+    before = (directory / 'session.json').read_bytes()
+    response = client.post('/keywords/test/bulk', json={'items': items})
+    assert response.status_code == 200, response.text
+    body = response.json()
+    expected = {'index': 0, 'status': 'invalid'} if not items[0]['kw'].strip() else {
+        'index': 0, 'status': 'duplicate', 'duplicateOf': 'k1'}
+    assert body['results'] == [expected]
+    assert body['keywords'] == []
+    assert (directory / 'session.json').read_bytes() == before
+    assert not (directory / 'keyword_feedback.md').exists()
+    assert load_events('test') == []
+
+
+def test_add_many_rechecks_duplicates_inside_lock(client, monkeypatch):
+    original = bulk.rounds.volumes
+    fired = []
+    def racing(kws):
+        if not fired:
+            fired.append(1)
+            response = client.post('/keywords/test/manual', json={
+                'kw': '층간소음', 'axis': 'physical', 'sub': 'sense'})
+            assert response.status_code == 200, response.text
+        return original(kws)
+    monkeypatch.setattr(bulk.rounds, 'volumes', racing)
+    response = client.post('/keywords/test/bulk', json={'items': [
+        {'kw': '층간소음', 'axis': 'physical', 'sub': 'sense'}]})
+    assert response.status_code == 200, response.text
+    assert response.json()['results'][0]['status'] == 'duplicate'
+    assert [k['kw'] for k in store.load_session('test')['keywords']].count('층간소음') == 1
+
+
+def test_add_many_readonly_and_validation(client):
+    item = {'kw': 'x', 'axis': 'physical', 'sub': 'sense'}
+    for items in ([], [item] * 501, [{**item, 'kw': 'x' * 101}], [{**item, 'axis': 'nope'}]):
+        assert client.post('/keywords/test/bulk', json={'items': items}).status_code == 422
+    from app.context.versions import create_version, version_dir
+    create_version('test', 'v1', 'stage1', '')
+    paths = [store.session_dir('test') / 'session.json', version_dir('test', 'v1') / 'session.json']
+    before = [path.read_bytes() for path in paths]
+    assert client.post('/keywords/test/bulk?version=v1', json={'items': [item]}).status_code == 409
+    assert [path.read_bytes() for path in paths] == before

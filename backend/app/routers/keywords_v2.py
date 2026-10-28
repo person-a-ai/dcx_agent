@@ -54,6 +54,16 @@ class ManualRequest(BaseModel):
     origin: Literal['manual', 'suggested'] = 'manual'
 
 
+class BulkItem(BaseModel):
+    kw: str = Field(min_length=1, max_length=100)
+    axis: Literal['physical', 'psychological', 'behavioral']
+    sub: str
+
+
+class BulkAddRequest(BaseModel):
+    items: list[BulkItem] = Field(min_length=1, max_length=500)
+
+
 class BulkRow(BaseModel):
     kw: str = Field(min_length=1, max_length=100)
     axis: str | None = None
@@ -109,6 +119,11 @@ def commit_round(sid: str, n: int, body: CommitRequest, version: str | None = No
 def manual(sid: str, body: ManualRequest, version: str | None = None):
     keyword = rounds.add_manual(sid, **body.model_dump(), version=version).model_dump()
     return {**keyword, 'keywords': with_display([keyword])}
+
+
+@router.post('/{sid}/bulk')
+def bulk_add(sid: str, body: BulkAddRequest, version: str | None = None):
+    return bulk.add_many(sid, [item.model_dump() for item in body.items], version=version)
 
 
 @router.post('/{sid}/bulk/preview')
