@@ -20,63 +20,37 @@ export function resolveGroup(axis: string | undefined, sub: string | undefined, 
   return matches.length === 1 ? { ...matches[0] } : null;
 }
 
-// A quote opens only at a cell start. It may span lines only if a closing
-// quote followed by a delimiter, newline or EOF occurs before another line
-// starts with a quote. Otherwise recover at the opening line's end.
-// Both delimiter detection and cell parsing use this same boundary rule.
-function closingQuote(text: string, opening: number): number {
-  for (let i = opening + 1; i < text.length; i++) {
-    if ((text[i] === '\n' || text[i] === '\r') && text[i + 1] === '"') return -1;
-    if (text[i] !== '"') continue;
-    if (text[i + 1] === '"') { i++; continue; }
-    if (i + 1 === text.length || ',\t\r\n'.includes(text[i + 1])) return i;
-  }
-  return -1;
-}
-function cells(text: string, delimiter: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [], cell = '', quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
+// Quotes never cross a line boundary. Use the same scanner to find
+// unquoted separators and to split cells, so delimiter detection agrees.
+function splitLine(line: string, delimiters: string): { cells: string[]; hasTab: boolean } {
+  const cells: string[] = [];
+  let cell = '', quoted = false, atStart = true, hasTab = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
     if (quoted) {
       if (c === '"') {
-        if (text[i + 1] === '"') { cell += '"'; i++; }
-        else if (i + 1 === text.length || ',\t\r\n'.includes(text[i + 1])) quoted = false;
-        else cell += c;
+        if (line[i + 1] === '"') { cell += '"'; i++; }
+        else quoted = false;
       } else cell += c;
-    } else if (c === '"' && cell === '') {
-      if (closingQuote(text, i) >= 0) quoted = true;
-      else {
-        while (i + 1 < text.length && text[i + 1] !== '\n' && text[i + 1] !== '\r') cell += text[++i];
-      }
-    } else if (c === delimiter) { row.push(cell); cell = ''; }
-    else if (c === '\n' || c === '\r') {
-      row.push(cell); rows.push(row); row = []; cell = '';
-      if (c === '\r' && text[i + 1] === '\n') i++;
-    } else cell += c;
+    } else if (c === '"') {
+      if (atStart) quoted = true;
+      // A stray closing quote (for example after a pasted newline) is dropped.
+      atStart = false;
+    } else if (delimiters.includes(c)) {
+      if (c === '\t') hasTab = true;
+      cells.push(cell); cell = ''; atStart = true;
+    } else {
+      cell += c; atStart = false;
+    }
   }
-  row.push(cell); rows.push(row);
-  return rows;
-}
-function delimiterFor(text: string): string {
-  let quoted = false, start = true;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (c === '"' && (quoted || start)) {
-      if (quoted && text[i + 1] === '"') { i++; continue; }
-      if (quoted && i + 1 < text.length && !',\t\r\n'.includes(text[i + 1])) continue;
-      if (!quoted && closingQuote(text, i) < 0) {
-        while (i + 1 < text.length && text[i + 1] !== '\n' && text[i + 1] !== '\r') i++;
-      } else quoted = !quoted;
-    } else if (!quoted && c === '\t') return '\t';
-    start = !quoted && (c === ',' || c === '\n' || c === '\r');
-  }
-  return ',';
+  cells.push(cell);
+  return { cells, hasTab };
 }
 export function parseBulk(text: string, groups: Destination[]): { rows: BulkRowIn[]; truncated: number; tooLong: string[] } {
   text = text.replace(/^\uFEFF/, '');
-  const delimiter = delimiterFor(text);
-  const table = cells(text, delimiter).filter(row => row.some(c => c.trim()));
+  const lines = text.split(/\r\n|\n|\r/);
+  const delimiter = lines.some(line => splitLine(line, ',\t').hasTab) ? '\t' : ',';
+  const table = lines.map(line => splitLine(line, delimiter).cells).filter(row => row.some(c => c.trim()));
   const aliases = [['키워드', 'keyword', 'kw'], ['축', 'axis'], ['하위분류', 'sub']];
   const header = table[0]?.map(c => c.trim().toLowerCase()) ?? [];
   const kwIndex = header.findIndex(c => aliases[0].includes(c));
