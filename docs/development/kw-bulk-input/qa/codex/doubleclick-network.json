@@ -1,0 +1,41 @@
+{
+  "requests": [
+    "http://localhost:8488/keywords/s1732f9db5edd4b919c40e5c4986375bc/bulk?version=v1"
+  ],
+  "keywords": [
+    {
+      "id": "manual-1ec1f545df5a49bf8ecdca6867ab9531",
+      "kw": "더블클릭하나",
+      "axis": "psychological",
+      "sub": "emotion",
+      "round": 1,
+      "origin": "manual",
+      "status": "approved",
+      "reject": null,
+      "volume": {
+        "monthly": null,
+        "source": "unconnected",
+        "at": null
+      },
+      "badges": [],
+      "display": "더블 클릭 하나"
+    },
+    {
+      "id": "manual-c5ab6db985904af7b67643edf5b363e2",
+      "kw": "더블클릭둘",
+      "axis": "behavioral",
+      "sub": "coping",
+      "round": 1,
+      "origin": "manual",
+      "status": "approved",
+      "reject": null,
+      "volume": {
+        "monthly": null,
+        "source": "unconnected",
+        "at": null
+      },
+      "badges": [],
+      "display": "더블 클릭 둘"
+    }
+  ]
+}
