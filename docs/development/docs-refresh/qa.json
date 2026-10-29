@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS",
+  "head": "3ab568500e1af76e3938c1c61ba9fe3c127e5913",
+  "fingerprint": "9d1589239210f88c3a11b6380c12c948c65e5e589ab99307ae9d5c1cc8249176",
+  "notApplicable": "Docs-only change: README.md, CLAUDE.md, backend/BACKEND.md, frontend/PIPELINE.md, frontend/README.md, ops/macmini/README.md. No UI, frontend code, or backend code changed (git diff --name-only origin/main...HEAD), so there is no browser scenario. Approved QA plan (03-plan.md) replaces browser QA with the document fact checker.",
+  "commands": [
+    {"command": "backend/.venv/bin/python docs/development/docs-refresh/check_docs.py --only paths", "exitCode": 0},
+    {"command": "backend/.venv/bin/python docs/development/docs-refresh/check_docs.py --only api", "exitCode": 0},
+    {"command": "backend/.venv/bin/python docs/development/docs-refresh/check_docs.py --only stages", "exitCode": 0},
+    {"command": "backend/.venv/bin/python docs/development/docs-refresh/check_docs.py --only banned", "exitCode": 0},
+    {"command": "backend/.venv/bin/python docs/development/docs-refresh/check_docs.py --only env", "exitCode": 0}
+  ],
+  "findings": [],
+  "scenarios": []
+}

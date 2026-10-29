@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS",
+  "head": "3ab568500e1af76e3938c1c61ba9fe3c127e5913",
+  "fingerprint": "9d1589239210f88c3a11b6380c12c948c65e5e589ab99307ae9d5c1cc8249176",
+  "commands": [
+    {"command": "backend/.venv/bin/python docs/development/docs-refresh/check_docs.py", "exitCode": 0, "output": "OK"},
+    {"command": "git diff --name-only origin/main...HEAD (allowed-file scope check)", "exitCode": 0, "output": "no files outside allowed list"}
+  ],
+  "findings": [],
+  "notes": "Per-task and whole-branch review in reports/review.md. F1 and F2 found and fixed in commit 3ab5685 before this review was recorded."
+}

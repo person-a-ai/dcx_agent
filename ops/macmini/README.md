@@ -48,7 +48,7 @@ Codex 판정 동시 수는 `shared/app.env`의 `LABEL_CONCURRENCY=<n>`로 조절
 
 ## 운영 사용자 에이전트(권장)
 
-LaunchDaemon 아래에서는 `codex exec`가 `Failed to synchronize managed preferences` 오류로 실패하고, 사용자 로그인 세션에서는 정상 동작합니다(D-342). Codex 판정을 사용하는 운영 서비스는 `--agent`로 설치합니다. 사용자 `persona1`의 자동 로그인을 계속 켜 두어야 하며, 로그아웃하면 서비스가 중단됩니다.
+LaunchDaemon 아래에서는 `codex exec`가 `Failed to synchronize managed preferences` 오류로 실패하고, 사용자 로그인 세션에서는 정상 동작합니다(D-342). Codex 판정을 사용하는 운영 서비스는 `--agent`로 설치합니다. 운영 사용자(현재 맥미니는 `tech`)의 자동 로그인을 계속 켜 두어야 하며, 로그아웃하면 서비스가 중단됩니다.
 
 운영 에이전트는 sudo 없이 `~/Library/LaunchAgents/ai.person-a.dcx-agent.{deploy,api,web}.plist`를 `gui/<uid>` 도메인에 등록합니다. 운영 루트·라벨·포트(8400/3400)와 공개 주소 설정은 운영 데몬과 같습니다. 전환 전 다음 명령으로 미리볼 수 있습니다.
 
@@ -56,7 +56,7 @@ LaunchDaemon 아래에서는 `codex exec`가 `Failed to synchronize managed pref
 APP_ROOT="$HOME/srv/dcx-agent" /bin/bash "$HOME/srv/dcx-agent/current/ops/macmini/install.sh" --agent --dry-run --output-dir /tmp/dcx-agent-plan
 ```
 
-전환은 `persona1`의 로그인 세션 터미널에서 다음 세 단계로 진행합니다.
+전환은 운영 사용자(현재 맥미니는 `tech`)의 로그인 세션 터미널에서 다음 세 단계로 진행합니다.
 
 1. 기존 운영 데몬을 내리고 plist를 삭제합니다.
 
@@ -84,6 +84,32 @@ APP_ROOT="$HOME/srv/dcx-agent" /bin/bash "$HOME/srv/dcx-agent/current/ops/macmin
 for job in deploy api web; do launchctl bootout gui/$(id -u)/ai.person-a.dcx-agent.$job; rm -f ~/Library/LaunchAgents/ai.person-a.dcx-agent.$job.plist; done
 sudo APP_ROOT="$HOME/srv/dcx-agent" /bin/bash "$HOME/srv/dcx-agent/current/ops/macmini/install.sh"
 ```
+
+## 맥미니 전원·로그인·원격 접속
+
+- 자동 로그인: 운영 사용자(현재 맥미니는 `tech`)를 항상 자동 로그인 상태로 둡니다. 운영 에이전트는 이 사용자의 로그인 세션에서 돌기 때문에 로그아웃하면 API·웹·배포가 모두 멈춥니다.
+- 정전·재부팅: 맥미니가 켜지면 자동 로그인 뒤 서비스·Cloudflare 터널·Tailscale이 다시 올라옵니다(몇 분 걸림). 버전은 그대로인데 서비스가 멈춘 경우 마지막 수단은 재부팅입니다. 새 버전이 문제라면 재부팅 대신 아래 `rollback`을 씁니다.
+- 원격 접속: Tailscale에 연결된 기기에서 기기 이름 `techpersona-mac-mini`로 SSH나 화면 공유를 씁니다. Tailscale 키가 만료되면 원격 접속이 갑자기 끊기므로, Tailscale 관리 화면에서 이 기기의 key expiry를 꺼 둡니다.
+- 네트워크: 현재 Wi-Fi로만 인터넷에 연결돼 있습니다. 재부팅 뒤 Wi-Fi가 붙지 않으면 공개 주소와 원격 접속이 모두 끊기고 현장에서 확인해야 합니다. 유선 연결이 더 안정적입니다.
+
+## 외부 서비스
+
+키 값은 `~/srv/dcx-agent/shared/app.env`(권한 600)에만 둡니다. 이 문서와 커밋·PR에는 키 값이나 키 일부를 적지 않습니다. 키 식별용 끝자리, 계정, 비용 확인 위치는 노션 운영 카드에서 관리합니다. 운영 데이터는 S3가 아니라 맥미니 로컬 `shared/data/`에 저장합니다(`STORAGE=local`).
+
+| 서비스 | 상태 | 용도 | 설정 |
+| --- | --- | --- | --- |
+| Codex (ChatGPT 플랜) | 사용 | 라벨링 판정, 6단계 클러스터링, 7단계 근거 탐색 | 맥미니 운영 사용자의 ChatGPT 로그인, `LABEL_GPT_BACKEND=codex_exec` |
+| OpenAI API | 사용 | 그 밖의 LLM 작업(키워드 생성, 8단계 페르소나·인사이트 등) | `OPENAI_API_KEY` |
+| Voyage AI | 사용 | 3단계 임베딩 | `VOYAGE_API_KEY` |
+| 네이버 오픈 API | 사용 | 네이버 쇼핑 검색(키워드 단계) | `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` |
+| Cloudflare | 사용 | 공개 주소 터널(`cloudflared`) | — |
+| GitHub | 사용 | 코드·PR (배포 검사는 `shared/ci-mode`가 `local`이면 맥미니가 직접) | — |
+| Claude API | 미연결 | 선택 LLM 백엔드. 현재 이 백엔드로 가는 작업 없음 | `CLAUDE_API_KEY` |
+| 네이버 검색광고 API | 미연결 | 키워드 검색량. 현재 모두 "미연결"로 저장됨 | `SEARCHAD_API_KEY`, `SEARCHAD_SECRET`, `SEARCHAD_CUSTOMER_ID` |
+| YouTube Data API | 불필요 | 유튜브 수집은 키 없이 `yt_dlp`로 동작 | `YOUTUBE_API_KEY` |
+| Jev 모델 | 꺼짐 | 라벨링 교차 판정. 현재 GPT 단독 판정 | `JEV_BACKEND=fake`, `JEVMODEL_API_KEY` |
+
+`LABEL_GPT_BACKEND`는 `app.env`와 `runtime.env`에 다르게 적혀 있을 수 있습니다. `runtime.env`를 나중에 읽으므로 설치기가 쓴 `codex_exec`가 실제 값입니다. `app.env`에 코드가 쓰지 않는 예전 키가 남아 있어도 동작에는 영향이 없습니다.
 
 ## 수동 명령
 
