@@ -1,0 +1,9 @@
+{
+  "head": "15c38b34905bcf3245077f652391b71e265c2763",
+  "trackedDiff": "empty",
+  "stagedDiff": "empty",
+  "status": "?? docs/development/kw-bulk-input/build.json\n?? docs/development/kw-bulk-input/plan-amendment-1.md\n?? docs/development/kw-bulk-input/qa.json\n?? docs/development/kw-bulk-input/qa/\n?? docs/development/kw-bulk-input/review.json\n",
+  "fingerprint": "139f5522f51ef3fdec1aa35799eae970238d6db881543a1a05368e64ee903d0b",
+  "apiHealth": "{\"status\":\"ok\",\"release\":\"dev\"}",
+  "apiMode": "normal; qa-mode.env empty"
+}
