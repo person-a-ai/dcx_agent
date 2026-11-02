@@ -11,6 +11,7 @@ from app.config import settings
 from app.context import versions
 from app.context.stale import judge_done
 from app.label import gpt
+from app.label.decisions import to_decisions_questions
 from app.label.jev import get_jev_client as JevClient, JevError, build_state, GPT_ONLY_MESSAGE, labeler_mode
 from app.label.questions import QVER, jev_questions
 from app.label.votes import VoteCache
@@ -22,10 +23,29 @@ BREAKER_MESSAGE = 'GPT 판정이 연속으로 실패해 멈췄습니다. 잠시 
 JEV_TRANSIENT_LIMIT = 5
 JEV_BACKOFF_CAP_S = 30
 LEASE_WAIT_LIMIT = 6000  # At most ten minutes of 0.1-second lease polling.
+DECISIONS_USD_PER_MTOK = 0.10
+
+
+def _decisions() -> bool:
+    return settings.jev_backend == 'decisions'
+
+
+def jev_client_args():
+    """Keys and model for the Jev-slot client of the configured backend."""
+    if _decisions():
+        return settings.decisions_api_keys, settings.decisions_model
+    return settings.jev_api_keys, settings.jev_model
+
+
+def _decisions_key_count() -> int:
+    keys = {key.strip() for key in settings.decisions_api_keys if key.strip()}
+    return len(keys) or (1 if settings.openai_api_key else 0)
 
 
 def context_key(one_liner, labeler):
-    if labeler == 'jev':
+    if labeler == 'jev' and _decisions():
+        identity = f'{settings.decisions_model}/decisions'
+    elif labeler == 'jev':
         identity = f'{settings.jev_model}/{settings.jev_backend}'
     elif labeler == 'gpt':
         model = settings.openai_model if settings.label_gpt_backend == 'openai_api' else settings.codex_profile
@@ -46,8 +66,21 @@ def cache_root(sid, prep_key, labeler, one_liner):
 def estimate(docs, one_liner, labeler, *, key_count=None, recent=None):
     """Estimate seconds and JSON input tokens; recent contains (time, count) pairs."""
     count = len(docs)
-    tokens = None
-    if labeler == 'jev':
+    tokens = cost = None
+    if labeler == 'jev' and _decisions():
+        keys = _decisions_key_count() if key_count is None else key_count
+        seconds = count * 60 / (settings.decisions_rate_per_min * keys) if keys else None
+        questions = to_decisions_questions(jev_questions(one_liner))
+        tokens = 0
+        for doc in docs:
+            try:
+                state, _ = build_state(doc, one_liner)
+            except JevError:
+                continue
+            request = dict(model=settings.decisions_model, input=state, questions=questions)
+            tokens += math.ceil(len(json.dumps(request, ensure_ascii=False, separators=(',', ':'))) / 4)
+        cost = tokens * DECISIONS_USD_PER_MTOK / 1_000_000
+    elif labeler == 'jev':
         keys = len(set(settings.jev_api_keys)) if key_count is None else key_count
         seconds = count * 60 / (settings.jev_rate_per_min * keys) if keys else None
         tokens = 0
@@ -63,7 +96,7 @@ def estimate(docs, one_liner, labeler, *, key_count=None, recent=None):
         elapsed = samples[-1][0] - samples[0][0] if len(samples) > 1 else 0
         done = samples[-1][1] - samples[0][1] if len(samples) > 1 else 0
         seconds = count * elapsed / done if done and elapsed else None
-    return dict(seconds=0 if not count else seconds, jevTokens=tokens)
+    return dict(seconds=0 if not count else seconds, jevTokens=tokens, jevCostUsd=cost)
 
 
 def _pause(ctx, reason, detail):
@@ -121,7 +154,7 @@ def run_worker(ctx):
             raise ValueError('Batch size must be positive')
         concurrency = max(1, settings.label_concurrency) if labeler == 'gpt' else 1
         total_estimate = estimate(list(docs.values()), one_liner, labeler)
-        client = JevClient(settings.jev_api_keys, settings.jev_model) if labeler == 'jev' else None
+        client = JevClient(*jev_client_args()) if labeler == 'jev' else None
         transient_failures = 0
         lease_waits = 0
         pool = ThreadPoolExecutor(max_workers=concurrency) if labeler == 'gpt' else None
@@ -255,6 +288,10 @@ def run_worker(ctx):
                             cache.release()
                             _pause(ctx, str(exc), detail)
                             break
+                        if exc.code == 'refused':
+                            # A provider refusal is final; retrying cannot change it.
+                            cache.mark_bad(doc['doc_id'], exc.code)
+                            continue
                         cache.fail(doc['doc_id'], exc.code)
                     else:
                         transient_failures = 0

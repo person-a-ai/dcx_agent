@@ -85,7 +85,7 @@ def run_worker(ctx):
                             break
                         if name == 'jev':
                             if client is None:
-                                client = JevClient(settings.jev_api_keys, settings.jev_model)
+                                client = JevClient(*judge.jev_client_args())
                             vote = client.judge(docs[doc_id], one_liner,
                                 idempotency_key=f'{doc_id}:{QVER}-{judge.context_key(one_liner, name)}')
                         else:
