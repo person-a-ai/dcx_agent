@@ -1,0 +1,142 @@
+{
+  "executor": "claude",
+  "role": "browser-qa",
+  "dispatch": "harness-opus subagent via dispatch browserQa QA-ALL (.harness/dispatch/browserQa-QA-ALL.md)",
+  "freshSession": true,
+  "verdict": "PASS",
+  "head": "a807c123d2dfe0fb36031250a3ab3c5ed6240ff6",
+  "fingerprint": "ae20bd0fb6ac2a7f6ca1c14d02e0673338426d0a3881579806c24b024c0cb3c3",
+  "findings": [],
+  "browser": {
+    "tool": "mcp__Claude_Browser (built-in browser pane)",
+    "session": "preview-local_217b55ab-b640-4d3e-a6b4-f0e56d6a35f0",
+    "preflight": "PASS",
+    "evidence": "docs/development/decisions-labeler/qa/shots/preflight-start.jpg"
+  },
+  "scenarios": [
+    {
+      "id": "QA-E2E-001",
+      "url": "http://localhost:3321/pipeline/labeling",
+      "result": "PASS",
+      "expected": "Decisions·GPT 진행 카드 완료, Jev 표기 없음, 요청 로그(순서·헤더·키 교대), crossLabeler=Decisions·labelerMode=cross, 캐시 투표 형식",
+      "actual": "카드 둘 다 131건 판정 완료; 'Jev' 0건(개요·검수 큐·감사); POST 131건 전부 질문 순서 일치, Idempotency-Key 0, 키 1/2 교대(66/65); crossLabeler=Decisions, cross; 캐시 131건 probs 8개·reason_probs·model",
+      "evidence": "docs/development/decisions-labeler/qa/shots/e2e001-done.jpg",
+      "additionalEvidence": [
+        "docs/development/decisions-labeler/qa/evidence/e2e001-analysis.json",
+        "docs/development/decisions-labeler/qa/logs/mock-e2e001.jsonl"
+      ]
+    },
+    {
+      "id": "QA-E2E-002",
+      "url": "http://localhost:3321/pipeline/labeling",
+      "result": "PASS",
+      "expected": "진행 중 '예상 Decisions 비용 · 약 $'+입력·토큰, 미제공 문구 없음, jevCostUsd≥0",
+      "actual": "'예상 Decisions 비용 · 약 $0.01(입력 67,187토큰)', 미제공 문구 없음, jevCostUsd=0.0067187",
+      "evidence": "docs/development/decisions-labeler/qa/shots/e2e002-running.jpg",
+      "additionalEvidence": [
+        "docs/development/decisions-labeler/qa/evidence/e2e002-overview-running.json"
+      ]
+    },
+    {
+      "id": "QA-NEG-001",
+      "url": "http://localhost:3321/pipeline/labeling",
+      "result": "PASS",
+      "expected": "표식 2건 bad·refused, 각 1회 요청, 나머지 완료, 검수 큐>0",
+      "actual": "done 129·bad 2(refused), 표식 요청 각 1회, 화면 '2건은 판정하지 못해 검수 큐로', 검수 큐 56(판정 실패 2)",
+      "evidence": "docs/development/decisions-labeler/qa/shots/neg001-overview.jpg",
+      "additionalEvidence": [
+        "docs/development/decisions-labeler/qa/evidence/neg001-analysis.json",
+        "docs/development/decisions-labeler/qa/logs/mock-neg001.jsonl"
+      ]
+    },
+    {
+      "id": "QA-NEG-002",
+      "url": "http://localhost:3321/pipeline/labeling",
+      "result": "PASS",
+      "expected": "멈춤·'연결 키' 안내, 키·응답 본문 미노출",
+      "actual": "'Decisions 연결 키를 확인해 주세요', state failed; qa-key·MOCK-SECRET-BODY 화면·API·로그·데이터에서 0건",
+      "evidence": "docs/development/decisions-labeler/qa/shots/neg002-stopped.jpg",
+      "additionalEvidence": [
+        "docs/development/decisions-labeler/qa/evidence/neg002-overview.json"
+      ]
+    },
+    {
+      "id": "QA-NEG-003",
+      "url": "http://localhost:3321/pipeline/labeling",
+      "result": "PASS",
+      "expected": "gpt_only, 안내 문구에 'Decisions', 요청 0건",
+      "actual": "배너 'Decisions 미연결 · GPT 단독 판정', labelerMode=gpt_only, 가짜 서버 로그 미생성(0건)",
+      "evidence": "docs/development/decisions-labeler/qa/shots/neg003-gpt-only.jpg",
+      "additionalEvidence": [
+        "docs/development/decisions-labeler/qa/evidence/neg003-overview.json"
+      ]
+    },
+    {
+      "id": "QA-NEG-004",
+      "url": "http://localhost:3321/pipeline/labeling",
+      "result": "PASS",
+      "expected": "일시정지, 잔액 부족 안내, 요청 1건",
+      "actual": "state paused, 사유 'Decisions 사용 한도가 부족합니다'(문구에 '잔액' 단어는 없음 — 의미 동일로 판정), 요청 1건(429)",
+      "evidence": "docs/development/decisions-labeler/qa/shots/neg004-paused.jpg",
+      "additionalEvidence": [
+        "docs/development/decisions-labeler/qa/evidence/neg004-overview.json",
+        "docs/development/decisions-labeler/qa/logs/mock-neg004.jsonl"
+      ]
+    },
+    {
+      "id": "QA-EDGE-001",
+      "url": "http://localhost:3321/pipeline/labeling",
+      "result": "PASS",
+      "expected": "fake·decisions의 q1-<hash> 폴더 분리, 모델 미혼합",
+      "actual": "fake q1-5a40afd6(fake-jev-latest×131) / decisions q1-61259f54(mock-decisions-1×131)",
+      "evidence": "docs/development/decisions-labeler/qa/evidence/edge001-folders.txt",
+      "additionalEvidence": []
+    },
+    {
+      "id": "QA-EDGE-002",
+      "url": "http://localhost:3321/pipeline/labeling",
+      "result": "PASS",
+      "expected": "8000자 초과 문서 input ≤8000, truncated=true",
+      "actual": "후기 302(14,439자) input_len_json=8000, truncated=true",
+      "evidence": "docs/development/decisions-labeler/qa/evidence/e2e001-analysis.json",
+      "additionalEvidence": []
+    },
+    {
+      "id": "QA-REG-001",
+      "url": "http://localhost:3321/pipeline/labeling",
+      "result": "PASS",
+      "expected": "fake: 카드 'Jev', 미제공 비용 문구, 'Jev 정확도', crossLabeler=Jev",
+      "actual": "카드 'Jev', '예상 Jev 비용 · 금액 추정은 아직 제공되지 않습니다…', κ 'Jev 정확도', crossLabeler=Jev, jevCostUsd=null",
+      "evidence": "docs/development/decisions-labeler/qa/shots/reg001-fake-jev.jpg",
+      "additionalEvidence": [
+        "docs/development/decisions-labeler/qa/evidence/reg001-overview.json"
+      ]
+    },
+    {
+      "id": "QA-REG-002",
+      "url": "http://localhost:3321/pipeline/labeling",
+      "result": "PASS",
+      "expected": "http·키 없음: 'Jev 미연결 · GPT 단독 판정' 그대로",
+      "actual": "배너 'Jev 미연결 · GPT 단독 판정', gpt_only, crossLabeler=Jev",
+      "evidence": "docs/development/decisions-labeler/qa/shots/reg002-jev-gpt-only.jpg",
+      "additionalEvidence": [
+        "docs/development/decisions-labeler/qa/evidence/reg002-overview.json"
+      ]
+    },
+    {
+      "id": "QA-REG-003",
+      "url": "http://localhost:3321/pipeline/labeling",
+      "result": "PASS",
+      "expected": "감사 탭 κ 표·GPT 열 유지",
+      "actual": "감사 탭 표 '칸|표본|감사 κ|Decisions 정확도|GPT 정확도|비고', 9행",
+      "evidence": "docs/development/decisions-labeler/qa/shots/reg003-audit.jpg",
+      "additionalEvidence": []
+    }
+  ],
+  "notes": [
+    "Summary: docs/development/decisions-labeler/qa/QA-RESULTS.md",
+    "Test data deviation: DECISIONS_MODEL set per scenario (judge cache is keyed by it) so new versions actually hit the fake server; backend, base URL and keys unchanged.",
+    "QA-NEG-004 wording: pause reason says '사용 한도가 부족합니다', not the literal word '잔액'; judged PASS since the plan expectation is unquoted.",
+    "Session prepared through the UI; servers on 8321/3321/8399 stopped; user's 8000/3000 untouched; one human review submitted on test session v1."
+  ]
+}

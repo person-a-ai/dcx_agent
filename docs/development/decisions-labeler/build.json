@@ -1,0 +1,123 @@
+{
+  "verdict": "PASS",
+  "head": "a807c123d2dfe0fb36031250a3ab3c5ed6240ff6",
+  "fingerprint": "ae20bd0fb6ac2a7f6ca1c14d02e0673338426d0a3881579806c24b024c0cb3c3",
+  "commands": [
+    {
+      "command": "backend/.venv/bin/python -m pytest backend/tests/label -q -p no:cacheprovider",
+      "exitCode": 0
+    },
+    {
+      "command": "npm --prefix frontend test",
+      "exitCode": 0
+    }
+  ],
+  "findings": [],
+  "tasks": [
+    {
+      "id": "T1",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "fc4a75c60a087ce046f2d88a8bd1f30b23170ea1",
+      "commit": {
+        "sha": "f2672bf51d6d6de564b591a059c28040bb1c28e8",
+        "message": "feat(label): add Decisions API backend for the Jev labeler\n\n- config: jev_backend gains \"decisions\"; add DECISIONS_API_KEY (comma-split), decisions_model, decisions_rate_per_min, decisions_base_url (empty string -> default)\n- decisions.py: DecisionsClient with round-robin keys, OPENAI_API_KEY fallback, per-key rate limiting, question conversion, strict response parsing (refusal -> refused) and error mapping (401/insufficient_quota/retry/transport)\n- jev.py: jev_available/get_jev_client branch for the decisions backend\n- tests: test_decisions.py and fixtures/decisions/success.json (MockTransport only)"
+      },
+      "review_commit": "f2672bf51d6d6de564b591a059c28040bb1c28e8",
+      "review_verdict": "PASS",
+      "executor": "claude",
+      "dispatch": "harness-opus subagent via dispatch implementer T1 (.harness/dispatch/implementer-T1.md)",
+      "red": "backend/.venv/bin/python -m pytest backend/tests/label/test_decisions.py -q -p no:cacheprovider :: Ran against a stub decisions.py (DecisionsClient.judge raised JevError('stub'), to_decisions_questions returned []) with the config fields already added, so the failures are assertions, not import errors. Result: 43 failed, 2 passed. Examples: \"AssertionError: assert 'stub' == 'refused'\" (test_refusal); test_bad_payload[*] failed on the code=='bad' assertion; test_to_decisions_questions_order failed on the order assertion. The first run, before the stub existed, failed with ImportError; that run is not the RED evidence.",
+      "green": "backend/.venv/bin/python -m pytest backend/tests/label -q -p no:cacheprovider :: 337 passed",
+      "review": "docs/development/decisions-labeler/reviews/T1.md",
+      "reviewer": {
+        "executor": "claude",
+        "role": "code-review",
+        "dispatch": "harness-sonnet subagent via dispatch reviewer T1 (.harness/dispatch/reviewer-T1.md)",
+        "freshSession": true
+      }
+    },
+    {
+      "id": "T2",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "f2672bf51d6d6de564b591a059c28040bb1c28e8",
+      "commit": {
+        "sha": "dfb826b01dac97a0f55b2ad63020cb34c80750d5",
+        "message": "feat(label): run the Jev-slot judge worker on the Decisions backend\n\n- judge.context_key: Decisions identity is '<decisions_model>/decisions', so its cache is separate from http\n- judge.estimate: Decisions key count (unique decisions keys, else 1 for the OpenAI key), decisions_rate_per_min, tokens from the {model,input,questions} body, plus jevCostUsd (tokens * $0.10/1M; None otherwise)\n- judge worker: a 'refused' document is marked bad immediately (no retry); other non-transient codes keep the bounded cache.fail path\n- judge/monitor build the Jev-slot client with backend-specific keys/model\n- overview: crossLabeler ('Decisions' | 'Jev'); the estimate cache is keyed by backend\n- tests: worker E2E with MockTransport, refusal/401/429 paths, cache separation, estimate, overview API"
+      },
+      "review_commit": "dfb826b01dac97a0f55b2ad63020cb34c80750d5",
+      "review_verdict": "PASS",
+      "executor": "claude",
+      "dispatch": "harness-opus subagent via dispatch implementer T2 (.harness/dispatch/implementer-T2.md)",
+      "red": "backend/.venv/bin/python -m pytest backend/tests/label/test_decisions_judge.py -q -p no:cacheprovider :: Initial RED, 7 failed and 5 passed: AssertionError assert {'Bearer jev-key'} == {'Bearer dec-key'}; context_key '0f084bad' == '6f3944b3'; jevTokens 48720 == 55560; seconds 30.0 == 60; jevCostUsd [None, None]; KeyError 'crossLabeler' x2. Refusal RED after the controller decision (test tightened to one request): test_refused_document_is_bad_with_refused_code failed with 'AssertionError: assert 3 == 1'.",
+      "green": "backend/.venv/bin/python -m pytest backend/tests/label/test_decisions_judge.py -q -p no:cacheprovider :: 12 passed",
+      "review": "docs/development/decisions-labeler/reviews/T2.md",
+      "reviewer": {
+        "executor": "claude",
+        "role": "code-review",
+        "dispatch": "harness-sonnet subagent via dispatch reviewer T2 (.harness/dispatch/reviewer-T2.md)",
+        "freshSession": true
+      }
+    },
+    {
+      "id": "T3",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "dfb826b01dac97a0f55b2ad63020cb34c80750d5",
+      "commit": {
+        "sha": "659798d849c32cb6623d25e6d8f69e6bd9716479",
+        "message": "feat(label): show the cross labeler name and Decisions cost estimate\n\nThe overview now reports crossLabeler ('Jev' | 'Decisions') and the Jev-slot\nestimate carries jevCostUsd. The progress card, cost line, KappaTable accuracy\ncolumn, QueueCard probability column and GPT-only notice use the labeler name\n(falling back to Jev), and the cost line shows '약 $X.XX(입력 N토큰)' when a\ndollar estimate exists."
+      },
+      "review_commit": "659798d849c32cb6623d25e6d8f69e6bd9716479",
+      "review_verdict": "PASS",
+      "executor": "claude",
+      "dispatch": "harness-opus subagent via dispatch implementer T3 (.harness/dispatch/implementer-T3.md)",
+      "red": "npm --prefix frontend test -- src/components/label/labelerName.test.ts :: 4 failed (4) with placeholder stubs: AssertionError: expected 'Jev' to be 'Decisions'; expected '' to be '예상 Decisions 비용 · 약 $1.23(입력 12,345토큰)'; expected '' to be '예상 Jev 비용 · 금액 추정은 아직 제공되지 않습니다. 예상 입…'; GPT-only notice expected title 'Decisions 미연결 · GPT 단독 판정'. The first run, before stubs, failed with TypeError not-a-function (not RED evidence).",
+      "green": "npm --prefix frontend test :: 1063 passed",
+      "review": "docs/development/decisions-labeler/reviews/T3.md",
+      "reviewer": {
+        "executor": "claude",
+        "role": "code-review",
+        "dispatch": "harness-sonnet subagent via dispatch reviewer T3 (.harness/dispatch/reviewer-T3.md)",
+        "freshSession": true
+      }
+    },
+    {
+      "id": "T4",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "base_commit": "659798d849c32cb6623d25e6d8f69e6bd9716479",
+      "commit": {
+        "sha": "a807c123d2dfe0fb36031250a3ab3c5ed6240ff6",
+        "message": "docs: document Decisions labeler env vars and JEV_BACKEND=decisions"
+      },
+      "review_commit": "a807c123d2dfe0fb36031250a3ab3c5ed6240ff6",
+      "review_verdict": "PASS",
+      "executor": "claude",
+      "dispatch": "harness-opus subagent via dispatch implementer T4 (.harness/dispatch/implementer-T4.md)",
+      "red": "backend/.venv/bin/python <scratchpad>/check.py (ad-hoc doc check from worktree root) :: AssertionError: missing: ['DECISIONS_API_KEY', 'DECISIONS_MODEL', 'DECISIONS_RATE_PER_MIN', 'DECISIONS_BASE_URL', '.env:DECISIONS_API_KEY', '.env:DECISIONS_MODEL', '.env:DECISIONS_RATE_PER_MIN', '.env:DECISIONS_BASE_URL'] (RED/GREEN covered README and .env.example; .env.example change later reverted by the controller per user decision)",
+      "green": "same ad-hoc check; backend/.venv/bin/python -m pytest backend/tests/test_review_fix1.py -q -p no:cacheprovider; backend/.venv/bin/python -m pytest backend/tests -q -p no:cacheprovider :: 6273 passed",
+      "review": "docs/development/decisions-labeler/reviews/T4.md",
+      "reviewer": {
+        "executor": "claude",
+        "role": "code-review",
+        "dispatch": "harness-sonnet subagent via dispatch reviewer T4 (.harness/dispatch/reviewer-T4.md)",
+        "freshSession": true
+      }
+    }
+  ],
+  "notes": [
+    "[minor] T4: README에 DECISIONS_API_KEY와 OPENAI_API_KEY가 모두 빈 경우 동작 미기재(비차단)",
+    "[deviation] T4: 사용자 결정 'README만, 예시는 나중에': .env.example 4줄은 게이트의 .env* 거부 때문에 이번 실행에서 제외, PR 전 별도 커밋 예정",
+    "[deviation] T2: 거절(refused) 문서는 cache.fail 대신 mark_bad로 즉시 bad(계획의 RED 테스트 \"재시도 없음\"과 리뷰 체크리스트에 맞춤). JevClient() 대신 JevClient(*jev_client_args())로 기존 테스트 호환"
+  ]
+}
