@@ -138,11 +138,11 @@ export type LabelTags = { anchor: boolean; sem: Record<SemanticTag, 0 | 1>; situ
 export type ReviewMode = 'escalate' | 'audit' | 'reissue';
 export type WorkerState = 'none' | 'running' | 'paused' | 'failed' | 'interrupted' | 'done' | 'cancelled';
 export type Worker = { runId: string; kind: string; state: WorkerState; progress: number; detail: Record<string, unknown>; reason?: string | null; error?: string | null };
-export type LabelProgress = { state: string; pending: number; total?: number; done?: number; bad?: number; progress?: number; reason?: string | null; runId?: string | null; estimate?: { seconds: number | null; [key: string]: unknown } };
+export type LabelProgress = { state: string; pending: number; total?: number; done?: number; bad?: number; progress?: number; reason?: string | null; runId?: string | null; estimate?: { seconds: number | null; jevTokens?: number; jevCostUsd?: number | null; [key: string]: unknown } };
 export type KappaMetric = { n: number; accuracy: number | null; kappa: number | null };
 export type KappaSummary = { n: number; fields: Record<string, KappaMetric>; grade: KappaMetric };
 export type Overview = {
- labelerMode?: 'cross' | 'gpt_only';
+ labelerMode?: 'cross' | 'gpt_only'; crossLabeler?: 'Jev' | 'Decisions';
  started: boolean; mode: 'llm' | 'model'; modelId: string | null; progress: Record<string, LabelProgress>;
  definitionCheck: { needed: boolean; reason: string | null }; queue: { total: number; estimatedSeconds: number; byReason: Record<string, number> };
  now: { state: string; priority?: number; message?: string; action?: string | null }; merged: number; total: number; accepted: number; trainable?: number; escalated: number; mismatchRate: number | null;
