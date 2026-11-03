@@ -129,3 +129,93 @@ def test_status_reports_hold(macmini):
     output = ctl(m, 'status').stdout
     assert 'maintenance: held' in output
     assert '99999999 install' in output
+
+
+def _fake_python(m):
+    backend = m.root / f'releases/{m.a}/backend'
+    python = backend / '.venv/bin/python'
+    python.parent.mkdir(parents=True, exist_ok=True)
+    python.write_text('#!/bin/bash\nprintf "%s\\n" "$@" > "$(dirname "$0")/../../args.txt"\n')
+    python.chmod(0o755)
+    return backend / 'args.txt'
+
+
+def test_import_labels_runs_release_importer(macmini, tmp_path):
+    m = macmini
+    args = _fake_python(m)
+    data = tmp_path / 'data.zip'
+    data.write_bytes(b'x')
+    r = ctl(m, 'import-labels', str(data), '--sid', 'imp-a')
+    assert r.returncode == 0, r.stderr
+    text = args.read_text()
+    assert str(data) in text and 'imp-a' in text and 'app.importer' in text
+
+
+def test_import_labels_refused_in_maintenance(macmini, tmp_path):
+    m = macmini
+    args = _fake_python(m)
+    (m.root / 'shared/maintenance').write_text('99999999 install\n')
+    r = ctl(m, 'import-labels', str(tmp_path / 'x.zip'))
+    assert r.returncode == 1 and '점검' in r.stderr
+    assert not args.exists()
+
+
+def test_import_labels_requires_file(macmini):
+    r = ctl(macmini, 'import-labels')
+    assert r.returncode == 2
+
+
+def test_import_labels_requires_current_release(macmini):
+    args = _fake_python(macmini)
+    (macmini.root / 'current').unlink()
+    r = ctl(macmini, 'import-labels', 'x.csv')
+    assert r.returncode == 1 and 'current 릴리스가 없습니다' in r.stderr
+    assert not args.exists()
+
+
+@pytest.mark.parametrize('exit_code', [0, 1, 130])
+def test_import_labels_loads_env_and_preserves_arguments(macmini, tmp_path, monkeypatch, exit_code):
+    import json
+    import shlex
+    import sys
+
+    m = macmini
+    backend = m.root / f'releases/{m.a}/backend'
+    python = backend / '.venv/bin/python'
+    python.parent.mkdir(parents=True)
+    # Preserve the test interpreter's virtualenv and installed python-dotenv.
+    python.write_text(f'#!/bin/bash\nexec {shlex.quote(sys.executable)} "$@"\n')
+    python.chmod(0o755)
+    package = backend / 'app/importer'
+    package.mkdir(parents=True)
+    (backend / 'app/__init__.py').touch()
+    (package / '__init__.py').touch()
+    (package / '__main__.py').write_text('''import json, os, pathlib, sys
+pathlib.Path('probe.json').write_text(json.dumps({
+    'cwd': os.getcwd(), 'args': sys.argv[1:],
+    'app': os.environ['IMPORT_APP'], 'value': os.environ['IMPORT_VALUE'],
+    'literal': os.environ['IMPORT_LITERAL'], 'empty': os.environ['IMPORT_EMPTY'],
+    'bare': os.environ['IMPORT_BARE'],
+}))
+sys.exit(int(os.environ['IMPORT_EXIT']))
+''')
+    (m.root / 'shared/app.env').write_text(
+        'IMPORT_APP=app-value\nIMPORT_VALUE=app\nIMPORT_EMPTY=\nIMPORT_BARE\n'
+    )
+    (m.root / 'shared/runtime.env').write_text(
+        'IMPORT_VALUE=runtime\nIMPORT_LITERAL="${IMPORT_APP} $(touch unexpected)"\n'
+        f'IMPORT_EXIT={exit_code}\n'
+    )
+    data = tmp_path / '네이버 카페.zip'
+    data.write_bytes(b'x')
+    monkeypatch.chdir(tmp_path)
+    r = ctl(m, 'import-labels', data.name, '--sid', 'imp-a',
+            IMPORT_VALUE='inherited', IMPORT_BARE='inherited')
+    assert r.returncode == exit_code, r.stderr
+    assert json.loads((backend / 'probe.json').read_text()) == {
+        'cwd': str(backend), 'args': [str(data), '--sid', 'imp-a'],
+        'app': 'app-value', 'value': 'runtime',
+        'literal': '${IMPORT_APP} $(touch unexpected)', 'empty': '', 'bare': 'inherited',
+    }
+    assert not (tmp_path / 'unexpected').exists()
+    assert not (backend / 'unexpected').exists()

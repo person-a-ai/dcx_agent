@@ -106,6 +106,24 @@ APP_ROOT="$HOME/srv/dcx-agent" "$HOME/srv/dcx-agent/ops/dcxctl" rollback
 
 수동 롤백도 동작 전에 `deploy-state` 첫 줄에 `rolling-back <from> <to> <snapshot>`을 기록합니다. 둘째 줄의 `manual` 표시는 복구가 끝날 때까지 유지됩니다. kill·재부팅 후 다음 deploy 틱은 fetch/CI보다 먼저 복원·전환·이력 확정을 마칩니다. 이력 갱신은 반복해도 이전 행을 더 지우지 않으며 매 복원 시 현재 sessions/work를 새 `<snapshot>-failed`, `<snapshot>-failed-1`, … 폴더로 옮깁니다. 재시작 후 생긴 쓰기도 별도 백업에 보존되며 이 백업들은 스냅샷 5개 정리 대상에서 제외됩니다.
 
+## 외부 라벨 결과 가져오기
+
+결과 CSV 또는 결과 CSV가 든 zip을 서버로 옮긴 뒤, 서버에서 현재 릴리스의 가져오기 명령을 실행합니다.
+
+```bash
+# 로컬에서 서버로 복사
+scp ~/Downloads/네이버\ 카페.zip mini:~/
+
+# 서버에서 실행 (dcxctl이 PATH에 없다면 ~/srv/dcx-agent/ops/dcxctl 사용)
+dcxctl import-labels ~/네이버\ 카페.zip
+# 프로젝트 ID를 직접 지정할 때
+dcxctl import-labels ~/네이버\ 카페.zip --sid imp-cafe
+```
+
+기본 프로젝트 ID는 `imp-<파일 해시>`입니다. 중단되면 같은 파일과 같은 명령으로 다시 실행하면 완료한 작업 다음부터 이어서 진행합니다. 서버 점검 중에는 실행을 거부합니다.
+
+가져온 프로젝트의 **0단계 값은 모두 `.`**입니다. 6~8단계 결과는 주제 정보 없이 만들어진다는 점에 주의하세요. 가져오기가 끝나면 웹 프로젝트 목록에서 출력된 ID의 프로젝트를 열고 **6단계(세그먼트)**부터 진행합니다.
+
 ## QA 사용자 에이전트
 
 ```bash
