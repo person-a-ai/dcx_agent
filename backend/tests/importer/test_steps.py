@@ -82,6 +82,115 @@ def test_rerun_is_noop(env):
     assert after['training']['exportRef'] == before['training']['exportRef']
 
 
+@pytest.mark.parametrize('partial', [False, True])
+def test_interrupted_labels_completion_is_reinserted(env, monkeypatch, partial):
+    from app.model import export
+
+    real_iter = steps.iter_records
+    def records(source, crawled_at):
+        for i, record in enumerate(real_iter(source, crawled_at)):
+            if partial and crawled_at == '' and i == 0:
+                continue
+            yield record
+    monkeypatch.setattr(steps, 'iter_records', records)
+    insert = Mock(wraps=steps.insert_labels)
+    write_export = Mock(wraps=export.write)
+    monkeypatch.setattr(steps, 'insert_labels', insert)
+    monkeypatch.setattr(export, 'write', write_export)
+    real_write = store.write_json
+    interrupted = False
+    def write(path, data):
+        nonlocal interrupted
+        if (path.name == 'session.json' and 'labels' in data.get('imported', {}).get('steps', {})
+                and not interrupted):
+            interrupted = True
+            raise KeyboardInterrupt
+        return real_write(path, data)
+    monkeypatch.setattr(store, 'write_json', write)
+
+    with pytest.raises(KeyboardInterrupt):
+        run(env)
+    sid = steps.default_sid(read.open_source(env.path))
+    pending = store.load_session(sid)
+    assert pending['labeling']['status'] == 'running'
+    assert 'labels' not in pending['imported']['steps']
+    assert pending['imported']['counts'] == {}
+
+    summary = run(env)
+    data = store.load_session(sid)
+    assert insert.call_count == 2
+    assert summary['counts'] == dict(labeled=5 if partial else 6, unlabeled=int(partial), droppedByPrep=0)
+    assert data['version'] == pending['version'] == 'v1'
+    assert data['step'] == 'cluster-start'
+    assert data['labeling']['status'] == 'done'
+    assert 'labels' in data['imported']['steps']
+    assert write_export.call_args.kwargs['partial'] is partial
+    assert data['training']['exportPartial'] is partial
+
+
+@pytest.mark.parametrize('missing', ['labeled', 'unlabeled', 'droppedByPrep'])
+def test_labels_done_without_complete_counts_is_reinserted(env, monkeypatch, missing):
+    with monkeypatch.context() as patch:
+        patch.setattr(steps, 'export_step', Mock(side_effect=KeyboardInterrupt))
+        with pytest.raises(KeyboardInterrupt):
+            run(env)
+    sid = steps.default_sid(read.open_source(env.path))
+    with store.locked(sid):
+        data = store.load_session(sid)
+        del data['imported']['counts'][missing]
+        store.write_json(store.session_dir(sid) / 'session.json', data)
+    insert = Mock(wraps=steps.insert_labels)
+    monkeypatch.setattr(steps, 'insert_labels', insert)
+
+    summary = run(env)
+    assert insert.call_count == 1
+    assert summary['counts'] == dict(labeled=6, unlabeled=0, droppedByPrep=0)
+    assert store.load_session(sid)['step'] == 'cluster-start'
+
+
+@pytest.mark.parametrize('when', ['after_export', 'completion_write'])
+def test_interrupted_export_completion_is_redone(env, monkeypatch, when):
+    from app.model import export
+
+    real_export = export.write
+    calls = []
+    def write_export(*args, **kwargs):
+        result = real_export(*args, **kwargs)
+        calls.append(result['exportRef'])
+        if when == 'after_export' and len(calls) == 1:
+            raise KeyboardInterrupt
+        return result
+    monkeypatch.setattr(export, 'write', write_export)
+    real_write = store.write_json
+    interrupted = False
+    def write(path, data):
+        nonlocal interrupted
+        if (when == 'completion_write' and path.name == 'session.json'
+                and 'export' in data.get('imported', {}).get('steps', {}) and not interrupted):
+            interrupted = True
+            raise KeyboardInterrupt
+        return real_write(path, data)
+    monkeypatch.setattr(store, 'write_json', write)
+
+    with pytest.raises(KeyboardInterrupt):
+        run(env)
+    sid = steps.default_sid(read.open_source(env.path))
+    pending = store.load_session(sid)
+    assert pending['training']['exportRef'] == calls[0]
+    assert pending['training'].get('status') != 'done'
+    assert pending['step'] == 'train-start'
+    assert 'export' not in pending['imported']['steps']
+
+    summary = run(env)
+    data = store.load_session(sid)
+    assert len(calls) == 2
+    assert summary['exportRef'] == calls[1] != calls[0]
+    assert data['version'] == pending['version'] == 'v1'
+    assert data['step'] == 'cluster-start'
+    assert data['training']['status'] == 'done'
+    assert 'export' in data['imported']['steps']
+
+
 @pytest.mark.parametrize('restart_from, repeated', [
     ('stage3', ['prep', 'labels', 'export']),
     ('stage4', ['labels', 'export']),

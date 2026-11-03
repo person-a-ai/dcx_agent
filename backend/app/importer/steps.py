@@ -46,9 +46,13 @@ def _assert_version(sid, claimed):
         raise ImportError_('가져오는 동안 프로젝트 버전이 바뀌었습니다. 같은 명령을 다시 실행하세요.') from exc
 
 
-def _mark(sid, step, *, version=None, **counts):
+def _mark(sid, step, *, version=None, patch=None, **counts):
+    """Publish a stage's completion and checkpoint in one pinned session write."""
     with store.locked(sid):
         data = _assert_version(sid, version) if version is not None else store.load_session(sid)
+        if patch is not None:
+            data = store.deep_merge(data, patch)
+            data['updatedAt'] = store.now()
         imported = data.setdefault('imported', {})
         imported.setdefault('steps', {})[step] = store.now()
         imported.setdefault('counts', {}).update(counts)
@@ -186,9 +190,9 @@ def insert_labels(sid, source) -> dict:
     with store.locked(sid):
         _assert_version(sid, claimed)
         index_documents(sid, data, labels)
-        store._update_locked(sid, {'labeling': {'started': True, 'status': 'done', 'mode': IMPORTED,
-                                               'labelerMode': IMPORTED}, 'step': 'train-start'})
-    _mark(sid, 'labels', version=claimed, **counts)
+    _mark(sid, 'labels', version=claimed,
+          patch={'labeling': {'started': True, 'status': 'done', 'mode': IMPORTED,
+                              'labelerMode': IMPORTED}, 'step': 'train-start'}, **counts)
     return counts
 
 
@@ -203,10 +207,8 @@ def export_step(sid, partial: bool) -> dict:
         with store.locked(sid):
             _assert_version(sid, claimed)
         raise
-    with store.locked(sid):
-        _assert_version(sid, claimed)
-        store._update_locked(sid, {'step': 'cluster-start', 'training': {'status': 'done'}})
-    _mark(sid, 'export', version=claimed)
+    _mark(sid, 'export', version=claimed,
+          patch={'step': 'cluster-start', 'training': {'status': 'done'}})
     return exported
 
 
@@ -263,8 +265,9 @@ def _run_locked(sid, source, result, log, poll_s, sleep):
             or step == 'prep' and (data.get('prep') or {}).get('status') == 'done'
             or step == 'labels' and labeling.get('status') == 'done'
             and labeling.get('labelerMode') == IMPORTED
+            and {'labeled', 'unlabeled', 'droppedByPrep'} <= (data.get('imported', {}).get('counts') or {}).keys()
             or step == 'export' and training.get('exportRef')
-            and training.get('status') != 'stale' and 'stage5' not in (data.get('stale') or {})
+            and training.get('status') == 'done' and 'stage5' not in (data.get('stale') or {})
         )
         if complete:
             continue
