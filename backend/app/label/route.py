@@ -7,6 +7,9 @@ from app.context.store import StoreError
 from app.label import audit, questions, rule
 from app.label.schema import Tags
 
+IMPORTED = 'imported'
+IMPORTED_MESSAGE = '가져온 라벨입니다. 새 버전에서 다시 하세요.'
+
 
 def route(label) -> str:
     values = label if isinstance(label, dict) else label.model_dump()
@@ -91,11 +94,11 @@ def rebuild_final(store, jev_cache, gpt_cache, mode='cross'):
             AND identity NOT LIKE ? LIMIT 1""",
             (*active_names, f'%:{rule.RULE_VERSION}:{questions.QVER}')).fetchone()
         if first_sync:
-            changed = db.execute("""SELECT 1 FROM final WHERE source NOT IN ('human','model')
+            changed = db.execute("""SELECT 1 FROM final WHERE source NOT IN ('human','model','imported')
                 AND (rule_version!=? OR questions_version!=?) LIMIT 1""",
                 (rule.RULE_VERSION, questions.QVER)).fetchone()
         if changed:
-            db.execute("DELETE FROM final WHERE source!='human' AND source!='model'")
+            db.execute("DELETE FROM final WHERE source NOT IN ('human','model','imported')")
             db.execute("DELETE FROM queue WHERE reason='grade_mismatch' AND status='open'")
         previous_mode = db.execute("SELECT identity FROM route_sync WHERE name='mode'").fetchone()
         checkpoints.append(('mode', mode, 0))
@@ -145,6 +148,8 @@ def rebuild_final(store, jev_cache, gpt_cache, mode='cross'):
 
 def sync(store, jev_cache=None, gpt_cache=None, mode='cross'):
     rebuild_queue(store, jev_cache, gpt_cache, mode=mode)
+    if mode == IMPORTED:
+        return
     if next_item(store, 'audit') is None and next_item(store, 'reissue') is None:
         with store._db() as db:
             accepted = db.execute("SELECT count(*) FROM final WHERE route='accepted'").fetchone()[0]
@@ -160,7 +165,7 @@ def rebuild_queue(store, jev_cache=None, gpt_cache=None, mode='cross'):
     if has_inference:
         from app.model.infer import refresh_predictions
         model_mode = refresh_predictions(store)
-    if not model_mode and gpt_cache is not None and (mode == 'gpt_only' or jev_cache is not None):
+    if mode != IMPORTED and not model_mode and gpt_cache is not None and (mode == 'gpt_only' or jev_cache is not None):
         rebuild_final(store, jev_cache, gpt_cache, mode=mode)
     with store._db() as db:
         # T09 carry-over: a recovered failed vote must not leave a stale review.
