@@ -124,11 +124,27 @@ def insert_labels(sid, source) -> dict:
     from app.label import rule
     from app.label.questions import QVER
     from app.model import infer
-    data = store.load_session(sid)
-    labeling = data.get('labeling', {})
-    if labeling.get('started') and labeling.get('labelerMode') != IMPORTED:
-        raise ImportError_('이미 라벨링을 시작한 프로젝트입니다')
-    prepared = set(infer.documents(sid, data))
+    with store.locked(sid):
+        data = store.load_session(sid)
+        labeling = data.get('labeling', {})
+        if labeling.get('started') and labeling.get('labelerMode') != IMPORTED:
+            raise ImportError_('이미 라벨링을 시작한 프로젝트입니다')
+        # Claim stage four before writing labels; API starts take the same lock.
+        data = store._update_locked(sid, {'labeling': {'started': True, 'mode': IMPORTED,
+                                                      'labelerMode': IMPORTED, 'status': 'running'}})
+    root = infer.prepared_root(sid, data) / 'docs'
+    if not root.is_dir():
+        raise store.StoreError('전처리 문서를 찾을 수 없습니다.')
+    prepared = set()
+    for path in sorted(root.glob('*.jsonl')):
+        with path.open(encoding='utf-8') as stream:
+            for line in stream:
+                if not line.strip():
+                    continue
+                doc_id = json.loads(line)['doc_id']
+                if doc_id in prepared:
+                    raise ValueError('Duplicate prepared document ID')
+                prepared.add(doc_id)
     labels = labels_for(sid, data)
     label_schema(labels)
     votes = json.dumps({'imported': dict(file=source.name, sha256=source.sha256[:12])})

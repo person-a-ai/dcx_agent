@@ -239,3 +239,127 @@ def test_invalid_sid_is_import_error_without_writes(env, data_dir):
         run(env, sid='../outside')
     assert not (data_dir / 'imports').exists()
     assert not (data_dir / 'sessions').exists()
+
+
+@pytest.fixture
+def prepared_import(env):
+    source = read.open_source(env.path)
+    sid = steps.default_sid(source)
+    steps.create_session(sid, source, read.scan(source))
+    steps.register_collection(sid, source)
+    steps.run_prep_step(sid, env.logs.append, 0, env.sleep)
+    return sid, source
+
+
+def test_import_claim_blocks_api_start_during_and_after_insert(prepared_import, client, monkeypatch):
+    from app.label.overview import labels_for
+
+    sid, source = prepared_import
+    labels = labels_for(sid, store.load_session(sid))
+    launches, checkpoints = [], []
+    def start(sid, version, kind, args):
+        launches.append(kind)
+        return {'runId': args['labeler'], 'state': 'running'}
+    monkeypatch.setattr(runner, 'start', start)
+    monkeypatch.setattr(steps, '_BATCH', 2)
+    real_iter = steps.iter_records
+    def records(source, crawled_at):
+        for i, record in enumerate(real_iter(source, crawled_at)):
+            if i in (0, 2):
+                assert client.post(f'/label/{sid}/start').status_code == 409
+                assert store.load_session(sid)['labeling'] == {
+                    'started': True, 'mode': 'imported', 'labelerMode': 'imported', 'status': 'running'}
+                with labels._db() as db:
+                    assert db.execute('SELECT count(*) FROM final').fetchone()[0] == i
+                    assert not db.execute("SELECT 1 FROM final WHERE source != 'imported'").fetchone()
+                checkpoints.append(i)
+            yield record
+    monkeypatch.setattr(steps, 'iter_records', records)
+
+    assert steps.insert_labels(sid, source)['labeled'] == 6
+    assert checkpoints == [0, 2]
+    assert client.post(f'/label/{sid}/start').status_code == 409
+    assert launches == []
+    data = store.load_session(sid)
+    assert data['labeling']['status'] == 'done' and data['step'] == 'train-start'
+    with labels._db() as db:
+        assert db.execute('SELECT count(*) FROM final').fetchone()[0] == 6
+        assert {r[0] for r in db.execute('SELECT source FROM final')} == {'imported'}
+
+
+@pytest.mark.parametrize('when', ['before_insert', 'before_claim_lock'])
+def test_api_started_after_prep_refuses_import(prepared_import, client, monkeypatch, when):
+    from contextlib import contextmanager
+    from app.label.overview import labels_for
+
+    sid, source = prepared_import
+    monkeypatch.setattr(runner, 'start', lambda s, v, kind, args: {
+        'runId': args['labeler'], 'state': 'running'})
+    def api_start():
+        assert client.post(f'/label/{sid}/start').status_code == 200
+        labeling = store.load_session(sid)['labeling']
+        assert labeling['started'] and labeling['labelerMode'] != 'imported'
+
+    if when == 'before_insert':
+        api_start()
+    else:
+        real_locked = store.locked
+        pending = True
+        @contextmanager
+        def locked(session_id):
+            nonlocal pending
+            if session_id == sid and pending:
+                pending = False
+                # The API wins the lock immediately before the importer acquires it.
+                api_start()
+            with real_locked(session_id) as root:
+                yield root
+        monkeypatch.setattr(store, 'locked', locked)
+
+    with pytest.raises(read.ImportError_, match='이미 라벨링을 시작한 프로젝트입니다'):
+        steps.insert_labels(sid, source)
+    with labels_for(sid, store.load_session(sid))._db() as db:
+        assert db.execute('SELECT count(*) FROM final').fetchone()[0] == 0
+    assert store.load_session(sid)['labeling']['labelerMode'] != 'imported'
+
+
+def test_full_import_streams_prepared_ids(env, monkeypatch):
+    from app.model import infer
+
+    original = steps.insert_labels
+    def forbidden(*args, **kwargs):
+        pytest.fail('insert_labels must not load prepared document bodies with infer.documents')
+    def insert(sid, source):
+        # Stage-five export still uses infer.documents and is outside this fix.
+        with monkeypatch.context() as patch:
+            patch.setattr(infer, 'documents', forbidden)
+            return original(sid, source)
+    monkeypatch.setattr(steps, 'insert_labels', insert)
+
+    summary = run(env)
+    assert summary['counts'] == dict(labeled=6, unlabeled=0, droppedByPrep=0)
+    assert summary['exportRef']
+    assert store.load_session(summary['sid'])['step'] == 'cluster-start'
+
+
+@pytest.mark.parametrize('invalid', ['missing', 'duplicate'])
+def test_invalid_prepared_docs_write_no_labels(prepared_import, invalid):
+    from app.label.overview import labels_for
+    from app.model import infer
+
+    sid, source = prepared_import
+    data = store.load_session(sid)
+    root = infer.prepared_root(sid, data) / 'docs'
+    if invalid == 'missing':
+        root.rename(root.with_name('docs-missing'))
+        error, message = store.StoreError, '전처리 문서를 찾을 수 없습니다.'
+    else:
+        first = next(p for p in sorted(root.glob('*.jsonl')))
+        with first.open(encoding='utf-8') as stream:
+            doc = next(json.loads(line) for line in stream if line.strip())
+        (root / 'duplicate.jsonl').write_text('\n' + json.dumps(doc) + '\n', encoding='utf-8')
+        error, message = ValueError, 'Duplicate prepared document ID'
+    with pytest.raises(error, match=message):
+        steps.insert_labels(sid, source)
+    with labels_for(sid, data)._db() as db:
+        assert db.execute('SELECT count(*) FROM final').fetchone()[0] == 0
