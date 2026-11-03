@@ -205,7 +205,7 @@ def export_step(sid, partial: bool) -> dict:
         raise
     with store.locked(sid):
         _assert_version(sid, claimed)
-        store._update_locked(sid, {'step': 'cluster-start'})
+        store._update_locked(sid, {'step': 'cluster-start', 'training': {'status': 'done'}})
     _mark(sid, 'export', version=claimed)
     return exported
 
@@ -251,7 +251,22 @@ def _run_locked(sid, source, result, log, poll_s, sleep):
             raise ImportError_(f'{sid}는 다른 파일로 만든 프로젝트입니다. --sid로 다른 이름을 주세요.')
     counts = dict(_imported(sid).get('counts', {}))
     for step in ORDER:
-        if step in _imported(sid).get('steps', {}):
+        # Restarts inherit checkpoints but reset the active version's results.
+        data = store.load_session(sid) or {}
+        labeling = data.get('labeling') or {}
+        training = data.get('training') or {}
+        complete = (
+            step == 'session' and data.get('projectContext')
+            and (data.get('imported') or {}).get('sha256') == source.sha256
+            or step == 'crawl' and data.get('collectionId')
+            and phase_state(sid, data['collectionId']) == 'done'
+            or step == 'prep' and (data.get('prep') or {}).get('status') == 'done'
+            or step == 'labels' and labeling.get('status') == 'done'
+            and labeling.get('labelerMode') == IMPORTED
+            or step == 'export' and training.get('exportRef')
+            and training.get('status') != 'stale' and 'stage5' not in (data.get('stale') or {})
+        )
+        if complete:
             continue
         fn = globals()[STEP_FUNCTIONS[step]]
         if step == 'session':

@@ -1,10 +1,11 @@
 import json
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
 from app.config import settings
-from app.context import store
+from app.context import store, versions
 from app.crawl.control import phase_state
 from app.importer import read, steps
 from app.prep import pipeline
@@ -79,6 +80,86 @@ def test_rerun_is_noop(env):
     after = store.load_session(first['sid'])
     assert second['sid'] == first['sid']
     assert after['training']['exportRef'] == before['training']['exportRef']
+
+
+@pytest.mark.parametrize('restart_from, repeated', [
+    ('stage3', ['prep', 'labels', 'export']),
+    ('stage4', ['labels', 'export']),
+    ('stage5', ['export']),
+])
+def test_completed_import_resumes_active_version(env, monkeypatch, restart_from, repeated):
+    from app.label.overview import labels_for
+
+    first = run(env)
+    sid = first['sid']
+    assert versions.create_version(sid, 'v1', restart_from, 'test') == 'v2'
+    restarted = store.load_session(sid)
+    assert set(restarted['imported']['steps']) == set(steps.ORDER)
+    if restart_from != 'stage5':
+        assert restarted['labeling']['started'] is False
+        assert restarted['labeling']['mode'] == 'imported'
+        assert 'labelerMode' not in restarted['labeling']
+        with labels_for(sid, restarted)._db() as db:
+            assert db.execute('SELECT count(*) FROM final').fetchone()[0] == 0
+    calls = {}
+    for step, name in steps.STEP_FUNCTIONS.items():
+        calls[step] = Mock(wraps=getattr(steps, name))
+        monkeypatch.setattr(steps, name, calls[step])
+
+    summary = run(env)
+    assert [step for step, call in calls.items() if call.called] == repeated
+    data = store.load_session(sid)
+    assert data['version'] == 'v2'
+    assert data['prep']['status'] == 'done'
+    assert data['labeling']['status'] == 'done'
+    assert data['labeling']['labelerMode'] == 'imported'
+    assert data['training']['exportRef'] == summary['exportRef']
+    assert summary['exportRef'] and summary['exportRef'] != first['exportRef']
+    assert data['training']['status'] != 'stale'
+    assert 'stage5' not in data.get('stale', {})
+    assert data['step'] == 'cluster-start'
+    with labels_for(sid, data)._db() as db:
+        assert db.execute('SELECT count(*) FROM final').fetchone()[0] == 6
+        assert {r[0] for r in db.execute('SELECT source FROM final')} == {'imported'}
+
+    for call in calls.values():
+        call.reset_mock()
+    assert run(env)['exportRef'] == summary['exportRef']
+    for call in calls.values():
+        call.assert_not_called()
+
+
+def test_export_interrupted_by_stage4_restart_resumes(env, monkeypatch):
+    from app.label.overview import labels_for
+    from app.model import export
+
+    real_write = export.write
+    def write(sid, *args, **kwargs):
+        result = real_write(sid, *args, **kwargs)
+        assert versions.create_version(sid, 'v1', 'stage4', 'test') == 'v2'
+        return result
+    with monkeypatch.context() as patch:
+        patch.setattr(export, 'write', write)
+        with pytest.raises(read.ImportError_, match='가져오는 동안 프로젝트 버전이 바뀌었습니다'):
+            run(env)
+
+    sid = steps.default_sid(read.open_source(env.path))
+    restarted = store.load_session(sid)
+    assert 'labels' in restarted['imported']['steps']
+    assert 'export' not in restarted['imported']['steps']
+    with labels_for(sid, restarted)._db() as db:
+        assert db.execute('SELECT count(*) FROM final').fetchone()[0] == 0
+
+    summary = run(env)
+    data = store.load_session(sid)
+    assert data['version'] == 'v2'
+    assert data['labeling']['status'] == 'done'
+    assert data['labeling']['labelerMode'] == 'imported'
+    assert data['training']['exportRef'] == summary['exportRef']
+    assert summary['exportRef'] and data['step'] == 'cluster-start'
+    with labels_for(sid, data)._db() as db:
+        assert db.execute('SELECT count(*) FROM final').fetchone()[0] == 6
+        assert {r[0] for r in db.execute('SELECT source FROM final')} == {'imported'}
 
 
 @pytest.mark.parametrize('blocked', ['register_collection', 'run_prep_step', 'insert_labels', 'export_step'])
