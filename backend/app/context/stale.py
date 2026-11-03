@@ -26,7 +26,7 @@ def clear_stale(sid, version, stage, *, already_locked=False):
 
 def _judges_complete(db, version, mode='cross'):
     if mode == 'imported':
-        return True
+        return False
     latest = {}
     for labeler, state in db.execute("""SELECT labeler, state FROM runs
             WHERE version=? AND kind='judge'

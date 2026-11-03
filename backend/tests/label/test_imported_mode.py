@@ -6,10 +6,11 @@ import pytest
 from app.config import settings
 from app.context import store
 from app.context.stale import _judges_complete
-from app.label import route, rule
+from app.label import audit, route, rule
 from app.label.overview import labels_for, overview
 from app.label.questions import QVER
 from app.label.votes import VoteCache
+from app.work.status import database_path, transaction
 
 
 def _imported_session(sid='imp-test'):
@@ -66,8 +67,61 @@ def test_imported_label_can_be_read(data_dir):
 def test_judges_complete_without_runs():
     with sqlite3.connect(':memory:') as db:
         db.execute('CREATE TABLE runs (labeler TEXT, state TEXT, version TEXT, kind TEXT, started_at REAL)')
-        assert _judges_complete(db, 'v1', mode='imported') is True
+        assert _judges_complete(db, 'v1', mode='imported') is False
         assert _judges_complete(db, 'v1', mode='gpt_only') is False
+
+
+@pytest.mark.parametrize('status', ['running', 'done'])
+def test_session_read_preserves_imported_status_with_runs_database(client, data_dir, status):
+    sid, _ = _imported_session()
+    store.update_session(sid, {'labeling': {'status': status}})
+    with transaction(sid):
+        pass
+    assert database_path(sid).exists()
+
+    response = client.get(f'/session/{sid}')
+
+    assert response.status_code == 200, response.text
+    assert response.json()['data']['labeling']['status'] == status
+    assert store.load_session(sid)['labeling']['status'] == status
+
+
+def test_label_api_refuses_imported_audit(client, data_dir, monkeypatch):
+    sid, labels = _imported_session()
+    monkeypatch.setattr(settings, 'audit_size', 3)
+
+    response = client.post(f'/label/{sid}/audit')
+
+    assert response.status_code == 409, response.text
+    assert '가져온 라벨' in response.text
+    with labels._db() as db:
+        assert db.execute('SELECT count(*) FROM audit_set').fetchone()[0] == 0
+
+
+@pytest.mark.parametrize('mode', ['audit', 'reissue'])
+def test_label_api_refuses_imported_review_submission(client, data_dir, monkeypatch, mode):
+    sid, labels = _imported_session()
+    monkeypatch.setattr(settings, 'audit_size', 3)
+    # Reproduce a round created before imported sessions were guarded.
+    round_id = audit.maybe_new_round(labels, 3, kind='manual')
+    doc_id = 'nc_0000000000000000'
+    with labels._db() as db:
+        if mode == 'reissue':
+            db.execute('INSERT INTO audit_reissue VALUES (?,?)', (round_id, doc_id))
+        before = tuple(db.execute('SELECT * FROM final WHERE doc_id=?', (doc_id,)).fetchone())
+    tags = dict(anchor=False, situation=True, sem={k: 1 for k in rule.SEM},
+                reason_code=None, signal='pain')
+
+    response = client.post(f'/label/{sid}/submit', json=dict(
+        doc_id=doc_id, labeler='alice', mode=mode, round=round_id, tags=tags))
+
+    assert response.status_code == 409, response.text
+    assert '가져온 라벨' in response.text
+    with labels._db() as db:
+        after = db.execute('SELECT * FROM final WHERE doc_id=?', (doc_id,)).fetchone()
+        assert after['source'] == 'imported'
+        assert tuple(after) == before
+        assert db.execute('SELECT count(*) FROM human').fetchone()[0] == 0
 
 
 @pytest.mark.parametrize('derived_ref', [None, {'collectionId': 'c1', 'prepKey': 'p_0123456789ab'}])

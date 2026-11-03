@@ -196,6 +196,8 @@ def seen(sid: str, version: str | None = None):
 def submit(sid: str, body: Submit, version: str | None = None):
     with store.locked(sid):
         data = session(sid, version, writable=True)
+        if labeler_mode(data) == IMPORTED:
+            raise store.StoreError(IMPORTED_MESSAGE, 409)
         return submit_item(labels_for(sid, data), body.doc_id, body.labeler, body.mode,
                            body.tags, body.round, body.elapsedSeconds, caches_for(sid, data))
 
@@ -204,6 +206,8 @@ def submit(sid: str, body: Submit, version: str | None = None):
 def new_audit(sid: str, version: str | None = None):
     with store.locked(sid):
         data = session(sid, version, writable=True)
+        if labeler_mode(data) == IMPORTED:
+            raise store.StoreError(IMPORTED_MESSAGE, 409)
         labels = labels_for(sid, data)
         caches = caches_for(sid, data)
         rebuild_queue(labels, caches.get('jev'), caches.get('gpt'), mode=labeler_mode(data))
