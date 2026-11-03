@@ -234,6 +234,93 @@ def test_label_batches_resume_without_duplicates(env, monkeypatch):
     assert summary['counts']['labeled'] == 6
 
 
+@pytest.mark.parametrize('after_rows', [2, 6])
+def test_version_change_during_label_insertion_stops_writes(env, monkeypatch, after_rows):
+    from app.context import versions
+    from app.label.overview import labels_for
+
+    sid = steps.default_sid(read.open_source(env.path))
+    monkeypatch.setattr(steps, '_BATCH', 2)
+    real_iter = steps.iter_records
+    switched = False
+    def records(source, crawled_at):
+        nonlocal switched
+        for i, record in enumerate(real_iter(source, crawled_at), 1):
+            yield record
+            if crawled_at == '' and i == after_rows and not switched:
+                switched = True
+                assert versions.create_version(sid, 'v1', 'stage4', 'test') == 'v2'
+    monkeypatch.setattr(steps, 'iter_records', records)
+
+    with pytest.raises(read.ImportError_, match='가져오는 동안 프로젝트 버전이 바뀌었습니다. 같은 명령을 다시 실행하세요.'):
+        run(env)
+    old = versions._data(sid, 'v1')
+    with labels_for(sid, old)._db() as db:
+        assert db.execute('SELECT count(*) FROM final').fetchone()[0] == after_rows
+    assert old['labeling']['status'] == 'running'
+    assert 'labels' not in old['imported']['steps']
+    assert 'labels' not in store.load_session(sid)['imported']['steps']
+
+    summary = run(env)
+    data = store.load_session(sid)
+    assert data['version'] == 'v2' and data['labeling']['status'] == 'done'
+    assert data['training']['exportRef'] == summary['exportRef']
+    assert summary['counts']['labeled'] == 6
+    with labels_for(sid, data)._db() as db:
+        assert db.execute('SELECT count(*) FROM final').fetchone()[0] == 6
+    with labels_for(sid, old)._db() as db:
+        assert db.execute('SELECT count(*) FROM final').fetchone()[0] == after_rows
+
+
+@pytest.mark.parametrize('step', ['labels', 'export'])
+def test_version_change_before_checkpoint_does_not_mark_new_version(env, monkeypatch, step):
+    from app.context import versions
+
+    real_mark = steps._mark
+    switched = False
+    def mark(sid, name, **kwargs):
+        nonlocal switched
+        if name == step and not switched:
+            switched = True
+            versions.create_version(sid, 'v1', 'stage4' if step == 'labels' else 'stage5', 'test')
+        return real_mark(sid, name, **kwargs)
+    monkeypatch.setattr(steps, '_mark', mark)
+
+    with pytest.raises(read.ImportError_, match='가져오는 동안 프로젝트 버전이 바뀌었습니다'):
+        run(env)
+    sid = steps.default_sid(read.open_source(env.path))
+    assert step not in versions._data(sid, 'v1')['imported']['steps']
+    assert step not in store.load_session(sid)['imported']['steps']
+    summary = run(env)
+    data = store.load_session(sid)
+    assert data['version'] == 'v2' and data['labeling']['status'] == 'done'
+    assert data['training']['exportRef'] == summary['exportRef']
+    assert step in data['imported']['steps']
+
+
+def test_version_change_before_export_close_does_not_update_new_version(env, monkeypatch):
+    from app.context import versions
+    from app.model import export
+
+    real_write = export.write
+    switched = False
+    def write(sid, *args, **kwargs):
+        nonlocal switched
+        result = real_write(sid, *args, **kwargs)
+        if not switched:
+            switched = True
+            versions.create_version(sid, 'v1', 'stage5', 'test')
+        return result
+    monkeypatch.setattr(export, 'write', write)
+
+    with pytest.raises(read.ImportError_, match='가져오는 동안 프로젝트 버전이 바뀌었습니다'):
+        run(env)
+    sid = steps.default_sid(read.open_source(env.path))
+    assert store.load_session(sid)['step'] == 'train-start'
+    assert 'export' not in store.load_session(sid)['imported']['steps']
+    assert run(env)['exportRef']
+
+
 def test_invalid_sid_is_import_error_without_writes(env, data_dir):
     with pytest.raises(read.ImportError_, match='Invalid session id'):
         run(env, sid='../outside')

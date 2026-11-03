@@ -9,7 +9,7 @@ import time
 from typing import Callable
 
 from app.config import settings
-from app.context import store
+from app.context import store, versions
 from app.crawl.control import phase_state
 from app.crawl.queue import CrawlQueue
 from app.crawl.writer import DocWriter
@@ -38,13 +38,22 @@ def _imported(sid):
     return (store.load_session(sid) or {}).get('imported') or {}
 
 
-def _mark(sid, step, **counts):
+def _assert_version(sid, claimed):
+    """Caller holds the session lock through any following writes."""
+    try:
+        return store.assert_writable(sid, claimed)
+    except store.StoreError as exc:
+        raise ImportError_('가져오는 동안 프로젝트 버전이 바뀌었습니다. 같은 명령을 다시 실행하세요.') from exc
+
+
+def _mark(sid, step, *, version=None, **counts):
     with store.locked(sid):
-        data = store.load_session(sid)
+        data = _assert_version(sid, version) if version is not None else store.load_session(sid)
         imported = data.setdefault('imported', {})
         imported.setdefault('steps', {})[step] = store.now()
         imported.setdefault('counts', {}).update(counts)
-        store.write_json(store.session_dir(sid) / 'session.json', data)
+        directory = versions.version_dir(sid, version) if version is not None else store.session_dir(sid)
+        store.write_json(directory / 'session.json', data)
 
 
 def create_session(sid, source, result):
@@ -126,6 +135,8 @@ def insert_labels(sid, source) -> dict:
     from app.model import infer
     with store.locked(sid):
         data = store.load_session(sid)
+        claimed = data['version']
+        _assert_version(sid, claimed)
         labeling = data.get('labeling', {})
         if labeling.get('started') and labeling.get('labelerMode') != IMPORTED:
             raise ImportError_('이미 라벨링을 시작한 프로젝트입니다')
@@ -145,14 +156,18 @@ def insert_labels(sid, source) -> dict:
                 if doc_id in prepared:
                     raise ValueError('Duplicate prepared document ID')
                 prepared.add(doc_id)
-    labels = labels_for(sid, data)
-    label_schema(labels)
+    with store.locked(sid):
+        _assert_version(sid, claimed)
+        labels = labels_for(sid, data)
+        label_schema(labels)
     votes = json.dumps({'imported': dict(file=source.name, sha256=source.sha256[:12])})
     labeled, batch = set(), []
     dropped = 0
     def flush():
-        with labels._db() as db:
-            db.executemany('INSERT OR REPLACE INTO final VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)', batch)
+        with store.locked(sid):
+            _assert_version(sid, claimed)
+            with labels._db() as db:
+                db.executemany('INSERT OR REPLACE INTO final VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)', batch)
         batch.clear()
     for record in iter_records(source, ''):
         doc_id = record.doc['doc_id']
@@ -167,17 +182,31 @@ def insert_labels(sid, source) -> dict:
             flush()
     if batch:
         flush()
-    index_documents(sid, data, labels)
     counts = dict(labeled=len(labeled), unlabeled=len(prepared - labeled), droppedByPrep=dropped)
-    store.update_session(sid, {'labeling': {'started': True, 'status': 'done', 'mode': IMPORTED,
-                                            'labelerMode': IMPORTED}, 'step': 'train-start'})
+    with store.locked(sid):
+        _assert_version(sid, claimed)
+        index_documents(sid, data, labels)
+        store._update_locked(sid, {'labeling': {'started': True, 'status': 'done', 'mode': IMPORTED,
+                                               'labelerMode': IMPORTED}, 'step': 'train-start'})
+    _mark(sid, 'labels', version=claimed, **counts)
     return counts
 
 
 def export_step(sid, partial: bool) -> dict:
     from app.model import export
-    exported = export.write(sid, without_model=True, partial=partial)  # keyword args: tests assert on them
-    store.update_session(sid, {'step': 'cluster-start'})
+    with store.locked(sid):
+        claimed = store.load_session(sid)['version']
+        _assert_version(sid, claimed)
+    try:
+        exported = export.write(sid, claimed, without_model=True, partial=partial)
+    except store.StoreError:
+        with store.locked(sid):
+            _assert_version(sid, claimed)
+        raise
+    with store.locked(sid):
+        _assert_version(sid, claimed)
+        store._update_locked(sid, {'step': 'cluster-start'})
+    _mark(sid, 'export', version=claimed)
     return exported
 
 
@@ -239,7 +268,8 @@ def _run_locked(sid, source, result, log, poll_s, sleep):
         elif step == 'export':
             exported = fn(sid, partial=counts.get('unlabeled', 0) > 0)
             log(f"[5/5] 내보내기 완료 · core+supporting {exported['relevant']:,}건")
-        _mark(sid, step, **({k: v for k, v in counts.items()} if step == 'labels' else {}))
+        if step not in ('labels', 'export'):  # These stages checkpoint their claimed version.
+            _mark(sid, step)
     data = store.load_session(sid)
     log(f'완료. 웹 프로젝트 목록에서 {sid}를 열고 6단계(세그먼트)부터 진행하세요.')
     log(WARNING)
