@@ -435,3 +435,29 @@ def test_personas_reset_after_rows(data_dir, monkeypatch):
     monkeypatch.setattr(routes, '_rows', interleave)
     result = routes.personas('snapshot')
     assert result['run'] == result['personas'][0]['id'] == 'old'
+
+
+
+@pytest.mark.parametrize('state', ['running', 'paused', 'interrupted', 'failed', 'stopped', 'review', 'done'])
+def test_status_preview_visibility_and_representative_limit(api, state):
+    root = version_dir(api.sid, 'v1')
+    preview = dict(run='original-run', k=3, suggested=4, silhouette={'3': .5}, sample=12,
+                   clusters=[dict(id='CL0', docs=12, keywords=['word'], reps=[{'text': 'x'*1000}])])
+    sessions.write_json(root / 'segment/preview.json', preview)
+    sessions.update_session(api.sid, {'segment': {'status': state}})
+    result = ok(api.client.get(api.base + '/status'))
+    if state in ('review', 'done'):
+        assert 'preview' not in result
+    else:
+        assert 'preview' in result
+        expected = {key: value for key, value in preview.items() if key != 'run'}
+        expected['clusters'][0]['reps'][0]['text'] = 'x'*300
+        assert result['preview'] == expected
+
+
+def test_status_before_new_l1_has_no_preview(api):
+    from tests.segment.test_pipeline import Context
+    pipeline.run(Context(api.sid, stop_after='L1'))
+    assert 'preview' in ok(api.client.get(api.base + '/status'))
+    pipeline.run(Context(api.sid, args={'fresh': True}, stop_after='load'))
+    assert 'preview' not in ok(api.client.get(api.base + '/status'))

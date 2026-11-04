@@ -3,12 +3,15 @@ from collections import Counter
 from dataclasses import dataclass
 import fcntl
 import json
+from itertools import islice
+from pathlib import Path
+from sys import intern
 
 import numpy as np
 
 from app.context import store
 from app.context.versions import version_dir
-from app.known.filter import read_export
+from app.config import settings
 from app.model.infer import prepared_root
 from app.prep.tokens import tokenize
 from app.vectors.store import VectorStore
@@ -51,8 +54,56 @@ def _join(export, prepared):
     return doc
 
 
+def _exports(sid, data):
+    ref = data.get('training', {}).get('exportRef')
+    if not isinstance(ref, str) or not ref:
+        raise store.StoreError('5단계 결과가 없습니다')
+    base = (Path(settings.local_data_dir) / 'classified' / sid).resolve()
+    path = (Path(settings.local_data_dir) / ref).resolve()
+    if not path.is_relative_to(base) or path.name != 'relevant.jsonl' or not path.is_file():
+        raise store.StoreError('5단계 결과가 없습니다')
+    return (row for row in _rows(path)
+            if row.get('evidence_level_pred') in {'core', 'supporting'})
+
+
+def _compact(export, prepared):
+    doc = {key: prepared.get(key, '') for key in ('source', 'author_hash', 'date')}
+    doc.update({key: export[key] for key in ('doc_id', 'evidence_level_pred', 'pred_entropy')
+                if key in export})
+    doc.update({key: (prepared.get(key) or '')[:300] for key in ('title', 'body')})
+    doc['comments'] = [{'text': (c.get('text') or '')[:300]}
+                       for c in prepared.get('comments', [])[:1]]
+    return doc
+
+
+def _joined_rows(sid, data, root, selected):
+    # Export order normally follows preparation. Keep only the current full row.
+    prepared = (row for path in sorted((root / 'docs').glob('*.jsonl'))
+                for row in _rows(path) if row['doc_id'] in selected)
+    fallback = None
+    for export in _exports(sid, data):
+        doc_id = export['doc_id']
+        if doc_id not in selected:
+            continue
+        if fallback is None:
+            doc = next(prepared, None)
+            if doc is not None and doc['doc_id'] == doc_id:
+                yield _compact(export, doc), len(_text(doc)) > 2000
+                continue
+            # Legacy exports can be reordered: index compact previews only.
+            prepared.close()
+            fallback = {row['doc_id']: (_compact({}, row), len(_text(row)) > 2000)
+                        for path in sorted((root / 'docs').glob('*.jsonl'))
+                        for row in _rows(path) if row['doc_id'] in selected}
+            doc = None
+        if doc_id not in fallback:
+            raise store.StoreError('전처리 문서를 찾을 수 없습니다.')
+        preview, truncated = fallback[doc_id]
+        yield _compact(export, preview), truncated
+
+
 def _selected(root, folder, ids, field=None):
-    return {row['doc_id']: row[field] if field else row
+    return {row['doc_id']: [intern(w) for w in row[field]] if field else row
             for path in sorted((root / folder).glob('*.jsonl'))
             for row in _rows(path) if row['doc_id'] in ids}
 
@@ -84,7 +135,7 @@ def _nouns(root, ids, pulse=None):
                         if not isinstance(words, list) or not all(isinstance(w, str) for w in words):
                             raise ValueError('Invalid noun cache')
                         if row['doc_id'] in ids:
-                            cached[row['doc_id']] = words
+                            cached[row['doc_id']] = [intern(w) for w in words]
                         count += 1
                     pulse(docs=count, total=total)
                 if count == total and ids <= cached.keys():
@@ -107,7 +158,7 @@ def _nouns(root, ids, pulse=None):
                 words = (list(token_row['tokens']) if token_row.get('doc_id') == doc_id
                          else tokenize(_text(doc), ('NNG', 'NNP')))
                 if doc_id in ids:
-                    cached[doc_id] = words
+                    cached[doc_id] = [intern(w) for w in words]
                 batch.append(dict(doc_id=doc_id, nouns=words))
                 count += 1
                 pulse(docs=count, total=total)
@@ -126,11 +177,9 @@ def restore_input(sid, version, saved, vectors, pulse=None):
     root = prepared_root(sid, data)
     ids = saved['ids']
     selected = set(ids)
-    prepared = _selected(root, 'docs', selected)
-    relevant = {r['doc_id']: r for r in read_export(sid, data) if r['doc_id'] in selected}
+    docs = {doc['doc_id']: doc for doc, _ in _joined_rows(sid, data, root, selected)}
     return SegmentInput(ids, vectors, _selected(root, 'tokens', selected, 'tokens'),
-                        _nouns(root, selected, pulse),
-                        {i: _join(relevant[i], prepared[i]) for i in ids}, saved['report'])
+                        _nouns(root, selected, pulse), docs, saved['report'])
 
 
 def _write_part(directory, parts, rows):
@@ -168,34 +217,29 @@ def load_input(sid: str, version: str, *, pulse=None, structure_sources=None) ->
     data = store.read_json(version_dir(sid, version) / 'session.json')
     if data is None:
         raise store.StoreError('Session not found', 404, 'not_found')
-    relevant = read_export(sid, data)
     root = prepared_root(sid, data)
-    selected = {r['doc_id'] for r in relevant}
-    prepared = _selected(root, 'docs', selected)
+    selected = {r['doc_id'] for r in _exports(sid, data)}
     paths = sorted((root / 'tokens').glob('*.jsonl'))
     if not paths:
         raise store.StoreError('형태소 토큰이 없습니다. 3단계 전처리를 다시 실행하세요.')
     tokens = _selected(root, 'tokens', selected, 'tokens')
     nouns = _nouns(root, selected, pulse)
     ids, joined, selected_tokens, selected_nouns = [], {}, {}, {}
-    report = dict(relevant=len(relevant), zero_vector=0, no_tokens=0, truncated=0, by_channel={})
+    report = dict(relevant=len(selected), zero_vector=0, no_tokens=0, truncated=0, by_channel={})
     vectors = _SelectedVectors(root, selected)
     support_ids, support_vectors = [], []
     # Keep the full result float16; only one normalization batch is float32.
     output = None
     count = 0
-    for start in range(0, len(relevant), _VECTOR_BATCH):
-        batch = relevant[start:start + _VECTOR_BATCH]
-        found, values = vectors.get([row['doc_id'] for row in batch])
+    rows = _joined_rows(sid, data, root, selected)
+    while batch := list(islice(rows, _VECTOR_BATCH)):
+        found, values = vectors.get([doc['doc_id'] for doc, _ in batch])
         if output is None:
-            output = np.empty((len(relevant), values.shape[1]), dtype=np.float16)
+            output = np.empty((len(selected), values.shape[1]), dtype=np.float16)
         lookup = {doc_id: i for i, doc_id in enumerate(found)}
         norms = np.linalg.norm(values, axis=1)
-        for row in batch:
-            doc_id = row['doc_id']
-            if doc_id not in prepared:
-                raise store.StoreError('전처리 문서를 찾을 수 없습니다.')
-            doc = _join(row, prepared[doc_id])
+        for doc, truncated in batch:
+            doc_id = doc['doc_id']
             index = lookup.get(doc_id)
             if index is None or not np.isfinite(norms[index]) or norms[index] == 0:
                 report['zero_vector'] += 1
@@ -208,7 +252,7 @@ def load_input(sid: str, version: str, *, pulse=None, structure_sources=None) ->
                 support_ids.append(doc_id)
                 support_vectors.append(values[index] / norms[index])
                 continue
-            report['truncated'] += int(len(_text(doc)) > 2000)
+            report['truncated'] += int(truncated)
             output[count] = values[index] / norms[index]
             count += 1
             ids.append(doc_id)
