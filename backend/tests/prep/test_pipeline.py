@@ -1,4 +1,5 @@
 import json
+import time
 from contextlib import closing
 from app.crawl.queue import CrawlQueue
 
@@ -452,3 +453,22 @@ def test_tokenize_many_matches_single_documents():
     texts = ['경험이 좋았다', '', '육아맘 사용 경험이 충분히 길어요'] * 5
     pos = ['NNG', 'NNP', 'VV', 'VA', 'XR']
     assert list(tokenize_many(iter(texts), pos)) == [tokenize(text, pos) for text in texts]
+
+
+def test_embed_runs_batches_concurrently_in_order():
+    import threading
+    texts = [str(i) for i in range(pipeline.BATCH_ROWS * 5 + 3)]
+    seen = set()
+
+    class Concurrent:
+        dim, concurrency = 4, 3
+
+        def embed(self, batch):
+            seen.add(threading.get_ident())
+            time.sleep(.01)  # keep requests overlapping so the pool uses several threads
+            return np.array([[float(t), 1., 1., 1.] for t in batch], dtype=np.float32)
+
+    vectors, failed = pipeline._embed(Concurrent(), texts)
+    assert vectors[:, 0].tolist() == [float(t) for t in texts]
+    assert not any(failed)
+    assert len(seen) > 1
