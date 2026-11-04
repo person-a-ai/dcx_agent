@@ -137,7 +137,8 @@ def _run(run_task, task):
 
 
 def _map(fn, items):
-    with ThreadPoolExecutor(max_workers=max(1, settings.segment_concurrency)) as pool:
+    # Hundreds of short judge calls per persona: run wider than the drafts pool.
+    with ThreadPoolExecutor(max_workers=max(1, settings.segment_concurrency, params.TARGET_CONCURRENCY)) as pool:
         return list(pool.map(fn, items))
 
 
