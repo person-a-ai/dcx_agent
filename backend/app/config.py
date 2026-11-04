@@ -49,10 +49,14 @@ class Settings(BaseSettings):
     naver_client_secret: str = "x"
     claude_api_key: str = "x"
     voyage_api_key: str = "x"
+    # Keys from other Voyage accounts; each account has its own rate limit.
+    voyage_extra_api_keys: Annotated[list[str], NoDecode] = Field(default_factory=list)
 
     embed_backend: Literal["voyage", "fake"] = "voyage"
     embed_model: str = "voyage-4"
     embed_dim: int = 1024
+    # Kiwi tokenizer threads; they share one model, so leave cores for the API and web.
+    kiwi_workers: int = 8
     jev_api_keys: Annotated[list[str], NoDecode] = Field(default_factory=list, validation_alias="JEVMODEL_API_KEY")
     jev_model: str = "jev-latest"
     jev_rate_per_min: int = 120
@@ -98,9 +102,9 @@ class Settings(BaseSettings):
             raise PydanticUseDefault()
         return value
 
-    @field_validator("jev_api_keys", "decisions_api_keys", mode="before")
+    @field_validator("jev_api_keys", "voyage_extra_api_keys", "decisions_api_keys", mode="before")
     @classmethod
-    def split_jev_keys(cls, value):
+    def split_api_keys(cls, value):
         if isinstance(value, str):
             return [key.strip() for key in value.split(",") if key.strip()]
         return value

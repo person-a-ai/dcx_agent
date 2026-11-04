@@ -31,6 +31,35 @@ case "${1:-}" in
         release
         exec "${DCX_BASH:-/bin/bash}" "$HERE/deploy.sh"
         ;;
+    import-labels)
+        shift
+        [[ $# -ge 1 ]] || { echo '사용법: dcxctl import-labels <zip 또는 csv>... [--sid ID]' >&2; exit 2; }
+        [[ ! -e "$MAINTENANCE" ]] || { echo '서버 점검 중이라 가져오기를 실행하지 않습니다' >&2; exit 1; }
+        sha="$(current_sha)"
+        [[ -n "$sha" ]] || { echo 'current 릴리스가 없습니다' >&2; exit 1; }
+        backend="$APP_ROOT/releases/$sha/backend"
+        args=()
+        while [[ $# -gt 0 ]]; do
+            case "$1" in
+                --sid) [[ $# -ge 2 ]] || { echo '사용법: dcxctl import-labels <zip 또는 csv>... [--sid ID]' >&2; exit 2; }
+                       args+=("$1" "$2"); shift 2 ;;
+                -*) args+=("$1"); shift ;;
+                /*) args+=("$1"); shift ;;
+                *) args+=("$PWD/$1"); shift ;;
+            esac
+        done
+        # Same dotenv loading as run-api.sh, then the release interpreter runs the importer.
+        exec "$backend/.venv/bin/python" -c '
+import os, pathlib, sys
+from dotenv import dotenv_values
+root = pathlib.Path(sys.argv[1]); backend = pathlib.Path(sys.argv[2])
+for name in ("app.env", "runtime.env"):
+    os.environ.update({k: v for k, v in dotenv_values(root / "shared" / name, interpolate=False).items() if v is not None})
+os.chdir(backend)
+python = str(backend / ".venv/bin/python")
+os.execv(python, [python, "-m", "app.importer", *sys.argv[3:]])
+' "$APP_ROOT" "$backend" "${args[@]}"
+        ;;
     rollback)
         [[ $# == 1 ]] || exit 2
         acquire_lock || { echo '배포가 진행 중입니다' >&2; exit 1; }
@@ -62,5 +91,5 @@ PY
         rollback_mode=manual
         if rollback_candidate; then exit 0; else exit 1; fi
         ;;
-    *) echo '사용법: dcxctl status | deploy [sha] | rollback' >&2; exit 2 ;;
+    *) echo '사용법: dcxctl status | deploy [sha] | import-labels <zip 또는 csv>... [--sid ID] | rollback' >&2; exit 2 ;;
 esac

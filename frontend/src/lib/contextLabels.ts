@@ -41,6 +41,8 @@ export const contextLabels = {
     "threads": "Threads",
     "naver_kin": "지식iN",
     "cook82": "82쿡",
+    "daum_cafe": "다음 카페",
+    "daum_brunch": "브런치",
   },
   "source": {
     "shopping": "쇼핑 분류",
@@ -73,3 +75,5 @@ export const contextLabels = {
     "positioning": "포지셔닝",
   }
 } as const;
+
+export const IMPORT_ONLY_CHANNELS = ['daum_cafe', 'daum_brunch'] as const;

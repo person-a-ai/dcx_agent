@@ -1,0 +1,16 @@
+{
+  "executor": "codex",
+  "role": "code-review",
+  "dispatch": "reviewer-branch: .harness/dispatch/reviewer-branch.md via codex:codex-rescue --fresh (read-only), round 2",
+  "freshSession": true,
+  "verdict": "PASS",
+  "head": "f6d43131266f8b4a5be299a18589fcc9dbd63cb1",
+  "fingerprint": "99ca2cbeb6b4a928a3cf87ca5f973514328b99ac93db44837b72503aae55239d",
+  "range": "c0faa3d7fbcdcdb25dbf4b9aa3c10cb9d32a51e6..f6d43131266f8b4a5be299a18589fcc9dbd63cb1",
+  "findings": [],
+  "non_blocking": [
+    "minor: backend/app/importer/steps.py:193 — after a stage3/stage4 restart, a successful label reimport leaves stale.stage4 in the session; completion and export succeed, only an obsolete stale marker remains.",
+    "Round 1 branch review (c0faa3d..e347f80) FAIL with 3 major findings; all fixed and verified in integrated code by this fresh reviewer.",
+    "Static review; tests not rerun by the reviewer (read-only sandbox). Controller evidence: backend 6319 passed at f6d4313; frontend lint/build/test pass."
+  ]
+}

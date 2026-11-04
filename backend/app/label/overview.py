@@ -134,6 +134,8 @@ def overview(sid, version=None, *, sync=True) -> dict:
     accuracy = audit.labeler_accuracy(labels)
     if mode == 'gpt_only':
         accuracy['jev'] = None
+    if mode == 'imported':
+        accuracy['jev'] = accuracy['gpt'] = None
     consistency = audit.self_consistency(labels)
     consistency['agree'] = consistency['accuracy']
     definition = audit.definition_signal([r['kappaAI'] for r in history])

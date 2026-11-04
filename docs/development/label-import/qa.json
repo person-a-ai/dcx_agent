@@ -1,0 +1,18 @@
+{
+  "executor": "codex",
+  "role": "browser-qa",
+  "dispatch": "browserQa-non-ui: .harness/dispatch/browserQa-non-ui.md via codex:codex-rescue --fresh",
+  "freshSession": true,
+  "verdict": "PASS",
+  "findings": [],
+  "scenarios": [],
+  "notApplicable": "웹 화면을 바꾸지 않는다(2026-11-03 사용자 결정: 업로드 화면·'가져온 프로젝트' 안내 띠 모두 제외). 서버 명령(dcxctl import-labels)과 백엔드 저장 형식·완료 판정만 바뀌고, 기존 화면은 기존 데이터 형식 그대로 결과를 보여 준다.",
+  "head": "f6d43131266f8b4a5be299a18589fcc9dbd63cb1",
+  "fingerprint": "99ca2cbeb6b4a928a3cf87ca5f973514328b99ac93db44837b72503aae55239d",
+  "evidence": {
+    "diffCommand": "git diff --name-only c0faa3d7fbcdcdb25dbf4b9aa3c10cb9d32a51e6..HEAD",
+    "diffResult": "21 changed files, all under backend/ or ops/macmini/. No frontend/ or web UI files changed.",
+    "qaPlan": "All 30 QA scenarios are API/backend pytest or CLI scenarios; no browser execution prescribed.",
+    "execution": "Read-only exemption verification only; no browser run claimed."
+  }
+}
