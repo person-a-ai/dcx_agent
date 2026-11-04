@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 import tempfile
 import time
+from threading import Event
 from types import SimpleNamespace
 
 import numpy as np
@@ -218,59 +219,38 @@ def _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnecte
                                          cfg.minBodyChars, full_text=True)
     removed['excluded_channel'] = len(cleaned) - len(kept)
     total = (len(filtered) + SHARD_ROWS - 1) // SHARD_ROWS
-    done = manifest['progress'].get('done_shards', 0)
-    # Complete document/token preparation before any vectors. Tokenizing a large
-    # import takes over an hour, so heartbeat from this thread too: kiwi can starve
-    # the pulse thread long enough for the run to be marked stale and retried.
-    tokenized, beat_at = 0, time.monotonic()
-    for shard, start in enumerate(range(0, len(filtered), SHARD_ROWS), 1):
-        batch = filtered[start:start + SHARD_ROWS]
-        for offset in range(0, len(batch), DOC_SHARD_ROWS):
-            part = (shard - 1) * ((SHARD_ROWS + DOC_SHARD_ROWS - 1) // DOC_SHARD_ROWS) + offset // DOC_SHARD_ROWS + 1
-            docs = batch[offset:offset + DOC_SHARD_ROWS]
-            filename = f'part-{part:05d}.jsonl'
-            _jsonl(root / 'docs' / filename, docs)
-            rows = []
-            for d, tokens in zip(docs, tokenize_many((token_text(_text(d)) for d in docs), cfg.tokenPos)):
-                if time.monotonic() - beat_at >= HEARTBEAT_INTERVAL:
-                    if not _checkpoint(ctx, done, total, tokenized_docs=tokenized, total_docs=len(filtered)):
-                        manifest['status'] = 'interrupted'
-                        store.write_json(root / 'manifest.json', manifest)
-                        return root
-                    beat_at = time.monotonic()
-                rows.append(dict(doc_id=d['doc_id'], tokens=tokens))
-                tokenized += 1
-            _jsonl(root / 'tokens' / filename, rows)
-    manifest['counts'] = dict(original=len(documents), after=len(filtered))
+    state = dict(done=manifest['progress'].get('done_shards', 0), tokenized=0)
+
+    def check():
+        # Either thread may heartbeat; report tokenizing progress until it finishes.
+        extra = {} if state['tokenized'] is None else dict(tokenized_docs=state['tokenized'],
+                                                           total_docs=len(filtered))
+        return _checkpoint(ctx, state['done'], total, **extra)
+
+    stop = Event()
     if unconnected is not None:
+        # Make the non-embedding outputs durable before reporting the missing key.
+        _write_parts(root, cfg, filtered, state, stop, check)
+        manifest['counts'] = dict(original=len(documents), after=len(filtered))
         raise unconnected
-    vectors = VectorStore(root)
-    if not _retry_failed(vectors, embedder, filtered, lambda: _checkpoint(ctx, done, total)):
-        manifest['status'] = 'interrupted'
-        store.write_json(root / 'manifest.json', manifest)
-        return root
-    existing = {doc_id: bool(failed[i]) for ids, _, failed in vectors.iter_shards()
-                for i, doc_id in enumerate(ids)}
-    for shard, start in enumerate(range(0, len(filtered), SHARD_ROWS), 1):
-        if shard <= done:
-            continue
-        if not _checkpoint(ctx, done, total):
-            manifest['status'] = 'interrupted'
-            store.write_json(root / 'manifest.json', manifest)
-            return root
-        batch = filtered[start:start + SHARD_ROWS]
-        pending = [d for d in batch if d['doc_id'] not in existing]
-        if pending:
-            matrix, failed = _embed(embedder, [_text(d) for d in pending])
-            ids = [d['doc_id'] for d in pending]
-            vectors.write_shard(ids, matrix, failed)
-            existing.update(zip(ids, failed))
-        done = shard
-        manifest['progress'] = dict(done_shards=done, total_shards=total,
-                                    docs_written=start + len(batch), tokens_written=start + len(batch),
-                                    vectors_written=len(existing))
-        store.write_json(root / 'manifest.json', manifest)
-    if not _checkpoint(ctx, done, total):
+    # Tokenizing is CPU-bound and embedding waits on the provider, so overlap them.
+    with ThreadPoolExecutor(1) as pool:
+        parts = pool.submit(_write_parts, root, cfg, filtered, state, stop, check)
+        try:
+            existing = _embed_shards(root, embedder, filtered, manifest, state, check)
+        except EmbedderUnconnected:
+            # Same contract as a missing key at start: finish the non-embedding outputs.
+            parts.result()
+            manifest['counts'] = dict(original=len(documents), after=len(filtered))
+            raise
+        except BaseException:
+            stop.set()
+            raise
+        if existing is None:
+            stop.set()
+        written = parts.result()
+    manifest['counts'] = dict(original=len(documents), after=len(filtered))
+    if existing is None or not written or not check():
         manifest['status'] = 'interrupted'
         store.write_json(root / 'manifest.json', manifest)
         return root
@@ -285,3 +265,58 @@ def _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnecte
     store.write_json(root / 'manifest.json', manifest)
     _publish(sid, version, root, cfg, manifest)
     return root
+
+
+def _write_parts(root, cfg, filtered, state, stop, check):
+    """Write document and token parts; False when the run was stopped."""
+    beat_at = time.monotonic()
+    for shard, start in enumerate(range(0, len(filtered), SHARD_ROWS), 1):
+        batch = filtered[start:start + SHARD_ROWS]
+        for offset in range(0, len(batch), DOC_SHARD_ROWS):
+            part = (shard - 1) * ((SHARD_ROWS + DOC_SHARD_ROWS - 1) // DOC_SHARD_ROWS) + offset // DOC_SHARD_ROWS + 1
+            docs = batch[offset:offset + DOC_SHARD_ROWS]
+            filename = f'part-{part:05d}.jsonl'
+            _jsonl(root / 'docs' / filename, docs)
+            rows = []
+            for d, tokens in zip(docs, tokenize_many((token_text(_text(d)) for d in docs), cfg.tokenPos)):
+                if stop.is_set():
+                    return False
+                # Kiwi can starve the pulse thread, so heartbeat from here too.
+                if time.monotonic() - beat_at >= HEARTBEAT_INTERVAL:
+                    if not check():
+                        stop.set()
+                        return False
+                    beat_at = time.monotonic()
+                rows.append(dict(doc_id=d['doc_id'], tokens=tokens))
+                state['tokenized'] += 1
+            _jsonl(root / 'tokens' / filename, rows)
+    state['tokenized'] = None
+    return True
+
+
+def _embed_shards(root, embedder, filtered, manifest, state, check):
+    """Embed shards not yet stored; the stored-vector map, or None when stopped."""
+    total = (len(filtered) + SHARD_ROWS - 1) // SHARD_ROWS
+    vectors = VectorStore(root)
+    if not _retry_failed(vectors, embedder, filtered, check):
+        return None
+    existing = {doc_id: bool(failed[i]) for ids, _, failed in vectors.iter_shards()
+                for i, doc_id in enumerate(ids)}
+    for shard, start in enumerate(range(0, len(filtered), SHARD_ROWS), 1):
+        if shard <= state['done']:
+            continue
+        if not check():
+            return None
+        batch = filtered[start:start + SHARD_ROWS]
+        pending = [d for d in batch if d['doc_id'] not in existing]
+        if pending:
+            matrix, failed = _embed(embedder, [_text(d) for d in pending])
+            ids = [d['doc_id'] for d in pending]
+            vectors.write_shard(ids, matrix, failed)
+            existing.update(zip(ids, failed))
+        state['done'] = shard
+        manifest['progress'] = dict(done_shards=shard, total_shards=total,
+                                    docs_written=start + len(batch), tokens_written=start + len(batch),
+                                    vectors_written=len(existing))
+        store.write_json(root / 'manifest.json', manifest)
+    return existing
