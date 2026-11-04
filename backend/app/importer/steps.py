@@ -251,6 +251,8 @@ def run_import(paths: str | Path | Sequence[str | Path], *, sid: str | None = No
         log(f'검증  {result.total:,}행 · done {result.done:,} · 건너뜀 {skipped}')
     del seen
     result = merge_scans(scans)
+    if result.done == 0:
+        raise ImportError_('가져올 done 행이 없습니다')
     bundle = bundle_sha(sources)
     if len(sources) > 1:
         log(f'묶음 {len(sources)}개 파일 → sha256 {bundle[:12]}')

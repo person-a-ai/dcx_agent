@@ -739,6 +739,20 @@ def test_cross_file_duplicate_writes_nothing(env, tmp_path, data_dir):
         assert not (data_dir / name).exists() or not any((data_dir / name).iterdir())
 
 
+@pytest.mark.parametrize('file_rows', [
+    [[]],
+    [[row(1, status='skipped')]],
+    [[row(1, status='skipped')], [row(2, site='티스토리')]],
+], ids=['header-only', 'skipped-only', 'two-files-zero-done'])
+def test_no_done_rows_write_nothing(env, tmp_path, data_dir, file_rows):
+    paths = [write_csv(tmp_path / f'empty-{i}.csv', rows) for i, rows in enumerate(file_rows)]
+    with pytest.raises(read.ImportError_, match='가져올 done 행이 없습니다'):
+        run_files(env, paths)
+    for name in ('sessions', 'crawl'):
+        assert not (data_dir / name).exists() or not any((data_dir / name).iterdir())
+    assert not (data_dir / 'imports').exists()
+
+
 def test_single_file_import_unchanged(env, data_dir):
     source = read.open_source(env.path)
     summary = run(env)
