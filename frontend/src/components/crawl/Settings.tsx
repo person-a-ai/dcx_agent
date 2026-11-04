@@ -4,7 +4,7 @@ import type { CrawlConfig } from '@/lib/api/crawl';
 import { parseList, settingsSources, limits } from '@/lib/logic/crawlConfig';
 import { contextLabels } from '@/lib/contextLabels';
 import { INTERNAL_TOOLS } from '@/lib/internalTools';
-export const channelNames:Record<string,string> = {naver_cafe:'네이버 카페',naver_blog:'네이버 블로그',youtube:'유튜브 댓글',youtube_vlog:'유튜브 브이로그',threads:'Threads',naver_kin:'지식iN',cook82:'82쿡',ppomppu:'뽐뿌',clien:'클리앙',fixture:contextLabels.channels.fixture};
+export const channelNames:Record<string,string> = {naver_cafe:'네이버 카페',naver_blog:'네이버 블로그',youtube:'유튜브 댓글',youtube_vlog:'유튜브 브이로그',threads:'Threads',naver_kin:'지식iN',cook82:'82쿡',ppomppu:'뽐뿌',clien:'클리앙',fixture:contextLabels.channels.fixture,daum_cafe:'다음 카페',daum_brunch:'브런치'};
 export const channelDescriptions: Record<string, string> = {
   naver_cafe: '검색 결과 화면 · 본문 (회원 전용 글은 제외)', naver_blog: '검색 결과 화면 · 본문',
   youtube: '영상 검색 · 댓글 스레드',

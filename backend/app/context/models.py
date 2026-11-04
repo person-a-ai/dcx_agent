@@ -83,6 +83,8 @@ class Channel(str, Enum):
     threads = "threads"
     naver_kin = "naver_kin"
     cook82 = "cook82"
+    daum_cafe = "daum_cafe"
+    daum_brunch = "daum_brunch"
 
 
 class CategorySource(str, Enum):

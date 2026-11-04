@@ -43,6 +43,8 @@ LABELS: dict[str, dict[str, str]] = {
         "threads": "Threads",
         "naver_kin": "지식iN",
         "cook82": "82쿡",
+        "daum_cafe": "다음 카페",
+        "daum_brunch": "브런치",
     },
     "source": {
         "shopping": "쇼핑 분류",
