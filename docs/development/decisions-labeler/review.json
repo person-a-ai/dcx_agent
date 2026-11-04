@@ -1,0 +1,35 @@
+{
+  "executor": "claude",
+  "role": "code-review",
+  "dispatch": "harness-sonnet subagent via dispatch reviewer branch (.harness/dispatch/reviewer-branch.md)",
+  "freshSession": true,
+  "review_verdict": "PASS",
+  "verdict": "PASS",
+  "head": "a807c123d2dfe0fb36031250a3ab3c5ed6240ff6",
+  "fingerprint": "ae20bd0fb6ac2a7f6ca1c14d02e0673338426d0a3881579806c24b024c0cb3c3",
+  "commands": [
+    {
+      "command": "backend/.venv/bin/python -m pytest backend/tests/label backend/tests/model -q -p no:cacheprovider",
+      "exitCode": 0
+    },
+    {
+      "command": "npm --prefix frontend test",
+      "exitCode": 0
+    },
+    {
+      "command": "npm --prefix frontend run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "npm --prefix frontend run build",
+      "exitCode": 0
+    }
+  ],
+  "findings": [],
+  "notes": [
+    "[minor, non-blocking] overview._estimate lru_cache key includes only jev_backend; changing DECISIONS_MODEL or key count in-process could serve a stale estimate (settings normally change on restart).",
+    "[minor, known follow-up] judge.estimate token count (JSON length/4) undercounts ~3.5x vs real usage.input_tokens (live check, 2 docs); the dollar figure is effectively a lower bound.",
+    "[info] .env.example DECISIONS_* lines deferred by user decision; separate commit before the PR."
+  ],
+  "evidence": "docs/development/decisions-labeler/reviews/branch.md"
+}

@@ -1,0 +1,12 @@
+## judgeRefs per version
+v7 judge/s245f6045a3454d51a9b2b1bb080c0f8e/p_82344a663550/jev/q1-5a40afd6
+v8 judge/s245f6045a3454d51a9b2b1bb080c0f8e/p_82344a663550/jev/q1-61259f54
+## jev cache folders and stored models
+q1-27b76ef0 
+q1-5a40afd6 fake-jev-latest:131
+q1-61259f54 mock-decisions-1:131
+q1-7f97aa9a 
+q1-e3517982 mock-decisions-1:129
+q1-edfb62bc 
+q1-fcaab27d mock-decisions-1:131
+## mock requests during EDGE-001 decisions run: 0

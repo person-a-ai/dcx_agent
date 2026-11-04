@@ -62,7 +62,7 @@ class Settings(BaseSettings):
     jev_api_keys: Annotated[list[str], NoDecode] = Field(default_factory=list, validation_alias="JEVMODEL_API_KEY")
     jev_model: str = "jev-latest"
     jev_rate_per_min: int = 120
-    jev_backend: Literal["http", "fake"] = "http"
+    jev_backend: Literal["http", "fake", "decisions"] = "http"
     label_gpt_backend: Literal["codex_exec", "openai_api", "fake"] = "codex_exec"
     label_fake_jev_cross: bool = False
     label_capacity_retries: int = Field(default=2, ge=0)
@@ -84,6 +84,11 @@ class Settings(BaseSettings):
     audit_size: int = 50
     audit_reissue: int = 2
     kappa_floor: float = 0.75
+    # Decisions labeler (jev_backend="decisions"); falls back to openai_api_key when no key is set.
+    decisions_api_keys: Annotated[list[str], NoDecode] = Field(default_factory=list, validation_alias="DECISIONS_API_KEY")
+    decisions_model: str = "gpt-6-luna"
+    decisions_rate_per_min: int = 120
+    decisions_base_url: str = "https://api.openai.com/v1"
 
     @field_validator(
         "embed_backend", "embed_model", "embed_dim", "jev_model", "jev_rate_per_min",
@@ -91,7 +96,7 @@ class Settings(BaseSettings):
         "label_capacity_retries", "label_failure_pause_after",
         "known_theta", "model_cut_low", "model_cut_high", "monitor_rate", "monitor_warn",
         "head_min_samples", "audit_first", "audit_every", "audit_size", "audit_reissue",
-        "kappa_floor", mode="before",
+        "kappa_floor", "decisions_model", "decisions_rate_per_min", "decisions_base_url", mode="before",
     )
     @classmethod
     def empty_stage_setting_uses_default(cls, value):
@@ -99,7 +104,7 @@ class Settings(BaseSettings):
             raise PydanticUseDefault()
         return value
 
-    @field_validator("jev_api_keys", "voyage_extra_api_keys", mode="before")
+    @field_validator("jev_api_keys", "voyage_extra_api_keys", "decisions_api_keys", mode="before")
     @classmethod
     def split_api_keys(cls, value):
         if isinstance(value, str):
