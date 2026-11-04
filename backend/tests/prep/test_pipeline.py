@@ -386,7 +386,7 @@ def test_unconnected_keeps_documents_before_embedding(setup, monkeypatch, data_d
         raise EmbedderUnconnected('not configured')
 
     def embed(texts):
-        assert len(rows(root, 'docs')) == len(rows(root, 'tokens')) == 2
+        # Tokenizing now overlaps embedding; the parts must still be complete afterwards.
         raise EmbedderUnconnected('not configured')
 
     identity.embed = embed
@@ -395,6 +395,7 @@ def test_unconnected_keeps_documents_before_embedding(setup, monkeypatch, data_d
         pipeline.run_prep(Context(), 's', 'v1')
     docs = rows(root, 'docs')
     assert [d['doc_id'] for d in docs] == ['one', 'two']
+    assert [t['doc_id'] for t in rows(root, 'tokens')] == ['one', 'two']
     assert all({'desc', 'cafe', 'link'} <= d.keys() for d in docs)
     manifest = store.read_json(root / 'manifest.json')
     assert manifest['status'] == 'failed' and 'compatRef' not in manifest
@@ -438,7 +439,8 @@ def test_tokenizing_heartbeats_and_honors_stop(setup, monkeypatch):
     context = Recording()
     pipeline.run_prep(context, 's', 'v1')
     tokenized = [d['tokenized_docs'] for d in context.details if 'tokenized_docs' in d]
-    assert tokenized == [0, 1, 2]
+    # Embedding heartbeats interleave with tokenizing ones, so only check coverage.
+    assert {0, 1, 2} <= set(tokenized) and max(tokenized) <= 3
     assert all(d['total_docs'] == 3 for d in context.details if 'total_docs' in d)
 
     stopped = Recording(stop=True)
@@ -472,3 +474,28 @@ def test_embed_runs_batches_concurrently_in_order():
     assert vectors[:, 0].tolist() == [float(t) for t in texts]
     assert not any(failed)
     assert len(seen) > 1
+
+
+def test_tokenizing_overlaps_embedding(setup, monkeypatch):
+    import threading
+    monkeypatch.setattr(pipeline, 'SHARD_ROWS', 1)
+    embedder = setup([doc('d1'), doc('d2')])
+    tokenizing, overlapped = threading.Event(), []
+    real = pipeline.tokenize_many
+
+    def slow_tokens(texts, pos):
+        tokenizing.set()
+        for tokens in real(texts, pos):
+            time.sleep(.2)
+            yield tokens
+
+    def embed(texts):
+        overlapped.append(tokenizing.is_set())
+        return np.ones((len(texts), embedder.dim), dtype=np.float32)
+
+    monkeypatch.setattr(pipeline, 'tokenize_many', slow_tokens)
+    monkeypatch.setattr(embedder, 'embed', embed)
+    root = pipeline.run_prep(Context(), 's', 'v1')
+    assert any(overlapped)  # some embedding ran while tokens were still being written
+    assert [t['doc_id'] for t in rows(root, 'tokens')] == ['d1', 'd2']
+    assert json.loads((root / 'stage_3.json').read_text())['embedded'] == 2
