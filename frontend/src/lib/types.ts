@@ -202,9 +202,16 @@ export type SegmentContext = SegmentRow & {
   dominantConstraint: string | null; dimsSummary: Record<string, unknown>; quality: SegmentQuality; flags: string[];
 };
 export type SegmentKSuggest = { k: number; suggested: number; silhouette: Record<string, number>; inertia: Record<string, number>; dendrogram: unknown[]; sample: number };
+export type SegmentPreviewPersona = {
+  id: string; cluster: string; docs: number; centrality: string[];
+  reps: SegmentRepresentative[]; edges?: SegmentRepresentative[];
+  name: string; desire: string; goals: string[]; draftFailed: boolean;
+};
 export type SegmentPreview = Pick<SegmentKSuggest, 'k' | 'suggested' | 'silhouette' | 'sample'> & {
   naming: 'pending' | 'done';
-  clusters: (Pick<SegmentCluster, 'id' | 'docs' | 'keywords' | 'reps'> & { name: string; nameFailed: boolean })[];
+  clusters: (Pick<SegmentCluster, 'id' | 'docs' | 'keywords' | 'reps'> & { edges?: SegmentRepresentative[]; name: string; nameFailed: boolean })[];
+  personas?: SegmentPreviewPersona[];
+  personaDrafting?: 'pending' | 'done';
 };
 export type SegmentStatus = {
   preview?: SegmentPreview;
