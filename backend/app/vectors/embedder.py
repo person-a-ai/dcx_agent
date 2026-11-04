@@ -1,5 +1,7 @@
 """Interchangeable production and deterministic offline embedders."""
 import hashlib
+from itertools import cycle
+from threading import Lock
 from typing import Literal, Protocol
 
 import numpy as np
@@ -29,15 +31,24 @@ def embedder_name(meta: dict) -> str:
 
 class VoyageEmbedder:
     name = 'voyage'
+    REQUESTS_PER_KEY = 2
 
     def __init__(self):
         if settings.voyage_api_key.strip() in {'', 'x'}:
             raise EmbedderUnconnected('Voyage API key is not configured')
         self.model = settings.embed_model
         self.dim = settings.embed_dim
+        keys = [key.strip() for key in (settings.voyage_api_key, *settings.voyage_extra_api_keys)]
+        keys = list(dict.fromkeys(key for key in keys if key not in {'', 'x'}))
+        self._keys, self._lock = cycle(keys), Lock()
+        # Batch callers (prep) may run this many embed calls at once.
+        self.concurrency = len(keys) * self.REQUESTS_PER_KEY
 
     def embed(self, texts: list[str], input_type: Literal['document', 'query'] = 'document') -> np.ndarray:
-        return np.asarray(get_embeddings(texts, input_type=input_type), dtype=np.float32).reshape(len(texts), self.dim)
+        with self._lock:
+            key = next(self._keys)
+        return np.asarray(get_embeddings(texts, input_type=input_type, api_key=key),
+                          dtype=np.float32).reshape(len(texts), self.dim)
 
 
 class FakeEmbedder:

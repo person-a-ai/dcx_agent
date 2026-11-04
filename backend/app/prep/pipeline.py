@@ -1,4 +1,5 @@
 """Durable preparation, with a single writer per immutable preparation key."""
+from concurrent.futures import ThreadPoolExecutor
 import fcntl
 import json
 import os
@@ -40,26 +41,31 @@ def _text(doc):
 def _embed(embedder, texts):
     vectors = np.zeros((len(texts), embedder.dim), dtype=np.float32)
     failed = np.ones(len(texts), dtype=bool)
-    for start in range(0, len(texts), BATCH_ROWS):
-        indexes = np.arange(start, min(start + BATCH_ROWS, len(texts)))
-        for _ in range(3):
-            try:
-                result = np.asarray(embedder.embed([texts[i][:2000] for i in indexes]), dtype=np.float32)
-                if result.shape != (len(indexes), embedder.dim):
-                    continue
-                valid = np.isfinite(result).all(axis=1) & (np.linalg.norm(result, axis=1) > 0)
-                valid &= (np.abs(result) <= np.finfo(np.float16).max).all(axis=1)
-                vectors[indexes[valid]] = result[valid]
-                failed[indexes[valid]] = False
-                indexes = indexes[~valid]
-                if not len(indexes):
-                    break
-            except EmbedderUnconnected:
-                raise
-            except Exception:
-                # Provider payloads may include credentials or document text.
-                continue
+    batches = [np.arange(start, min(start + BATCH_ROWS, len(texts))) for start in range(0, len(texts), BATCH_ROWS)]
+    # Batches write disjoint rows, so several provider requests can run at once.
+    with ThreadPoolExecutor(max(1, getattr(embedder, 'concurrency', 1))) as pool:
+        list(pool.map(lambda indexes: _embed_batch(embedder, texts, indexes, vectors, failed), batches))
     return vectors, failed.tolist()
+
+
+def _embed_batch(embedder, texts, indexes, vectors, failed):
+    for _ in range(3):
+        try:
+            result = np.asarray(embedder.embed([texts[i][:2000] for i in indexes]), dtype=np.float32)
+            if result.shape != (len(indexes), embedder.dim):
+                continue
+            valid = np.isfinite(result).all(axis=1) & (np.linalg.norm(result, axis=1) > 0)
+            valid &= (np.abs(result) <= np.finfo(np.float16).max).all(axis=1)
+            vectors[indexes[valid]] = result[valid]
+            failed[indexes[valid]] = False
+            indexes = indexes[~valid]
+            if not len(indexes):
+                break
+        except EmbedderUnconnected:
+            raise
+        except Exception:
+            # Provider payloads may include credentials or document text.
+            continue
 
 
 def _retry_failed(vectors, embedder, documents, checkpoint):

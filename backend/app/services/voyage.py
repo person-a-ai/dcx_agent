@@ -6,11 +6,13 @@ import voyageai
 from app.config import settings
 
 
-def get_embeddings(texts: list[str], input_type: Literal['document', 'query'] | None = None) -> list[list[float]]:
+def get_embeddings(texts: list[str], input_type: Literal['document', 'query'] | None = None,
+                   api_key: str | None = None) -> list[list[float]]:
     """Voyage AI multilingual embeddings for Korean."""
     if len(texts) == 0:
         return []
-    vo = voyageai.Client(api_key=settings.voyage_api_key)
+    # The client waits and retries rate-limit errors instead of returning zero vectors.
+    vo = voyageai.Client(api_key=api_key or settings.voyage_api_key, max_retries=3)
     # D-256: stored document vectors used no input_type; preserve that request.
     input_kwargs = {'input_type': 'query'} if input_type == 'query' else {}
     all_embs = []
