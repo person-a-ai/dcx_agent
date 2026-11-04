@@ -41,7 +41,7 @@ def env(data_dir, salt, monkeypatch, tmp_path):
 
     monkeypatch.setattr(runner, 'start', start)
     monkeypatch.setattr(runner, 'status', lambda sid: [dict(runs[sid])] if sid in runs else [])
-    rows = [row(i) for i in range(6)] + [row(6, status='skipped', evidence_level=''), row(7, site='네이버지식인')]
+    rows = [row(i) for i in range(6)] + [row(6, status='skipped', evidence_level=''), row(7, site='티스토리')]
     rows[1].update(anchor='0', sense='0', feel='0', think='0', act='0', relate='0', outcome='0', situation='0',
                    evidence_level='non', reason_code='ad', signal='')
     return SimpleNamespace(path=write_csv(tmp_path / 'r.csv', rows), logs=[], runs=runs, sleep=sleep)

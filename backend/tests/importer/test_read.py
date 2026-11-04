@@ -1,15 +1,18 @@
+import hashlib
 import json
 import re
 
 import pytest
 
+from app.crawl.hashing import author_hash
+from app.crawl.urls import normalize_url
 from app.importer import read
-from tests.importer.conftest import COLUMNS, row, write_csv, write_zip
+from tests.importer.conftest import COLUMNS, SITES, channel_row, row, write_csv, write_zip
 
 
 def test_scan_counts_done_skipped_and_other_site(tmp_path, salt):
     rows = [row(1), row(2), row(3, status='skipped', error='short_body', evidence_level=''),
-            row(4, site='네이버지식인')]
+            row(4, site='티스토리')]
     source = read.open_source(write_csv(tmp_path / 'r.csv', rows))
     result = read.scan(source)
     assert (result.total, result.done) == (4, 2)
@@ -80,11 +83,13 @@ def test_records_map_to_doc_and_label(tmp_path, salt):
     Doc.model_validate(doc)
 
 
-def test_records_do_not_keep_nicknames_or_answers(tmp_path, salt):
-    rows = [row(1, author_nickname='비밀닉네임', comment_nicknames='댓글닉A | 댓글닉B', answers="['지식인 답변']")]
+@pytest.mark.parametrize('channel', SITES)
+def test_records_do_not_keep_nicknames_or_answers(tmp_path, salt, channel):
+    rows = [channel_row(channel, 1, author_nickname='비밀닉네임', comment_nicknames='댓글닉A | 댓글닉B',
+                        answers="['지식인 답변']")]
     record = next(read.iter_records(read.open_source(write_csv(tmp_path / 'r.csv', rows)), 'now'))
     text = json.dumps(record.doc, ensure_ascii=False)
-    for secret in ('비밀닉네임', '댓글닉A', '지식인 답변'):
+    for secret in ('비밀닉네임', '댓글닉A', '댓글닉B', '지식인 답변'):
         assert secret not in text
     assert 'answers' not in record.doc
     assert re.fullmatch(r'[0-9a-f]{16}', record.doc['author_hash'])
@@ -145,6 +150,109 @@ def test_short_csv_row_has_user_facing_error(tmp_path):
 
 
 def test_records_skip_other_sites(tmp_path, salt):
-    path = write_csv(tmp_path / 'r.csv', [row(1, site='네이버지식인'), row(2)])
+    path = write_csv(tmp_path / 'r.csv', [row(1, site='티스토리'), row(2)])
     records = list(read.iter_records(read.open_source(path), 'now'))
     assert [record.doc['doc_id'] for record in records] == [row(2)['doc_id']]
+
+
+@pytest.mark.parametrize('channel,date,meta', [
+    ('naver_kin', '2025-12-22', {}),
+    ('daum_cafe', '2026-06-02', {'cafe': 'club1', 'cafe_id': 'club1'}),
+    ('daum_brunch', '2026-06-06', {}),
+])
+def test_each_channel_maps_source_date_and_meta(tmp_path, salt, channel, date, meta):
+    path = write_csv(tmp_path / 'a.csv', [channel_row(channel, 1)])
+    source = read.open_source(path)
+    result = read.scan(source)
+    assert result.done == 1 and result.channels == {channel: 1}
+    [record] = list(read.iter_records(source, 'now'))
+    doc = record.doc
+    assert doc['source'] == channel and doc['date'] == date
+    assert doc['src_meta'] == {**meta, 'imported': True}
+    assert doc['doc_id'] == channel_row(channel, 1)['doc_id']
+    assert doc['url'] == normalize_url(channel_row(channel, 1)['url'], channel)
+    assert '답변' not in json.dumps(doc, ensure_ascii=False)
+    assert '닉1' not in json.dumps(doc, ensure_ascii=False)
+    assert doc['author_hash'] == author_hash(channel, '닉1')
+
+
+def test_mixed_channels_in_one_file(tmp_path, salt):
+    assert read.CHANNEL_ORDER == ('naver_cafe', 'naver_kin', 'daum_cafe', 'daum_brunch')
+    rows = [channel_row(c, i) for i, c in enumerate(read.CHANNEL_ORDER)]
+    source = read.open_source(write_csv(tmp_path / 'a.csv', rows))
+    result = read.scan(source)
+    assert result.channels == {c: 1 for c in read.CHANNEL_ORDER}
+    assert [record.doc['source'] for record in read.iter_records(source, 'now')] == list(read.CHANNEL_ORDER)
+
+
+def test_wrong_doc_id_for_channel_is_rejected(tmp_path, salt):
+    bad = channel_row('daum_cafe', 1, doc_id='dc_' + '0' * 16)
+    with pytest.raises(read.ImportError_, match='doc_id'):
+        read.scan(read.open_source(write_csv(tmp_path / 'a.csv', [bad])))
+
+
+def test_unknown_site_still_skipped(tmp_path, salt):
+    result = read.scan(read.open_source(write_csv(tmp_path / 'a.csv', [row(1, site='티스토리')])))
+    assert result.done == 0 and result.skipped['unknown_site'] == 1
+
+
+@pytest.mark.parametrize('value,expected', [
+    ('2026.03.30. 22:02', '2026-03-30'), ('2025.12.22', '2025-12-22'),
+    ('2026-06-06T03:46:43+09:00', '2026-06-06'), ('2026-06-06', '2026-06-06'),
+    ('26.06.02 11:32', '2026-06-02'), ('', ''), ('26.13.02 11:32', ''), ('어제', ''),
+    ('2026.6.1', '2026-06-01'), ('2026.13.02', ''), ('2026-06-32', ''), ('26.00.02 11:32', ''),
+])
+def test_dates(value, expected):
+    assert read._date(value) == expected
+
+
+def test_duplicate_doc_id_across_files_is_rejected(tmp_path, salt):
+    a = read.open_source(write_csv(tmp_path / 'a.csv', [channel_row('naver_kin', 1)]))
+    b = read.open_source(write_csv(tmp_path / 'b.csv', [channel_row('naver_kin', 1, title='다른 제목')]))
+    seen = set()
+    read.scan(a, seen)
+    assert seen == {channel_row('naver_kin', 1)['doc_id']}
+    with pytest.raises(read.ImportError_, match='중복'):
+        read.scan(b, seen)
+
+
+def test_bundle_sha_is_order_independent_and_single_file_is_unchanged(tmp_path, salt):
+    a = read.open_source(write_csv(tmp_path / 'a.csv', [channel_row('naver_cafe', 1)]))
+    b = read.open_source(write_csv(tmp_path / 'b.csv', [channel_row('daum_brunch', 2)]))
+    expected = hashlib.sha256('\n'.join(sorted([a.sha256, b.sha256])).encode('utf-8')).hexdigest()
+    assert read.bundle_sha([a]) == a.sha256
+    assert read.bundle_sha([a, b]) == read.bundle_sha([b, a]) == expected != a.sha256
+
+
+def test_same_file_twice_is_rejected(tmp_path, salt):
+    path = write_csv(tmp_path / 'a.csv', [channel_row('naver_cafe', 1)])
+    with pytest.raises(read.ImportError_, match='두 번'):
+        read.open_sources([path, path])
+
+
+def test_same_csv_in_zip_is_rejected(tmp_path):
+    path = write_csv(tmp_path / 'a.csv', [row(1)])
+    archive = write_zip(tmp_path / 'a.zip', {'result.csv': path.read_bytes()})
+    with pytest.raises(read.ImportError_, match='두 번.*result.csv'):
+        read.open_sources([path, archive])
+
+
+def test_open_sources_accepts_iterable_and_preserves_order(tmp_path):
+    paths = [write_csv(tmp_path / f'{n}.csv', [row(n)]) for n in (2, 1)]
+    sources = read.open_sources(str(path) for path in paths)
+    assert [source.name for source in sources] == ['2.csv', '1.csv']
+    assert [read.scan(source).done for source in sources] == [1, 1]
+
+
+def test_merge_scans_sums_and_keeps_keyword_order(tmp_path, salt):
+    a = read.scan(read.open_source(write_csv(tmp_path / 'a.csv', [
+        channel_row('naver_cafe', 1, keyword='가'), row(4, status='skipped')])))
+    b = read.scan(read.open_source(write_csv(tmp_path / 'b.csv', [
+        channel_row('daum_cafe', 2, keyword='나'), channel_row('daum_cafe', 3, keyword='가'),
+        channel_row('daum_cafe', 5, status='skipped'), row(6, site='티스토리')])))
+    merged = read.merge_scans([a, b])
+    assert (merged.total, merged.done) == (6, 3)
+    assert merged.keywords == ['가', '나']
+    assert merged.channels == {'naver_cafe': 1, 'daum_cafe': 2}
+    assert merged.skipped == {'skipped': 2, 'unknown_site': 1}
+    assert a.skipped == {'skipped': 1} and a.keywords == ['가']

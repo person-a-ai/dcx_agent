@@ -8,7 +8,7 @@ import hashlib
 import io
 from pathlib import Path
 import re
-from typing import Callable, ContextManager, Iterator, TextIO
+from typing import Callable, ContextManager, Iterable, Iterator, Sequence, TextIO
 from urllib.parse import urlsplit
 import zipfile
 
@@ -19,14 +19,20 @@ from app.label.questions import QVER
 from app.label.schema import ReasonCode, Signal, Tags
 
 csv.field_size_limit(2 ** 31 - 1)
-SITE = '네이버카페'
-SOURCE = 'naver_cafe'
+CHANNELS: dict[str, str] = {'네이버카페': 'naver_cafe', '네이버지식인': 'naver_kin',
+                          '다음카페': 'daum_cafe', '다음블로그_브런치': 'daum_brunch'}
+CHANNEL_ORDER: tuple[str, ...] = ('naver_cafe', 'naver_kin', 'daum_cafe', 'daum_brunch')
 REQUIRED: tuple[str, ...] = ('date', 'keyword', 'title', 'contents', 'comments', 'answers', 'site', 'url',
             'author_nickname', 'comment_nicknames', 'doc_id', 'status', 'anchor', *rule.SEM,
             'situation', 'evidence_level', 'reason_code', 'signal', 'questions_version', 'rule_version')
 REASONS = set(ReasonCode.__args__)
 SIGNALS = set(Signal.__args__)
 _EXAMPLES = 5
+_DATE_FORMATS = (
+    (re.compile(r'\s*(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})'), 0),
+    (re.compile(r'\s*(\d{4})-(\d{2})-(\d{2})(?:[T ]|$)'), 0),
+    (re.compile(r'\s*(\d{2})\.(\d{2})\.(\d{2})\s+\d{1,2}:\d{2}\s*$'), 2000),
+)
 
 
 class ImportError_(Exception):
@@ -46,6 +52,7 @@ class Scan:
     done: int
     skipped: Counter[str]
     keywords: list[str]
+    channels: Counter[str]
 
 
 @dataclass(frozen=True)
@@ -101,6 +108,24 @@ def open_source(path: str | Path) -> Source:
         raise ImportError_(f'{Path(path).name}: 파일을 읽을 수 없습니다: {exc}') from exc
 
 
+def open_sources(paths: Iterable[str | Path]) -> list[Source]:
+    sources, seen = [], set()
+    for path in paths:
+        source = open_source(path)
+        if source.sha256 in seen:
+            raise ImportError_(f'같은 파일이 두 번 들어왔습니다: {source.name}')
+        seen.add(source.sha256)
+        sources.append(source)
+    return sources
+
+
+def bundle_sha(sources: Sequence[Source]) -> str:
+    if len(sources) == 1:
+        return sources[0].sha256
+    hashes = '\n'.join(sorted(source.sha256 for source in sources))
+    return hashlib.sha256(hashes.encode('utf-8')).hexdigest()
+
+
 @contextmanager
 def _rows(source: Source):
     try:
@@ -121,12 +146,16 @@ def _tags(row):
     return {k: int(v) for k, v in values.items()}
 
 
-def _problems(row):
+def _channel(row) -> str | None:
+    return CHANNELS.get(row['site'])
+
+
+def _problems(row, channel):
     """Return the first validation problem of a done row, or None."""
     if row['questions_version'] != QVER or row['rule_version'] != rule.RULE_VERSION:
         return f'판정 버전이 DCX({QVER}/{rule.RULE_VERSION})와 다릅니다: {row["questions_version"]}/{row["rule_version"]}'
     try:
-        expected_id = make_doc_id(SOURCE, normalize_url(row['url'], SOURCE))
+        expected_id = make_doc_id(channel, normalize_url(row['url'], channel))
     except ValueError:
         return 'URL 형식이 올바르지 않습니다'
     if expected_id != row['doc_id']:
@@ -143,10 +172,12 @@ def _problems(row):
     return None
 
 
-def scan(source: Source) -> Scan:
-    seen, problems = set(), []
+def scan(source: Source, seen: set[str] | None = None) -> Scan:
+    seen = set() if seen is None else seen
+    problems = []
     total = done = 0
     skipped, keywords = Counter(), {}
+    channels = Counter()
     with _rows(source) as reader:
         for line, row in enumerate(reader, start=2):
             total += 1
@@ -155,22 +186,34 @@ def scan(source: Source) -> Scan:
             if row['doc_id'] in seen:
                 problems.append(f'{line}행 {row["doc_id"]}: 중복된 doc_id')
             seen.add(row['doc_id'])
-            if row['site'] != SITE:
+            channel = _channel(row)
+            if channel is None:
                 skipped['unknown_site'] += 1
                 continue
             if row['status'] != 'done':
                 skipped[row['status'] or 'blank'] += 1
                 continue
-            problem = _problems(row)
+            problem = _problems(row, channel)
             if problem:
                 problems.append(f'{line}행 {row["doc_id"]}: {problem}')
             done += 1
+            channels[channel] += 1
             keywords.setdefault(_keyword(row), None)
             if len(problems) >= _EXAMPLES:
                 break
     if problems:
         raise ImportError_(f'{source.name}: 가져올 수 없는 행이 있습니다\n' + '\n'.join(problems))
-    return Scan(total=total, done=done, skipped=skipped, keywords=list(keywords))
+    return Scan(total=total, done=done, skipped=skipped, keywords=list(keywords), channels=channels)
+
+
+def merge_scans(scans: Sequence[Scan]) -> Scan:
+    skipped, channels = Counter(), Counter()
+    for result in scans:
+        skipped.update(result.skipped)
+        channels.update(result.channels)
+    return Scan(total=sum(result.total for result in scans), done=sum(result.done for result in scans),
+                skipped=skipped, channels=channels,
+                keywords=list(dict.fromkeys(keyword for result in scans for keyword in result.keywords)))
 
 
 def _comments(value):
@@ -187,8 +230,12 @@ def _comments(value):
 
 
 def _date(value):
-    match = re.match(r'\s*(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})', value or '')
-    return f'{int(match[1]):04d}-{int(match[2]):02d}-{int(match[3]):02d}' if match else ''
+    for pattern, century in _DATE_FORMATS:
+        match = pattern.match(value or '')
+        if match:
+            year, month, day = int(match[1]) + century, int(match[2]), int(match[3])
+            return f'{year:04d}-{month:02d}-{day:02d}' if 1 <= month <= 12 and 1 <= day <= 31 else ''
+    return ''
 
 
 def _keyword(row):
@@ -196,17 +243,20 @@ def _keyword(row):
     return (row['keyword'] or '').strip() or '.'
 
 
-def _doc(row, crawled_at):
-    url = normalize_url(row['url'], SOURCE)
-    cafe = urlsplit(url).path.strip('/').split('/')[0]
+def _doc(row, crawled_at, channel):
+    url = normalize_url(row['url'], channel)
+    src_meta = dict(imported=True)
+    if channel in ('naver_cafe', 'daum_cafe'):
+        cafe = urlsplit(url).path.strip('/').split('/')[0]
+        src_meta.update(cafe=cafe, cafe_id=cafe)
     nickname = (row['author_nickname'] or '').strip()
     kw = _keyword(row)
-    return dict(doc_id=row['doc_id'], source=SOURCE, src_meta=dict(cafe=cafe, cafe_id=cafe, imported=True),
+    return dict(doc_id=row['doc_id'], source=channel, src_meta=src_meta,
                 kw=kw, kw_axis='', kw_sub='', kw_hits=[kw],
                 title=row['title'] or '', body=row['contents'] or '', comments=_comments(row['comments']),
                 date=_date(row['date']), url=url, fetch_level='full', access='public',
                 snippet=(row['contents'] or '')[:200],
-                author_hash=author_hash(SOURCE, nickname) if nickname else '', crawled_at=crawled_at)
+                author_hash=author_hash(channel, nickname) if nickname else '', crawled_at=crawled_at)
 
 
 def _label(row):
@@ -224,6 +274,7 @@ def _label(row):
 def iter_records(source: Source, crawled_at: str) -> Iterator[Record]:
     with _rows(source) as reader:
         for row in reader:
-            if row['site'] != SITE or row['status'] != 'done':
+            channel = _channel(row)
+            if channel is None or row['status'] != 'done':
                 continue
-            yield Record(doc=_doc(row, crawled_at), label=_label(row))
+            yield Record(doc=_doc(row, crawled_at, channel), label=_label(row))
