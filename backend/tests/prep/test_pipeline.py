@@ -187,7 +187,7 @@ def test_done_cache_does_not_read_collection_again(setup, monkeypatch):
     root = pipeline.run_prep(Context(), 's', 'v1')
     def forbidden(*args, **kwargs):
         raise AssertionError('completed cache must return without collection IO')
-    monkeypatch.setattr(pipeline, 'crawl_docs', forbidden)
+    monkeypatch.setattr(pipeline, 'iter_crawl_docs', forbidden)
     assert pipeline.run_prep(Context(), 's', 'v1') == root
 
 
@@ -499,3 +499,20 @@ def test_tokenizing_overlaps_embedding(setup, monkeypatch):
     assert any(overlapped)  # some embedding ran while tokens were still being written
     assert [t['doc_id'] for t in rows(root, 'tokens')] == ['d1', 'd2']
     assert json.loads((root / 'stage_3.json').read_text())['embedded'] == 2
+
+
+def test_streams_parts_and_prunes_stale_ones(setup, monkeypatch):
+    monkeypatch.setattr(pipeline, 'SHARD_ROWS', 2)
+    monkeypatch.setattr(pipeline, 'DOC_SHARD_ROWS', 1)
+    setup([doc(f'd{i}') for i in range(5)])
+    root = pipeline.run_prep(Context(), 's', 'v1')
+    # A stale part from an earlier, larger run of the same key must not survive a rebuild.
+    pipeline._jsonl(root / 'docs' / 'part-00099.jsonl', [doc('stale')])
+    manifest = store.read_json(root / 'manifest.json')
+    store.write_json(root / 'manifest.json', {**manifest, 'status': 'interrupted', 'progress': {}})
+    pipeline.run_prep(Context(), 's', 'v1')
+    names = sorted(path.name for path in (root / 'docs').glob('*.jsonl'))
+    assert names == [f'part-{n:05d}.jsonl' for n in range(1, 6)]
+    assert [d['doc_id'] for d in rows(root, 'docs')] == [f'd{i}' for i in range(5)]
+    assert [t['doc_id'] for t in rows(root, 'tokens')] == [f'd{i}' for i in range(5)]
+    assert VectorStore(root).count() == 5
