@@ -10,10 +10,15 @@ from app.crawl.writer import read_docs
 
 def crawl_docs(sid: str, session: dict) -> list[dict]:
     """Read the active collection chain child-first so the child's doc_id wins."""
+    return list(iter_crawl_docs(sid, session))
+
+
+def iter_crawl_docs(sid: str, session: dict):
+    """Stream crawl_docs' documents; only the seen IDs stay in memory."""
     cid = session.get('collectionId')
     base = Path(settings.local_data_dir) / 'crawl' / sid / 'collections'
     collections = set()
-    docs = {}
+    seen = set()
     while True:
         if not isinstance(cid, str) or not re.fullmatch(r'c[1-9][0-9]*', cid):
             raise ValueError('Invalid crawl collection id')
@@ -26,10 +31,12 @@ def crawl_docs(sid: str, session: dict) -> list[dict]:
         except (OSError, ValueError):
             raise ValueError(f'수집본을 읽을 수 없습니다 ({cid})') from None
         for doc in read_docs(root / 'docs'):
-            docs.setdefault(doc['doc_id'], doc)
+            if doc['doc_id'] not in seen:
+                seen.add(doc['doc_id'])
+                yield doc
         cid = manifest.get('parent')
         if not cid:
-            return list(docs.values())
+            return
 
 
 def _export_fields(item: dict) -> dict:
@@ -54,9 +61,14 @@ def _passes_quality(item: dict, min_body_chars: int = 10) -> bool:
 
 def filter_documents(documents, ad_filter=(), excluded=(), min_body_chars=10, *, full_text=False):
     """D-084–086 rules; full_text uses uncapped body/comments for ad matching."""
-    seen = set()
-    filtered = []
     removed = dict(ad=0, excluded_source=0, duplicate=0, too_short=0)
+    filtered = list(iter_filtered(documents, ad_filter, excluded, min_body_chars, removed, full_text=full_text))
+    return filtered, removed
+
+
+def iter_filtered(documents, ad_filter, excluded, min_body_chars, removed, *, full_text=False):
+    """Stream filter_documents' kept items, counting removals into ``removed``."""
+    seen = set()
     for idx, raw in enumerate(documents):
         item = _export_fields(raw)
         text = item.get('title', '') + ' ' + item.get('desc', '')
@@ -82,5 +94,4 @@ def filter_documents(documents, ad_filter=(), excluded=(), min_body_chars=10, *,
             removed[reason] += 1
             continue
         item['idx'] = idx
-        filtered.append(item)
-    return filtered, removed
+        yield item
