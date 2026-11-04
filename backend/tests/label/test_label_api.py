@@ -299,7 +299,7 @@ def test_overview_reads_preserve_seen_and_estimates(client, session, monkeypatch
     second = client.get(f'/label/{sid}/overview').json()
     assert first['changes'] == second['changes']
     assert store.load_session(sid)['labeling']['lastSeenAt'] == first['lastSeenAt']
-    assert calls == ['jev', 'gpt']
+    assert calls == []  # nothing pending: the corpus is never read for an estimate
     assert client.post(f'/label/{sid}/seen').status_code == 200
     assert client.get(f'/label/{sid}/overview').json()['changes']['accepted'] == 1
     assert client.post(f'/label/{sid}/seen').status_code == 200
