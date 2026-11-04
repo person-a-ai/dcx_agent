@@ -62,10 +62,10 @@ def test_channel_from_derived_not_export(session):
     assert 'agreed' not in result.report['by_channel']
     assert sum(result.report['by_channel'].values()) == len(result.ids)
     for doc_id, doc in result.docs.items():
-        assert doc['judge_source'] == 'agreed'
-        for key in ('source', 'author_hash', 'comments', 'date'):
+        for key in ('source', 'author_hash', 'date'):
             assert doc[key] == prepared[doc_id][key]
-        assert doc['tagProbs']
+        assert doc['comments'] == [{'text': (c.get('text') or '')[:300]}
+                                   for c in prepared[doc_id]['comments'][:1]]
         assert doc['evidence_level_pred'] in {'core', 'supporting'}
 
 
@@ -275,3 +275,92 @@ def test_sparse_vectors_do_not_materialize_collection_index(session, monkeypatch
     result = load_input(session.sid, 'v1')
     assert len(result.ids) == 13
     np.testing.assert_allclose(np.linalg.norm(result.vectors.astype(np.float32), axis=1), 1, atol=.001)
+
+
+def test_compact_input_and_resume_preserve_consumers(session, data_dir, monkeypatch):
+    import sys
+    from app.segment.inputs import SegmentInput, _join, restore_input
+    from app.segment.pipeline import _reps
+    from app.segment.signals import document_signals
+    from app.segment.quality import channel_distribution
+    data = snapshot(session)
+    root = prepared_root(session.sid, data)
+    prepared = documents(session.sid, data)
+    for doc in prepared.values():
+        doc.update(title='title' * 100, body='body' * 1000,
+                   comments=[{'text': 'comment' * 100, 'unused': 'x'}, {'text': 'later'}],
+                   unused='x' * 10000)
+        if int(doc['doc_id'][1:]) % 3 != 2:
+            doc['body'] = ''
+        if int(doc['doc_id'][1:]) % 3 == 1:
+            doc['title'] = ''
+    for path in (root / 'docs').glob('*.jsonl'):
+        write_rows(path, [prepared[r['doc_id']] for r in map(json.loads, path.read_text().splitlines())])
+    export = data_dir / data['training']['exportRef']
+    rows = list(map(json.loads, export.read_text().splitlines()))
+    from app.segment import inputs
+    with monkeypatch.context() as patch:
+        patch.setattr(inputs, '_compact', _join)
+        baseline = load_input(session.sid, session.version)
+    result = load_input(session.sid, session.version)
+    assert result.ids == baseline.ids
+    np.testing.assert_array_equal(result.vectors, baseline.vectors)
+    assert result.tokens == baseline.tokens
+    assert result.nouns == baseline.nouns
+    assert result.report == baseline.report
+    full = SegmentInput(result.ids, result.vectors, result.tokens, result.nouns,
+                        {r['doc_id']: _join(r, prepared[r['doc_id']]) for r in rows}, result.report)
+    for source in (full, result):
+        source.index = {i: n for n, i in enumerate(source.ids)}
+    assert _reps(result, result.ids) == _reps(full, full.ids)
+    for doc_id in result.ids:
+        assert _reps(result, [doc_id]) == _reps(full, [doc_id])
+    assert document_signals(result) == document_signals(full)
+    assert channel_distribution(result.docs.values()) == channel_distribution(full.docs[i] for i in full.ids)
+    allowed = {'doc_id', 'title', 'body', 'comments', 'source', 'author_hash', 'date',
+               'evidence_level_pred', 'pred_entropy'}
+    for doc in result.docs.values():
+        assert set(doc) <= allowed
+        original = prepared[doc['doc_id']]
+        assert doc['body'] == original['body'][:300]
+        assert doc['title'] == original['title'][:300]
+        assert doc['comments'] == [{'text': ('comment' * 100)[:300]}]
+        assert len(json.dumps(doc)) < 3000
+    for words in [*result.tokens.values(), *result.nouns.values()]:
+        assert all(w is sys.intern(w) for w in words)
+    restored = restore_input(session.sid, session.version,
+                             {'ids': result.ids, 'report': result.report}, result.vectors)
+    assert restored.docs == result.docs
+    assert restored.tokens == result.tokens
+    assert restored.nouns == result.nouns
+    write_rows(export, list(reversed(rows)))
+    reordered = load_input(session.sid, session.version)
+    assert reordered.ids == list(reversed(result.ids))
+    assert reordered.docs == result.docs
+    assert reordered.report == result.report
+    np.testing.assert_array_equal(reordered.vectors, result.vectors[::-1])
+
+
+def test_large_join_retains_only_compact_rows(tmp_path, monkeypatch):
+    import tracemalloc
+    from app.segment import inputs
+    root = tmp_path
+    (root / 'docs').mkdir()
+    count = 3000
+    with (root / 'docs/part-00001.jsonl').open('w') as stream:
+        for i in range(count):
+            stream.write(json.dumps({'doc_id': str(i), 'body': 'x' * 20000,
+                                     'unused': 'y' * 20000}) + '\n')
+    monkeypatch.setattr(inputs, '_exports', lambda *args: (
+        {'doc_id': str(i), 'evidence_level_pred': 'core', 'unused': 'z' * 20000}
+        for i in range(count)))
+    selected = {str(i) for i in range(count)}
+    tracemalloc.start()
+    try:
+        docs = dict((doc['doc_id'], doc) for doc, _ in inputs._joined_rows('', {}, root, selected))
+        _, peak = tracemalloc.get_traced_memory()
+    finally:
+        tracemalloc.stop()
+    assert len(docs) == count
+    assert peak < 8_000_000
+    assert all(len(doc['body']) == 300 and 'unused' not in doc for doc in docs.values())

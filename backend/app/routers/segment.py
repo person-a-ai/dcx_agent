@@ -209,6 +209,14 @@ def status(sid: str, version: str | None = None):
             reason = '클러스터링 중 오류가 났습니다. 이어서 진행하거나 다시 실행하세요.'
         if reason or work['state'] in ('failed', 'interrupted'):
             result['reason'] = reason or '이어서 진행'
+    if result['status'] not in ('review', 'done'):
+        preview = sessions.read_json(version_dir(sid, data['version']) / 'segment/preview.json')
+        if preview:
+            result['preview'] = {key: value for key, value in preview.items() if key != 'run'}
+            result['preview']['clusters'] = [
+                {**cluster, 'reps': [{**rep, 'text': (rep.get('text') or '')[:300]}
+                                    for rep in cluster.get('reps', [])]}
+                for cluster in preview['clusters']]
     report = _report(sid, data)
     if report:
         result['stage6'] = report

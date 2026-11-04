@@ -16,6 +16,7 @@ import { LayerTabs, type SegmentLayer } from './LayerTabs';
 import { ClusterLayer, type Edit } from './ClusterLayer';
 import { PersonaLayer } from './PersonaLayer';
 import { ContextLayer } from './ContextLayer';
+import { ClusterPreview } from './ClusterPreview';
 import { KSuggestChart } from './KSuggestChart';
 import { currentSegmentDraft, layerState, segmentErrorMessage, segmentErrorMessages } from './segmentView';
 const running = (s: SegmentStatus | null) => !!s && ['queued', 'running', 'paused'].includes(s.status);
@@ -400,5 +401,6 @@ export function SegmentScreen({ sid, version, readonly = false }: Props) {
  {layer === '6-C' && <div className="grid grid-cols-[minmax(220px,1fr)_minmax(0,3fr)] gap-5"><nav aria-label="Persona 목록" className="min-w-0 space-y-2">{personas.map(p => { const rows = contexts.filter(c => c.personaId === p.id); return <Button key={p.id} className="ds-wrap w-full" aria-current={chosen?.id === p.id ? 'true' : undefined} onClick={() => setSelected(p.id)}>{p.clusterId} · {p.name ?? p.nameDraft ?? p.id} · {rows.filter(c => c.confirmed).length}/{rows.length} 확정</Button>; })}</nav><ContextLayer key={current.run} sid={sid} version={version} support={supportCounts} {...editor} contexts={visibleContexts} emptyRatio={emptyRatio} onBulk={bulk}/></div>}
  {forward && <div className="flex justify-end"><Button data-forward variant="primary" disabled={blocked} onClick={() => setLayer(layer === '6-A' ? '6-B' : '6-C')}>{layer === '6-A' ? '6-B로 →' : '6-C로 →'}</Button></div>}
  <div className="flex flex-wrap items-center gap-3"><p aria-live="polite">{layer === '6-A' ? current.confirm.clusters : layer === '6-B' ? current.confirm.personas : current.confirm.contexts} 확정</p>{(layer === '6-A' || layer === '6-B') && bulkRemaining > 0 && <Button disabled={editor.disabled} onClick={bulkLayer}>{`남은 ${layer === '6-A' ? '클러스터' : 'Persona'} ${bulkRemaining}개 초안으로 모두 확정`}</Button>}</div></>}
+ {current?.preview && (running(current) || current.status === 'failed' || current.status === 'interrupted') && <ClusterPreview preview={current.preview}/>}
  <div className="flex justify-end"><Button disabled={!evidence.allowed} title={evidence.allowed ? undefined : evidence.reason} onClick={() => router.push('/pipeline/evidence?start=1')}>근거 탐색 실행</Button></div></div></VersionStage>;
 }

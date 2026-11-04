@@ -11,6 +11,7 @@ T10 sends fresh=True only after confirmReset. Without a checkpoint, initialize
 new layers. The legacy resume argument is unnecessary and cannot override reset.
 """
 from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import threading
 import os
@@ -24,6 +25,7 @@ import uuid
 
 import numpy as np
 
+from app.config import settings
 from app.context import store as sessions
 from app.context.stale import clear_stale
 from app.context.versions import version_dir
@@ -213,6 +215,19 @@ def _groups(rows, field):
     return result
 
 
+def _l1_summary(source, state, sid, version):
+    grouped = defaultdict(list)
+    for doc_id, label in zip(source.ids, state['labels']):
+        grouped[f'CL{label}'].append(doc_id)
+    session = sessions.read_json(version_dir(sid, version) / 'session.json')
+    state['bk'] = session.get('projectContext', {}).get('bk', '')
+    keywords = ctfidf.ctfidf({key: [source.nouns[i] for i in ids] for key, ids in grouped.items()},
+                             params.CTFIDF_TOP, bk=state['bk'])
+    return [dict(id=key, docs=len(ids), keywords=keywords[key], reps=_reps(source, ids),
+                 name='', nameFailed=False)
+            for key, ids in grouped.items()]
+
+
 def _boundary_sample(vectors, labels):
     # Stratification guarantees small target clusters are present. quality's
     # own cap still applies and samples this already bounded matrix in full.
@@ -369,19 +384,35 @@ def run(context):
                 labels, centers = l1.cluster(source.vectors, k, np.random.default_rng(params.SEED))
                 state['L1'] = {**suggestion, 'k': k, 'suggested': suggestion['k']}
                 state['labels'], state['centers'] = labels.tolist(), centers.tolist()
+                state['l1_summary'] = _l1_summary(source, state, sid, version)
+                preview = dict(run=run_id, k=k, suggested=suggestion['k'],
+                    silhouette=suggestion['silhouette'], sample=suggestion['sample'],
+                    clusters=state['l1_summary'], naming='pending')
+                _write(root / 'preview.json', preview)
+                session = sessions.read_json(version_dir(sid, version) / 'session.json')
+                one_liner = session.get('projectContext', {}).get('oneLiner', '')
+                draft = _bind(drafts._draft, registry=calls)
+                def name_cluster(cluster):
+                    return draft(sid, 'cluster_name', drafts.ClusterNameOut, one_liner,
+                                 {'keywords': cluster['keywords'], 'reps': cluster['reps']})
+                with ThreadPoolExecutor(max_workers=max(1, settings.segment_concurrency)) as pool:
+                    names = list(pool.map(name_cluster, state['l1_summary']))
+                for cluster, name in zip(state['l1_summary'], names):
+                    cluster.update(name=name['name'] if name else '', nameFailed=name is None)
+                preview['naming'] = 'done'
+                _write(root / 'preview.json', preview)
             elif step == 'L2':
                 state['clusters'], state['personas'], state['docs'], state['l2'] = [], [], [], {}
                 grouped = defaultdict(list)
                 for doc_id, label in zip(source.ids, state['labels']):
                     grouped[f'CL{label}'].append(doc_id)
-                session = sessions.read_json(version_dir(sid, version) / 'session.json')
-                state['bk'] = session.get('projectContext', {}).get('bk', '')
-                keywords = ctfidf.ctfidf({key: [source.nouns[i] for i in ids] for key, ids in grouped.items()},
-                                         params.CTFIDF_TOP, bk=state['bk'])
+                if 'l1_summary' not in state:
+                    state['l1_summary'] = _l1_summary(source, state, sid, version)
+                summary = {row['id']: row for row in state['l1_summary']}
                 for cluster_id, ids in grouped.items():
                     pulse()
                     result = l2.personas(ids, source.nouns, state['bk'])
-                    state['clusters'].append(dict(cluster_id=cluster_id, keywords=keywords[cluster_id], reps=_reps(source, ids), quality={}, requests=[]))
+                    state['clusters'].append(dict(cluster_id=cluster_id, keywords=summary[cluster_id]['keywords'], reps=summary[cluster_id]['reps'], quality={}, requests=[]))
                     state['l2'][cluster_id] = dict(fallback_assign=result.fallback_ratio)
                     for p in sorted(set(result.assign.values())):
                         pid = f'{cluster_id}-P{p}'
@@ -430,7 +461,9 @@ def run(context):
                 session = sessions.read_json(version_dir(sid, version) / 'session.json')
                 reps = {key: _reps(source, ids) for key, ids in _groups(state['docs'], 'context_id').items()}
                 generate = _bind(drafts.generate_drafts, _draft=_bind(drafts._draft, registry=calls))
-                result = generate(sid, _DraftStore(store, pulse), session.get('projectContext', {}), context_reps=reps)
+                result = generate(sid, _DraftStore(store, pulse), session.get('projectContext', {}), context_reps=reps,
+                    cluster_drafts={row['id']: {'name': row.get('name', '')}
+                                    for row in state.get('l1_summary', [])})
                 for persona in store.personas():
                     persona['flags'] = list(dict.fromkeys([flag for flag in (persona['flags'] or []) if flag != 'draft_failed'] + result['flags'].get(persona['persona_id'], [])))
                     _save_row(store, 'personas', 'persona_id', persona)

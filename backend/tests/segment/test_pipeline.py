@@ -268,10 +268,12 @@ def test_resume_mid_dims_reuses_completed_batches(setup, monkeypatch):
             ctx.stopped = True
     ctx.heartbeat = stop_after_batch
     pipeline.run(ctx)
-    assert len(calls) == 1
-    first_ids = {a['title'] for a in calls[0][1]}
+    dims_calls = [call for call in calls if call[0] == 'segment.dims']
+    assert len(dims_calls) == 1
+    first_ids = {a['title'] for a in dims_calls[0][1]}
+    before = len(calls)
     pipeline.run(Context(fixture.sid, args={'resume': True}))
-    later_ids = {a['title'] for name, attachments in calls[1:] if name == 'segment.dims' for a in attachments}
+    later_ids = {a['title'] for name, attachments in calls[before:] if name == 'segment.dims' for a in attachments}
     assert not first_ids & later_ids
     assert report(fixture.sid)['dims']['extracted'] > len(first_ids)
 
@@ -381,3 +383,112 @@ def test_nullable_core_export_runs_and_resumes(setup, data_dir):
     assert any(row['evidence_level'] == 'core' and row['pred_entropy'] is None for row in rows)
     pipeline.run(Context(fixture.sid))
     assert report(fixture.sid)['dims'] == result['dims']
+
+
+
+def test_l1_preview_is_reused_on_resume(setup, monkeypatch):
+    fixture, _ = setup(docs_per_context=4)
+    root = version_dir(fixture.sid, 'v1') / 'segment'
+    calls = []
+    original = pipeline.ctfidf.ctfidf
+    def counted(*args, **kwargs):
+        calls.append(kwargs)
+        return original(*args, **kwargs)
+    monkeypatch.setattr(pipeline.ctfidf, 'ctfidf', counted)
+    pipeline.run(Context(fixture.sid, stop_after='L1'))
+    preview = sessions.read_json(root / 'preview.json')
+    assert preview is not None, 'L1 must publish preview.json before L2'
+    assert len(preview['clusters']) == preview['k'] == 3
+    saved = sessions.read_json(root / 'input.json')
+    assert sum(c['docs'] for c in preview['clusters']) == len(saved['ids'])
+    assert len(calls) == 1
+    assert sessions.read_json(root / 'state.json')['l1_summary'] == preview['clusters']
+    monkeypatch.setattr(pipeline.l1, 'cluster', lambda *a, **kw: pytest.fail('L1 recalculated'))
+    pipeline.run(Context(fixture.sid, stop_after='L3'))
+    assert sessions.read_json(root / 'preview.json') == preview
+    assert len(calls) == 1
+    rows = {c['cluster_id']: c for c in SegmentStore.open(fixture.sid, 'v1').clusters()}
+    for cluster in preview['clusters']:
+        assert cluster['keywords'] == rows[cluster['id']]['keywords']
+        assert cluster['reps'] == rows[cluster['id']]['reps']
+
+
+@pytest.mark.parametrize('args', [{'fresh': True}, {'k': 4}])
+def test_reset_removes_preview_before_l1(setup, args):
+    fixture, _ = setup(docs_per_context=4)
+    root = version_dir(fixture.sid, 'v1') / 'segment'
+    pipeline.run(Context(fixture.sid, stop_after='L1'))
+    assert (root / 'preview.json').exists()
+    pipeline.run(Context(fixture.sid, args=args, stop_after='load'))
+    assert not (root / 'preview.json').exists()
+
+
+def test_preview_counts_only_structure_sources(setup):
+    fixture, _ = setup(docs_per_context=4)
+    pipeline.run(Context(fixture.sid, args={'structureSources': ['naver_blog']}, stop_after='L1'))
+    root = version_dir(fixture.sid, 'v1') / 'segment'
+    saved = sessions.read_json(root / 'input.json')
+    preview = sessions.read_json(root / 'preview.json')
+    assert saved['support_ids']
+    assert sum(c['docs'] for c in preview['clusters']) == len(saved['ids'])
+    assert all(rep['source'] == 'naver_blog' for c in preview['clusters'] for rep in c['reps'])
+
+
+def test_legacy_l1_checkpoint_can_resume_without_summary(setup):
+    fixture, _ = setup(docs_per_context=4)
+    pipeline.run(Context(fixture.sid, stop_after='L1'))
+    root = version_dir(fixture.sid, 'v1') / 'segment'
+    state = sessions.read_json(root / 'state.json')
+    del state['l1_summary']
+    del state['bk']
+    sessions.write_json(root / 'state.json', state)
+    (root / 'preview.json').unlink()
+    pipeline.run(Context(fixture.sid, stop_after='L2'))
+    state = sessions.read_json(root / 'state.json')
+    assert len(state['clusters']) == state['L1']['k']
+    assert all(c['keywords'] and c['reps'] for c in state['clusters'])
+
+
+def test_preview_names_pending_done_and_no_duplicate_calls(setup, monkeypatch):
+    fixture, calls = setup(docs_per_context=4)
+    root = version_dir(fixture.sid, 'v1') / 'segment'
+    original = registry.run_task
+    def checked(task):
+        if task.task == 'segment.cluster_name':
+            preview = sessions.read_json(root / 'preview.json')
+            assert preview['naming'] == 'pending'
+        return original(task)
+    monkeypatch.setattr(registry, 'run_task', checked)
+    pipeline.run(Context(fixture.sid, stop_after='L1'))
+    preview = sessions.read_json(root / 'preview.json')
+    assert preview is not None, 'L1 must publish names before L2'
+    assert preview['naming'] == 'done'
+    assert all(c['name'] and not c['nameFailed'] for c in preview['clusters'])
+    assert sum(name == 'segment.cluster_name' for name, _ in calls) == preview['k']
+    pipeline.run(Context(fixture.sid))
+    assert sum(name == 'segment.cluster_name' for name, _ in calls) == preview['k']
+    names = {c['id']: c['name'] for c in preview['clusters']}
+    assert all(c['name_draft'] == names[c['cluster_id']] for c in SegmentStore.open(fixture.sid, 'v1').clusters())
+
+
+def test_preview_name_failure_is_nonfatal_and_retried(setup, monkeypatch):
+    from app.llm.base import failure
+    fixture, _ = setup(docs_per_context=4)
+    original = registry.run_task
+    attempts = []
+    def offline(task):
+        if task.task == 'segment.cluster_name':
+            attempts.append(task)
+            return failure('backend', 'offline')
+        return original(task)
+    monkeypatch.setattr(registry, 'run_task', offline)
+    pipeline.run(Context(fixture.sid, stop_after='L1'))
+    preview = sessions.read_json(version_dir(fixture.sid, 'v1') / 'segment/preview.json')
+    assert preview is not None, 'Failed names must still publish preview'
+    assert preview['naming'] == 'done'
+    assert all(c['name'] == '' and c['nameFailed'] for c in preview['clusters'])
+    monkeypatch.setattr(registry, 'run_task', original)
+    pipeline.run(Context(fixture.sid))
+    assert sessions.load_session(fixture.sid)['segment']['status'] == 'review'
+    assert len(attempts) == preview['k']
+    assert all(c['name_draft'] for c in SegmentStore.open(fixture.sid, 'v1').clusters())

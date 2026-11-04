@@ -121,3 +121,50 @@ it('renders empty, single, flat and negative silhouette data without invalid coo
     if (!Object.keys(silhouette).length) expect(html).toContain('실루엣 정보가 없습니다.');
   }
 });
+
+
+import { ClusterPreview } from './ClusterPreview';
+const clusterPreview: import('@/lib/types').SegmentPreview = {
+  naming: 'done',
+  k: 2, suggested: 3, silhouette: { '2': 0.2, '3': 0.4 }, sample: 1234,
+  clusters: [
+    { id: 'CL0', name: '가격 중심', nameFailed: false, docs: 23, keywords: ['가격', '배송'], reps: [{ docId: 'doc0', text: '대표 문서 첫 번째', source: 'naver_cafe', field: 'body', idx: null }] },
+    { id: 'CL1', name: '', nameFailed: true, docs: 45, keywords: ['품질'], reps: [{ docId: 'doc1', text: '대표 문서 두 번째', source: 'youtube', field: 'comment', idx: 2 }] },
+  ],
+};
+it('renders each preview cluster with keyword chips and representative documents, without mutation controls', () => {
+  const html = renderToStaticMarkup(createElement(ClusterPreview, { preview: clusterPreview }));
+  expect(html).toContain('미리보기 · Persona·관계망·토픽 분석 진행 중');
+  for (const cluster of clusterPreview.clusters) {
+    expect(html).toContain(`${cluster.id} · 문서 ${cluster.docs}건`);
+    for (const keyword of cluster.keywords) expect(html).toMatch(new RegExp(`<span[^>]*>#${keyword}</span>`));
+    for (const rep of cluster.reps) {
+      expect(html).toContain(rep.text);
+      expect(html).toContain(`${rep.source} · ${rep.field}${rep.idx === null ? '' : ` ${rep.idx}`}`);
+    }
+  }
+  expect(html).toContain('가격 중심');
+  expect(html).toContain('이름 생성 실패 · 최종 단계에서 다시 시도');
+  expect(html).toContain('k = 2');
+  expect(html).toContain('제안 k = 3');
+  expect(html).toContain('표본 1,234건');
+  expect(html).not.toMatch(/<(button|input|textarea|select|form)\b/);
+  for (const control of ['이름 확정', '요청 저장', '다시 나누기']) expect(html).not.toContain(control);
+});
+it('stacks preview columns at 375px with shrinkable, wrapping content', () => {
+  // Static markup tests cannot measure scrollWidth; assert the mobile layout contract.
+  const long = '긴키워드'.repeat(100);
+  const html = renderToStaticMarkup(createElement(ClusterPreview, {
+    preview: { ...clusterPreview, clusters: [{ ...clusterPreview.clusters[0], keywords: [long], reps: [{ ...clusterPreview.clusters[0].reps[0], text: long }] }] },
+  }));
+  expect(html).toMatch(/<article[^>]*class="[^"]*\bgrid-cols-1\b[^"]*\bmd:grid-cols-2\b/);
+  expect(html).toContain('min-w-0');
+  expect(html).toContain('[overflow-wrap:anywhere]');
+  expect(html).toContain('flex-wrap');
+  expect(html).not.toMatch(/min-width:|w-\[\d+px\]|whitespace-nowrap/);
+});
+it('shows pending cluster naming status', () => {
+  const html = renderToStaticMarkup(createElement(ClusterPreview, { preview: { ...clusterPreview, naming: 'pending', clusters: clusterPreview.clusters.map(c => ({...c, name: '', nameFailed: false})) } }));
+  expect(html).toContain('군집 이름 만드는 중');
+  expect(html).not.toContain('이름 생성 실패');
+});

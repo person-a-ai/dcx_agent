@@ -202,7 +202,12 @@ export type SegmentContext = SegmentRow & {
   dominantConstraint: string | null; dimsSummary: Record<string, unknown>; quality: SegmentQuality; flags: string[];
 };
 export type SegmentKSuggest = { k: number; suggested: number; silhouette: Record<string, number>; inertia: Record<string, number>; dendrogram: unknown[]; sample: number };
+export type SegmentPreview = Pick<SegmentKSuggest, 'k' | 'suggested' | 'silhouette' | 'sample'> & {
+  naming: 'pending' | 'done';
+  clusters: (Pick<SegmentCluster, 'id' | 'docs' | 'keywords' | 'reps'> & { name: string; nameFailed: boolean })[];
+};
 export type SegmentStatus = {
+  preview?: SegmentPreview;
     detail?: { step?: string; persona?: number; personas?: number; docs?: number; total?: number };
   run: string | null; status: WorkerState | 'review'; step: 'load' | 'L1' | 'L2' | 'L3' | 'quality' | 'dims' | 'drafts';
   progress: number; confirm: Record<SegmentLayer, string>; stage6?: Record<string, unknown>; reason?: string;
