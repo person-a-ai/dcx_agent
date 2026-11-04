@@ -134,8 +134,17 @@ def test_c6_export_crash_keeps_published_generation(data_dir, monkeypatch, failu
             raise OSError('simulated disk failure')
         return write(path, text)
     monkeypatch.setattr(store, 'atomic_write', crash)
+    replace = export.os.replace
+    def crash_replace(src, dst):
+        # The jsonl exports stream to a temporary file and are published with os.replace.
+        if Path(dst).name == failure_at:
+            Path(dst).write_text('{partial')
+            raise OSError('simulated disk failure')
+        return replace(src, dst)
+    monkeypatch.setattr(export.os, 'replace', crash_replace)
     with pytest.raises(OSError):
         export.write(sid, without_model=True)
+    monkeypatch.setattr(export.os, 'replace', replace)
     assert store.load_session(sid)['training']['exportRef'] == first['exportRef']
     assert old == {name: (data_dir / first['exportRef']).with_name(name).read_bytes() for name in old}
     from app.known.filter import read_export

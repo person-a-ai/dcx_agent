@@ -84,19 +84,26 @@ def embedder_for(sid, data):
 
 
 def documents(sid, data):
+    return {doc['doc_id']: doc for part in iter_document_parts(sid, data) for doc in part}
+
+
+def iter_document_parts(sid, data):
+    """Yield the prepared documents one part file at a time, rejecting duplicate IDs."""
     root = prepared_root(sid, data) / 'docs'
     if not root.is_dir():
         raise store.StoreError('전처리 문서를 찾을 수 없습니다.')
-    docs = {}
+    seen = set()
     for path in sorted(root.glob('*.jsonl')):
+        part = []
         with path.open(encoding='utf-8') as stream:
             for line in stream:
                 if line.strip():
                     doc = json.loads(line)
-                    if doc['doc_id'] in docs:
+                    if doc['doc_id'] in seen:
                         raise ValueError('Duplicate prepared document ID')
-                    docs[doc['doc_id']] = doc
-    return docs
+                    seen.add(doc['doc_id'])
+                    part.append(doc)
+        yield part
 
 
 def _truncation(sid, data):
