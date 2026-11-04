@@ -516,3 +516,22 @@ def test_streams_parts_and_prunes_stale_ones(setup, monkeypatch):
     assert [d['doc_id'] for d in rows(root, 'docs')] == [f'd{i}' for i in range(5)]
     assert [t['doc_id'] for t in rows(root, 'tokens')] == [f'd{i}' for i in range(5)]
     assert VectorStore(root).count() == 5
+
+
+def test_reuses_token_parts_that_match_their_documents(setup, monkeypatch):
+    monkeypatch.setattr(pipeline, 'SHARD_ROWS', 2)
+    monkeypatch.setattr(pipeline, 'DOC_SHARD_ROWS', 1)
+    setup([doc(f'd{i}') for i in range(3)])
+    root = pipeline.run_prep(Context(), 's', 'v1')
+    pipeline._jsonl(root / 'tokens' / 'part-00001.jsonl', [dict(doc_id='d0', tokens=['kept'])])
+    pipeline._jsonl(root / 'tokens' / 'part-00002.jsonl', [dict(doc_id='other', tokens=['stale'])])
+    (root / 'tokens' / 'part-00003.jsonl').unlink()
+    manifest = store.read_json(root / 'manifest.json')
+    store.write_json(root / 'manifest.json', {**manifest, 'status': 'interrupted', 'progress': {}})
+    calls = []
+    real = pipeline.tokenize_many
+    monkeypatch.setattr(pipeline, 'tokenize_many', lambda texts, pos: calls.append(1) or real(texts, pos))
+    pipeline.run_prep(Context(), 's', 'v1')
+    tokens = {t['doc_id']: t['tokens'] for t in rows(root, 'tokens')}
+    assert tokens['d0'] == ['kept'] and 'other' not in tokens and set(tokens) == {'d0', 'd1', 'd2'}
+    assert len(calls) == 2  # only the mismatched and the missing part were tokenized again
