@@ -121,3 +121,69 @@ it('renders empty, single, flat and negative silhouette data without invalid coo
     if (!Object.keys(silhouette).length) expect(html).toContain('실루엣 정보가 없습니다.');
   }
 });
+
+
+import { ClusterPreview } from './ClusterPreview';
+const clusterPreview: import('@/lib/types').SegmentPreview = {
+  naming: 'done',
+  k: 2, suggested: 3, silhouette: { '2': 0.2, '3': 0.4 }, sample: 1234,
+  clusters: [
+    { id: 'CL0', name: '가격 중심', nameFailed: false, docs: 23, keywords: ['가격', '배송'], reps: [{ docId: 'doc0', text: '대표 문서 첫 번째', source: 'naver_cafe', field: 'body', idx: null }] },
+    { id: 'CL1', name: '', nameFailed: true, docs: 45, keywords: ['품질'], reps: [{ docId: 'doc1', text: '대표 문서 두 번째', source: 'youtube', field: 'comment', idx: 2 }] },
+  ],
+};
+it('renders each preview cluster with keyword chips and representative documents, without mutation controls', () => {
+  const html = renderToStaticMarkup(createElement(ClusterPreview, { preview: clusterPreview }));
+  expect(html).toContain('미리보기 · Persona·관계망·토픽 분석 진행 중');
+  for (const cluster of clusterPreview.clusters) {
+    expect(html).toContain(`${cluster.id} · 문서 ${cluster.docs}건`);
+    for (const keyword of cluster.keywords) expect(html).toMatch(new RegExp(`<span[^>]*>#${keyword}</span>`));
+    for (const rep of cluster.reps) {
+      expect(html).toContain(rep.text);
+      expect(html).toContain(`${rep.source} · ${rep.field}${rep.idx === null ? '' : ` ${rep.idx}`}`);
+    }
+  }
+  expect(html).toContain('가격 중심');
+  expect(html).toContain('이름 생성 실패 · 최종 단계에서 다시 시도');
+  expect(html).toContain('k = 2');
+  expect(html).toContain('제안 k = 3');
+  expect(html).toContain('표본 1,234건');
+  expect(html).not.toMatch(/<(input|textarea|select|form)\b/);
+  // The only buttons are the read-only source ordering toggles.
+  expect((html.match(/<button\b/g) ?? []).length).toBe(clusterPreview.clusters.length * 2);
+  expect(html).toContain('가장자리순 · 숨은 니즈 후보');
+  for (const control of ['이름 확정', '요청 저장', '다시 나누기']) expect(html).not.toContain(control);
+});
+it('stacks preview columns at 375px with shrinkable, wrapping content', () => {
+  // Static markup tests cannot measure scrollWidth; assert the mobile layout contract.
+  const long = '긴키워드'.repeat(100);
+  const html = renderToStaticMarkup(createElement(ClusterPreview, {
+    preview: { ...clusterPreview, clusters: [{ ...clusterPreview.clusters[0], keywords: [long], reps: [{ ...clusterPreview.clusters[0].reps[0], text: long }] }] },
+  }));
+  expect(html).toMatch(/<div[^>]*class="[^"]*\bgrid-cols-1\b[^"]*\bmd:grid-cols-2\b/);
+  expect(html).toContain('min-w-0');
+  expect(html).toContain('[overflow-wrap:anywhere]');
+  expect(html).toContain('flex-wrap');
+  expect(html).not.toMatch(/min-width:|w-\[\d+px\]|whitespace-nowrap/);
+});
+it('lists personas with Desire·Goal drafts under their cluster', () => {
+  const persona = { id: 'CL0-P0', cluster: 'CL0', docs: 12, centrality: ['혈당', '식단'], reps: clusterPreview.clusters[0].reps,
+    edges: [{ docId: 'edge0', text: '가장자리 문서', source: 'naver_kin', field: 'body', idx: null }],
+    name: '혈당 관리러', desire: '혈당을 안정적으로 지키고 싶다', goals: ['식후 혈당 확인', '저당 식단'], draftFailed: false };
+  const failed = { ...persona, id: 'CL1-P0', cluster: 'CL1', name: '', desire: '', goals: [], draftFailed: true };
+  const html = renderToStaticMarkup(createElement(ClusterPreview, { preview: { ...clusterPreview, personas: [persona, failed], personaDrafting: 'done' } }));
+  expect(html).toContain('Persona 2개');
+  expect(html).toContain('CL0-P0 · 문서 12건');
+  expect(html).toContain('혈당을 안정적으로 지키고 싶다');
+  expect(html).toContain('식후 혈당 확인');
+  expect(html).toMatch(/<span[^>]*>#혈당<\/span>/);
+  expect(html).toContain('Desire·Goal 초안 생성 실패');
+  expect(html.indexOf('CL0-P0')).toBeLessThan(html.indexOf('CL1 · 문서'));
+  const pending = renderToStaticMarkup(createElement(ClusterPreview, { preview: { ...clusterPreview, personas: [], personaDrafting: 'pending' } }));
+  expect(pending).toContain('Persona Desire·Goal 만드는 중');
+});
+it('shows pending cluster naming status', () => {
+  const html = renderToStaticMarkup(createElement(ClusterPreview, { preview: { ...clusterPreview, naming: 'pending', clusters: clusterPreview.clusters.map(c => ({...c, name: '', nameFailed: false})) } }));
+  expect(html).toContain('군집 이름 만드는 중');
+  expect(html).not.toContain('이름 생성 실패');
+});

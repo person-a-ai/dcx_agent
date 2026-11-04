@@ -170,3 +170,16 @@ def test_similarity_failure_clears_stale_badges(case, monkeypatch):
 def test_persona_clamps_sentences_without_spaces():
     result = drafts.PersonaDraftOut(name='이름', desire='쉬고 싶다.자고 싶다!먹고 싶다?', goals=['목표'])
     assert result.desire == '쉬고 싶다.'
+
+
+@pytest.mark.parametrize('preview', [{'name': '미리보기 이름'}, {'name': ''}, {'name': '', 'nameFailed': True}])
+def test_reuse_preview_names_and_retry_empty(case, monkeypatch, preview):
+    calls = []
+    original = drafts._draft
+    def counted(*args):
+        calls.append(args[1])
+        return original(*args)
+    monkeypatch.setattr(drafts, '_draft', counted)
+    drafts.generate_drafts('sid', *case, cluster_drafts={'CL0': preview})
+    assert calls.count('cluster_name') == (0 if preview['name'] else 1)
+    assert case[0].clusters()[0]['name_draft'] == (preview['name'] or '쾌적한 냉방과 절전')

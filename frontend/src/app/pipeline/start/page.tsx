@@ -35,7 +35,10 @@ function submitOnEnter(event: KeyboardEvent<HTMLInputElement>, submit: () => voi
     event.preventDefault(); submit();
   }
 }
-function preview(context: ProjectContext) {
+function preview(saved: ProjectContext) {
+  // Imported sessions save only a few stage-0 fields; fill the missing structure,
+  // but keep task/persona/goal as saved so the preview does not invent them.
+  const context: ProjectContext = {...mergeStartForm(saved), taskMode: saved.taskMode, personaSeeds: saved.personaSeeds, analysisGoal: saved.analysisGoal};
   const label = (group: Record<string, string>, code: string) => group[code] || code;
   const items = (values: string[], fallback = "없음") => values.join(", ") || fallback;
   const note = (value: string, extra?: string) => extra ? `${value} (${extra})` : value;

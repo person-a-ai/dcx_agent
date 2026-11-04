@@ -20,7 +20,7 @@ from app.prep.clean import clean_html, strip_boilerplate, token_text
 from app.prep.config import PrepConfig, analyzer_version, prep_key
 from app.prep.report import stage3_report
 from app.prep.tokens import tokenize_many
-from app.prep.documents import crawl_docs, filter_documents
+from app.prep.documents import iter_crawl_docs, iter_filtered
 from app.vectors.embedder import EmbedderUnconnected, FakeEmbedder, VoyageEmbedder, get_embedder, embedder_name
 from app.vectors.store import VectorStore
 from app.work.status import HEARTBEAT_INTERVAL
@@ -69,7 +69,7 @@ def _embed_batch(embedder, texts, indexes, vectors, failed):
             continue
 
 
-def _retry_failed(vectors, embedder, documents, checkpoint):
+def _retry_failed(vectors, embedder, lookup, checkpoint):
     """Retry stored failures once per run, preserving successful rows and shard shape.
 
     Publish replacement bytes before clearing failure flags. A crash between the
@@ -81,7 +81,11 @@ def _retry_failed(vectors, embedder, documents, checkpoint):
     groups = {}
     for record in records:
         groups.setdefault(record['shard'], []).append(record)
-    by_id = {doc['doc_id']: doc for doc in documents}
+    failed_ids = {record['doc_id'] for record in records if record.get('failed')}
+    if not failed_ids:
+        return True
+    # Only failures need their documents; look them up instead of loading every document.
+    by_id = lookup(failed_ids)
     for shard, group in groups.items():
         retry = [record for record in group if record.get('failed') and record['doc_id'] in by_id]
         if not retry:
@@ -185,7 +189,7 @@ def run_prep(ctx, sid: str, version: str) -> Path:
         manifest['status'] = 'running'
         store.write_json(root / 'manifest.json', manifest)
         try:
-            documents = crawl_docs(sid, session)
+            documents = iter_crawl_docs(sid, session)
             return _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnected)
         except Exception as error:
             if isinstance(error, EmbedderUnconnected):
@@ -195,53 +199,92 @@ def run_prep(ctx, sid: str, version: str) -> Path:
             raise
 
 
+class _Stopped(Exception):
+    """The run was stopped while documents were being written."""
+
+
+def _clean(raw, cfg, replacements):
+    doc = dict(raw)
+    phrases = cfg.boilerplate.get(doc.get('source', ''), [])
+    doc['title'] = clean_html(doc.get('title', ''))
+    if 'snippet' in doc:
+        doc['snippet'] = clean_html(doc['snippet'])
+    doc['body'], count = strip_boilerplate(clean_html(doc.get('body', '')), phrases)
+    doc['comments'] = []
+    for comment in raw.get('comments', []):
+        text, n = strip_boilerplate(clean_html(comment.get('text', '')), phrases)
+        doc['comments'].append({**comment, 'text': text})
+        count += n
+    if count:
+        source = doc.get('source', '')
+        replacements[source] = replacements.get(source, 0) + count
+    return doc
+
+
+def _parts_per_shard():
+    return (SHARD_ROWS + DOC_SHARD_ROWS - 1) // DOC_SHARD_ROWS
+
+
+def _part_path(root, kind, part):
+    return root / kind / f'part-{part:05d}.jsonl'
+
+
+def _read_part(root, part):
+    path = _part_path(root, 'docs', part)
+    if not path.exists():
+        return []
+    with path.open(encoding='utf-8') as stream:
+        return [json.loads(line) for line in stream if line.strip()]
+
+
+def _shard_parts(shard):
+    first = (shard - 1) * _parts_per_shard() + 1
+    return range(first, first + _parts_per_shard())
+
+
 def _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnected=None):
-    cleaned, replacements = [], {}
-    for raw in documents:
-        doc = dict(raw)
-        phrases = cfg.boilerplate.get(doc.get('source', ''), [])
-        doc['title'] = clean_html(doc.get('title', ''))
-        if 'snippet' in doc:
-            doc['snippet'] = clean_html(doc['snippet'])
-        doc['body'], count = strip_boilerplate(clean_html(doc.get('body', '')), phrases)
-        doc['comments'] = []
-        for comment in raw.get('comments', []):
-            text, n = strip_boilerplate(clean_html(comment.get('text', '')), phrases)
-            doc['comments'].append({**comment, 'text': text})
-            count += n
-        if count:
-            source = doc.get('source', '')
-            replacements[source] = replacements.get(source, 0) + count
-        cleaned.append(doc)
-    channels = set(cfg.excludeChannels)
-    kept = [d for d in cleaned if d.get('source', '') not in channels]
-    filtered, removed = filter_documents(kept, cfg.adFilter, cfg.excludeSources,
-                                         cfg.minBodyChars, full_text=True)
-    removed['excluded_channel'] = len(cleaned) - len(kept)
-    total = (len(filtered) + SHARD_ROWS - 1) // SHARD_ROWS
+    # Large imports do not fit in memory, so documents stream to disk once and
+    # every later pass (tokens, vectors) reads them back one part at a time.
+    replacements = {}
+    removed = dict(ad=0, excluded_source=0, duplicate=0, too_short=0, excluded_channel=0)
+    beat_at = [time.monotonic()]
+
+    def beat(**detail):
+        if time.monotonic() - beat_at[0] >= HEARTBEAT_INTERVAL:
+            if not _checkpoint(ctx, 0, 0, **detail):
+                raise _Stopped()
+            beat_at[0] = time.monotonic()
+
+    try:
+        original, after = _write_docs(root, cfg, documents, removed, replacements, beat)
+    except _Stopped:
+        manifest['status'] = 'interrupted'
+        store.write_json(root / 'manifest.json', manifest)
+        return root
+    total = (after + SHARD_ROWS - 1) // SHARD_ROWS
     state = dict(done=manifest['progress'].get('done_shards', 0), tokenized=0)
 
     def check():
         # Either thread may heartbeat; report tokenizing progress until it finishes.
-        extra = {} if state['tokenized'] is None else dict(tokenized_docs=state['tokenized'],
-                                                           total_docs=len(filtered))
+        extra = {} if state['tokenized'] is None else dict(tokenized_docs=state['tokenized'], total_docs=after)
         return _checkpoint(ctx, state['done'], total, **extra)
 
     stop = Event()
+    counts = dict(original=original, after=after)
     if unconnected is not None:
         # Make the non-embedding outputs durable before reporting the missing key.
-        _write_parts(root, cfg, filtered, state, stop, check)
-        manifest['counts'] = dict(original=len(documents), after=len(filtered))
+        _write_tokens(root, cfg, total, state, stop, check)
+        manifest['counts'] = counts
         raise unconnected
     # Tokenizing is CPU-bound and embedding waits on the provider, so overlap them.
     with ThreadPoolExecutor(1) as pool:
-        parts = pool.submit(_write_parts, root, cfg, filtered, state, stop, check)
+        parts = pool.submit(_write_tokens, root, cfg, total, state, stop, check)
         try:
-            existing = _embed_shards(root, embedder, filtered, manifest, state, check)
+            existing = _embed_shards(root, embedder, after, manifest, state, check)
         except EmbedderUnconnected:
             # Same contract as a missing key at start: finish the non-embedding outputs.
             parts.result()
-            manifest['counts'] = dict(original=len(documents), after=len(filtered))
+            manifest['counts'] = counts
             raise
         except BaseException:
             stop.set()
@@ -249,14 +292,14 @@ def _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnecte
         if existing is None:
             stop.set()
         written = parts.result()
-    manifest['counts'] = dict(original=len(documents), after=len(filtered))
+    manifest['counts'] = counts
     if existing is None or not written or not check():
         manifest['status'] = 'interrupted'
         store.write_json(root / 'manifest.json', manifest)
         return root
     failures = sum(existing.values())
-    report = stage3_report(original=len(documents), after=len(filtered), removed=removed,
-                           boilerplate_replaced=replacements, tokens_written=len(filtered),
+    report = stage3_report(original=original, after=after, removed=removed,
+                           boilerplate_replaced=replacements, tokens_written=after,
                            embedded=len(existing) - failures, embed_failed_zero_vector=failures,
                            prepKey=root.name, embedder=embedder_name(manifest['embedder']), analyzer=analyzer_version())
     store.write_json(root / 'stage_3.json', report)
@@ -267,16 +310,60 @@ def _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnecte
     return root
 
 
-def _write_parts(root, cfg, filtered, state, stop, check):
-    """Write document and token parts; False when the run was stopped."""
-    beat_at = time.monotonic()
-    for shard, start in enumerate(range(0, len(filtered), SHARD_ROWS), 1):
-        batch = filtered[start:start + SHARD_ROWS]
+def _write_docs(root, cfg, documents, removed, replacements, beat):
+    """Clean, filter and write document parts, holding one shard at a time; (original, after)."""
+    channels = set(cfg.excludeChannels)
+    original = 0
+
+    def kept():
+        nonlocal original
+        for raw in documents:
+            original += 1
+            beat(prepared_docs=original)
+            doc = _clean(raw, cfg, replacements)
+            if doc.get('source', '') in channels:
+                removed['excluded_channel'] += 1
+                continue
+            yield doc
+
+    shard, batch, after = 0, [], 0
+
+    def flush():
         for offset in range(0, len(batch), DOC_SHARD_ROWS):
-            part = (shard - 1) * ((SHARD_ROWS + DOC_SHARD_ROWS - 1) // DOC_SHARD_ROWS) + offset // DOC_SHARD_ROWS + 1
-            docs = batch[offset:offset + DOC_SHARD_ROWS]
-            filename = f'part-{part:05d}.jsonl'
-            _jsonl(root / 'docs' / filename, docs)
+            part = (shard - 1) * _parts_per_shard() + offset // DOC_SHARD_ROWS + 1
+            _jsonl(_part_path(root, 'docs', part), batch[offset:offset + DOC_SHARD_ROWS])
+
+    for item in iter_filtered(kept(), cfg.adFilter, cfg.excludeSources, cfg.minBodyChars, removed, full_text=True):
+        if not batch:
+            shard += 1
+        batch.append(item)
+        after += 1
+        if len(batch) == SHARD_ROWS:
+            flush()
+            batch = []
+    if batch:
+        flush()
+    # A previous run of the same key may have left more parts; readers glob them.
+    last = shard * _parts_per_shard()
+    for kind in ('docs', 'tokens'):
+        for path in (root / kind).glob('part-*.jsonl'):
+            if int(path.stem.split('-')[1]) > last:
+                path.unlink()
+    return original, after
+
+
+def _write_tokens(root, cfg, total, state, stop, check):
+    """Write token parts from the document parts; False when the run was stopped."""
+    beat_at = time.monotonic()
+    for shard in range(1, total + 1):
+        for part in _shard_parts(shard):
+            docs = _read_part(root, part)
+            if not docs:
+                continue
+            if _tokens_match(root, part, docs):
+                # Same documents, same config (the prep key): reuse a part written earlier.
+                state['tokenized'] += len(docs)
+                continue
             rows = []
             for d, tokens in zip(docs, tokenize_many((token_text(_text(d)) for d in docs), cfg.tokenPos)):
                 if stop.is_set():
@@ -289,25 +376,45 @@ def _write_parts(root, cfg, filtered, state, stop, check):
                     beat_at = time.monotonic()
                 rows.append(dict(doc_id=d['doc_id'], tokens=tokens))
                 state['tokenized'] += 1
-            _jsonl(root / 'tokens' / filename, rows)
+            _jsonl(_part_path(root, 'tokens', part), rows)
     state['tokenized'] = None
     return True
 
 
-def _embed_shards(root, embedder, filtered, manifest, state, check):
+def _tokens_match(root, part, docs):
+    path = _part_path(root, 'tokens', part)
+    if not path.exists():
+        return False
+    try:
+        with path.open(encoding='utf-8') as stream:
+            ids = [json.loads(line)['doc_id'] for line in stream if line.strip()]
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+    return ids == [d['doc_id'] for d in docs]
+
+
+def _find_docs(root, total, doc_ids):
+    found = {}
+    for shard in range(1, total + 1):
+        for part in _shard_parts(shard):
+            found.update((d['doc_id'], d) for d in _read_part(root, part) if d['doc_id'] in doc_ids)
+    return found
+
+
+def _embed_shards(root, embedder, after, manifest, state, check):
     """Embed shards not yet stored; the stored-vector map, or None when stopped."""
-    total = (len(filtered) + SHARD_ROWS - 1) // SHARD_ROWS
+    total = (after + SHARD_ROWS - 1) // SHARD_ROWS
     vectors = VectorStore(root)
-    if not _retry_failed(vectors, embedder, filtered, check):
+    if not _retry_failed(vectors, embedder, lambda ids: _find_docs(root, total, ids), check):
         return None
     existing = {doc_id: bool(failed[i]) for ids, _, failed in vectors.iter_shards()
                 for i, doc_id in enumerate(ids)}
-    for shard, start in enumerate(range(0, len(filtered), SHARD_ROWS), 1):
+    for shard in range(1, total + 1):
         if shard <= state['done']:
             continue
         if not check():
             return None
-        batch = filtered[start:start + SHARD_ROWS]
+        batch = [d for part in _shard_parts(shard) for d in _read_part(root, part)]
         pending = [d for d in batch if d['doc_id'] not in existing]
         if pending:
             matrix, failed = _embed(embedder, [_text(d) for d in pending])
@@ -315,8 +422,9 @@ def _embed_shards(root, embedder, filtered, manifest, state, check):
             vectors.write_shard(ids, matrix, failed)
             existing.update(zip(ids, failed))
         state['done'] = shard
+        written = min(shard * SHARD_ROWS, after)
         manifest['progress'] = dict(done_shards=shard, total_shards=total,
-                                    docs_written=start + len(batch), tokens_written=start + len(batch),
+                                    docs_written=written, tokens_written=written,
                                     vectors_written=len(existing))
         store.write_json(root / 'manifest.json', manifest)
     return existing

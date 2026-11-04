@@ -356,3 +356,39 @@ it('clears dirty only after the latest save completes', async () => {
  expect(dirty.register).toHaveBeenLastCalledWith(expect.any(String), false);
  expect(patchSession).toHaveBeenLastCalledWith('s', {drafts:{segment:{run:'r1',edits:{CL0:{name:'second'}}}}}, 'v1');
 });
+
+
+const preview = {
+ naming: 'done',
+ k: 2, suggested: 3, silhouette: {'2': .2, '3': .4}, sample: 1234,
+ clusters: [
+  {id:'CL0', name:'가격 중심', nameFailed:false, docs:23, keywords:['가격', '배송'], reps:[{docId:'doc0',text:'대표 문서 첫 번째',source:'naver_cafe',field:'body',idx:null}]},
+  {id:'CL1', name:'품질 중심', nameFailed:false, docs:45, keywords:['품질'], reps:[{docId:'doc1',text:'대표 문서 두 번째',source:'youtube',field:'comment',idx:2}]},
+ ],
+};
+const previewNode = (tree:any) => nodes(tree).find(n => n.type?.name === 'ClusterPreview');
+it('shows a read-only cluster preview below the running card', async () => {
+ const tree = await ready({...status,status:'running',step:'L2',preview});
+ expect(previewNode(tree)?.props.preview).toEqual(preview);
+ expect(textOf(tree)).toContain('6단계 · 실행 중');
+ expect(nodes(tree).some(n => n.type === ClusterLayer)).toBe(false);
+});
+it('keeps the running card without a preview when L1 has not completed', async () => {
+ const tree = await ready({...status,status:'running',step:'L1'});
+ expect(textOf(tree)).toContain('6단계 · 실행 중');
+ expect(previewNode(tree)).toBeUndefined();
+ expect(nodes(tree).some(n => n.type === ClusterLayer)).toBe(false);
+});
+it.each(['interrupted','failed'])('shows resume and preview together for %s', async (runStatus) => {
+ const tree = await ready({...status,status:runStatus,preview});
+ expect(textOf(tree)).toContain('이어서 진행');
+ expect(previewNode(tree)?.props.preview).toEqual(preview);
+});
+it('replaces a running preview with the final ClusterLayer on review', async () => {
+ let tree = await ready({...status,status:'running',step:'L2',preview});
+ expect(previewNode(tree)).toBeDefined();
+ state.poll = {...status,preview};
+ screen(); await tick(); screen(); await tick(); tree = screen();
+ expect(previewNode(tree)).toBeUndefined();
+ expect(nodes(tree).some(n => n.type === ClusterLayer)).toBe(true);
+});

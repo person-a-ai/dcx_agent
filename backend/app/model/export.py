@@ -49,57 +49,26 @@ def write(sid, version=None, *, without_model=False, partial=False):
         data = session(sid, version, writable=True)
         labels = labels_for(sid, data)
         infer.refresh_predictions(labels)
-        docs = infer.documents(sid, data)
         model_id = None if without_model else (data.get('training', {}).get('modelId') or
             (data.get('labeling', {}).get('modelId') if data.get('labeling', {}).get('mode') == 'model' else None))
         meta = registry.require_compatible(model_id, infer.embedder_for(sid, data)) if model_id else None
         with labels._db() as db:
             if not partial and db.execute("SELECT 1 FROM queue WHERE status='open' LIMIT 1").fetchone():
                 raise store.StoreError('사람 검수를 먼저 완료하세요.')
-            final = {r['doc_id']: dict(r) for r in db.execute('SELECT * FROM final')}
-            exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='model_predictions'").fetchone()
-            predictions = {r['doc_id']: dict(r) for r in db.execute(
-                'SELECT * FROM model_predictions WHERE model_id=?', (model_id,))} if exists and model_id else {}
-        rows = []
-        for doc_id, doc in docs.items():
-            label = final.get(doc_id)
-            prediction = predictions.get(doc_id)
-            unavailable = bool(model_id) and (prediction is None or prediction['invalid_vector'])
-            if label and (label['source'] == 'human' or not model_id or unavailable):
-                if label['source'] != 'human' and label['route'] not in ('accepted', 'audited'):
-                    if partial:
-                        continue
-                    raise store.StoreError('사람 검수를 먼저 완료하세요.')
-                tags = json.loads(label['tags_json'])
-                probs = dict(anchor=float(tags['anchor']), situation=float(tags['situation']),
-                             **{k: float(v) for k, v in tags['sem'].items()})
-                values = dict(evidence_level_pred=label['level'], confidence=label['confidence'],
-                    pred_entropy=_label_entropy(label), relevance_score=float(label['level'] != 'non'), tagProbs=probs,
-                    signal=label['signal'], source=label['source'])
-                if unavailable:
-                    values.update(prediction='unavailable', pred_entropy=None,
-                                  relevance_score=None, tagProbs=None)
-            elif model_id and not unavailable:
-                pred = json.loads(prediction['payload'])
-                values = dict(evidence_level_pred=pred['level'], confidence=pred['confidence'],
-                    pred_entropy=pred['predEntropy'], relevance_score=pred['relevanceScore'],
-                    tagProbs=pred['tagProbs'], signal=pred['signal'] if pred['level'] != 'non' else None,
-                    source='model')
-            elif partial:
-                continue
-            else:
-                raise store.StoreError('모든 문서의 판정 또는 추론을 먼저 완료하세요.')
-            rows.append({**doc, 'title': doc.get('title') or '',
-                'desc': doc.get('desc') or doc.get('body') or doc.get('text') or '',
-                'cafe': doc.get('cafe') or '', 'kw': doc.get('kw') or '', **values,
-                'rule_version': rule.RULE_VERSION, 'modelId': None if unavailable else model_id})
+            has_predictions = bool(model_id) and db.execute(
+                "SELECT 1 FROM sqlite_master WHERE name='model_predictions'").fetchone() is not None
         base = f"classified/{sid}/{data['version']}/gen-{uuid4().hex}"
         generation = Path(settings.local_data_dir) / base
         generation.mkdir(parents=True, exist_ok=False)
-        relevant = [r for r in rows if r['evidence_level_pred'] in ('core', 'supporting')]
-        for name, items in (('all.jsonl', rows), ('relevant.jsonl', relevant)):
-            store.atomic_write(generation / name, ''.join(
-                json.dumps(row, ensure_ascii=False) + '\n' for row in items))
+        try:
+            # Large imports do not fit in memory: stream prepared parts and look up
+            # their labels one part at a time, writing both exports as we go.
+            total, relevant = _write_rows(generation, infer.iter_document_parts(sid, data), labels,
+                                          model_id, has_predictions, partial)
+        except BaseException:
+            import shutil
+            shutil.rmtree(generation, ignore_errors=True)
+            raise
         model = None if meta is None else {key: meta[key] for key in ('modelId', 'kind', 'perHead', 'metrics')}
         stage = write_stage5(sid, data, model, generation=generation)
         # atomic_write fsyncs each file and its directory. Persist the new
@@ -118,4 +87,89 @@ def write(sid, version=None, *, without_model=False, partial=False):
         # historical versions may still point to them.
         store.write_json(store.session_dir(sid) / 'stage_5.json', stage)
         clear_stale(sid, data['version'], 'stage5', already_locked=True)
-        return dict(exportRef=ref, allRef=base + '/all.jsonl', total=len(rows), relevant=len(relevant), stage5=stage)
+        return dict(exportRef=ref, allRef=base + '/all.jsonl', total=total, relevant=relevant, stage5=stage)
+
+
+def _row(doc, label, prediction, model_id, partial):
+    """One exported row, or None when a partial export skips the document."""
+    unavailable = bool(model_id) and (prediction is None or prediction['invalid_vector'])
+    if label and (label['source'] == 'human' or not model_id or unavailable):
+        if label['source'] != 'human' and label['route'] not in ('accepted', 'audited'):
+            if partial:
+                return None
+            raise store.StoreError('사람 검수를 먼저 완료하세요.')
+        tags = json.loads(label['tags_json'])
+        probs = dict(anchor=float(tags['anchor']), situation=float(tags['situation']),
+                     **{k: float(v) for k, v in tags['sem'].items()})
+        values = dict(evidence_level_pred=label['level'], confidence=label['confidence'],
+            pred_entropy=_label_entropy(label), relevance_score=float(label['level'] != 'non'), tagProbs=probs,
+            signal=label['signal'], source=label['source'])
+        if unavailable:
+            values.update(prediction='unavailable', pred_entropy=None,
+                          relevance_score=None, tagProbs=None)
+    elif model_id and not unavailable:
+        pred = json.loads(prediction['payload'])
+        values = dict(evidence_level_pred=pred['level'], confidence=pred['confidence'],
+            pred_entropy=pred['predEntropy'], relevance_score=pred['relevanceScore'],
+            tagProbs=pred['tagProbs'], signal=pred['signal'] if pred['level'] != 'non' else None,
+            source='model')
+    elif partial:
+        return None
+    else:
+        raise store.StoreError('모든 문서의 판정 또는 추론을 먼저 완료하세요.')
+    return {**doc, 'title': doc.get('title') or '',
+        'desc': doc.get('desc') or doc.get('body') or doc.get('text') or '',
+        'cafe': doc.get('cafe') or '', 'kw': doc.get('kw') or '', **values,
+        'rule_version': rule.RULE_VERSION, 'modelId': None if unavailable else model_id}
+
+
+def _lookup(db, table, ids, extra='', args=()):
+    rows = {}
+    for start in range(0, len(ids), 500):
+        chunk = ids[start:start + 500]
+        marks = ','.join('?' for _ in chunk)
+        rows.update((r['doc_id'], dict(r)) for r in db.execute(
+            f'SELECT * FROM {table} WHERE doc_id IN ({marks}){extra}', (*chunk, *args)))
+    return rows
+
+
+def _write_rows(generation, parts, labels, model_id, has_predictions, partial):
+    """Write all.jsonl and relevant.jsonl part by part; (total, relevant) row counts."""
+    import tempfile
+    streams, names, total, relevant = {}, {}, 0, 0
+    try:
+        for name in ('all.jsonl', 'relevant.jsonl'):
+            fd, names[name] = tempfile.mkstemp(prefix='.tmp-', dir=generation)
+            streams[name] = os.fdopen(fd, 'w', encoding='utf-8')
+        with labels._db() as db:
+            for docs in parts:
+                ids = [doc['doc_id'] for doc in docs]
+                final = _lookup(db, 'final', ids)
+                predictions = _lookup(db, 'model_predictions', ids, ' AND model_id=?', (model_id,)) if has_predictions else {}
+                for doc in docs:
+                    row = _row(doc, final.get(doc['doc_id']), predictions.get(doc['doc_id']), model_id, partial)
+                    if row is None:
+                        continue
+                    line = json.dumps(row, ensure_ascii=False) + '\n'
+                    streams['all.jsonl'].write(line)
+                    total += 1
+                    if row['evidence_level_pred'] in ('core', 'supporting'):
+                        streams['relevant.jsonl'].write(line)
+                        relevant += 1
+        for name, stream in streams.items():
+            stream.flush()
+            os.fsync(stream.fileno())
+            stream.close()
+            os.replace(names[name], generation / name)
+        directory = os.open(generation, os.O_RDONLY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+    finally:
+        for name, stream in streams.items():
+            if not stream.closed:
+                stream.close()
+            if os.path.exists(names[name]):
+                os.unlink(names[name])
+    return total, relevant

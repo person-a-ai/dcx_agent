@@ -209,6 +209,16 @@ def status(sid: str, version: str | None = None):
             reason = '클러스터링 중 오류가 났습니다. 이어서 진행하거나 다시 실행하세요.'
         if reason or work['state'] in ('failed', 'interrupted'):
             result['reason'] = reason or '이어서 진행'
+    if result['status'] not in ('review', 'done'):
+        preview = sessions.read_json(version_dir(sid, data['version']) / 'segment/preview.json')
+        if preview:
+            result['preview'] = {key: value for key, value in preview.items() if key != 'run'}
+            def trimmed(item):
+                return {**item, **{key: [{**rep, 'text': (rep.get('text') or '')[:300]} for rep in item.get(key, [])]
+                                   for key in ('reps', 'edges') if key in item}}
+            result['preview']['clusters'] = [trimmed(cluster) for cluster in preview['clusters']]
+            if 'personas' in preview:
+                result['preview']['personas'] = [trimmed(persona) for persona in preview['personas']]
     report = _report(sid, data)
     if report:
         result['stage6'] = report

@@ -77,13 +77,33 @@ def index_documents(sid, data, labels):
             db.execute('INSERT OR REPLACE INTO document_files VALUES (?,?)', (str(path), stamp))
 
 
+class _IndexedDocuments:
+    """Sized, streaming view of the documents table: never holds the corpus in memory."""
+
+    def __init__(self, path):
+        self.path = path
+
+    def __len__(self):
+        with sqlite3.connect(self.path) as db:
+            return db.execute('SELECT count(*) FROM documents').fetchone()[0]
+
+    def __iter__(self):
+        with sqlite3.connect(self.path) as db:
+            for (payload,) in db.execute('SELECT payload FROM documents'):
+                yield json.loads(payload)
+
+
 @lru_cache(maxsize=128)
-def _estimate(path, labeler, counts, context, stamp, backend):
+def _estimate(path, labeler, counts, context, stamp, backend=None):
     # backend keys the cache so a JEV_BACKEND switch never serves a stale estimate.
-    # Only deserialize the corpus on an estimate cache miss, never for worker ETAs.
-    with sqlite3.connect(path) as db:
-        docs = [json.loads(row[0]) for row in db.execute('SELECT payload FROM documents')]
-    result = judge.estimate(docs, context, labeler)
+    # Nothing left to judge (e.g. imported labels): skip reading a corpus that can
+    # be hundreds of thousands of documents.
+    if not counts[0]:
+        if backend is None:
+            return dict(seconds=0, jevTokens=0)
+        # Same shape as judge.estimate: a cost only for the Decisions Jev slot.
+        return dict(seconds=0, jevTokens=0, jevCostUsd=0.0 if labeler == 'jev' and backend == 'decisions' else None)
+    result = judge.estimate(_IndexedDocuments(path), context, labeler)
     total = sum(counts)
     if total and result['seconds'] is not None:
         result['seconds'] *= counts[0] / total

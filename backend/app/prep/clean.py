@@ -11,7 +11,10 @@ def clean_html(text) -> str:
         tag.decompose()
     for tag in soup.find_all(['br', 'p', 'div', 'li']):
         tag.insert_after('\n')
-    return soup.get_text().strip()
+    text = soup.get_text().strip()
+    # The parse tree is cyclic; free it now instead of piling up until a full GC.
+    soup.decompose()
+    return text
 
 
 def strip_boilerplate(text, phrases) -> tuple[str, int]:
