@@ -146,7 +146,10 @@ def run_prep_step(sid, log, poll_s=10, sleep=time.sleep):
                 log(f'      전처리 {state}: {(row or {}).get("error") or ""}')
                 break
             progress = (row or work).get('progress') or 0
-            log(f'      {time.strftime("%H:%M:%S")}  {round(progress * 100)}%')
+            detail = (row or {}).get('detail') or {}
+            note = (f'  토큰화 {detail["tokenized_docs"]:,}/{detail["total_docs"]:,}'
+                    if 'tokenized_docs' in detail else '')
+            log(f'      {time.strftime("%H:%M:%S")}  {round(progress * 100)}%{note}')
             sleep(poll_s)
         if store.load_session(sid).get('prep', {}).get('status') == 'done':
             log('[3/5] 전처리 완료')

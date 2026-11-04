@@ -416,3 +416,32 @@ def test_old_unfinalized_snapshot_rebuilt_with_current_documents(setup, data_dir
     assert VectorStore(root).get(['old'])[0] == []
     assert VectorStore(root).get(['new'])[0] == ['new']
     assert store.read_json(root / 'manifest.json')['collectionFinalized'] is True
+
+
+def test_tokenizing_heartbeats_and_honors_stop(setup, monkeypatch):
+    # A long tokenization must keep the run fresh from the worker thread itself.
+    monkeypatch.setattr(pipeline, 'HEARTBEAT_INTERVAL', 0)
+    setup([doc('d1'), doc('d2'), doc('d3')])
+
+    class Recording(Context):
+        def __init__(self, stop=False):
+            super().__init__()
+            self.details, self.stop = [], stop
+
+        def heartbeat(self, progress, detail):
+            self.details.append(detail)
+
+        def should_stop(self):
+            return self.stop and len(self.details) >= 2
+
+    context = Recording()
+    pipeline.run_prep(context, 's', 'v1')
+    tokenized = [d['tokenized_docs'] for d in context.details if 'tokenized_docs' in d]
+    assert tokenized == [0, 1, 2]
+    assert all(d['total_docs'] == 3 for d in context.details if 'total_docs' in d)
+
+    stopped = Recording(stop=True)
+    store.update_session('s', {'prep': {'config': {'minBodyChars': 11}}})
+    root = pipeline.run_prep(stopped, 's', 'v1')
+    assert json.loads((root / 'manifest.json').read_text())['status'] == 'interrupted'
+    assert not (root / 'stage_3.json').exists()
