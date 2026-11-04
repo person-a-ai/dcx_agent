@@ -321,6 +321,7 @@ sudo certbot renew --dry-run
 | `STORAGE` / `LOCAL_DATA_DIR` | - | 저장 방식 (`local`) / 로컬 데이터 경로 (`data`); 3~5단계와 검색은 로컬 벡터 재사용 |
 | `EMBED_BACKEND` | - | `voyage` (기본) 또는 오프라인 `fake` |
 | `EMBED_MODEL` / `EMBED_DIM` | - | `voyage-4` / `1024` |
+| `KIWI_WORKERS` | - | 3단계 전처리 토큰화(kiwi) 스레드 수 (`8`); API·웹용 코어는 남겨 두세요 |
 | `JEVMODEL_API_KEY` | Jev HTTP 사용 시 | Jev API 키; 여러 키는 쉼표로 구분 |
 | `JEV_BACKEND` / `JEV_MODEL` | - | `http` 또는 오프라인 `fake` / `jev-latest` |
 | `JEV_RATE_PER_MIN` | - | 키당 분당 요청 수 (`120`) |
