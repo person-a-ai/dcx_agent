@@ -1,0 +1,8 @@
+{
+  "kind": "plan",
+  "surface": "web",
+  "designNeeded": true,
+  "design": "docs/development/label-import-multi/02-design.md",
+  "implementation": "docs/development/label-import-multi/03-plan.md",
+  "qaPlan": "docs/development/label-import-multi/QA_PLAN-label-import-multi.md"
+}
