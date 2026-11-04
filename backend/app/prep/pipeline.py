@@ -17,7 +17,7 @@ from app.context.versions import version_dir
 from app.prep.clean import clean_html, strip_boilerplate, token_text
 from app.prep.config import PrepConfig, analyzer_version, prep_key
 from app.prep.report import stage3_report
-from app.prep.tokens import tokenize
+from app.prep.tokens import tokenize_many
 from app.prep.documents import crawl_docs, filter_documents
 from app.vectors.embedder import EmbedderUnconnected, FakeEmbedder, VoyageEmbedder, get_embedder, embedder_name
 from app.vectors.store import VectorStore
@@ -225,14 +225,14 @@ def _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnecte
             filename = f'part-{part:05d}.jsonl'
             _jsonl(root / 'docs' / filename, docs)
             rows = []
-            for d in docs:
+            for d, tokens in zip(docs, tokenize_many((token_text(_text(d)) for d in docs), cfg.tokenPos)):
                 if time.monotonic() - beat_at >= HEARTBEAT_INTERVAL:
                     if not _checkpoint(ctx, done, total, tokenized_docs=tokenized, total_docs=len(filtered)):
                         manifest['status'] = 'interrupted'
                         store.write_json(root / 'manifest.json', manifest)
                         return root
                     beat_at = time.monotonic()
-                rows.append(dict(doc_id=d['doc_id'], tokens=tokenize(token_text(_text(d)), cfg.tokenPos)))
+                rows.append(dict(doc_id=d['doc_id'], tokens=tokens))
                 tokenized += 1
             _jsonl(root / 'tokens' / filename, rows)
     manifest['counts'] = dict(original=len(documents), after=len(filtered))
