@@ -126,6 +126,7 @@ APP_ROOT="$HOME/srv/dcx-agent" "$HOME/srv/dcx-agent/ops/dcxctl" rollback
 | `AUTHOR_SALT_PATH` | 작성자 해시 생성 시 | salt 파일 위치; 기본 `data/.author_salt` |
 | `S3_BUCKET` / `S3_REGION` | `STORAGE=s3`일 때만 필수 | S3 버킷과 리전; 로컬 저장에서는 불필요 |
 | `VOYAGE_API_KEY` | Voyage 임베딩 사용 시 | Voyage API 인증 |
+| `VOYAGE_EXTRA_API_KEYS` | 추가 Voyage 계정 사용 시 | 다른 Voyage 계정의 키(쉼표로 구분); 3단계 임베딩 요청을 키마다 나눠 동시에 보냄, 기본 빈 목록 |
 | `CORS_ORIGINS` | 브라우저 접근 설정 | 허용 origin; 기본 `*`, 운영에서는 웹 주소 지정 |
 | `EMBED_BACKEND` | 임베딩 선택 | 기본 `voyage`, 오프라인 `fake` |
 | `EMBED_MODEL` / `EMBED_DIM` | 임베딩 설정 | 기본 `voyage-4` / `1024` |

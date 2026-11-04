@@ -68,3 +68,24 @@ def test_voyage_invalid_response_rows_are_zero(monkeypatch):
     assert result.shape == (4, 1024)
     assert result[0].all()
     assert not result[1:].any()
+
+
+def test_voyage_rotates_extra_keys(monkeypatch):
+    monkeypatch.setattr(settings, 'voyage_api_key', 'key-1')
+    monkeypatch.setattr(settings, 'voyage_extra_api_keys', ['key-2', ' key-3 ', 'key-1', ''])
+    used = []
+    client = Mock()
+    client.embed.side_effect = lambda texts, **kwargs: SimpleNamespace(embeddings=[[1.] * 1024 for _ in texts])
+    monkeypatch.setattr(voyage.voyageai, 'Client', Mock(side_effect=lambda **kwargs: used.append(kwargs) or client))
+    embedder = VoyageEmbedder()
+    assert embedder.concurrency == 3 * VoyageEmbedder.REQUESTS_PER_KEY
+    for _ in range(4):
+        embedder.embed(['text'])
+    assert [kwargs['api_key'] for kwargs in used] == ['key-1', 'key-2', 'key-3', 'key-1']
+    assert all(kwargs['max_retries'] > 0 for kwargs in used)
+
+
+def test_extra_keys_split_from_env(monkeypatch):
+    from app.config import Settings
+    monkeypatch.setenv('VOYAGE_EXTRA_API_KEYS', 'a, b,,c')
+    assert Settings().voyage_extra_api_keys == ['a', 'b', 'c']
