@@ -6,7 +6,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 
 _PREFIXES = {"naver_cafe":"nc","naver_blog":"nb","youtube":"yt","ppomppu":"pp","clien":"cl","fixture":"fx",
-             "youtube_vlog":"yv","threads":"th","naver_kin":"kn","cook82":"c8"}
+             "youtube_vlog":"yv","threads":"th","naver_kin":"kn","cook82":"c8","daum_cafe":"dc","daum_brunch":"db"}
 _TRACKERS = {"fbclid", "gclid"}
 _NAVER_TRACKERS = {"art", "query", "where", "sm"}
 _YOUTUBE_TRACKERS = {"si", "feature", "t", "pp"}
@@ -56,6 +56,8 @@ def normalize_url(url: str, source: str) -> str:
         params = [(k, v) for k, v in params if k in {"bn", "num"}]
     elif source == "threads" and host in {"threads.net", "www.threads.net", "threads.com", "www.threads.com"}:
         scheme, netloc, params = "https", "www.threads.com", []
+    elif source == "daum_cafe" and host in {"cafe.daum.net", "m.cafe.daum.net"}:
+        scheme, netloc, params = "https", "cafe.daum.net", []
 
     return urlunsplit((scheme, netloc, path, urlencode(sorted(params)), ""))
 

@@ -1,6 +1,7 @@
 import { reconcileGateSelection } from './qaFix';
 import { availableChannels, localDate } from './finalFix';
 import type { CrawlConfig, CrawlSession, CrawlStatus, Limits } from '../api/crawl';
+import { IMPORT_ONLY_CHANNELS } from '../contextLabels';
 
 export const parseList = (value: string): string[] => value.split(',').map(s => s.trim()).filter(Boolean);
 
@@ -17,7 +18,9 @@ export function enabledChannelConfig<T extends { channels: string[]; perChannel:
 }
 
 export function settingsSources(known: string[], selected: string[], available: string[]): string[] {
-  return [...new Set([...known.filter(source => source !== 'fixture' || available.includes(source)), ...available, ...selected])];
+  const importOnly: readonly string[] = IMPORT_ONLY_CHANNELS;
+  return [...new Set([...known.filter(source => !importOnly.includes(source)
+    && (source !== 'fixture' || available.includes(source))), ...available, ...selected])];
 }
 
 const DEFAULTS: Record<string, [number, number]> = {
