@@ -31,7 +31,6 @@ def embedder_name(meta: dict) -> str:
 
 class VoyageEmbedder:
     name = 'voyage'
-    REQUESTS_PER_KEY = 2
 
     def __init__(self):
         if settings.voyage_api_key.strip() in {'', 'x'}:
@@ -42,7 +41,7 @@ class VoyageEmbedder:
         keys = list(dict.fromkeys(key for key in keys if key not in {'', 'x'}))
         self._keys, self._lock = cycle(keys), Lock()
         # Batch callers (prep) may run this many embed calls at once.
-        self.concurrency = len(keys) * self.REQUESTS_PER_KEY
+        self.concurrency = len(keys) * max(1, settings.voyage_requests_per_key)
 
     def embed(self, texts: list[str], input_type: Literal['document', 'query'] = 'document') -> np.ndarray:
         with self._lock:
