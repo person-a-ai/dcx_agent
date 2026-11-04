@@ -79,13 +79,14 @@ def _draft(sid, task_name, model, one_liner, evidence):
     return None
 
 
-def generate_drafts(sid, store, project_context, *, context_reps=None, cluster_drafts=None):
+def generate_drafts(sid, store, project_context, *, context_reps=None, cluster_drafts=None, persona_drafts=None):
     """Generate one draft per row in layer order, preserving confirmed fields."""
     context = (project_context.model_dump(mode='json')
                if isinstance(project_context, BaseModel) else project_context)
     one_liner = context.get('oneLiner', '')
     context_reps = context_reps or {}
     cluster_drafts = cluster_drafts or {}
+    persona_drafts = persona_drafts or {}
     flags = {}
     clusters = {}
     personas = {}
@@ -111,6 +112,10 @@ def generate_drafts(sid, store, project_context, *, context_reps=None, cluster_d
             cached = cluster_drafts.get(row[key], {}) if table == 'clusters' else {}
             if cached.get('name', '').strip():
                 return {'name': cached['name']}
+            # Personas drafted right after L2 used the same evidence; reuse them.
+            cached = persona_drafts.get(row[key]) if table == 'personas' else None
+            if cached and cached.get('desire', '').strip():
+                return {field: cached[field] for field in ('name', 'desire', 'goals')}
             return _draft(sid, task, model, one_liner, evidence_for(row))
         rows = list(getattr(store, table)())
         # Items in one layer are independent; the next layer reads this layer's results.

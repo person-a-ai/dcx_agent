@@ -300,19 +300,23 @@ def test_failed_persona_draft_retried_on_resume(setup, monkeypatch):
     fixture, _ = setup(docs_per_context=4)
     original = registry.run_task
     attempts = []
-    def fail_once(task):
+    offline = {'on': True}
+    def fail_first_persona(task):
+        # The L2 preview drafts personas first; keep one persona failing for the
+        # whole first run so the drafts step also fails and flags it.
         if task.task == 'segment.persona_draft':
             attempts.append(task.model_dump(exclude={'output_schema'}))
-            if len(attempts) == 1:
+            if offline['on'] and attempts[-1] == attempts[0]:
                 return failure('backend', 'offline')
         return original(task)
-    monkeypatch.setattr(registry, 'run_task', fail_once)
+    monkeypatch.setattr(registry, 'run_task', fail_first_persona)
     pipeline.run(Context(fixture.sid, stop_after='drafts'))
     store = SegmentStore.open(fixture.sid, 'v1')
     failed = [p['persona_id'] for p in store.personas() if 'draft_failed' in p['flags']]
     assert len(failed) == 1
+    offline['on'] = False
     pipeline.run(Context(fixture.sid, args={'k': None, 'fresh': False, 'resume': True}))
-    assert attempts.count(attempts[0]) == 2
+    assert attempts.count(attempts[0]) == 3  # L2 preview, drafts step, resumed drafts step
     assert all('draft_failed' not in p['flags'] and p['desire_draft'] for p in store.personas())
     assert all('draft_failed' not in p['flags'] for p in report(fixture.sid)['personas'])
 
@@ -405,7 +409,9 @@ def test_l1_preview_is_reused_on_resume(setup, monkeypatch):
     assert sessions.read_json(root / 'state.json')['l1_summary'] == preview['clusters']
     monkeypatch.setattr(pipeline.l1, 'cluster', lambda *a, **kw: pytest.fail('L1 recalculated'))
     pipeline.run(Context(fixture.sid, stop_after='L3'))
-    assert sessions.read_json(root / 'preview.json') == preview
+    resumed = sessions.read_json(root / 'preview.json')
+    # L2 adds personas to the preview; the L1 part must stay exactly as it was.
+    assert {key: value for key, value in resumed.items() if key not in ('personas', 'personaDrafting')} == preview
     assert len(calls) == 1
     rows = {c['cluster_id']: c for c in SegmentStore.open(fixture.sid, 'v1').clusters()}
     for cluster in preview['clusters']:
@@ -492,3 +498,75 @@ def test_preview_name_failure_is_nonfatal_and_retried(setup, monkeypatch):
     assert sessions.load_session(fixture.sid)['segment']['status'] == 'review'
     assert len(attempts) == preview['k']
     assert all(c['name_draft'] for c in SegmentStore.open(fixture.sid, 'v1').clusters())
+
+
+def test_l2_previews_personas_with_drafts_reused_by_drafts_step(setup, monkeypatch):
+    fixture, calls = setup(docs_per_context=4)
+    root = version_dir(fixture.sid, 'v1') / 'segment'
+    original = registry.run_task
+    def checked(task):
+        if task.task == 'segment.persona_draft':
+            assert sessions.read_json(root / 'preview.json')['personaDrafting'] == 'pending'
+        return original(task)
+    monkeypatch.setattr(registry, 'run_task', checked)
+    pipeline.run(Context(fixture.sid, stop_after='L2'))
+    preview = sessions.read_json(root / 'preview.json')
+    assert preview['personaDrafting'] == 'done'
+    personas = preview['personas']
+    assert personas and all(p['desire'] and p['goals'] and not p['draftFailed'] for p in personas)
+    assert all(p['centrality'] and isinstance(p['centrality'][0], str) for p in personas)
+    assert {p['cluster'] for p in personas} <= {c['id'] for c in preview['clusters']}
+    drafted = sum(name == 'segment.persona_draft' for name, _ in calls)
+    assert drafted == len(personas)
+    pipeline.run(Context(fixture.sid))
+    assert sum(name == 'segment.persona_draft' for name, _ in calls) == drafted
+    stored = {p['persona_id']: p for p in SegmentStore.open(fixture.sid, 'v1').personas()}
+    assert all(stored[p['id']]['desire_draft'] == p['desire'] for p in personas)
+    assert sum(p['docs'] for p in personas) == sum(c['docs'] for c in preview['clusters'])
+
+
+def test_persona_preview_failure_is_nonfatal_and_retried(setup, monkeypatch):
+    from app.llm.base import failure
+    fixture, _ = setup(docs_per_context=4)
+    original = registry.run_task
+    attempts = []
+    def offline(task):
+        if task.task == 'segment.persona_draft':
+            attempts.append(task)
+            return failure('backend', 'offline')
+        return original(task)
+    monkeypatch.setattr(registry, 'run_task', offline)
+    pipeline.run(Context(fixture.sid, stop_after='L2'))
+    preview = sessions.read_json(version_dir(fixture.sid, 'v1') / 'segment/preview.json')
+    assert preview['personaDrafting'] == 'done'
+    assert all(p['draftFailed'] and not p['desire'] for p in preview['personas'])
+    first = len(attempts)
+    monkeypatch.setattr(registry, 'run_task', original)
+    pipeline.run(Context(fixture.sid))
+    assert sessions.load_session(fixture.sid)['segment']['status'] == 'review'
+    assert first == len(preview['personas'])
+    assert all(p['desire_draft'] for p in SegmentStore.open(fixture.sid, 'v1').personas())
+
+
+def test_preview_lists_edge_documents_farthest_from_center(setup):
+    fixture, _ = setup(docs_per_context=4)
+    pipeline.run(Context(fixture.sid, stop_after='L2'))
+    preview = sessions.read_json(version_dir(fixture.sid, 'v1') / 'segment/preview.json')
+    for item in [*preview['clusters'], *preview['personas']]:
+        assert item['edges'] and len(item['edges']) == len(item['reps'])
+        assert {rep['docId'] for rep in item['edges']} != {rep['docId'] for rep in item['reps']} or item['docs'] <= len(item['reps'])
+
+
+def test_resume_after_l2_backfills_personas_and_edges(setup):
+    fixture, _ = setup(docs_per_context=4)
+    root = version_dir(fixture.sid, 'v1') / 'segment'
+    pipeline.run(Context(fixture.sid, stop_after='L2'))
+    preview = sessions.read_json(root / 'preview.json')
+    # Simulate a preview written by the release before personas/edges existed.
+    legacy = {key: value for key, value in preview.items() if key not in ('personas', 'personaDrafting')}
+    legacy['clusters'] = [{k: v for k, v in c.items() if k != 'edges'} for c in legacy['clusters']]
+    sessions.write_json(root / 'preview.json', legacy)
+    pipeline.run(Context(fixture.sid, stop_after='L3'))
+    filled = sessions.read_json(root / 'preview.json')
+    assert filled['personaDrafting'] == 'done' and filled['personas']
+    assert all(c['edges'] for c in filled['clusters'])
