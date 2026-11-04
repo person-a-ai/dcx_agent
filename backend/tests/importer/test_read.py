@@ -55,6 +55,23 @@ def test_zip_picks_result_csv_and_ignores_probs(tmp_path):
     assert read.scan(source).done == 1
 
 
+@pytest.mark.parametrize('metadata_paths', [
+    ['__MACOSX/dir/._x_full.csv', '__MACOSX/dir/._x_full_probs.csv', '__MACOSX/._dir'],
+    ['dir/__MACOSX/x_full.csv'],
+    ['dir/._x_full.csv'],
+])
+def test_zip_ignores_macos_metadata(tmp_path, metadata_paths):
+    rows = [channel_row('daum_cafe', 1), channel_row('daum_cafe', 2)]
+    csv_path = write_csv(tmp_path / 'r.csv', rows)
+    members = {'dir/x_full.csv': csv_path.read_bytes(), 'dir/x_full_probs.csv': b'doc_id\n'}
+    members.update({name: b'metadata' for name in metadata_paths})
+    archive = write_zip(tmp_path / '다음 카페.zip', members)
+    source = read.open_source(archive)
+    assert source.name == 'x_full.csv'
+    assert source.sha256 == read.open_source(csv_path).sha256
+    assert read.scan(source).done == len(rows)
+
+
 def test_zip_with_two_result_csvs_rejected(tmp_path):
     archive = write_zip(tmp_path / 'a.zip', {'a.csv': b'x', 'b.csv': b'y'})
     with pytest.raises(read.ImportError_, match='결과 CSV'):
@@ -201,6 +218,7 @@ def test_unknown_site_still_skipped(tmp_path, salt):
     ('2026-06-06T03:46:43+09:00', '2026-06-06'), ('2026-06-06', '2026-06-06'),
     ('26.06.02 11:32', '2026-06-02'), ('', ''), ('26.13.02 11:32', ''), ('어제', ''),
     ('2026.6.1', '2026-06-01'), ('2026.13.02', ''), ('2026-06-32', ''), ('26.00.02 11:32', ''),
+    ('2026.06.021', ''), ('2026.06.02garbage', ''),
 ])
 def test_dates(value, expected):
     assert read._date(value) == expected

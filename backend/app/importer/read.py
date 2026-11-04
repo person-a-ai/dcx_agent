@@ -29,7 +29,7 @@ REASONS = set(ReasonCode.__args__)
 SIGNALS = set(Signal.__args__)
 _EXAMPLES = 5
 _DATE_FORMATS = (
-    (re.compile(r'\s*(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})'), 0),
+    (re.compile(r'\s*(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})(?=[.\s]|$)'), 0),
     (re.compile(r'\s*(\d{4})-(\d{2})-(\d{2})(?:[T ]|$)'), 0),
     (re.compile(r'\s*(\d{2})\.(\d{2})\.(\d{2})\s+\d{1,2}:\d{2}\s*$'), 2000),
 )
@@ -76,6 +76,7 @@ def _open_source(path: str | Path) -> Source:
     if path.suffix.lower() == '.zip':
         with zipfile.ZipFile(path) as archive:
             members = [i.filename for i in archive.infolist() if not i.is_dir()
+                       and '__MACOSX' not in Path(i.filename).parts and not Path(i.filename).name.startswith('._')
                        and i.filename.lower().endswith('.csv') and not i.filename.lower().endswith('_probs.csv')]
         if len(members) != 1:
             raise ImportError_(f'{path.name}: 결과 CSV가 정확히 하나여야 합니다(찾은 수 {len(members)})')
