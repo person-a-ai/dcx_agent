@@ -213,10 +213,12 @@ def status(sid: str, version: str | None = None):
         preview = sessions.read_json(version_dir(sid, data['version']) / 'segment/preview.json')
         if preview:
             result['preview'] = {key: value for key, value in preview.items() if key != 'run'}
-            result['preview']['clusters'] = [
-                {**cluster, 'reps': [{**rep, 'text': (rep.get('text') or '')[:300]}
-                                    for rep in cluster.get('reps', [])]}
-                for cluster in preview['clusters']]
+            def trimmed(item):
+                return {**item, **{key: [{**rep, 'text': (rep.get('text') or '')[:300]} for rep in item.get(key, [])]
+                                   for key in ('reps', 'edges') if key in item}}
+            result['preview']['clusters'] = [trimmed(cluster) for cluster in preview['clusters']]
+            if 'personas' in preview:
+                result['preview']['personas'] = [trimmed(persona) for persona in preview['personas']]
     report = _report(sid, data)
     if report:
         result['stage6'] = report
