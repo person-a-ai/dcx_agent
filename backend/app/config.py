@@ -53,6 +53,8 @@ class Settings(BaseSettings):
     embed_backend: Literal["voyage", "fake"] = "voyage"
     embed_model: str = "voyage-4"
     embed_dim: int = 1024
+    # Kiwi tokenizer threads; they share one model, so leave cores for the API and web.
+    kiwi_workers: int = 8
     jev_api_keys: Annotated[list[str], NoDecode] = Field(default_factory=list, validation_alias="JEVMODEL_API_KEY")
     jev_model: str = "jev-latest"
     jev_rate_per_min: int = 120

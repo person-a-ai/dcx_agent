@@ -107,7 +107,7 @@ def test_boilerplate_removed_counted(setup):
 def test_two_paths(setup, monkeypatch):
     embedder = setup([{**doc(), 'body': '<b>충분히 긴 본문인가요?!</b>'}])
     inputs = []
-    monkeypatch.setattr(pipeline, 'tokenize', lambda text, pos: inputs.append(text) or ['본문'])
+    monkeypatch.setattr(pipeline, 'tokenize_many', lambda texts, pos: [inputs.append(text) or ['본문'] for text in texts])
     root = pipeline.run_prep(Context(), 's', 'v1')
     assert '?' not in inputs[0] and '!' not in inputs[0]
     assert '?!' in embedder.calls[0][0] and '?!' in rows(root, 'docs')[0]['body']
@@ -445,3 +445,10 @@ def test_tokenizing_heartbeats_and_honors_stop(setup, monkeypatch):
     root = pipeline.run_prep(stopped, 's', 'v1')
     assert json.loads((root / 'manifest.json').read_text())['status'] == 'interrupted'
     assert not (root / 'stage_3.json').exists()
+
+
+def test_tokenize_many_matches_single_documents():
+    from app.prep.tokens import tokenize, tokenize_many
+    texts = ['경험이 좋았다', '', '육아맘 사용 경험이 충분히 길어요'] * 5
+    pos = ['NNG', 'NNP', 'VV', 'VA', 'XR']
+    assert list(tokenize_many(iter(texts), pos)) == [tokenize(text, pos) for text in texts]
