@@ -91,3 +91,24 @@ def test_llm_export_unavailable_prediction_uses_final(client, data_dir, unavaila
         db.execute("DELETE FROM final WHERE doc_id='d0'")
     with pytest.raises(store.StoreError):
         export.write(sid)
+
+
+def test_export_releases_the_labels_lock_between_parts(tmp_path):
+    import sqlite3
+    from app.label.store import LabelStore
+    from app.model import export as export_module
+    labels = LabelStore(tmp_path)
+    generation = tmp_path / 'gen'
+    generation.mkdir()
+    writes = []
+
+    def parts():
+        for n in range(3):
+            yield [{'doc_id': f'd{n}', 'title': 't', 'body': 'b'}]
+            # Labeling keeps writing while a partial export runs between parts.
+            with sqlite3.connect(labels.path, timeout=0) as db:
+                db.execute("INSERT INTO queue(doc_id, reason, priority) VALUES (?, 'r', 1)", (f'q{n}',))
+            writes.append(n)
+
+    export_module._write_rows(generation, parts(), labels, None, False, True)
+    assert writes == [0, 1, 2]
