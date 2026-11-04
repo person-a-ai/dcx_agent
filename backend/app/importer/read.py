@@ -29,8 +29,9 @@ REASONS = set(ReasonCode.__args__)
 SIGNALS = set(Signal.__args__)
 _EXAMPLES = 5
 _DATE_FORMATS = (
-    (re.compile(r'\s*(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})(?=[.\s]|$)'), 0),
-    (re.compile(r'\s*(\d{4})-(\d{2})-(\d{2})(?:[T ]|$)'), 0),
+    (re.compile(r'\s*(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})\.?(?:\s+\d{2}:\d{2}(?::\d{2})?)?\s*'), 0),
+    (re.compile(r'\s*(\d{4})-(\d{2})-(\d{2})(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?'
+                r'(?:Z|[+-]\d{2}:?\d{2})?)?\s*'), 0),
     (re.compile(r'\s*(\d{2})\.(\d{2})\.(\d{2})\s+\d{1,2}:\d{2}\s*$'), 2000),
 )
 
@@ -232,7 +233,7 @@ def _comments(value):
 
 def _date(value):
     for pattern, century in _DATE_FORMATS:
-        match = pattern.match(value or '')
+        match = pattern.fullmatch(value or '')
         if match:
             year, month, day = int(match[1]) + century, int(match[2]), int(match[3])
             return f'{year:04d}-{month:02d}-{day:02d}' if 1 <= month <= 12 and 1 <= day <= 31 else ''
