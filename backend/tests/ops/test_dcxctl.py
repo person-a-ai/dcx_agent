@@ -219,3 +219,21 @@ sys.exit(int(os.environ['IMPORT_EXIT']))
     }
     assert not (tmp_path / 'unexpected').exists()
     assert not (backend / 'unexpected').exists()
+
+
+def test_import_labels_resolves_multiple_relative_paths(macmini, tmp_path, monkeypatch):
+    args = _fake_python(macmini)
+    monkeypatch.chdir(tmp_path)
+    result = ctl(macmini, 'import-labels', '네이버 카페.zip', '지식인.csv', '--sid', 'imp-multi')
+    assert result.returncode == 0, result.stderr
+    assert args.read_text().splitlines()[-4:] == [
+        str(tmp_path / '네이버 카페.zip'), str(tmp_path / '지식인.csv'), '--sid', 'imp-multi']
+
+
+@pytest.mark.parametrize('paths', [[], ['a.csv']])
+def test_import_labels_requires_sid_value(macmini, paths):
+    args = _fake_python(macmini)
+    result = ctl(macmini, 'import-labels', *paths, '--sid')
+    assert result.returncode == 2
+    assert '사용법: dcxctl import-labels <zip 또는 csv>... [--sid ID]' in result.stderr
+    assert not args.exists()

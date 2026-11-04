@@ -1,4 +1,4 @@
-"""python -m app.importer <zip|csv> [--sid ID]"""
+"""python -m app.importer <zip|csv>... [--sid ID]"""
 import argparse
 import sys
 
@@ -7,11 +7,11 @@ from app.importer import read, steps
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog='dcxctl import-labels', description='외부 라벨 결과를 새 프로젝트로 가져옵니다')
-    parser.add_argument('path', help='결과 CSV 또는 그것을 담은 zip')
-    parser.add_argument('--sid', help='프로젝트 id (기본: imp-<파일 해시>)')
+    parser.add_argument('paths', nargs='+', help='결과 CSV 또는 그것을 담은 zip (여러 개면 한 프로젝트로 합칩니다)')
+    parser.add_argument('--sid', help='프로젝트 id (기본: imp-<파일 또는 묶음 해시>)')
     args = parser.parse_args(argv)
     try:
-        steps.run_import(args.path, sid=args.sid, log=lambda line: print(line, flush=True))
+        steps.run_import(args.paths, sid=args.sid, log=lambda line: print(line, flush=True))
     except read.ImportError_ as exc:
         print(str(exc), file=sys.stderr)
         return 1

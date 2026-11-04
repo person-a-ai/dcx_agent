@@ -1,4 +1,5 @@
 import json
+import sqlite3
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -10,7 +11,7 @@ from app.crawl.control import phase_state
 from app.importer import read, steps
 from app.prep import pipeline
 from app.work import runner
-from tests.importer.conftest import row, write_csv
+from tests.importer.conftest import channel_row, row, write_csv, write_zip
 
 
 @pytest.fixture
@@ -640,3 +641,123 @@ def test_invalid_prepared_docs_write_no_labels(prepared_import, invalid):
         steps.insert_labels(sid, source)
     with labels_for(sid, data)._db() as db:
         assert db.execute('SELECT count(*) FROM final').fetchone()[0] == 0
+
+
+def multi_files(tmp_path, channels=read.CHANNEL_ORDER):
+    paths = []
+    for i, channel in enumerate(channels):
+        path = write_csv(tmp_path / f'{channel}.csv',
+                         [channel_row(channel, i * 10 + n) for n in range(2 + i % 2)])
+        if channel == 'naver_cafe':
+            path = write_zip(tmp_path / '네이버 카페.zip', {path.name: path.read_bytes()})
+        paths.append(path)
+    return paths
+
+
+def run_files(env, paths, **kwargs):
+    return steps.run_import(paths, log=env.logs.append, poll_s=0, sleep=env.sleep, **kwargs)
+
+
+def test_multi_file_import_creates_one_project_with_all_channels(env, tmp_path, data_dir, monkeypatch):
+    from app.label.overview import labels_for
+
+    # Exercise batches across source boundaries, including a final partial batch.
+    monkeypatch.setattr(steps, '_BATCH', 3)
+    paths = list(reversed(multi_files(tmp_path)))
+    sources = read.open_sources(paths)
+    summary = run_files(env, paths)
+    sid = summary['sid']
+    assert sid == 'imp-' + read.bundle_sha(sources)[:12]
+    assert steps.default_sid(sources) == sid
+    data = store.load_session(sid)
+    assert data['projectContext']['channels'] == list(read.CHANNEL_ORDER)
+    collection = data_dir / 'crawl' / sid / 'collections' / 'c1'
+    manifest = json.loads((collection / 'manifest.json').read_text())
+    files = [dict(name=s.name, sha256=s.sha256) for s in sources]
+    assert manifest['channels'] == list(read.CHANNEL_ORDER)
+    assert manifest['imported'] == dict(sha256=read.bundle_sha(sources), files=files)
+    assert data['imported']['files'] == files
+    docs = [json.loads(line) for shard in (collection / 'docs').glob('*.jsonl')
+            for line in shard.read_text().splitlines()]
+    assert len(docs) == sum(read.scan(s).done for s in sources) == 10
+    assert {d['source'] for d in docs} == set(read.CHANNEL_ORDER)
+    with sqlite3.connect(collection / 'queue.sqlite') as db:
+        assert dict(db.execute('SELECT url_norm, source FROM urls')) == {d['url']: d['source'] for d in docs}
+    expected_votes = {r.doc['doc_id']: dict(file=s.name, sha256=s.sha256[:12])
+                      for s in sources for r in read.iter_records(s, '')}
+    with labels_for(sid, data)._db() as db:
+        rows = db.execute('SELECT doc_id, votes_json FROM final').fetchall()
+        assert len(rows) == 10
+        assert {r[0]: json.loads(r[1])['imported'] for r in rows} == expected_votes
+    assert data['labeling']['status'] == 'done'
+    assert data['training']['exportRef'] == summary['exportRef']
+    assert summary['exportRef'] and set(data['imported']['steps']) == set(steps.ORDER)
+    assert phase_state(sid, 'c1') == 'done'
+    assert any('묶음 4개 파일' in line for line in env.logs)
+    assert any('채널: 네이버 카페 · 지식iN · 다음 카페 · 브런치' in line for line in env.logs)
+
+
+def test_channels_only_include_present_channels(env, tmp_path, data_dir):
+    paths = multi_files(tmp_path, ['daum_brunch', 'naver_kin'])
+    summary = run_files(env, paths)
+    sid = summary['sid']
+    channels = ['naver_kin', 'daum_brunch']
+    assert store.load_session(sid)['projectContext']['channels'] == channels
+    manifest = data_dir / 'crawl' / sid / 'collections/c1/manifest.json'
+    assert json.loads(manifest.read_text())['channels'] == channels
+
+
+def test_resume_with_files_in_other_order(env, tmp_path, monkeypatch):
+    paths = multi_files(tmp_path)
+    with monkeypatch.context() as patch:
+        patch.setattr(steps, 'run_prep_step', Mock(side_effect=KeyboardInterrupt))
+        with pytest.raises(KeyboardInterrupt):
+            run_files(env, paths)
+    sid = 'imp-' + read.bundle_sha(read.open_sources(paths))[:12]
+    before = store.load_session(sid)
+    register = Mock(wraps=steps.register_collection)
+    monkeypatch.setattr(steps, 'register_collection', register)
+    summary = run_files(env, list(reversed(paths)))
+    assert summary['sid'] == sid and summary['exportRef']
+    assert store.load_session(sid)['imported']['files'] == before['imported']['files']
+    register.assert_not_called()
+
+
+def test_other_bundle_with_same_sid_is_rejected(env, tmp_path):
+    paths = multi_files(tmp_path)
+    run_files(env, paths, sid='imp-bundle')
+    with pytest.raises(read.ImportError_, match='다른 파일로 만든 프로젝트'):
+        run_files(env, paths[:-1], sid='imp-bundle')
+
+
+def test_cross_file_duplicate_writes_nothing(env, tmp_path, data_dir):
+    paths = [write_csv(tmp_path / 'first.csv', [row(1), row(2)]),
+             write_csv(tmp_path / 'second.csv', [row(2), row(3)])]
+    with pytest.raises(read.ImportError_, match='중복된 doc_id'):
+        run_files(env, paths)
+    for name in ('sessions', 'crawl'):
+        assert not (data_dir / name).exists() or not any((data_dir / name).iterdir())
+
+
+def test_single_file_import_unchanged(env, data_dir):
+    source = read.open_source(env.path)
+    summary = run(env)
+    assert summary['sid'] == 'imp-' + source.sha256[:12]
+    data = store.load_session(summary['sid'])
+    assert data['imported']['sha256'] == source.sha256
+    assert data['imported']['file'] == source.name
+    assert data['imported'].get('files') == [dict(name=source.name, sha256=source.sha256)]
+    assert data['projectContext']['channels'] == ['naver_cafe']
+    assert data['projectContext']['projectType'] == dict(choice='new', note='.')
+    assert data['projectContext']['productCategory'] == dict(l1='.', source='user')
+    manifest = data_dir / 'crawl' / summary['sid'] / 'collections/c1/manifest.json'
+    assert json.loads(manifest.read_text())['imported'] == dict(
+        file=source.name, sha256=source.sha256, files=[dict(name=source.name, sha256=source.sha256)])
+    assert summary['counts'] == dict(labeled=6, unlabeled=0, droppedByPrep=0)
+
+
+def test_empty_paths_write_nothing(env, data_dir):
+    with pytest.raises(read.ImportError_, match='가져올 파일이 없습니다'):
+        run_files(env, [])
+    assert not (data_dir / 'sessions').exists()
+    assert not (data_dir / 'crawl').exists()

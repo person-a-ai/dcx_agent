@@ -34,10 +34,19 @@ def test_main_forwards_path_and_sid(monkeypatch):
 
     monkeypatch.setattr(steps, 'run_import', run)
     assert cli.main(['네이버 카페.zip', '--sid', 'imp-a']) == 0
-    assert calls == [('네이버 카페.zip', 'imp-a')]
+    assert calls == [(['네이버 카페.zip'], 'imp-a')]
 
 
 def test_main_requires_file():
     with pytest.raises(SystemExit) as exc:
         cli.main([])
     assert exc.value.code == 2
+
+
+def test_main_forwards_multiple_paths_and_sid(monkeypatch):
+    calls = []
+    def run(paths, *, sid=None, log=print):
+        calls.append((paths, sid))
+    monkeypatch.setattr(steps, 'run_import', run)
+    assert cli.main(['a.csv', 'b.zip', '--sid', 'imp-x']) == 0
+    assert calls == [(['a.csv', 'b.zip'], 'imp-x')]

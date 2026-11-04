@@ -6,14 +6,16 @@ from pathlib import Path
 import shutil
 import sqlite3
 import time
-from typing import Callable
+from typing import Callable, Sequence
 
 from app.config import settings
 from app.context import store, versions
+from app.context.labels import LABELS
 from app.crawl.control import phase_state
 from app.crawl.queue import CrawlQueue
 from app.crawl.writer import DocWriter
-from app.importer.read import ImportError_, Source, iter_records, open_source, scan
+from app.importer.read import (CHANNEL_ORDER, ImportError_, Source, bundle_sha, iter_records,
+                               merge_scans, open_sources, scan)
 from app.label.route import IMPORTED, schema as label_schema
 
 ORDER = ('session', 'crawl', 'prep', 'labels', 'export')
@@ -24,13 +26,26 @@ WARNING = "주의: 0단계 값이 모두 '.'입니다. 6~8단계 결과는 주�
 _BATCH = 5000
 
 
-def default_sid(source: Source) -> str:
-    return 'imp-' + source.sha256[:12]
+def _sources(sources: Source | Sequence[Source]) -> Sequence[Source]:
+    # Keep direct single-source stage calls compatible with earlier importers.
+    return [sources] if isinstance(sources, Source) else sources
 
 
-def _context():
+def default_sid(sources: Source | Sequence[Source]) -> str:
+    return 'imp-' + bundle_sha(_sources(sources))[:12]
+
+
+def _source_info(sources):
+    info = dict(sha256=bundle_sha(sources),
+                files=[dict(name=s.name, sha256=s.sha256) for s in sources])
+    if len(sources) == 1:
+        info['file'] = sources[0].name
+    return info
+
+
+def _context(channels):
     return dict(bk=DOT, oneLiner=DOT, researchQuestion=dict(text=DOT), projectType=dict(choice='new', note=DOT),
-                taskMode='explore', constraints=[], channels=['naver_cafe'],
+                taskMode='explore', constraints=[], channels=list(channels),
                 productCategory=dict(l1=DOT, source='user'))
 
 
@@ -60,13 +75,19 @@ def _mark(sid, step, *, version=None, patch=None, **counts):
         store.write_json(directory / 'session.json', data)
 
 
-def create_session(sid, source, result):
+def create_session(sid, sources, result, channels=None):
+    sources = _sources(sources)
+    if channels is None:
+        channels = [c for c in CHANNEL_ORDER if result.channels.get(c)]
     keywords = [dict(kw=k, text=k, status='approved', axis='', sub='') for k in result.keywords]
-    store.update_session(sid, {'schemaVersion': 2, 'sid': sid, 'projectContext': _context(), 'keywords': keywords,
-                               'imported': dict(file=source.name, sha256=source.sha256, steps={}, counts={})})
+    store.update_session(sid, {'schemaVersion': 2, 'sid': sid, 'projectContext': _context(channels), 'keywords': keywords,
+                               'imported': dict(_source_info(sources), steps={}, counts={})})
 
 
-def register_collection(sid, source):
+def register_collection(sid, sources, channels=None):
+    sources = _sources(sources)
+    if channels is None:
+        channels = store.load_session(sid)['projectContext']['channels']
     base = Path(settings.local_data_dir) / 'crawl' / sid / 'collections'
     final, partial = base / 'c1', base / 'c1.partial'
     if not final.exists():
@@ -76,20 +97,21 @@ def register_collection(sid, source):
         keywords = [dict(kw=k['kw'], axis='', sub='') for k in store.load_session(sid)['keywords']]
         meta = dict(id='c1', parent=None, createdAt=now, keywords=keywords, status='done')
         store.write_json(partial / 'meta.json', meta)
-        store.write_json(partial / 'manifest.json', dict(meta, channels=['naver_cafe'], config={}, snapshotId=None,
-                                                         imported=dict(file=source.name, sha256=source.sha256)))
+        store.write_json(partial / 'manifest.json', dict(meta, channels=list(channels), config={}, snapshotId=None,
+                                                         imported=_source_info(sources)))
         writer = DocWriter(partial / 'docs')
         urls = []
         with closing(CrawlQueue(partial / 'queue.sqlite')) as queue:
             try:
-                for record in iter_records(source, now):
-                    writer.write(record.doc)
-                    urls.append(dict(url=record.doc['url'], source='naver_cafe', kw=record.doc['kw'],
-                                     title=record.doc['title'], date=record.doc['date'],
-                                     src_meta=record.doc['src_meta']))
-                    if len(urls) >= _BATCH:  # bounded memory: never hold all ~200k URL rows
-                        queue.add_urls(urls)
-                        urls.clear()
+                for source in sources:
+                    for record in iter_records(source, now):
+                        writer.write(record.doc)
+                        urls.append(dict(url=record.doc['url'], source=record.doc['source'], kw=record.doc['kw'],
+                                         title=record.doc['title'], date=record.doc['date'],
+                                         src_meta=record.doc['src_meta']))
+                        if len(urls) >= _BATCH:  # bounded memory: never hold all ~200k URL rows
+                            queue.add_urls(urls)
+                            urls.clear()
             finally:
                 writer.close()
             if urls:
@@ -132,7 +154,8 @@ def run_prep_step(sid, log, poll_s=10, sleep=time.sleep):
     raise ImportError_('전처리에 실패했습니다. 서버 로그를 확인하고 같은 명령을 다시 실행하세요.')
 
 
-def insert_labels(sid, source) -> dict:
+def insert_labels(sid, sources) -> dict:
+    sources = _sources(sources)
     from app.label.overview import index_documents, labels_for
     from app.label import rule
     from app.label.questions import QVER
@@ -164,7 +187,6 @@ def insert_labels(sid, source) -> dict:
         _assert_version(sid, claimed)
         labels = labels_for(sid, data)
         label_schema(labels)
-    votes = json.dumps({'imported': dict(file=source.name, sha256=source.sha256[:12])})
     labeled, batch = set(), []
     dropped = 0
     def flush():
@@ -173,17 +195,19 @@ def insert_labels(sid, source) -> dict:
             with labels._db() as db:
                 db.executemany('INSERT OR REPLACE INTO final VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)', batch)
         batch.clear()
-    for record in iter_records(source, ''):
-        doc_id = record.doc['doc_id']
-        if doc_id not in prepared:
-            dropped += 1
-            continue
-        lab = record.label
-        batch.append((doc_id, lab['level'], None, IMPORTED, 'accepted', lab['tags_json'], lab['reason_code'],
-                      lab['signal'], rule.RULE_VERSION, QVER, votes, '[]', 0))
-        labeled.add(doc_id)
-        if len(batch) >= _BATCH:
-            flush()
+    for source in sources:
+        votes = json.dumps({'imported': dict(file=source.name, sha256=source.sha256[:12])})
+        for record in iter_records(source, ''):
+            doc_id = record.doc['doc_id']
+            if doc_id not in prepared:
+                dropped += 1
+                continue
+            lab = record.label
+            batch.append((doc_id, lab['level'], None, IMPORTED, 'accepted', lab['tags_json'], lab['reason_code'],
+                          lab['signal'], rule.RULE_VERSION, QVER, votes, '[]', 0))
+            labeled.add(doc_id)
+            if len(batch) >= _BATCH:
+                flush()
     if batch:
         flush()
     counts = dict(labeled=len(labeled), unlabeled=len(prepared - labeled), droppedByPrep=dropped)
@@ -212,18 +236,29 @@ def export_step(sid, partial: bool) -> dict:
     return exported
 
 
-def run_import(path, *, sid: str | None = None, log: Callable[[str], None] = print,
-               poll_s: float = 10, sleep=time.sleep) -> dict:
-    source = open_source(path)
-    log(f'가져오기: {Path(path).name} → {source.name} (sha256 {source.sha256[:12]})')
-    result = scan(source)
-    skipped = ' · '.join(f'{k} {v:,}' for k, v in result.skipped.items()) or '없음'
-    log(f'검증  {result.total:,}행 · done {result.done:,} · 건너뜀 {skipped}')
-    sid = sid or default_sid(source)
+def run_import(paths: str | Path | Sequence[str | Path], *, sid: str | None = None,
+               log: Callable[[str], None] = print, poll_s: float = 10, sleep=time.sleep) -> dict:
+    paths = [paths] if isinstance(paths, (str, Path)) else list(paths)
+    if not paths:
+        raise ImportError_('가져올 파일이 없습니다')
+    sources = open_sources(paths)
+    scans, seen = [], set()
+    for path, source in zip(paths, sources):
+        log(f'가져오기: {Path(path).name} → {source.name} (sha256 {source.sha256[:12]})')
+        result = scan(source, seen)
+        scans.append(result)
+        skipped = ' · '.join(f'{k} {v:,}' for k, v in result.skipped.items()) or '없음'
+        log(f'검증  {result.total:,}행 · done {result.done:,} · 건너뜀 {skipped}')
+    del seen
+    result = merge_scans(scans)
+    bundle = bundle_sha(sources)
+    if len(sources) > 1:
+        log(f'묶음 {len(sources)}개 파일 → sha256 {bundle[:12]}')
+    sid = sid or default_sid(sources)
     try:
         store.root_dir(sid)  # validates the id before anything is written
         with _import_lock(sid):
-            return _run_locked(sid, source, result, log, poll_s, sleep)
+            return _run_locked(sid, sources, result, log, poll_s, sleep)
     except (store.StoreError, OSError, sqlite3.Error) as exc:
         raise ImportError_(str(exc)) from exc
 
@@ -243,13 +278,15 @@ def _import_lock(sid):
             fcntl.flock(handle, fcntl.LOCK_UN)
 
 
-def _run_locked(sid, source, result, log, poll_s, sleep):
+def _run_locked(sid, sources, result, log, poll_s, sleep):
+    bundle = bundle_sha(sources)
+    channels = [c for c in CHANNEL_ORDER if result.channels.get(c)]
     existing = store.load_session(sid) if (store.root_dir(sid)).exists() else None
     if existing is not None:
         info = existing.get('imported')
         if not info:
             raise ImportError_(f'{sid}는 가져오기로 만든 프로젝트가 아닙니다. --sid로 다른 이름을 주세요.')
-        if info.get('sha256') != source.sha256:
+        if info.get('sha256') != bundle:
             raise ImportError_(f'{sid}는 다른 파일로 만든 프로젝트입니다. --sid로 다른 이름을 주세요.')
     counts = dict(_imported(sid).get('counts', {}))
     for step in ORDER:
@@ -259,7 +296,7 @@ def _run_locked(sid, source, result, log, poll_s, sleep):
         training = data.get('training') or {}
         complete = (
             step == 'session' and data.get('projectContext')
-            and (data.get('imported') or {}).get('sha256') == source.sha256
+            and (data.get('imported') or {}).get('sha256') == bundle
             or step == 'crawl' and data.get('collectionId')
             and phase_state(sid, data['collectionId']) == 'done'
             or step == 'prep' and (data.get('prep') or {}).get('status') == 'done'
@@ -273,15 +310,16 @@ def _run_locked(sid, source, result, log, poll_s, sleep):
             continue
         fn = globals()[STEP_FUNCTIONS[step]]
         if step == 'session':
-            fn(sid, source, result)
-            log(f'[1/5] 프로젝트 {sid} 만듦')
+            fn(sid, sources, result, channels)
+            names = ' · '.join(LABELS['channels'][c] for c in channels)
+            log(f'[1/5] 프로젝트 {sid} 만듦 (채널: {names})')
         elif step == 'crawl':
-            fn(sid, source)
+            fn(sid, sources, channels)
             log(f'[2/5] 수집본 c1 등록 {result.done:,}건')
         elif step == 'prep':
             fn(sid, log, poll_s=poll_s, sleep=sleep)
         elif step == 'labels':
-            counts.update(fn(sid, source))
+            counts.update(fn(sid, sources))
             log(f"[4/5] 라벨 {counts['labeled']:,}건 넣음 · 판정 없음 {counts['unlabeled']:,} · 전처리에서 빠짐 {counts['droppedByPrep']:,}")
         elif step == 'export':
             exported = fn(sid, partial=counts.get('unlabeled', 0) > 0)
