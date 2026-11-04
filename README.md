@@ -129,6 +129,7 @@ APP_ROOT="$HOME/srv/dcx-agent" "$HOME/srv/dcx-agent/ops/dcxctl" rollback
 | `CORS_ORIGINS` | 브라우저 접근 설정 | 허용 origin; 기본 `*`, 운영에서는 웹 주소 지정 |
 | `EMBED_BACKEND` | 임베딩 선택 | 기본 `voyage`, 오프라인 `fake` |
 | `EMBED_MODEL` / `EMBED_DIM` | 임베딩 설정 | 기본 `voyage-4` / `1024` |
+| `KIWI_WORKERS` | 3단계 처리량 조정 | 전처리 토큰화(kiwi) 스레드 수; 기본 `8`, API·웹용 코어는 남겨 두세요 |
 | `JEVMODEL_API_KEY` | Jev HTTP 사용 시 | Jev API 키; 여러 키는 쉼표로 구분, 기본 빈 목록 |
 | `JEV_BACKEND` / `JEV_MODEL` | Jev 설정 | 기본 `http` / `jev-latest`, 오프라인 `fake` |
 | `JEV_RATE_PER_MIN` | Jev 사용 시 | 키당 분당 요청 수; 기본 `120` |

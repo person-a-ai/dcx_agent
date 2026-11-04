@@ -18,7 +18,7 @@ class Doc(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     doc_id: str
-    source: Literal["naver_cafe", "naver_blog", "youtube", "ppomppu", "clien", "fixture", "youtube_vlog", "threads", "naver_kin", "cook82"]
+    source: Literal["naver_cafe", "naver_blog", "youtube", "ppomppu", "clien", "fixture", "youtube_vlog", "threads", "naver_kin", "cook82", "daum_cafe", "daum_brunch"]
     src_meta: dict[str, Any]
     kw: str
     kw_axis: str

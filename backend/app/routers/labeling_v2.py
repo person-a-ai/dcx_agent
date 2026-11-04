@@ -12,7 +12,7 @@ from app.label import audit, rule
 from app.label.jev import GPT_ONLY_MESSAGE, labeler_mode
 from app.label.overview import (session, labels_for, caches_for, index_documents,
                                 overview, LEGACY_MESSAGE)
-from app.label.route import next_item, rebuild_queue, submit_item, sync
+from app.label.route import IMPORTED, IMPORTED_MESSAGE, next_item, rebuild_queue, submit_item, sync
 from app.label.schema import Tags
 from app.routers.context import ContextRoute
 from app.work import runner
@@ -64,6 +64,8 @@ def preview(body: Preview):
 def mode(sid: str, body: Mode, version: str | None = None):
     with store.locked(sid):
         data = session(sid, version, writable=True)
+        if labeler_mode(data) == IMPORTED:
+            raise store.StoreError(IMPORTED_MESSAGE, 409)
         if data.get('labeling', {}).get('started'):
             raise store.StoreError('새 버전에서 방식을 바꾸세요')
         if body.mode == 'model' and not body.modelId:
@@ -80,6 +82,8 @@ def mode(sid: str, body: Mode, version: str | None = None):
 def start(sid: str, version: str | None = None):
     with store.locked(sid):
         data = session(sid, version, writable=True)
+        if labeler_mode(data) == IMPORTED:
+            raise store.StoreError(IMPORTED_MESSAGE, 409)
         if data.get('prep', {}).get('status') != 'done' or not data.get('prep', {}).get('derivedRef'):
             raise store.StoreError('전처리를 먼저 완료하세요.')
         labels = labels_for(sid, data)
@@ -111,6 +115,8 @@ def start(sid: str, version: str | None = None):
 def control(sid: str, labeler: Literal['jev', 'gpt', 'infer'], action: Literal['pause', 'resume', 'stop'], version: str | None = None):
     with store.locked(sid):
         data = session(sid, version, writable=True)
+        if labeler_mode(data) == IMPORTED:
+            raise store.StoreError(IMPORTED_MESSAGE, 409)
         if labeler == 'jev' and labeler_mode(data) == 'gpt_only':
             raise store.StoreError(GPT_ONLY_MESSAGE, 409)
         model_mode = data.get('labeling', {}).get('mode') == 'model'
@@ -190,6 +196,8 @@ def seen(sid: str, version: str | None = None):
 def submit(sid: str, body: Submit, version: str | None = None):
     with store.locked(sid):
         data = session(sid, version, writable=True)
+        if labeler_mode(data) == IMPORTED:
+            raise store.StoreError(IMPORTED_MESSAGE, 409)
         return submit_item(labels_for(sid, data), body.doc_id, body.labeler, body.mode,
                            body.tags, body.round, body.elapsedSeconds, caches_for(sid, data))
 
@@ -198,6 +206,8 @@ def submit(sid: str, body: Submit, version: str | None = None):
 def new_audit(sid: str, version: str | None = None):
     with store.locked(sid):
         data = session(sid, version, writable=True)
+        if labeler_mode(data) == IMPORTED:
+            raise store.StoreError(IMPORTED_MESSAGE, 409)
         labels = labels_for(sid, data)
         caches = caches_for(sid, data)
         rebuild_queue(labels, caches.get('jev'), caches.get('gpt'), mode=labeler_mode(data))

@@ -17,10 +17,11 @@ from app.context.versions import version_dir
 from app.prep.clean import clean_html, strip_boilerplate, token_text
 from app.prep.config import PrepConfig, analyzer_version, prep_key
 from app.prep.report import stage3_report
-from app.prep.tokens import tokenize
+from app.prep.tokens import tokenize_many
 from app.prep.documents import crawl_docs, filter_documents
 from app.vectors.embedder import EmbedderUnconnected, FakeEmbedder, VoyageEmbedder, get_embedder, embedder_name
 from app.vectors.store import VectorStore
+from app.work.status import HEARTBEAT_INTERVAL
 
 SHARD_ROWS = 10_000
 DOC_SHARD_ROWS = 5_000
@@ -102,8 +103,8 @@ def _retry_failed(vectors, embedder, documents, checkpoint):
     return True
 
 
-def _checkpoint(ctx, done, total):
-    detail = {'done_shards': done, 'total_shards': total}
+def _checkpoint(ctx, done, total, **extra):
+    detail = {'done_shards': done, 'total_shards': total, **extra}
     ctx.heartbeat(done / max(total, 1), detail)
     while ctx.should_pause() and not ctx.should_stop():
         time.sleep(.1)
@@ -210,7 +211,12 @@ def _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnecte
     filtered, removed = filter_documents(kept, cfg.adFilter, cfg.excludeSources,
                                          cfg.minBodyChars, full_text=True)
     removed['excluded_channel'] = len(cleaned) - len(kept)
-    # Complete document/token preparation before any vectors.
+    total = (len(filtered) + SHARD_ROWS - 1) // SHARD_ROWS
+    done = manifest['progress'].get('done_shards', 0)
+    # Complete document/token preparation before any vectors. Tokenizing a large
+    # import takes over an hour, so heartbeat from this thread too: kiwi can starve
+    # the pulse thread long enough for the run to be marked stale and retried.
+    tokenized, beat_at = 0, time.monotonic()
     for shard, start in enumerate(range(0, len(filtered), SHARD_ROWS), 1):
         batch = filtered[start:start + SHARD_ROWS]
         for offset in range(0, len(batch), DOC_SHARD_ROWS):
@@ -218,14 +224,21 @@ def _run(ctx, sid, version, root, cfg, embedder, documents, manifest, unconnecte
             docs = batch[offset:offset + DOC_SHARD_ROWS]
             filename = f'part-{part:05d}.jsonl'
             _jsonl(root / 'docs' / filename, docs)
-            _jsonl(root / 'tokens' / filename,
-                   [dict(doc_id=d['doc_id'], tokens=tokenize(token_text(_text(d)), cfg.tokenPos)) for d in docs])
+            rows = []
+            for d, tokens in zip(docs, tokenize_many((token_text(_text(d)) for d in docs), cfg.tokenPos)):
+                if time.monotonic() - beat_at >= HEARTBEAT_INTERVAL:
+                    if not _checkpoint(ctx, done, total, tokenized_docs=tokenized, total_docs=len(filtered)):
+                        manifest['status'] = 'interrupted'
+                        store.write_json(root / 'manifest.json', manifest)
+                        return root
+                    beat_at = time.monotonic()
+                rows.append(dict(doc_id=d['doc_id'], tokens=tokens))
+                tokenized += 1
+            _jsonl(root / 'tokens' / filename, rows)
     manifest['counts'] = dict(original=len(documents), after=len(filtered))
     if unconnected is not None:
         raise unconnected
     vectors = VectorStore(root)
-    total = (len(filtered) + SHARD_ROWS - 1) // SHARD_ROWS
-    done = manifest['progress'].get('done_shards', 0)
     if not _retry_failed(vectors, embedder, filtered, lambda: _checkpoint(ctx, done, total)):
         manifest['status'] = 'interrupted'
         store.write_json(root / 'manifest.json', manifest)

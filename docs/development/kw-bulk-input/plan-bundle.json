@@ -1,0 +1,6 @@
+{
+  "kind": "plan",
+  "surface": "web",
+  "implementation": "docs/development/kw-bulk-input/03-plan.md",
+  "qaPlan": "docs/development/kw-bulk-input/QA_PLAN-kw-bulk-input.md"
+}

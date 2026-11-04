@@ -107,7 +107,7 @@ def test_boilerplate_removed_counted(setup):
 def test_two_paths(setup, monkeypatch):
     embedder = setup([{**doc(), 'body': '<b>충분히 긴 본문인가요?!</b>'}])
     inputs = []
-    monkeypatch.setattr(pipeline, 'tokenize', lambda text, pos: inputs.append(text) or ['본문'])
+    monkeypatch.setattr(pipeline, 'tokenize_many', lambda texts, pos: [inputs.append(text) or ['본문'] for text in texts])
     root = pipeline.run_prep(Context(), 's', 'v1')
     assert '?' not in inputs[0] and '!' not in inputs[0]
     assert '?!' in embedder.calls[0][0] and '?!' in rows(root, 'docs')[0]['body']
@@ -416,3 +416,39 @@ def test_old_unfinalized_snapshot_rebuilt_with_current_documents(setup, data_dir
     assert VectorStore(root).get(['old'])[0] == []
     assert VectorStore(root).get(['new'])[0] == ['new']
     assert store.read_json(root / 'manifest.json')['collectionFinalized'] is True
+
+
+def test_tokenizing_heartbeats_and_honors_stop(setup, monkeypatch):
+    # A long tokenization must keep the run fresh from the worker thread itself.
+    monkeypatch.setattr(pipeline, 'HEARTBEAT_INTERVAL', 0)
+    setup([doc('d1'), doc('d2'), doc('d3')])
+
+    class Recording(Context):
+        def __init__(self, stop=False):
+            super().__init__()
+            self.details, self.stop = [], stop
+
+        def heartbeat(self, progress, detail):
+            self.details.append(detail)
+
+        def should_stop(self):
+            return self.stop and len(self.details) >= 2
+
+    context = Recording()
+    pipeline.run_prep(context, 's', 'v1')
+    tokenized = [d['tokenized_docs'] for d in context.details if 'tokenized_docs' in d]
+    assert tokenized == [0, 1, 2]
+    assert all(d['total_docs'] == 3 for d in context.details if 'total_docs' in d)
+
+    stopped = Recording(stop=True)
+    store.update_session('s', {'prep': {'config': {'minBodyChars': 11}}})
+    root = pipeline.run_prep(stopped, 's', 'v1')
+    assert json.loads((root / 'manifest.json').read_text())['status'] == 'interrupted'
+    assert not (root / 'stage_3.json').exists()
+
+
+def test_tokenize_many_matches_single_documents():
+    from app.prep.tokens import tokenize, tokenize_many
+    texts = ['경험이 좋았다', '', '육아맘 사용 경험이 충분히 길어요'] * 5
+    pos = ['NNG', 'NNP', 'VV', 'VA', 'XR']
+    assert list(tokenize_many(iter(texts), pos)) == [tokenize(text, pos) for text in texts]

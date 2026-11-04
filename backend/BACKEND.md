@@ -109,6 +109,8 @@ GET /health는 `{"status": "ok", "release": "…"}`를 반환한다. release는 
 | GET | `/keywords/{sid}/rounds/{n}` | 라운드 상태·키워드 조회 |
 | POST | `/keywords/{sid}/rounds/{n}/commit` | 라운드 검토 결정 확정 |
 | POST | `/keywords/{sid}/manual` | 수동 키워드 추가 |
+| POST | `/keywords/{sid}/bulk` | 유효한 비중복 키워드 일괄 추가 |
+| POST | `/keywords/{sid}/bulk/preview` | 일괄 입력 키워드 중복 확인·필요 시 LLM 분류 미리보기 |
 | POST | `/keywords/{sid}/suggest-words` | 분류별 키워드 제안 |
 | POST | `/keywords/{sid}/coverage` | 커버리지 계산 |
 | GET | `/keywords/{sid}` | 키워드·라운드·피드백 조회 |

@@ -8,11 +8,12 @@ import { versionPath, getVersionKeywords, getVersionRound } from "@/lib/api/vers
 import { useSessionStore } from '@/stores/useSessionStore';
 import { Banner, Badge, BarList, Button, Card, ChoiceChips, Input, Popover, Select, Skeleton, Stepper, Tabs, type StepperItem } from '@/components/ds';
 import { SaveBar } from '@/components/SaveBar';
+import { BulkAdd } from '@/components/keywords/BulkAdd';
 import { KeywordGroup } from '@/components/keywords/KeywordGroup';
 import { keywordLabel } from '@/components/keywords/keywordDisplay';
 import { CoveragePanel, startCoveragePolling } from '@/components/keywords/CoveragePanel';
 import { axes, destinations, groupKey, groupLabel } from '@/components/keywords/taxonomy';
-import { addKeyword, commitRound, getCoverage, KeywordApiError, postEvent, regenerateRound, startRound, suggestWords, type Axis, type Decision, type Destination, type Draft, type Keyword, type KeywordState, type Rejection } from '@/lib/api/keywords';
+import { addBulk, previewBulk, type BulkResult, addKeyword, commitRound, getCoverage, KeywordApiError, postEvent, regenerateRound, startRound, suggestWords, type Axis, type Decision, type Destination, type Draft, type Keyword, type KeywordState, type Rejection } from '@/lib/api/keywords';
 import { contextRequest, patchSession } from '@/lib/api/context';
 import { filterKeywords, keywordFilters, type KeywordFilter } from '@/lib/logic/filterKeywords';
 import { createActionQueue } from '@/lib/logic/actionQueue';
@@ -123,6 +124,16 @@ function KeywordScreen({ sid }: { sid: string }) {
   }
   function focusKeyword(id: string) { requestAnimationFrame(() => { const chip = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-keyword-id]')).find(el => el.dataset.keywordId === id); chip?.focus(); }); }
   function reveal(to: Destination) { setAxis('all'); setFilter('전체'); setQuery(''); setCollapsed(c => ({ ...c, [`all:${groupKey(to)}`]: false })); }
+  function revealGroups(gs: Destination[]) { setAxis('all'); setFilter('전체'); setQuery(''); setCollapsed(c => ({ ...c, ...Object.fromEntries(gs.map(g => [`all:${groupKey(g)}`, false])) })); }
+  async function addViaQueue(items: (Destination & { kw: string })[]): Promise<BulkResult> {
+    let result: BulkResult | undefined; let failed: unknown; let didFail = false;
+    await action(async () => {
+      try { result = await addBulk(sid, items, version); } catch (e) { failed = e; didFail = true; return; }
+      try { await reload(); } catch { setError('추가는 완료했지만 목록을 새로 불러오지 못했습니다. 새로고침하세요.'); }
+    }, true);
+    if (didFail) throw failed;
+    return result!;
+  }
   async function move(k: Keyword | string, to: Destination) {
     const id = typeof k === 'string' ? k : k.id; if (!all.some(item => item.id === id)) return;
     let failed: unknown;
@@ -155,6 +166,7 @@ function KeywordScreen({ sid }: { sid: string }) {
   return <div className="kw-screen"><StageVersionAction stage="stage1" /><div className="ds-eyebrow">1단계 · 키워드</div><h1 className={data.keywordRounds[String(prevRound(3))]?.committed ? 'ds-t-section' : 'ds-t-screen'}>{ui.final ? '최종 키워드를 검토합니다' : `R${round} ${names[round - 1]} 결과 ${ui.canEdit ? current?.keywords.length ?? 0 : 0}개를 검토합니다`}</h1><p>거절할 키워드를 누르고 사유를 남기면 다음 라운드에 반영됩니다. 드래그하거나 M 키로 하위 카테고리를 옮길 수 있습니다.</p><Stepper label="라운드 진행" steps={steps} /><Select label="검토할 라운드" value={round} disabled={busy || running} onChange={e => {if(!confirmNavigation()) return; const n=Number(e.target.value); const draft=restoreKeywordDraft(drafts.current[`r${n}`],data.keywordRounds[String(n)]?.gen??0);setRound(n);setOverrides(draft && !data.keywordRounds[String(n)]?.committed ? Object.fromEntries(draft.decisions.map(d=>[d.id,d])) : {});setCustom(draft?.groups??[]);setDirection(draft?.direction??'');setSavedDirection(draft?.direction??'');setDirty(false);}}>{[...new Set([round,...Object.keys(data.keywordRounds).map(Number)])].sort().map(n=><option key={n} value={n}>R{n}</option>)}</Select>
     {error && <Banner tone="danger">{error}{duplicate && <Button size="sm" onClick={() => { reveal(duplicate); setDuplicate(null); }}>중복 키워드 확인하기</Button>}</Banner>}{notice && !readonly && <Banner>{notice}</Banner>}
     <div className="kw-layout"><div className="kw-main space-y-4"><Card><fieldset disabled={busy || running}><Input label="다음 라운드 방향 지시 (선택)" value={direction} onChange={e => setDirection(e.target.value)} placeholder="예: 영유아 관련 맥락을 더 발산해줘" /><div className="ds-actions"><Button disabled={!direction.trim()} onClick={() => void action(saveDirection)}>지시 저장하기</Button></div></fieldset></Card>
+      {!running && (ui.canEdit || readonly) && <BulkAdd groups={groups} disabled={busy} readonly={readonly} preview={rows => previewBulk(sid, rows, version)} add={addViaQueue} onReveal={revealGroups} />}
       {running ? <Card><p role="status" aria-live="polite">처리 중… R{round} 생성 중 · 보통 30~90초 · 경과 {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, '0')}</p><div className="space-y-4 mt-4">{[0, 1, 2].map(i => <Skeleton key={i} height={112} />)}</div><p className="ds-t-caption">다른 화면으로 이동해도 생성은 계속됩니다.</p></Card> : <>
       {current?.job.status === 'failed' && <Banner tone="danger" actions={<Button disabled={busy || r3Blocked} onClick={() => void generate(round)}>다시 생성하기</Button>}>R{round} 생성에 실패했습니다(원인: {reasons[current.job.error?.kind ?? ''] ?? '생성 도구 오류'}). 승인한 키워드는 그대로 있습니다. 다시 생성하세요.{current.job.error?.kind === 'backend' && ' 설정에서 claude_api로 바꿀 수 있습니다.'}</Banner>}
       {current?.job.status === 'done' && !current.committed && (current?.keywords.length === 0 ? <Banner actions={<Button disabled={busy || r3Blocked || !ui.canRegenerate} onClick={() => void generate(round, true)}>R{round} 다시 생성</Button>}>새 키워드가 나오지 않았습니다. 방향 지시를 바꾸거나 다시 생성하세요.</Banner> : current?.below_min ? <Banner actions={<Button disabled={busy || r3Blocked || !ui.canRegenerate} onClick={() => void generate(round, true)}>R{round} 다시 생성</Button>}>목표 {current.below_min.min}개 중 {current.below_min.got}개가 생성되었습니다. 그대로 검토하거나 다시 생성하세요.</Banner> : null)}

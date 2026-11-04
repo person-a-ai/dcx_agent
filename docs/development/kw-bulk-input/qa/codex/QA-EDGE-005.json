@@ -1,0 +1,954 @@
+{
+  "id": "QA-EDGE-005",
+  "time": "2026-10-28T12:55:44.663Z",
+  "sid": "s1732f9db5edd4b919c40e5c4986375bc",
+  "url": "http://localhost:3488/pipeline/keywords",
+  "expected": "375×812 stacked rows, hidden table header, no horizontal overflow and accessible add button.",
+  "actual": "{\"width\":375,\"scrollWidth\":375,\"head\":[{\"display\":\"none\",\"visible\":0}],\"rows\":[{\"display\":\"block\",\"rect\":{\"x\":114,\"y\":361,\"width\":204,\"height\":173,\"top\":361,\"right\":318,\"bottom\":534,\"left\":114}},{\"display\":\"block\",\"rect\":{\"x\":114,\"y\":534,\"width\":204,\"height\":173,\"top\":534,\"right\":318,\"bottom\":707,\"left\":114}}]}; 5개 추가하기 scrolls into view and passes click actionability.",
+  "result": "PASS",
+  "state": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n검토 대기\n이 단계부터 다시\n1단계 · 키워드\nR1 초기 발산 결과 70개를 검토합니다\n\n거절할 키워드를 누르고 사유를 남기면 다음 라운드에 반영됩니다. 드래그하거나 M 키로 하위 카테고리를 옮길 수 있습니다.\n\nR1 · 현재\n초기 발산\n5W1H · JTBD\nR2\n인접 확장\nSCAMPER 대체·결합·응용\nR3\n수렴 · 균형\n분포 · 거절 · 커버리지\nR4\n재발산\n역발상 · 제거 · 부정 공간\n최종\n최종 검토\n크롤링으로 전달\n검토할 라운드\nR1\n다음 라운드 방향 지시 (선택)\n지시 저장하기\n키워드 일괄 추가\n\nCSV나 리스트로 정리한 키워드를 한 번에 넣습니다. 분류가 없으면 자동으로 제안합니다.\n\n닫기\n7행을 읽었습니다. 분류가 없던 2개는 자동 제안입니다. 확인하고 필요하면 바꾸세요.\n추가 예정 5\n이미 있음 1\n리스트 안 중복 1\n분류 필요 0\n제외 0\n선택한 행 분류 일괄 변경\n분류 선택\n물리 › 시간\n물리 › 공간\n물리 › 사회적 환경\n물리 › 감각\n물리 › 신체 상태\n물리 › 제품·물리 상호작용\n심리 › 감정\n심리 › 표면 목표·기능적 결과·숨은 니즈\n심리 › 심리적 장벽\n심리 › 인지·신념\n심리 › 자아·정체성\n행동 › 기존 행동·문제 발생·트리거\n행동 › 제약\n행동 › 대처·우회\n행동 › 정보탐색\n행동 › 전환·이탈\n모두 이 그룹으로\n층간소음\n분류 선택\n물리 › 시간\n물리 › 공간\n물리 › 사회적 환경\n물리 › 감각\n물리 › 신체 상태\n물리 › 제품·물리 상호작용\n심리 › 감정\n심리 › 표면 목표·기능적 결과·숨은 니즈\n심리 › 심리적 장벽\n심리 › 인지·신념\n심리 › 자아·정체성\n행동 › 기존 행동·문제 발생·트리거\n행동 › 제약\n행동 › 대처·우회\n행동 › 정보탐색\n행동 › 전환·이탈\n입력값\n추가 예정\n퇴근후휴식\n분류 선택\n물리 › 시간\n물리 › 공간\n물리 › 사회적 환경\n물리 › 감각\n물리 › 신체 상태\n물리 › 제품·물리 상호작용\n심리 › 감정\n심리 › 표면 목표·기능적 결과·숨은 니즈\n심리 › 심리적 장벽\n심리 › 인지·신념\n심리 › 자아·정체성\n행동 › 기존 행동·문제 발생·트리거\n행동 › 제약\n행동 › 대처·우회\n행동 › 정보탐색\n행동 › 전환·이탈\n입력값\n추가 예정\n불안감\n분류 선택\n물리 › 시간\n물리 › 공간\n물리 › 사회적 환경\n물리 › 감각\n물리 › 신체 상태\n물리 › 제품·물리 상호작용\n심리 › 감정\n심리 › 표면 목표·기능적 결과·숨은 니즈\n심리 › 심리적 장벽\n심리 › 인지·신념\n심리 › 자아·정체성\n행동 › 기존 행동·문제 발생·트리거\n행동 › 제약\n행동 › 대처·우회\n행동 › 정보탐색\n행동 › 전환·이탈\n자동 제안\n추가 예정\n수면방해\n분류 선택\n물리 › 시간\n물리 › 공간\n물리 › 사회적 환경\n물리 › 감각\n물리 › 신체 상태\n물리 › 제품·물리 상호작용\n심리 › 감정\n심리 › 표면 목표·기능적 결과·숨은 니즈\n심리 › 심리적 장벽\n심리 › 인지·신념\n심리 › 자아·정체성\n행동 › 기존 행동·문제 발생·트리거\n행동 › 제약\n행동 › 대처·우회\n행동 › 정보탐색\n행동 › 전환·이탈\n자동 제안\n추가 예정\n저소음\n—\n—\n이미 있음“저소음” · 물리 › 감각\n층간소음\n—\n—\n리스트 안 중복1행과 같음\n정보찾기\n분류 선택\n물리 › 시간\n물리 › 공간\n물리 › 사회적 환경\n물리 › 감각\n물리 › 신체 상태\n물리 › 제품·물리 상호작용\n심리 › 감정\n심리 › 표면 목표·기능적 결과·숨은 니즈\n심리 › 심리적 장벽\n심리 › 인지·신념\n심리 › 자아·정체성\n행동 › 기존 행동·문제 발생·트리거\n행동 › 제약\n행동 › 대처·우회\n행동 › 정보탐색\n행동 › 전환·이탈\n입력값\n추가 예정\n\n“이미 있음”과 “리스트 안 중복”은 추가하지 않습니다. “분류 필요”는 분류를 고르기 전까지 추가하지 않습니다.\n\n입력으로 돌아가기\n5개 추가하기\n전체71\n물리71\n심리0\n행동0\n전체 71\n판단 필요 0\nLLM 단독 0\n검색량 적음 0\n미연결 71\n거절됨 0\n수동 1\n키워드 검색\n키보드 도움말 보기\n모두 접기\n물리 › 시간 접기\n0\n직접 추가하기\n물리 › 공간 접기\n70\n직접 추가하기\n소음\n미연결\n소음문제\n미연결\n소음관리\n미연결\n소음설정\n미연결\n소음점검\n미연결\n소음변화\n미연결\n소음상태\n미연결\n소음조절\n미연결\n소음확인\n미연결\n소음불편\n미연결\n냄새\n미연결\n냄새문제\n미연결\n냄새관리\n미연결\n냄새설정\n미연결\n냄새점검\n미연결\n냄새변화\n미연결\n냄새상태\n미연결\n냄새조절\n미연결\n냄새확인\n미연결\n냄새불편\n미연결\n실외기\n미연결\n실외기문제\n미연결\n실외기관리\n미연결\n실외기설정\n미연결\n실외기점검\n미연결\n실외기변화\n미연결\n실외기상태\n미연결\n실외기조절\n미연결\n실외기확인\n미연결\n실외기불편\n미연결\n리모컨\n미연결\n리모컨문제\n미연결\n리모컨관리\n미연결\n리모컨설정\n미연결\n리모컨점검\n미연결\n리모컨변화\n미연결\n리모컨상태\n미연결\n리모컨조절\n미연결\n리모컨확인\n미연결\n리모컨불편\n미연결\n결로\n미연결\n결로문제\n미연결\n결로관리\n미연결\n결로설정\n미연결\n결로점검\n미연결\n결로변화\n미연결\n결로상태\n미연결\n결로조절\n미연결\n결로확인\n미연결\n결로불편\n미연결\n필터\n미연결\n필터문제\n미연결\n필터관리\n미연결\n필터설정\n미연결\n필터점검\n미연결\n필터변화\n미연결\n필터상태\n미연결\n필터조절\n미연결\n필터확인\n미연결\n필터불편\n미연결\n전기세\n미연결\n전기세문제\n미연결\n전기세관리\n미연결\n전기세설정\n미연결\n전기세점검\n미연결\n전기세변화\n미연결\n전기세상태\n미연결\n전기세조절\n미연결\n전기세확인\n미연결\n전기세불편\n미연결\n물리 › 사회적 환경 접기\n0\n직접 추가하기\n물리 › 감각 접기\n1\n직접 추가하기\n저소음\n수동\n미연결\n물리 › 신체 상태 접기\n0\n직접 추가하기\n물리 › 제품·물리 상호작용 접기\n0\n직접 추가하기\n새 하위 카테고리 축\n축 선택\n물리\n심리\n행동\n새 하위 카테고리 이름\n하위 카테고리 추가하기\n축 분포\n\n승인 예정 포함 71개 기준 · 부족한 축은 다음 라운드가 채웁니다.\n\n물리\n71개 · 100%\n심리\n0개 · 0%\n행동\n0개 · 0%\n커버리지\nR1 확정 후 계산\nkeyword_feedback.md 미리보기 내부용\n\n승인 예정 71 · 거절 0\n\n변경 사항 없음\n임시 저장\n저장\nR1 다시 생성\n생성하기\n다음 라운드 생성",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "label": "Open Next.js Dev Tools",
+      "text": "",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "사이드바 접기",
+      "text": "",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "v1 · 활성 버전 목록 열기",
+      "text": "v1 · 활성 버전 목록 열기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Known Insight · 0",
+      "text": "Known Insight · 0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "외부 API · 0/2 연결 열기",
+      "text": "외부 API · 0/2 연결 열기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "이 단계부터 다시",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "SELECT",
+      "label": null,
+      "text": "R1",
+      "value": "1",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": null,
+      "text": "",
+      "value": "",
+      "disabled": false,
+      "checked": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "지시 저장하기",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "닫기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "SELECT",
+      "label": null,
+      "text": "분류 선택",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "모두 이 그룹으로",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "전체 선택",
+      "text": "",
+      "value": "on",
+      "disabled": false,
+      "checked": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "층간소음 포함",
+      "text": "",
+      "value": "on",
+      "disabled": false,
+      "checked": true
+    },
+    {
+      "tag": "SELECT",
+      "label": "층간소음 분류",
+      "text": "물리 › 감각",
+      "value": "physical/sense",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": "퇴근후휴식 포함",
+      "text": "",
+      "value": "on",
+      "disabled": false,
+      "checked": true
+    },
+    {
+      "tag": "SELECT",
+      "label": "퇴근후휴식 분류",
+      "text": "물리 › 시간",
+      "value": "physical/time",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": "불안감 포함",
+      "text": "",
+      "value": "on",
+      "disabled": false,
+      "checked": true
+    },
+    {
+      "tag": "SELECT",
+      "label": "불안감 분류",
+      "text": "심리 › 감정",
+      "value": "psychological/emotion",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": "수면방해 포함",
+      "text": "",
+      "value": "on",
+      "disabled": false,
+      "checked": true
+    },
+    {
+      "tag": "SELECT",
+      "label": "수면방해 분류",
+      "text": "행동 › 대처·우회",
+      "value": "behavioral/coping",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": "저소음 포함",
+      "text": "",
+      "value": "on",
+      "disabled": true,
+      "checked": false
+    },
+    {
+      "tag": "INPUT",
+      "label": "층간소음 포함",
+      "text": "",
+      "value": "on",
+      "disabled": true,
+      "checked": false
+    },
+    {
+      "tag": "INPUT",
+      "label": "정보찾기 포함",
+      "text": "",
+      "value": "on",
+      "disabled": false,
+      "checked": true
+    },
+    {
+      "tag": "SELECT",
+      "label": "정보찾기 분류",
+      "text": "행동 › 정보탐색",
+      "value": "behavioral/info_search",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "입력으로 돌아가기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "5개 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "전체71",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리71",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "심리0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "행동0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "전체 71",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "판단 필요 0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "LLM 단독 0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "검색량 적음 0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "미연결 71",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "거절됨 0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "수동 1",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": null,
+      "text": "",
+      "value": "",
+      "disabled": false,
+      "checked": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "키보드 도움말 보기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "모두 접기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 시간 접기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 공간 접기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "소음, 미연결",
+      "text": "소음미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "소음문제, 미연결",
+      "text": "소음문제미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "소음관리, 미연결",
+      "text": "소음관리미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "소음설정, 미연결",
+      "text": "소음설정미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "소음점검, 미연결",
+      "text": "소음점검미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "소음변화, 미연결",
+      "text": "소음변화미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "소음상태, 미연결",
+      "text": "소음상태미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "소음조절, 미연결",
+      "text": "소음조절미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "소음확인, 미연결",
+      "text": "소음확인미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "소음불편, 미연결",
+      "text": "소음불편미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "냄새, 미연결",
+      "text": "냄새미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "냄새문제, 미연결",
+      "text": "냄새문제미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "냄새관리, 미연결",
+      "text": "냄새관리미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "냄새설정, 미연결",
+      "text": "냄새설정미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "냄새점검, 미연결",
+      "text": "냄새점검미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "냄새변화, 미연결",
+      "text": "냄새변화미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "냄새상태, 미연결",
+      "text": "냄새상태미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "냄새조절, 미연결",
+      "text": "냄새조절미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "냄새확인, 미연결",
+      "text": "냄새확인미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "냄새불편, 미연결",
+      "text": "냄새불편미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "실외기, 미연결",
+      "text": "실외기미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "실외기문제, 미연결",
+      "text": "실외기문제미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "실외기관리, 미연결",
+      "text": "실외기관리미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "실외기설정, 미연결",
+      "text": "실외기설정미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "실외기점검, 미연결",
+      "text": "실외기점검미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "실외기변화, 미연결",
+      "text": "실외기변화미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "실외기상태, 미연결",
+      "text": "실외기상태미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "실외기조절, 미연결",
+      "text": "실외기조절미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "실외기확인, 미연결",
+      "text": "실외기확인미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "실외기불편, 미연결",
+      "text": "실외기불편미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "리모컨, 미연결",
+      "text": "리모컨미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "리모컨문제, 미연결",
+      "text": "리모컨문제미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "리모컨관리, 미연결",
+      "text": "리모컨관리미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "리모컨설정, 미연결",
+      "text": "리모컨설정미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "리모컨점검, 미연결",
+      "text": "리모컨점검미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "리모컨변화, 미연결",
+      "text": "리모컨변화미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "리모컨상태, 미연결",
+      "text": "리모컨상태미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "리모컨조절, 미연결",
+      "text": "리모컨조절미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "리모컨확인, 미연결",
+      "text": "리모컨확인미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "리모컨불편, 미연결",
+      "text": "리모컨불편미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "결로, 미연결",
+      "text": "결로미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "결로문제, 미연결",
+      "text": "결로문제미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "결로관리, 미연결",
+      "text": "결로관리미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "결로설정, 미연결",
+      "text": "결로설정미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "결로점검, 미연결",
+      "text": "결로점검미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "결로변화, 미연결",
+      "text": "결로변화미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "결로상태, 미연결",
+      "text": "결로상태미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "결로조절, 미연결",
+      "text": "결로조절미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "결로확인, 미연결",
+      "text": "결로확인미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "결로불편, 미연결",
+      "text": "결로불편미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "필터, 미연결",
+      "text": "필터미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "필터문제, 미연결",
+      "text": "필터문제미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "필터관리, 미연결",
+      "text": "필터관리미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "필터설정, 미연결",
+      "text": "필터설정미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "필터점검, 미연결",
+      "text": "필터점검미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "필터변화, 미연결",
+      "text": "필터변화미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "필터상태, 미연결",
+      "text": "필터상태미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "필터조절, 미연결",
+      "text": "필터조절미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "필터확인, 미연결",
+      "text": "필터확인미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "필터불편, 미연결",
+      "text": "필터불편미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "전기세, 미연결",
+      "text": "전기세미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "전기세문제, 미연결",
+      "text": "전기세문제미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "전기세관리, 미연결",
+      "text": "전기세관리미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "전기세설정, 미연결",
+      "text": "전기세설정미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "전기세점검, 미연결",
+      "text": "전기세점검미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "전기세변화, 미연결",
+      "text": "전기세변화미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "전기세상태, 미연결",
+      "text": "전기세상태미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "전기세조절, 미연결",
+      "text": "전기세조절미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "전기세확인, 미연결",
+      "text": "전기세확인미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "전기세불편, 미연결",
+      "text": "전기세불편미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 사회적 환경 접기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 감각 접기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "저소음, 수동, 미연결",
+      "text": "저소음수동미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 신체 상태 접기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 제품·물리 상호작용 접기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "SELECT",
+      "label": null,
+      "text": "축 선택",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": null,
+      "text": "",
+      "value": "",
+      "disabled": false,
+      "checked": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "하위 카테고리 추가하기",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "임시 저장",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "저장",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "R1 다시 생성",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "생성하기",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "다음 라운드 생성",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": "챗봇 열기",
+      "text": "",
+      "value": "",
+      "disabled": false
+    }
+  ]
+}

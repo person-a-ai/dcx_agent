@@ -128,7 +128,11 @@ def execute(context: Context):
 
     def pulse():
         while not finished.wait(HEARTBEAT_INTERVAL):
-            context._pulse()
+            try:
+                context._pulse()
+            except Exception as exc:
+                # A busy runs.sqlite must not end the heartbeat for the rest of the run.
+                logger.warning('Heartbeat failed (%s)', type(exc).__name__)
 
     thread = Thread(target=pulse, daemon=True)
     state, error = 'done', None

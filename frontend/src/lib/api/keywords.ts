@@ -30,3 +30,9 @@ export const postEvent = (sid: string, event: ReviewEvent, version?: string) => 
 export const addKeyword = (sid: string, kw: string, to: Destination, origin: 'manual' | 'suggested', version?: string) => request<Keyword & { keywords: Keyword[] }>(sid, '/manual', 'POST', { kw, ...to, origin }, version);
 export const suggestWords = (sid: string, to: Destination, version?: string) => request<{ words: { word: string; type: string }[] }>(sid, '/suggest-words', 'POST', to, version);
 export const getCoverage = (sid: string, version?: string) => request<Coverage>(sid, '/coverage?refresh=true', 'POST', undefined, version);
+export type BulkRowIn = { kw: string; axis?: Axis; sub?: string };
+export type BulkPreviewRow = { row: number; kw: string; axis: Axis | null; sub: string | null; source: 'input' | 'llm' | 'llm_failed' | null; status: 'new' | 'existing' | 'in_list_duplicate' | 'needs_class'; duplicateOf?: { id: string; kw: string; axis: Axis; sub: string }; firstRow?: number };
+export type BulkPreview = { rows: BulkPreviewRow[]; classifyError?: { kind: string; message: string } };
+export type BulkResult = { results: { index: number; status: 'added' | 'duplicate' | 'invalid'; id?: string; duplicateOf?: string }[]; keywords: Keyword[] };
+export const previewBulk = (sid: string, rows: BulkRowIn[], version?: string) => request<BulkPreview>(sid, '/bulk/preview', 'POST', { rows }, version);
+export const addBulk = (sid: string, items: (Destination & { kw: string })[], version?: string) => request<BulkResult>(sid, '/bulk', 'POST', { items }, version);

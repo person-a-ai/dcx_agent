@@ -1,4 +1,5 @@
 "use client";
+import { stageZeroChannelOptions } from './channelOptions';
 import { displayError } from "@/lib/api/errors";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -263,7 +264,7 @@ function StartScreen() {
               {form.taskMode === "metric" ? <details open={isPositioningOpen} onToggle={event => setIsPositioningOpen(event.currentTarget.open)} className="space-y-3"><summary className="ds-t-label">브랜드 포지셔닝 (선택)</summary>{positioning}</details> : <div className="space-y-3"><h3 className="ds-t-label">브랜드 포지셔닝 (선택)</h3>{positioning}</div>}
             </div>
             <div className="grid gap-6 md:grid-cols-2">
-              <fieldset className="min-w-0" aria-labelledby="channels-heading" aria-describedby={errors.channels ? "channels-error" : undefined} tabIndex={-1} aria-invalid={!!errors.channels || undefined}><h3 id="channels-heading" className="ds-t-label">수집 채널 *</h3><ChoiceChips multiple label="수집 채널" options={options(labels.channels).filter(option => INTERNAL_TOOLS || option.value !== "fixture")} value={form.channels} onChange={value => update("channels", value)} />{errors.channels && <p id="channels-error" className="ds-err">{errors.channels}</p>}</fieldset>
+              <fieldset className="min-w-0" aria-labelledby="channels-heading" aria-describedby={errors.channels ? "channels-error" : undefined} tabIndex={-1} aria-invalid={!!errors.channels || undefined}><h3 id="channels-heading" className="ds-t-label">수집 채널 *</h3><ChoiceChips multiple label="수집 채널" options={stageZeroChannelOptions(form.channels, INTERNAL_TOOLS)} value={form.channels} onChange={value => update("channels", value)} />{errors.channels && <p id="channels-error" className="ds-err">{errors.channels}</p>}</fieldset>
               <ListInput label="이미 아는 것" value={form.knownInsights} onChange={value => update("knownInsights", value)} />
             </div>
           </Card>

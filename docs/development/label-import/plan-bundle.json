@@ -1,0 +1,7 @@
+{
+  "kind": "plan",
+  "surface": "non-ui",
+  "nonUiReason": "웹 화면을 바꾸지 않는다(2026-11-03 사용자 결정: 업로드 화면·'가져온 프로젝트' 안내 띠 모두 제외). 서버 명령(dcxctl import-labels)과 백엔드 저장 형식·완료 판정만 바뀌고, 기존 화면은 기존 데이터 형식 그대로 결과를 보여 준다.",
+  "implementation": "docs/development/label-import/03-plan.md",
+  "qaPlan": "docs/development/label-import/QA_PLAN-label-import.md"
+}

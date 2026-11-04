@@ -1,0 +1,3866 @@
+{
+  "network": [
+    {
+      "url": "http://localhost:8488/keywords/s1732f9db5edd4b919c40e5c4986375bc/rounds/3?version=v1",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "url": "http://localhost:8488/keywords/s1732f9db5edd4b919c40e5c4986375bc/rounds/3?version=v1",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "url": "http://localhost:8488/keywords/s1732f9db5edd4b919c40e5c4986375bc/rounds/3?version=v1",
+      "status": 200,
+      "method": "GET"
+    }
+  ],
+  "keywords": {
+    "keywordRounds": {
+      "1": {
+        "round": 1,
+        "gen": 1,
+        "committed": true,
+        "replacing": false,
+        "needsRegeneration": false,
+        "keywords": [
+          {
+            "id": "k_r1g1_0001",
+            "kw": "소음",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0002",
+            "kw": "소음문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0003",
+            "kw": "소음관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0004",
+            "kw": "소음설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0005",
+            "kw": "소음점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0006",
+            "kw": "소음변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0007",
+            "kw": "소음상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0008",
+            "kw": "소음조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0009",
+            "kw": "소음확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0010",
+            "kw": "소음불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0011",
+            "kw": "냄새",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0012",
+            "kw": "냄새문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0013",
+            "kw": "냄새관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0014",
+            "kw": "냄새설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0015",
+            "kw": "냄새점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0016",
+            "kw": "냄새변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0017",
+            "kw": "냄새상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0018",
+            "kw": "냄새조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0019",
+            "kw": "냄새확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0020",
+            "kw": "냄새불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0021",
+            "kw": "실외기",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0022",
+            "kw": "실외기문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0023",
+            "kw": "실외기관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0024",
+            "kw": "실외기설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0025",
+            "kw": "실외기점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0026",
+            "kw": "실외기변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0027",
+            "kw": "실외기상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0028",
+            "kw": "실외기조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0029",
+            "kw": "실외기확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0030",
+            "kw": "실외기불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0031",
+            "kw": "리모컨",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0032",
+            "kw": "리모컨문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0033",
+            "kw": "리모컨관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0034",
+            "kw": "리모컨설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0035",
+            "kw": "리모컨점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0036",
+            "kw": "리모컨변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0037",
+            "kw": "리모컨상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0038",
+            "kw": "리모컨조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0039",
+            "kw": "리모컨확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0040",
+            "kw": "리모컨불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0041",
+            "kw": "결로",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0042",
+            "kw": "결로문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0043",
+            "kw": "결로관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0044",
+            "kw": "결로설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0045",
+            "kw": "결로점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0046",
+            "kw": "결로변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0047",
+            "kw": "결로상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0048",
+            "kw": "결로조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0049",
+            "kw": "결로확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0050",
+            "kw": "결로불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0051",
+            "kw": "필터",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0052",
+            "kw": "필터문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0053",
+            "kw": "필터관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0054",
+            "kw": "필터설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0055",
+            "kw": "필터점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0056",
+            "kw": "필터변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0057",
+            "kw": "필터상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0058",
+            "kw": "필터조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0059",
+            "kw": "필터확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0060",
+            "kw": "필터불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0061",
+            "kw": "전기세",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0062",
+            "kw": "전기세문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0063",
+            "kw": "전기세관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0064",
+            "kw": "전기세설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0065",
+            "kw": "전기세점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0066",
+            "kw": "전기세변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0067",
+            "kw": "전기세상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0068",
+            "kw": "전기세조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0069",
+            "kw": "전기세확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r1g1_0070",
+            "kw": "전기세불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 1,
+            "origin": "llm",
+            "status": "approved",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          }
+        ],
+        "inputs": {
+          "rejection": "empty:no_rejections",
+          "coverage": "empty:searchad_unconnected",
+          "prior_session": "empty:no_prior_session",
+          "promptVersion": "r1.v3"
+        },
+        "below_min": null,
+        "promptVersion": "r1.v3",
+        "job": {
+          "jobId": "c97e60f6298d47da8d7340927d218652",
+          "status": "done",
+          "round": 1,
+          "gen": 1,
+          "progress": 1,
+          "updatedAt": "2026-10-28T12:50:42.188987+00:00",
+          "startedAt": "2026-10-28T12:50:42.181472+00:00",
+          "error": null
+        },
+        "normalization": []
+      },
+      "3": {
+        "round": 3,
+        "gen": 1,
+        "committed": false,
+        "replacing": false,
+        "needsRegeneration": false,
+        "keywords": [
+          {
+            "id": "k_r3g1_0001",
+            "kw": "수면",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0002",
+            "kw": "수면문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0003",
+            "kw": "수면관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0004",
+            "kw": "수면설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0005",
+            "kw": "수면점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0006",
+            "kw": "수면변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0007",
+            "kw": "수면상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0008",
+            "kw": "수면조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0009",
+            "kw": "수면확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0010",
+            "kw": "수면불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0011",
+            "kw": "예약",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0012",
+            "kw": "예약문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0013",
+            "kw": "예약관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0014",
+            "kw": "예약설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0015",
+            "kw": "예약점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0016",
+            "kw": "예약변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0017",
+            "kw": "예약상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0018",
+            "kw": "예약조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0019",
+            "kw": "예약확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0020",
+            "kw": "예약불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0021",
+            "kw": "절전",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0022",
+            "kw": "절전문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0023",
+            "kw": "절전관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0024",
+            "kw": "절전설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0025",
+            "kw": "절전점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0026",
+            "kw": "절전변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0027",
+            "kw": "절전상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0028",
+            "kw": "절전조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0029",
+            "kw": "절전확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0030",
+            "kw": "절전불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0031",
+            "kw": "환기문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0032",
+            "kw": "환기관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0033",
+            "kw": "환기설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0034",
+            "kw": "환기점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0035",
+            "kw": "환기변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0036",
+            "kw": "환기상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0037",
+            "kw": "환기조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0038",
+            "kw": "환기확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0039",
+            "kw": "환기불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0040",
+            "kw": "난방",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0041",
+            "kw": "난방문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0042",
+            "kw": "난방관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0043",
+            "kw": "난방설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0044",
+            "kw": "난방점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0045",
+            "kw": "난방변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0046",
+            "kw": "난방상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0047",
+            "kw": "난방조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0048",
+            "kw": "난방확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0049",
+            "kw": "난방불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0050",
+            "kw": "벽걸이",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0051",
+            "kw": "벽걸이문제",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0052",
+            "kw": "벽걸이관리",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0053",
+            "kw": "벽걸이설정",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0054",
+            "kw": "벽걸이점검",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0055",
+            "kw": "벽걸이변화",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0056",
+            "kw": "벽걸이상태",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0057",
+            "kw": "벽걸이조절",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0058",
+            "kw": "벽걸이확인",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          },
+          {
+            "id": "k_r3g1_0059",
+            "kw": "벽걸이불편",
+            "axis": "physical",
+            "sub": "space",
+            "round": 3,
+            "origin": "llm",
+            "status": "pending",
+            "reject": null,
+            "volume": {
+              "monthly": null,
+              "source": "unconnected",
+              "at": null
+            },
+            "badges": []
+          }
+        ],
+        "coverageSnapshot": {
+          "status": "connected",
+          "humanQueries": [
+            [
+              "에어컨 소음",
+              1
+            ],
+            [
+              "시스템에어컨 소음",
+              2
+            ],
+            [
+              "에어컨 소음 원인",
+              3
+            ]
+          ],
+          "humanAxes": {
+            "소음": "physical",
+            "냄새": "physical",
+            "전기세": "psychological"
+          },
+          "m1": 1,
+          "m2": null,
+          "m6": null,
+          "m7": null,
+          "missing_top": [],
+          "llm_only_ids": [],
+          "m2_bands": [
+            {
+              "label": "1~3위",
+              "value": 1
+            },
+            {
+              "label": "4~6위",
+              "value": null
+            },
+            {
+              "label": "7~10위",
+              "value": null
+            }
+          ],
+          "m7_reason": "no_volume",
+          "source": "autocomplete",
+          "weighting": "rank",
+          "seeds": 21,
+          "failedSeeds": 0,
+          "phase": "done",
+          "updatedAt": "2026-10-28T12:57:23.591414+00:00",
+          "error": null
+        },
+        "inputs": {
+          "rejection": "empty:no_rejections",
+          "coverage": "ok",
+          "prior_session": "empty:no_prior_session",
+          "promptVersion": "r3.v3"
+        },
+        "below_min": {
+          "got": 59,
+          "min": 60
+        },
+        "promptVersion": "r3.v3",
+        "job": {
+          "jobId": "ce6bb17f9e0e4c3dab3b769e0d8484b1",
+          "status": "done",
+          "round": 3,
+          "gen": 1,
+          "progress": 1,
+          "updatedAt": "2026-10-28T12:57:35.832688+00:00",
+          "startedAt": "2026-10-28T12:57:35.796889+00:00",
+          "error": null
+        },
+        "normalization": [
+          "Dropped '환기': duplicate normalized keyword."
+        ]
+      }
+    },
+    "coverage": {
+      "status": "connected",
+      "humanQueries": [
+        [
+          "에어컨 소음",
+          1
+        ],
+        [
+          "시스템에어컨 소음",
+          2
+        ],
+        [
+          "에어컨 소음 원인",
+          3
+        ]
+      ],
+      "humanAxes": {
+        "소음": "physical",
+        "냄새": "physical",
+        "전기세": "psychological"
+      },
+      "m1": 1,
+      "m2": null,
+      "m6": null,
+      "m7": null,
+      "missing_top": [],
+      "llm_only_ids": [],
+      "m2_bands": [
+        {
+          "label": "1~3위",
+          "value": 1
+        },
+        {
+          "label": "4~6위",
+          "value": null
+        },
+        {
+          "label": "7~10위",
+          "value": null
+        }
+      ],
+      "m7_reason": "no_volume",
+      "source": "autocomplete",
+      "weighting": "rank",
+      "seeds": 21,
+      "failedSeeds": 0,
+      "phase": "done",
+      "updatedAt": "2026-10-28T12:57:23.591414+00:00",
+      "error": null
+    },
+    "keywords": [
+      {
+        "id": "manual-a2ce347a7bce40fb8ee62e0e2fdc33be",
+        "kw": "저소음",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "저소음"
+      },
+      {
+        "id": "manual-939b69bae50148418d7176f753466fc5",
+        "kw": "층간소음",
+        "axis": "physical",
+        "sub": "time",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "층간 소음"
+      },
+      {
+        "id": "manual-47c5d50667f74c1ab5f68a095859cb19",
+        "kw": "불안감",
+        "axis": "psychological",
+        "sub": "perceived_risk",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "불안감"
+      },
+      {
+        "id": "manual-868e17cef541401d9bc85c4505aed3e4",
+        "kw": "수면방해",
+        "axis": "behavioral",
+        "sub": "coping",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "수면 방해"
+      },
+      {
+        "id": "manual-f155daf7b95c44d48a9fb5f88e64fe8f",
+        "kw": "정보찾기",
+        "axis": "behavioral",
+        "sub": "info_search",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "정보 찾기"
+      },
+      {
+        "id": "manual-be02a96885eb4ab28735922400ca6e8b",
+        "kw": "습도",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "습도"
+      },
+      {
+        "id": "manual-3e167df037bb4591a8e09ac447f9a3fb",
+        "kw": "환기",
+        "axis": "behavioral",
+        "sub": "coping",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "환기"
+      },
+      {
+        "id": "manual-083361d86f5047fbb8700495f1806bab",
+        "kw": "곰팡이",
+        "axis": "psychological",
+        "sub": "emotion",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "곰팡이"
+      },
+      {
+        "id": "manual-efe67a88efdf43cd8c13ba89a72146a5",
+        "kw": "곰팡이냄새",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "곰팡이 냄새"
+      },
+      {
+        "id": "manual-e6d7eff4b6cd4cde858aeaa86682a59e",
+        "kw": "시원하다",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "suggested",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "시원하다"
+      },
+      {
+        "id": "manual-04f40a8417e440c799b85cf97a809769",
+        "kw": "조용하다",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "suggested",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "조용하다"
+      },
+      {
+        "id": "manual-ad02212f9b2e4c64bbc567f6786cac80",
+        "kw": "쾌적하다",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "suggested",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "쾌적하다"
+      },
+      {
+        "id": "manual-a9bc9310379c475a8ee902b1b9dd9ce8",
+        "kw": "답답하다",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "suggested",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "답답하다"
+      },
+      {
+        "id": "manual-b5ec5c7dafa54e88843a56150135c5e4",
+        "kw": "습하다",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "suggested",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "습하다"
+      },
+      {
+        "id": "manual-58bef6772d6949408b407b2d8b0e13ca",
+        "kw": "건조하다",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "suggested",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "건조하다"
+      },
+      {
+        "id": "manual-f93cff8b1a9b4100b3657dd8ba6e8c78",
+        "kw": "번거롭다",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "suggested",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "번거롭다"
+      },
+      {
+        "id": "manual-6ab00595019044f2afa51ee6ed3260f4",
+        "kw": "편리하다",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "suggested",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "편리하다"
+      },
+      {
+        "id": "manual-954fb78f59f64cfb9102ebdf19e70f71",
+        "kw": "차갑다",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "suggested",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "차갑다"
+      },
+      {
+        "id": "manual-e1050821072c444d81380d50dd8b1024",
+        "kw": "덥다",
+        "axis": "physical",
+        "sub": "sense",
+        "round": 1,
+        "origin": "suggested",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "덥다"
+      },
+      {
+        "id": "manual-1ec1f545df5a49bf8ecdca6867ab9531",
+        "kw": "더블클릭하나",
+        "axis": "psychological",
+        "sub": "emotion",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "더블 클릭 하나"
+      },
+      {
+        "id": "manual-c5ab6db985904af7b67643edf5b363e2",
+        "kw": "더블클릭둘",
+        "axis": "behavioral",
+        "sub": "coping",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "더블 클릭 둘"
+      },
+      {
+        "id": "manual-2a75085e1b0145ebb88903d139baf3ac",
+        "kw": "대기추가하나",
+        "axis": "psychological",
+        "sub": "emotion",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "대기추가 하나"
+      },
+      {
+        "id": "manual-8c1dcb482d474411a99df56f66b3d359",
+        "kw": "대기추가둘",
+        "axis": "behavioral",
+        "sub": "coping",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "대기추가둘"
+      },
+      {
+        "id": "manual-88ccc1906f46477dac986f93ae422bf3",
+        "kw": "가드하나",
+        "axis": "psychological",
+        "sub": "emotion",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "가드 하나"
+      },
+      {
+        "id": "manual-c2896012a68047ceab53db3effa34260",
+        "kw": "가드둘",
+        "axis": "behavioral",
+        "sub": "coping",
+        "round": 1,
+        "origin": "manual",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "가드둘"
+      },
+      {
+        "id": "k_r1g1_0001",
+        "kw": "소음",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "소음"
+      },
+      {
+        "id": "k_r1g1_0002",
+        "kw": "소음문제",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "소음 문제"
+      },
+      {
+        "id": "k_r1g1_0003",
+        "kw": "소음관리",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "소음 관리"
+      },
+      {
+        "id": "k_r1g1_0004",
+        "kw": "소음설정",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "소음 설정"
+      },
+      {
+        "id": "k_r1g1_0005",
+        "kw": "소음점검",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "소음 점검"
+      },
+      {
+        "id": "k_r1g1_0006",
+        "kw": "소음변화",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "소음 변화"
+      },
+      {
+        "id": "k_r1g1_0007",
+        "kw": "소음상태",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "소음 상태"
+      },
+      {
+        "id": "k_r1g1_0008",
+        "kw": "소음조절",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "소음 조절"
+      },
+      {
+        "id": "k_r1g1_0009",
+        "kw": "소음확인",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "소음 확인"
+      },
+      {
+        "id": "k_r1g1_0010",
+        "kw": "소음불편",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "소음 불편"
+      },
+      {
+        "id": "k_r1g1_0011",
+        "kw": "냄새",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "냄새"
+      },
+      {
+        "id": "k_r1g1_0012",
+        "kw": "냄새문제",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "냄새 문제"
+      },
+      {
+        "id": "k_r1g1_0013",
+        "kw": "냄새관리",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "냄새 관리"
+      },
+      {
+        "id": "k_r1g1_0014",
+        "kw": "냄새설정",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "냄새 설정"
+      },
+      {
+        "id": "k_r1g1_0015",
+        "kw": "냄새점검",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "냄새 점검"
+      },
+      {
+        "id": "k_r1g1_0016",
+        "kw": "냄새변화",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "냄새 변화"
+      },
+      {
+        "id": "k_r1g1_0017",
+        "kw": "냄새상태",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "냄새 상태"
+      },
+      {
+        "id": "k_r1g1_0018",
+        "kw": "냄새조절",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "냄새 조절"
+      },
+      {
+        "id": "k_r1g1_0019",
+        "kw": "냄새확인",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "냄새 확인"
+      },
+      {
+        "id": "k_r1g1_0020",
+        "kw": "냄새불편",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "냄새 불편"
+      },
+      {
+        "id": "k_r1g1_0021",
+        "kw": "실외기",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "실외기"
+      },
+      {
+        "id": "k_r1g1_0022",
+        "kw": "실외기문제",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "실외기 문제"
+      },
+      {
+        "id": "k_r1g1_0023",
+        "kw": "실외기관리",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "실외기 관리"
+      },
+      {
+        "id": "k_r1g1_0024",
+        "kw": "실외기설정",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "실외기 설정"
+      },
+      {
+        "id": "k_r1g1_0025",
+        "kw": "실외기점검",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "실외기 점검"
+      },
+      {
+        "id": "k_r1g1_0026",
+        "kw": "실외기변화",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "실외기 변화"
+      },
+      {
+        "id": "k_r1g1_0027",
+        "kw": "실외기상태",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "실외기 상태"
+      },
+      {
+        "id": "k_r1g1_0028",
+        "kw": "실외기조절",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "실외기 조절"
+      },
+      {
+        "id": "k_r1g1_0029",
+        "kw": "실외기확인",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "실외기 확인"
+      },
+      {
+        "id": "k_r1g1_0030",
+        "kw": "실외기불편",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "실외기 불편"
+      },
+      {
+        "id": "k_r1g1_0031",
+        "kw": "리모컨",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "리모컨"
+      },
+      {
+        "id": "k_r1g1_0032",
+        "kw": "리모컨문제",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "리모컨 문제"
+      },
+      {
+        "id": "k_r1g1_0033",
+        "kw": "리모컨관리",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "리모컨 관리"
+      },
+      {
+        "id": "k_r1g1_0034",
+        "kw": "리모컨설정",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "리모컨 설정"
+      },
+      {
+        "id": "k_r1g1_0035",
+        "kw": "리모컨점검",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "리모컨 점검"
+      },
+      {
+        "id": "k_r1g1_0036",
+        "kw": "리모컨변화",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "리모컨 변화"
+      },
+      {
+        "id": "k_r1g1_0037",
+        "kw": "리모컨상태",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "리모컨 상태"
+      },
+      {
+        "id": "k_r1g1_0038",
+        "kw": "리모컨조절",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "리모컨 조절"
+      },
+      {
+        "id": "k_r1g1_0039",
+        "kw": "리모컨확인",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "리모컨 확인"
+      },
+      {
+        "id": "k_r1g1_0040",
+        "kw": "리모컨불편",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "리모컨 불편"
+      },
+      {
+        "id": "k_r1g1_0041",
+        "kw": "결로",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "결로"
+      },
+      {
+        "id": "k_r1g1_0042",
+        "kw": "결로문제",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "결로 문제"
+      },
+      {
+        "id": "k_r1g1_0043",
+        "kw": "결로관리",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "결로 관리"
+      },
+      {
+        "id": "k_r1g1_0044",
+        "kw": "결로설정",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "결로 설정"
+      },
+      {
+        "id": "k_r1g1_0045",
+        "kw": "결로점검",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "결로 점검"
+      },
+      {
+        "id": "k_r1g1_0046",
+        "kw": "결로변화",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "결로 변화"
+      },
+      {
+        "id": "k_r1g1_0047",
+        "kw": "결로상태",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "결로 상태"
+      },
+      {
+        "id": "k_r1g1_0048",
+        "kw": "결로조절",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "결로 조절"
+      },
+      {
+        "id": "k_r1g1_0049",
+        "kw": "결로확인",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "결로 확인"
+      },
+      {
+        "id": "k_r1g1_0050",
+        "kw": "결로불편",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "결로 불편"
+      },
+      {
+        "id": "k_r1g1_0051",
+        "kw": "필터",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "필터"
+      },
+      {
+        "id": "k_r1g1_0052",
+        "kw": "필터문제",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "필터 문제"
+      },
+      {
+        "id": "k_r1g1_0053",
+        "kw": "필터관리",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "필터 관리"
+      },
+      {
+        "id": "k_r1g1_0054",
+        "kw": "필터설정",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "필터 설정"
+      },
+      {
+        "id": "k_r1g1_0055",
+        "kw": "필터점검",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "필터 점검"
+      },
+      {
+        "id": "k_r1g1_0056",
+        "kw": "필터변화",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "필터 변화"
+      },
+      {
+        "id": "k_r1g1_0057",
+        "kw": "필터상태",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "필터 상태"
+      },
+      {
+        "id": "k_r1g1_0058",
+        "kw": "필터조절",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "필터 조절"
+      },
+      {
+        "id": "k_r1g1_0059",
+        "kw": "필터확인",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "필터 확인"
+      },
+      {
+        "id": "k_r1g1_0060",
+        "kw": "필터불편",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "필터 불편"
+      },
+      {
+        "id": "k_r1g1_0061",
+        "kw": "전기세",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "전기세"
+      },
+      {
+        "id": "k_r1g1_0062",
+        "kw": "전기세문제",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "전기세 문제"
+      },
+      {
+        "id": "k_r1g1_0063",
+        "kw": "전기세관리",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "전기세 관리"
+      },
+      {
+        "id": "k_r1g1_0064",
+        "kw": "전기세설정",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "전기세 설정"
+      },
+      {
+        "id": "k_r1g1_0065",
+        "kw": "전기세점검",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "전기세 점검"
+      },
+      {
+        "id": "k_r1g1_0066",
+        "kw": "전기세변화",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "전기세 변화"
+      },
+      {
+        "id": "k_r1g1_0067",
+        "kw": "전기세상태",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "전기세 상태"
+      },
+      {
+        "id": "k_r1g1_0068",
+        "kw": "전기세조절",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "전기세 조절"
+      },
+      {
+        "id": "k_r1g1_0069",
+        "kw": "전기세확인",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "전기세 확인"
+      },
+      {
+        "id": "k_r1g1_0070",
+        "kw": "전기세불편",
+        "axis": "physical",
+        "sub": "space",
+        "round": 1,
+        "origin": "llm",
+        "status": "approved",
+        "reject": null,
+        "volume": {
+          "monthly": null,
+          "source": "unconnected",
+          "at": null
+        },
+        "badges": [],
+        "display": "전기세 불편"
+      }
+    ],
+    "feedback_md": "## 방향 지시\n- 없음\n\n## 거절 사유\n- 없음\n\n## 원하는 방향\n- 저소음 (추가, 라운드 1)\n- 층간소음 (추가, 라운드 1)\n- 불안감 (추가, 라운드 1)\n- 수면방해 (추가, 라운드 1)\n- 정보찾기 (추가, 라운드 1)\n- 습도 (추가, 라운드 1)\n- 환기 (추가, 라운드 1)\n- 곰팡이 (추가, 라운드 1)\n- 곰팡이냄새 (추가, 라운드 1)\n- 시원하다 (추가, 라운드 1)\n- 조용하다 (추가, 라운드 1)\n- 쾌적하다 (추가, 라운드 1)\n- 답답하다 (추가, 라운드 1)\n- 습하다 (추가, 라운드 1)\n- 건조하다 (추가, 라운드 1)\n- 번거롭다 (추가, 라운드 1)\n- 편리하다 (추가, 라운드 1)\n- 차갑다 (추가, 라운드 1)\n- 덥다 (추가, 라운드 1)\n- 더블클릭하나 (추가, 라운드 1)\n- 더블클릭둘 (추가, 라운드 1)\n- 대기추가하나 (추가, 라운드 1)\n- 대기추가둘 (추가, 라운드 1)\n- 가드하나 (추가, 라운드 1)\n- 가드둘 (추가, 라운드 1)\n\n## 오분류 이동\n- 층간소음: physical/sense → physical/time\n"
+  }
+}

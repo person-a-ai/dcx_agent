@@ -478,9 +478,11 @@ it('F2 preserves readable column widths and local horizontal scrolling',()=>{
  for(const width of [96,220,160,72,100,260]) expect(source).toContain(`width:${width}`);
  expect(css).toContain('.persona-context-table{overflow-x:auto}');
 });
-it('F3 reserves 420px for the card map only at desktop widths',()=>{
+it('F3 stacks the card comparison table above a width-capped map',()=>{
  const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
- expect(css).toMatch(/@media\(min-width:1280px\)\{\s*\.persona-comparison-layout\{grid-template-columns:minmax\(0,1fr\) minmax\(420px,0.8fr\)\}/);
+ expect(css).not.toMatch(/\.persona-comparison-layout\{grid-template-columns:minmax\(0,1fr\) minmax\(420px,0\.8fr\)\}/);
+ expect(css).toContain('.persona-comparison-layout>.persona-map-surface{max-width:720px}');
+ expect(css).toContain('.persona-map-layout{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}');
 });
 it('F7 reduces mobile pain typography and indentation while hiding the duplicate card heading accessibly',()=>{
  const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');

@@ -131,7 +131,7 @@ def make_segment_session(local_data_dir, *, clusters=5, personas=PERSONAS,
         by_text = {pipeline._text(doc)[:2000]: matrix[i] for i, doc in enumerate(docs)}
         with patch.object(pipeline, 'get_embedder', return_value=embedder), \
                 patch.object(embedder, 'embed', side_effect=lambda texts: np.asarray([by_text[t] for t in texts])), \
-                patch.object(pipeline, 'tokenize', side_effect=tokens):
+                patch.object(pipeline, 'tokenize_many', side_effect=lambda texts, pos, it=iter(tokens): [next(it) for _ in texts]):
             pipeline.run_prep(Context(sid), sid, version)
         _write_export(base, sid, version, docs)
     return SynthSession(sid, version, expected)

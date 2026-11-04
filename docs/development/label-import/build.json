@@ -1,0 +1,156 @@
+{
+  "verdict": "PASS",
+  "head": "f6d43131266f8b4a5be299a18589fcc9dbd63cb1",
+  "fingerprint": "99ca2cbeb6b4a928a3cf87ca5f973514328b99ac93db44837b72503aae55239d",
+  "findings": [],
+  "tasks": [
+    {
+      "id": "T1",
+      "executor": "codex",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "commit": {
+        "sha": "2aceb0de3893d24b340e0202aa046f48e1fb652e"
+      },
+      "base_commit": "8ad10f240418f7a9cce6059cfa468d4e0c2535d4",
+      "review_commit": "2aceb0de3893d24b340e0202aa046f48e1fb652e",
+      "review_verdict": "PASS",
+      "dispatch": "implementer-T1: .harness/dispatch/implementer-T1.md via codex:codex-rescue --fresh --write",
+      "red": "Before implementation, test_missing_columns_named failed with: Failed: DID NOT RAISE ImportError_. Result: 1 failed, 1 warning in 0.94s. Minimal stubs avoided an import/environment failure.",
+      "green": "22 passed: cd backend && env -u VOYAGE_API_KEY .venv/bin/python -m pytest tests/importer/test_read.py -q -p no:cacheprovider",
+      "review": "PASS (8ad10f240418f7a9cce6059cfa468d4e0c2535d4..2aceb0de3893d24b340e0202aa046f48e1fb652e); findings: none. ",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "reviewer-T1: .harness/dispatch/reviewer-T1.md via codex:codex-rescue --fresh (read-only)",
+        "freshSession": true
+      }
+    },
+    {
+      "id": "T2",
+      "executor": "codex",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "commit": {
+        "sha": "df3646bcce2dd4676a8386975aef35d499a83a3b"
+      },
+      "base_commit": "e347f80b24f3a112d9e0d60a8c15dcc0aed82fc0",
+      "review_commit": "df3646bcce2dd4676a8386975aef35d499a83a3b",
+      "review_verdict": "PASS",
+      "dispatch": "implementer-T2: .harness/dispatch/implementer-T2.md via codex:codex-rescue --fresh --write",
+      "red": "Before implementation: 5 expected assertion failures, 19 passed. Imported completion returned True; GET changed running to done; audit creation and audit/reissue submissions returned 200 instead of 409.",
+      "green": "622 passed: cd backend && TAR_READER_OPTIONS=read_concatenated_archives env -u VOYAGE_API_KEY .venv/bin/python -m pytest tests/label tests/context tests/importer tests/test_integration_stage3_5.py -q -p no:cacheprovider",
+      "review": "PASS (e347f80b24f3a112d9e0d60a8c15dcc0aed82fc0..df3646bcce2dd4676a8386975aef35d499a83a3b); findings: none. Round 1 PASS (8ad10f2). Branch review FAIL (manual audit not guarded; judge reconciliation published imported completion) -> fix df3646b -> PASS.",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "reviewer-T2: .harness/dispatch/reviewer-T2.md via codex:codex-rescue --fresh (read-only)",
+        "freshSession": true
+      }
+    },
+    {
+      "id": "T3",
+      "executor": "codex",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "commit": {
+        "sha": "3602474cb9353e07ae9c352c73d3d0d42bc40bc8"
+      },
+      "base_commit": "c0faa3d7fbcdcdb25dbf4b9aa3c10cb9d32a51e6",
+      "review_commit": "3602474cb9353e07ae9c352c73d3d0d42bc40bc8",
+      "review_verdict": "PASS",
+      "dispatch": "implementer-T3: .harness/dispatch/implementer-T3.md via codex:codex-rescue --fresh --write",
+      "red": "Before implementation: 2 failed, 1 passed. Both failures were AssertionError: Shared preparation launcher must exist (find_spec returned None), not import/environment errors.",
+      "green": "57 passed: cd backend && env -u VOYAGE_API_KEY .venv/bin/python -m pytest tests/prep tests/test_integration_stage3_5.py -q -p no:cacheprovider",
+      "review": "PASS (c0faa3d7fbcdcdb25dbf4b9aa3c10cb9d32a51e6..3602474cb9353e07ae9c352c73d3d0d42bc40bc8); findings: none. ",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "reviewer-T3: .harness/dispatch/reviewer-T3.md via codex:codex-rescue --fresh (read-only)",
+        "freshSession": true
+      }
+    },
+    {
+      "id": "T4",
+      "executor": "codex",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "commit": {
+        "sha": "f6d43131266f8b4a5be299a18589fcc9dbd63cb1"
+      },
+      "base_commit": "38d4d7ccb806bafc128764c876bf0de495646d31",
+      "review_commit": "f6d43131266f8b4a5be299a18589fcc9dbd63cb1",
+      "review_verdict": "PASS",
+      "dispatch": "implementer-T4: .harness/dispatch/implementer-T4.md via codex:codex-rescue --fresh --write",
+      "red": "7 expected assertion failures before the fix: premature done markers, skipped label reinsertion, and skipped export retry. Output: /private/tmp/worker-T4-red.log",
+      "green": "4489 passed: cd backend && TAR_READER_OPTIONS=read_concatenated_archives env -u VOYAGE_API_KEY .venv/bin/python -m pytest tests/importer tests/label tests/prep tests/crawl tests/context -q -p no:cacheprovider",
+      "review": "PASS (38d4d7ccb806bafc128764c876bf0de495646d31..f6d43131266f8b4a5be299a18589fcc9dbd63cb1); findings: none. 7b665b1 FAIL (claim race, body memory) -> d031274 PASS; branch review FAIL (version change) -> 401e706 FAIL (stage4 restart checkpoints) -> 38d4d7c FAIL (non-atomic completion) -> f6d4313 PASS.",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "reviewer-T4: .harness/dispatch/reviewer-T4.md via codex:codex-rescue --fresh (read-only)",
+        "freshSession": true
+      }
+    },
+    {
+      "id": "T5",
+      "executor": "codex",
+      "committer": "controller",
+      "repository_control": {
+        "mode": "controller_managed"
+      },
+      "commit": {
+        "sha": "e347f80b24f3a112d9e0d60a8c15dcc0aed82fc0"
+      },
+      "base_commit": "d031274b582301158012131013d0cff5ef5a1702",
+      "review_commit": "e347f80b24f3a112d9e0d60a8c15dcc0aed82fc0",
+      "review_verdict": "PASS",
+      "dispatch": "implementer-T5: .harness/dispatch/implementer-T5.md via codex:codex-rescue --fresh --write",
+      "red": "Before implementation, CLI assertions failed with None != 0/1/130; import-labels returned usage exit 2 instead of success or maintenance exit 1. Full output: /private/tmp/worker-T5-red.log.",
+      "green": "204 passed: export TAR_READER_OPTIONS=read_concatenated_archives; cd backend && env -u VOYAGE_API_KEY DCX_BASH=/bin/bash .venv/bin/python -m pytest tests/importer tests/ops -q -p no:cacheprovider",
+      "review": "PASS (d031274b582301158012131013d0cff5ef5a1702..e347f80b24f3a112d9e0d60a8c15dcc0aed82fc0); findings: none. ",
+      "reviewer": {
+        "executor": "codex",
+        "role": "code-review",
+        "dispatch": "reviewer-T5: .harness/dispatch/reviewer-T5.md via codex:codex-rescue --fresh (read-only)",
+        "freshSession": true
+      }
+    }
+  ],
+  "commands": [
+    {
+      "command": "TAR_READER_OPTIONS=read_concatenated_archives env -u VOYAGE_API_KEY DCX_BASH=/bin/bash backend/.venv/bin/python -m pytest backend/tests -q -p no:cacheprovider",
+      "exitCode": 0,
+      "result": "6319 passed, 3 deselected"
+    },
+    {
+      "command": "npm --prefix frontend run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "npm --prefix frontend run build",
+      "exitCode": 0
+    },
+    {
+      "command": "npm --prefix frontend test",
+      "exitCode": 0,
+      "result": "1059 passed"
+    }
+  ],
+  "notes": [
+    "Environment: the host shell exports a real VOYAGE_API_KEY; with it 2 existing tests in backend/tests/known/test_known.py attempt the network and fail. Unset for all runs (baseline at c0faa3d passes with it unset).",
+    "Environment: on this Mac, bsdtar 3.5.3 + git 2.45.2 make `git archive | tar -x` in ops/macmini/lib.sh exit 141, failing 29 existing tests in backend/tests/ops. Identical on the pre-change base commit c0faa3d (29 failed without the option, 144 passed with TAR_READER_OPTIONS=read_concatenated_archives). Not caused by this branch; lib.sh unchanged.",
+    "T1-T3 implementers were dispatched in parallel by the controller; the harness tracks one active scope, so the watcher flagged T1/T2 edits under T3. Acknowledged via guard --ack after matching all 11 paths to the T1/T2 worker reports; each task was then re-dispatched and gated/committed separately (other tasks' files temporarily held in a tagged git stash, restored by SHA).",
+    "Worker sandbox cannot write .harness/ and Turbopack next build stalls inside it. Worker reports were written to /tmp and passed to the gate; frontend build was run by the controller outside the sandbox (no frontend files changed). Worker typecheck = Python byte-compile (no Python type checker in this project).",
+    "Reviewers could not create detached checkouts in the read-only sandbox, so per-task reviews are static; full test evidence is in commands above.",
+    "Branch review round 1 (c0faa3d..e347f80) FAIL with 3 major findings; fixed in T2 df3646b and T4 401e706/38d4d7c/f6d4313, each re-reviewed by a fresh reviewer (final PASS). The early-done reconciliation noted earlier is fixed (judge reconciliation never publishes imported completion)."
+  ]
+}

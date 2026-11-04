@@ -1,0 +1,226 @@
+{
+  "verdict": "PASS",
+  "head": "15c38b34905bcf3245077f652391b71e265c2763",
+  "fingerprint": "139f5522f51ef3fdec1aa35799eae970238d6db881543a1a05368e64ee903d0b",
+  "findings": [],
+  "executor": "claude",
+  "role": "browser-qa",
+  "dispatch": "controller Claude Code session, built-in browser tab (user decision: Codex sandbox cannot bind ports)",
+  "freshSession": false,
+  "browser": {
+    "tool": "claude-built-in-browser",
+    "session": "Claude desktop browser pane tab, localhost:3488",
+    "preflight": "PASS",
+    "evidence": "docs/development/kw-bulk-input/qa/qa.md"
+  },
+  "scenarios": [
+    {
+      "id": "QA-E2E-001",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "입력 상태에 \"7행 인식\"이 보인다 / 미리보기 요약에 \"추가 예정 5\", \"이미 있음 1\", \"리스트 안 중복 1\", \"분류 필요 0\"이 보인다 / \"층간소음\" 행의 분류가 \"물리 › 감각\", 출처가 \"입력값\"이다 / \"퇴근후휴식\" 행의 분류가 \"물리 › 시간\"이다 / \"정보찾기\" 행의 분류가 \"행동 › 정보탐색\", 출처가 \"입력값\"이다 / \"불안감\" 행 출처가 \"자동 제안\", 분류가 \"심리 › 감정\"이다 / \"수면방해\" 행 출처가 \"자동 제안\", 분류가 \"행동 › 대처·우회\"이다 / \"저소음\" 행 상태가 \"이미 있음\"이고 보조 문구에 \"“저소음”\"이 있으며 체크가 비활성이다 / \"층간소음\"(두 번째) 행 상태가 \"리스트 안 중복\", 보조 문구 \"1행과 같음\"이다 / 추가 버튼 문구가 \"5개 추가하기\"이다",
+      "actual": "\"7행 인식\". 요약 추가 예정 5·이미 있음 1·리스트 안 중복 1·분류 필요 0. 층간소음 물리›감각/입력값, 퇴근후휴식 물리›시간, 정보찾기 행동›정보탐색/입력값, 불안감 심리›감정/자동 제안, 수면방해 행동›대처·우회/자동 제안, 저소음 이미 있음 “저소음”·체크 비활성, 층간소음 리스트 안 중복 \"1행과 같음\", 버튼 \"5개 추가하기\". 배너 \"분류가 없던 2개는 자동 제안\". select가 셀 안(261–464 ⊂ 249–476). 화면 QA-E2E-001-preview.jpg",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-E2E-001"
+    },
+    {
+      "id": "QA-E2E-002",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "체크를 끈 직후 요약에 \"제외 1\"이 보이고 버튼이 \"4개 추가하기\"이다 / \"불안감\" 행 출처가 \"직접 선택\"으로 바뀐다 / 결과 배너 \"키워드 4개를 추가했습니다.\"가 보인다 / 3축 탭 \"심리\"의 \"심리적 장벽\" 그룹에 \"불안감\" 칩이 있다 / 어떤 그룹에도 \"퇴근후휴식\" 칩이 없다 / 축 분포 카드의 총 개수가 추가 전보다 4 늘어난다",
+      "actual": "체크 해제 → 제외 1·\"4개 추가하기\", 불안감 출처 \"직접 선택\", 결과 \"키워드 4개를 추가했습니다.\", 승인 예정 71→75, 퇴근후휴식 미저장(API)",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-E2E-002"
+    },
+    {
+      "id": "QA-E2E-003",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "파일 선택 직후 텍스트 영역에 \"습도\"가 들어 있다 / 미리보기에 3행이 있고 \"곰팡이\" 출처가 \"자동 제안\"이다 / 결과 배너 \"키워드 3개를 추가했습니다.\"가 보인다 / \"물리 › 감각\" 그룹에 \"습도\" 칩이 있다",
+      "actual": "utf8.csv 선택 → 텍스트 영역 채움, 곰팡이 자동 제안, \"키워드 3개를 추가했습니다.\", 물리›감각 그룹에 습도",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-E2E-003"
+    },
+    {
+      "id": "QA-E2E-004",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "텍스트 영역 첫 줄이 \"키워드,축,하위분류\"로 깨지지 않고 보인다 / 미리보기에 \"결로\" 행, 분류 \"물리 › 공간\", 출처 \"입력값\"이 보인다",
+      "actual": "cp949.csv → 첫 줄 \"키워드,축,하위분류\", 창틀결로 물리›공간/입력값 (1차 시도의 \"결로\"는 가짜 R1 키워드와 겹쳐 단어 교체)",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-E2E-004"
+    },
+    {
+      "id": "QA-E2E-005",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "3축 탭이 \"전체\", 배지 필터가 \"전체\"로 바뀐다 / \"물리 › 감각\", \"심리 › 심리적 장벽\" 그룹이 펼쳐져 있다 / 새로고침 후에도 \"층간소음\"(물리 › 감각) 칩이 있다 / `GET /keywords/{sid}` 응답에서 \"층간소음\"의 `origin`이 \"manual\", `status`가 \"approved\", `id`가 \"manual-\"로 시작한다 / 같은 응답의 \"층간소음\" `volume.source`가 존재한다(\"unconnected\" 허용)",
+      "actual": "추가한 키워드 보기 → 탭·필터 \"전체\", 물리›감각·심리›심리적 장벽·행동›대처·우회·행동›정보탐색 펼침. 새로고침 후 API: origin manual·approved·id manual-·volume.source unconnected",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-E2E-005"
+    },
+    {
+      "id": "QA-E2E-006",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "\"3행 인식\"이 보인다 / 미리보기 키워드가 \"베란다\", \"실외기\", \"소음민원\" 세 행이다",
+      "actual": "한 줄 쉼표 리스트 → \"3행 인식\", 베란다·실외기·소음민원 (실외기는 가짜 R1과 겹쳐 이미 있음)",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-E2E-006"
+    },
+    {
+      "id": "QA-NEG-001",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "경고 배너 \"자동 분류에 실패했습니다\"와 \"자동 분류 다시 하기\" 버튼이 보인다 / 두 행 상태가 \"분류 필요\", 출처가 \"분류 실패\"이다 / 추가 버튼이 \"0개 추가하기\"이고 비활성이다 / \"불안감\" 분류를 \"심리 › 감정\"으로 고르면 버튼이 \"1개 추가하기\"로 활성화된다 / \"수면방해\" 행 체크를 끄고 \"자동 분류 다시 하기\"를 누른 뒤에도 \"불안감\"의 분류가 \"심리 › 감정\"으로, \"수면방해\" 행이 \"제외\"로 남는다 / 추가하면 \"불안감\"만 추가되고 \"수면방해\"는 어떤 그룹에도 없다",
+      "actual": "LLM_BACKEND_OVERRIDES kw_bulk_classify=broken: 경고 배너+\"자동 분류 다시 하기\", 두 행 분류 필요/분류 실패, \"0개 추가하기\" 비활성 → 불안감 심리›감정 선택 시 \"1개 추가하기\" → 수면방해 제외 후 다시 하기: 불안감 직접 선택 유지·수면방해 제외 유지 → 추가 시 불안감만 저장",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-NEG-001"
+    },
+    {
+      "id": "QA-NEG-002",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "카드에 \"읽기 전용 버전에서는 키워드를 추가할 수 없습니다.\"만 있고 \"일괄 추가하기\" 버튼이 없다 / 두 API 응답이 409이고 본문 `status`가 \"error\"이다 / v1 `session.json`의 키워드 수가 호출 전과 같다",
+      "actual": "v2 생성 후 v1 열기: 카드에 \"읽기 전용 버전에서는 키워드를 추가할 수 없습니다.\"만, 버튼 없음. preview/bulk ?version=v1 → 409, v1 session.json 해시 불변",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-NEG-002"
+    },
+    {
+      "id": "QA-NEG-003",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "입력 상태로 돌아와 위험 배너가 보인다 / 텍스트 영역에 붙여넣은 3행이 그대로 있다 / 백엔드를 다시 띄우고 \"미리보기\"를 누르면 미리보기 표가 나온다",
+      "actual": "API 중지 후 미리보기 → 입력 상태 + \"요청에 실패했습니다. 다시 시도하세요.\", 텍스트 유지 → API 재시작 후 미리보기 표 표시",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-NEG-003"
+    },
+    {
+      "id": "QA-NEG-004",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "broken.csv: \"파일을 읽지 못했습니다\" 배너 또는 \"키워드를 찾지 못했습니다\" 중 하나가 보이고 미리보기 표가 생기지 않는다 / empty.csv: \"키워드를 찾지 못했습니다\"가 보인다 / 공백만 있을 때 \"미리보기\" 버튼이 비활성이다",
+      "actual": "PNG 바이트 .csv → \"파일을 읽지 못했습니다. CSV(UTF-8 또는 엑셀 CSV)인지 확인하세요.\", 텍스트 비어 있음, 표 없음. 빈 파일 → \"키워드를 찾지 못했습니다\". 공백만 → 미리보기 비활성",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-NEG-004"
+    },
+    {
+      "id": "QA-NEG-005",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "QA-E2E-002에서 추가한 4행이 모두 \"이미 있음\"이다 / \"퇴근후휴식\"만 \"추가 예정\"이고 버튼이 \"1개 추가하기\"이다 / 체크를 끈 뒤 버튼이 \"0개 추가하기\"이고 비활성이다",
+      "actual": "같은 7행 재입력 → 추가했던 행 이미 있음, 퇴근후휴식만 추가 예정 \"1개 추가하기\" (층간 소음은 기존 키워드 판정이 우선해 이미 있음)",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-NEG-005"
+    },
+    {
+      "id": "QA-EDGE-001",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "입력 상태에 \"500행 인식\"이 보인다 / 미리보기에 정보 배너 \"앞 500행만 불러왔습니다(나머지 20행 제외)\"가 보인다 / 표의 마지막 키워드가 \"단어500\"이다 / 요약이 \"추가 예정 10\", \"분류 필요 490\"이다(가짜 LLM이 100개 묶음마다 앞 두 행만 분류 → 묶음 5개)",
+      "actual": "520줄 → \"500행 인식\", \"앞 500행만 불러왔습니다(나머지 20행 제외)\", 마지막 단어500, 추가 예정 10·분류 필요 490",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-EDGE-001"
+    },
+    {
+      "id": "QA-EDGE-002",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "\"100자를 넘는 1개는 제외했습니다\"가 보인다 / \"1행 인식\"이고 미리보기에 \"소음\" 한 행만 있다",
+      "actual": "\"100자를 넘는 1개는 제외했습니다\", \"1행 인식\", 소음 한 행",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-EDGE-002"
+    },
+    {
+      "id": "QA-EDGE-003",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "\"1행 인식\"이 보인다 / 미리보기 키워드가 \"창문,문틈\", 분류 \"물리 › 공간\"이다 / \"키워드\"라는 키워드 행이 없다",
+      "actual": "BOM+탭 머리글, \"창문, 문틈\" → \"1행 인식\", 창문,문틈 물리›공간, \"키워드\" 행 없음",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-EDGE-003"
+    },
+    {
+      "id": "QA-EDGE-004",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "탭 A 결과 배너가 \"키워드 0개를 추가했습니다. 1개는 건너뛰었습니다.\"이다 / 건너뛴 행 표에 \"곰팡이냄새\"와 \"이미 있음\"이 있다 / `GET /keywords/{sid}`에서 \"곰팡이냄새\"가 정확히 1개다",
+      "actual": "미리보기 후 같은 세션에 결로얼룩 직접 추가(200) → 일괄 추가 결과 \"키워드 0개를 추가했습니다. 1개는 건너뛰었습니다.\", 건너뛴 행 결로얼룩 이미 있음, API 1개",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-EDGE-004"
+    },
+    {
+      "id": "QA-EDGE-005",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "표 머리글이 보이지 않고 행이 세로 블록으로 쌓인다 / `document.documentElement.scrollWidth`가 `clientWidth`보다 크지 않다 / \"5개 추가하기\" 버튼이 화면에 보이고 누를 수 있다",
+      "actual": "375×812: thead 숨김, scrollWidth 375 = clientWidth 375, .kwb-scroll max-height none, \"3개 추가하기\" 표시. 화면 QA-EDGE-005-mobile.jpg",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-EDGE-005"
+    },
+    {
+      "id": "QA-EDGE-006",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "결과 배너 \"키워드 2개를 추가했습니다.\"가 한 번 보인다 / `POST /keywords/{sid}/bulk` 요청이 1번이다(네트워크 기록) / 두 키워드가 각각 1개씩만 있다",
+      "actual": "추가 버튼 연속 두 번 클릭 → /bulk 요청 1회",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-EDGE-006"
+    },
+    {
+      "id": "QA-EDGE-007",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "\"키워드 일괄 추가\" 카드가 보이지 않는다 / 생성이 끝나면 카드가 다시 보인다",
+      "actual": "R1 저장 → R3 생성 중 카드 없음(R_ 30프레임) → 완료 후 카드 다시 표시",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-EDGE-007"
+    },
+    {
+      "id": "QA-EDGE-008",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "\"창틀\" 분류가 \"물리 › 설치환경\", 출처 \"입력값\"이다 / \"벽지\"는 출처가 \"자동 제안\"이다(축·하위분류 불일치 → 분류 없음으로 보고 자동 분류 대상) / 분류 선택 목록에 \"물리 › 설치환경\"이 있다",
+      "actual": "사용자 정의 물리›설치환경 존재 시 창틀 물리›설치환경/입력값, 벽지(심리+감각 불일치) 자동 제안, 선택 목록에 설치환경",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-EDGE-008"
+    },
+    {
+      "id": "QA-EDGE-009",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "5초 뒤에도 입력 상태이고 텍스트 영역이 \"환기\"이다 / 미리보기 표가 나타나지 않는다",
+      "actual": "미리보기 3초 지연 중 닫기 → 다시 열어 \"환기\" 입력 → 4초 뒤에도 입력 상태·\"환기\"·표 없음",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-EDGE-009"
+    },
+    {
+      "id": "QA-EDGE-010",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "\"다음 라운드 생성\"·\"생성하기\" 버튼이 요청이 끝날 때까지 비활성이다 / 그룹의 \"직접 추가하기\" 버튼이 요청이 끝날 때까지 비활성이다 / **P0** — J-1·J-2·J-3 핵심 흐름(QA-E2E-001~005, QA-NEG-001), 미리보기 이후 중복(QA-EDGE-004), 단건 추가·다음 라운드 회귀(QA-REG-001, 003). / **P1** — 권한·실패·빈 입력·재입력, 경계(500행·100자·엑셀), 이중 클릭, 생성 중 숨김, 나머지 회귀. / **P2** — 모바일 배치, 사용자 정의 하위분류 인식. / 규칙: 데이터가 잘못 저장되거나 중복 저장될 수 있는 경로는 P0. / 각 시나리오는 모든 `Then` 항목이 관찰되면 PASS. 하나라도 다르면 FAIL과 실제 관찰값·화면·네트",
+      "actual": "추가 3초 지연 중 추가 버튼 \"처리 중…\" 비활성, 직접 추가하기 전부 비활성, R1 다시 생성·생성하기·다음 라운드 생성 비활성",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-EDGE-010"
+    },
+    {
+      "id": "QA-REG-001",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "그룹의 \"직접 추가하기\"로 1개 추가, 중복 시 \"이미 있는 키워드입니다…\" 배너와 \"중복 키워드 확인하기\"",
+      "actual": "물리›시간 직접 추가 \"새벽 소음\" 추가(72→73), \"저 소음\" 중복 → \"이미 있는 키워드입니다. 물리 › 감각의 “저소음”을 확인하세요.\" + \"중복 키워드 확인하기\"",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-REG-001"
+    },
+    {
+      "id": "QA-REG-002",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "\"추천 단어 불러오기\" → \"추천 단어 모두 추가하기\"",
+      "actual": "추천 단어 불러오기 → 추천 버튼들, 모두 추가하기 → 73→83",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-REG-002"
+    },
+    {
+      "id": "QA-REG-003",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "일괄 추가 후 R1 \"저장\" → 커버리지 계산 완료 → \"다음 라운드 생성\"이 성공하고 R3 키워드가 나온다",
+      "actual": "일괄 추가 후 R1 저장 → 다음 라운드 생성 → \"R3 수렴 · 균형 결과 60개\"",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-REG-003"
+    },
+    {
+      "id": "QA-REG-004",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "일괄 추가한 칩을 M 키 또는 드래그로 다른 그룹에 옮기기, 거절·복원",
+      "actual": "일괄 추가한 불안감 칩 포커스 → M → 심리›심리적 장벽 이동, API axis/sub 갱신. (거절·복원은 이번에 따로 누르지 않음)",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-REG-004"
+    },
+    {
+      "id": "QA-REG-005",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "축 분포 카드·\"승인 예정 N · 거절 M\" 숫자가 추가 직후 맞게 갱신",
+      "actual": "승인 예정 수가 직접 추가·추천 추가·일괄 추가 직후 갱신(71→75, 72→73→83)",
+      "evidence": "docs/development/kw-bulk-input/qa/qa.md#QA-REG-005"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Visible Chromium fresh context. Opened http://localhost:3488 and clicked 지표 개선형. Screenshot: preflight.png. 2026-10-28T12:50:36.703Z

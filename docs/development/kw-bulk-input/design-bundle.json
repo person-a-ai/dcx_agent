@@ -1,0 +1,14 @@
+{
+  "kind": "design",
+  "surface": "web",
+  "document": "docs/development/kw-bulk-input/02-design.md",
+  "mockup": {
+    "provider": "Claude (local HTML using copied app CSS @fa71e31)",
+    "invocation": "none: /claude-design not used, reason recorded in 02-design.md section 0",
+    "entry": "docs/development/kw-bulk-input/mockup/index.html",
+    "files": [
+      "docs/development/kw-bulk-input/mockup/index.html",
+      "docs/development/kw-bulk-input/mockup/app.css"
+    ]
+  }
+}

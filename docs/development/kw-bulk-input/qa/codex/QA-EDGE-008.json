@@ -1,0 +1,579 @@
+{
+  "id": "QA-EDGE-008",
+  "time": "2026-10-28T12:56:30.665Z",
+  "sid": "s1732f9db5edd4b919c40e5c4986375bc",
+  "url": "http://localhost:3488/pipeline/keywords",
+  "expected": "Custom category accepted and axis/sub mismatch falls back to classifier.",
+  "actual": "Created physical 설치환경 and manually added 창문. Preview resolves 창틀 to physical/custom:설치환경 with 입력값; mismatch 벽지 auto-suggested; custom option listed.",
+  "result": "PASS",
+  "state": "파이프라인\n1\n시작\n2\n키워드\n진행 중\n3\n크롤링\n4\n전처리\n5\n라벨링\n6\n학습\n7\n클러스터링\n8\n근거 탐색\n9\n페르소나\n10\n인사이트\nCODEX QA 모바일\nv1 · 활성 버전 목록 열기\n검토 대기\nKnown Insight · 0\n외부 API · 0/2 연결 열기\n내부용\n이 단계부터 다시\n1단계 · 키워드\nR1 초기 발산 결과 70개를 검토합니다\n\n거절할 키워드를 누르고 사유를 남기면 다음 라운드에 반영됩니다. 드래그하거나 M 키로 하위 카테고리를 옮길 수 있습니다.\n\nR1 · 현재\n초기 발산\n5W1H · JTBD\nR2\n인접 확장\nSCAMPER 대체·결합·응용\nR3\n수렴 · 균형\n분포 · 거절 · 커버리지\nR4\n재발산\n역발상 · 제거 · 부정 공간\n최종\n최종 검토\n크롤링으로 전달\n검토할 라운드\nR1\n다음 라운드 방향 지시 (선택)\n지시 저장하기\n키워드 일괄 추가\n\nCSV나 리스트로 정리한 키워드를 한 번에 넣습니다. 분류가 없으면 자동으로 제안합니다.\n\n닫기\n2행을 읽었습니다. 분류가 없던 1개는 자동 제안입니다. 확인하고 필요하면 바꾸세요.\n추가 예정 2\n이미 있음 0\n리스트 안 중복 0\n분류 필요 0\n제외 0\n선택한 행 분류 일괄 변경\n분류 선택\n물리 › 시간\n물리 › 공간\n물리 › 사회적 환경\n물리 › 감각\n물리 › 신체 상태\n물리 › 제품·물리 상호작용\n심리 › 감정\n심리 › 표면 목표·기능적 결과·숨은 니즈\n심리 › 심리적 장벽\n심리 › 인지·신념\n심리 › 자아·정체성\n행동 › 기존 행동·문제 발생·트리거\n행동 › 제약\n행동 › 대처·우회\n행동 › 정보탐색\n행동 › 전환·이탈\n물리 › 설치환경\n모두 이 그룹으로\n\t키워드\t분류\t분류 출처\t상태\n\t창틀\t\n분류 선택\n물리 › 시간\n물리 › 공간\n물리 › 사회적 환경\n물리 › 감각\n물리 › 신체 상태\n물리 › 제품·물리 상호작용\n심리 › 감정\n심리 › 표면 목표·기능적 결과·숨은 니즈\n심리 › 심리적 장벽\n심리 › 인지·신념\n심리 › 자아·정체성\n행동 › 기존 행동·문제 발생·트리거\n행동 › 제약\n행동 › 대처·우회\n행동 › 정보탐색\n행동 › 전환·이탈\n물리 › 설치환경\n\t입력값\t추가 예정\n\t벽지\t\n분류 선택\n물리 › 시간\n물리 › 공간\n물리 › 사회적 환경\n물리 › 감각\n물리 › 신체 상태\n물리 › 제품·물리 상호작용\n심리 › 감정\n심리 › 표면 목표·기능적 결과·숨은 니즈\n심리 › 심리적 장벽\n심리 › 인지·신념\n심리 › 자아·정체성\n행동 › 기존 행동·문제 발생·트리거\n행동 › 제약\n행동 › 대처·우회\n행동 › 정보탐색\n행동 › 전환·이탈\n물리 › 설치환경\n\t자동 제안\t추가 예정\n\n“이미 있음”과 “리스트 안 중복”은 추가하지 않습니다. “분류 필요”는 분류를 고르기 전까지 추가하지 않습니다.\n\n입력으로 돌아가기\n2개 추가하기\n전체73\n물리72\n심리1\n행동0\n전체 73\n판단 필요 0\nLLM 단독 0\n검색량 적음 0\n미연결 73\n거절됨 0\n수동 3\n키워드 검색\n키보드 도움말 보기\n모두 접기\n물리 › 시간 펼치기\n0\n직접 추가하기\n물리 › 공간 펼치기\n70\n직접 추가하기\n물리 › 사회적 환경 펼치기\n0\n직접 추가하기\n물리 › 감각 펼치기\n1\n직접 추가하기\n물리 › 신체 상태 펼치기\n0\n직접 추가하기\n물리 › 제품·물리 상호작용 펼치기\n0\n직접 추가하기\n심리 › 감정 펼치기\n1\n직접 추가하기\n심리 › 표면 목표·기능적 결과·숨은 니즈 펼치기\n0\n직접 추가하기\n심리 › 심리적 장벽 펼치기\n0\n직접 추가하기\n심리 › 인지·신념 펼치기\n0\n직접 추가하기\n심리 › 자아·정체성 펼치기\n0\n직접 추가하기\n행동 › 기존 행동·문제 발생·트리거 펼치기\n0\n직접 추가하기\n행동 › 제약 펼치기\n0\n직접 추가하기\n행동 › 대처·우회 펼치기\n0\n직접 추가하기\n행동 › 정보탐색 펼치기\n0\n직접 추가하기\n행동 › 전환·이탈 펼치기\n0\n직접 추가하기\n물리 › 설치환경 접기\n1\n직접 추가하기\n창문\n수동\n미연결\n물리 › 설치환경 키워드\n추가하기\n추천 단어 불러오기\n새 하위 카테고리 축\n축 선택\n물리\n심리\n행동\n새 하위 카테고리 이름\n하위 카테고리 추가하기\n축 분포\n\n승인 예정 포함 73개 기준 · 부족한 축은 다음 라운드가 채웁니다.\n\n물리\n72개 · 99%\n심리\n1개 · 1%\n행동\n0개 · 0%\n커버리지\nR1 확정 후 계산\nkeyword_feedback.md 미리보기 내부용\n\n승인 예정 73 · 거절 0\n\n저장되지 않은 변경 있음\n임시 저장\n저장\nR1 다시 생성\n생성하기\n다음 라운드 생성",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "label": "Open Next.js Dev Tools",
+      "text": "",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "사이드바 접기",
+      "text": "",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "v1 · 활성 버전 목록 열기",
+      "text": "v1 · 활성 버전 목록 열기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Known Insight · 0",
+      "text": "Known Insight · 0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "외부 API · 0/2 연결 열기",
+      "text": "외부 API · 0/2 연결 열기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "이 단계부터 다시",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "SELECT",
+      "label": null,
+      "text": "R1",
+      "value": "1",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": null,
+      "text": "",
+      "value": "",
+      "disabled": false,
+      "checked": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "지시 저장하기",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "닫기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "SELECT",
+      "label": null,
+      "text": "분류 선택",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "모두 이 그룹으로",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "전체 선택",
+      "text": "",
+      "value": "on",
+      "disabled": false,
+      "checked": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "창틀 포함",
+      "text": "",
+      "value": "on",
+      "disabled": false,
+      "checked": true
+    },
+    {
+      "tag": "SELECT",
+      "label": "창틀 분류",
+      "text": "물리 › 설치환경",
+      "value": "physical/custom:설치환경",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": "벽지 포함",
+      "text": "",
+      "value": "on",
+      "disabled": false,
+      "checked": true
+    },
+    {
+      "tag": "SELECT",
+      "label": "벽지 분류",
+      "text": "심리 › 감정",
+      "value": "psychological/emotion",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "입력으로 돌아가기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "2개 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "전체73",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리72",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "심리1",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "행동0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "전체 73",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "판단 필요 0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "LLM 단독 0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "검색량 적음 0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "미연결 73",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "거절됨 0",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "수동 3",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": null,
+      "text": "",
+      "value": "",
+      "disabled": false,
+      "checked": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "키보드 도움말 보기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "모두 접기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 시간 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 공간 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 사회적 환경 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 감각 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 신체 상태 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 제품·물리 상호작용 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "심리 › 감정 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "심리 › 표면 목표·기능적 결과·숨은 니즈 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "심리 › 심리적 장벽 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "심리 › 인지·신념 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "심리 › 자아·정체성 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "행동 › 기존 행동·문제 발생·트리거 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "행동 › 제약 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "행동 › 대처·우회 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "행동 › 정보탐색 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "행동 › 전환·이탈 펼치기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "물리 › 설치환경 접기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "직접 추가하기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": "창문, 수동, 미연결",
+      "text": "창문수동미연결",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": null,
+      "text": "",
+      "value": "",
+      "disabled": false,
+      "checked": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "추가하기",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "추천 단어 불러오기",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "SELECT",
+      "label": null,
+      "text": "물리",
+      "value": "physical",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "label": null,
+      "text": "",
+      "value": "",
+      "disabled": false,
+      "checked": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "하위 카테고리 추가하기",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "임시 저장",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "저장",
+      "value": "",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "R1 다시 생성",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "생성하기",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": null,
+      "text": "다음 라운드 생성",
+      "value": "",
+      "disabled": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": "챗봇 열기",
+      "text": "",
+      "value": "",
+      "disabled": false
+    }
+  ]
+}

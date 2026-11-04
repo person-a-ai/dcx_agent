@@ -1,6 +1,7 @@
 import hashlib
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -180,7 +181,8 @@ def test_build_task_truncates_long_body():
 @pytest.fixture
 def capacity_sleep(gpt, monkeypatch):
     calls = []
-    monkeypatch.setattr(gpt.time, 'sleep', calls.append)
+    # gpt 모듈의 time만 바꾼다. time.sleep 자체를 바꾸면 subprocess 대기 폴링까지 기록된다.
+    monkeypatch.setattr(gpt, 'time', SimpleNamespace(sleep=calls.append))
     return calls
 
 

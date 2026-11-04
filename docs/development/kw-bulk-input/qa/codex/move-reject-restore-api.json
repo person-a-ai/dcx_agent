@@ -1,0 +1,58 @@
+{
+  "moved": {
+    "id": "manual-939b69bae50148418d7176f753466fc5",
+    "kw": "층간소음",
+    "axis": "physical",
+    "sub": "time",
+    "round": 1,
+    "origin": "manual",
+    "status": "approved",
+    "reject": null,
+    "volume": {
+      "monthly": null,
+      "source": "unconnected",
+      "at": null
+    },
+    "badges": [],
+    "display": "층간 소음"
+  },
+  "rejected": {
+    "id": "manual-939b69bae50148418d7176f753466fc5",
+    "kw": "층간소음",
+    "axis": "physical",
+    "sub": "time",
+    "round": 1,
+    "origin": "manual",
+    "status": "rejected",
+    "reject": {
+      "tags": [
+        "irrelevant"
+      ],
+      "note": ""
+    },
+    "volume": {
+      "monthly": null,
+      "source": "unconnected",
+      "at": null
+    },
+    "badges": [],
+    "display": "층간 소음"
+  },
+  "restored": {
+    "id": "manual-939b69bae50148418d7176f753466fc5",
+    "kw": "층간소음",
+    "axis": "physical",
+    "sub": "time",
+    "round": 1,
+    "origin": "manual",
+    "status": "approved",
+    "reject": null,
+    "volume": {
+      "monthly": null,
+      "source": "unconnected",
+      "at": null
+    },
+    "badges": [],
+    "display": "층간 소음"
+  }
+}

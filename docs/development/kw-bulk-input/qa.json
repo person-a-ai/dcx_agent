@@ -1,0 +1,234 @@
+{
+  "executor": "codex",
+  "role": "browser-qa",
+  "dispatch": "01a1828d-d191-7c72-a44a-2270e3b1936d",
+  "freshSession": true,
+  "browser": {
+    "tool": "Playwright 1.62.1 / visible Chromium",
+    "session": "isolated contexts in Codex dispatch 01a1828d-d191-7c72-a44a-2270e3b1936d",
+    "preflight": "PASS",
+    "evidence": "docs/development/kw-bulk-input/qa/codex/preflight.md",
+    "screenshot": "docs/development/kw-bulk-input/qa/codex/preflight.png"
+  },
+  "scenarios": [
+    {
+      "id": "QA-E2E-001",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "All stated preview counts, categories, sources and duplicate safeguards.",
+      "actual": "7 rows; 5 new, 1 existing, 1 in-list duplicate, 0 needs classification. All five category values and sources match; duplicate disabled and first-row annotation correct.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-E2E-001.md"
+    },
+    {
+      "id": "QA-E2E-002",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Exclusion/edit retained, four keywords added in correct groups and total +4.",
+      "actual": "Excluded 퇴근후휴식; changed 불안감 to 심리적 장벽 with 직접 선택; banner confirms 4 additions; total 71→75.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-E2E-002.md"
+    },
+    {
+      "id": "QA-E2E-003",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "UTF-8 CSV import previews and adds three correct keywords.",
+      "actual": "UTF-8 file populates textarea; three rows with 곰팡이 auto suggestion; 3 added, 습도 stored under physical/sense.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-E2E-003.md"
+    },
+    {
+      "id": "QA-E2E-004",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "CP949 decoded correctly, Korean header and explicit physical/space preserved.",
+      "actual": "CP949 decoded readable Korean header, 결로대책 physical/space with 입력값. Used 결로대책 because fixture already contains 결로.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-E2E-004.md"
+    },
+    {
+      "id": "QA-E2E-005",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Reveal affected groups and persist same single-add storage shape after refresh.",
+      "actual": "Reveal resets filters to 전체 and opens affected groups (captured before reload); refresh retains 층간소음 (display 층간 소음). GET confirms manual/approved/manual- ID and unconnected volume.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-E2E-005.md"
+    },
+    {
+      "id": "QA-E2E-006",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Single comma-separated line yields three normalized keywords.",
+      "actual": "3 rows: 베란다, 실외기, 소음민원. 실외기 is existing fixture keyword.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-E2E-006.md"
+    },
+    {
+      "id": "QA-NEG-001",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Classifier failure recoverable with manual category and retry preserving edits.",
+      "actual": "Broken classifier showed warning/retry; both rows 分류 필요 with 분류 실패, zero disabled; manually selected emotion and excluded second; retry retained edits; only 불안감 persisted.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-NEG-001.md"
+    },
+    {
+      "id": "QA-NEG-002",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Read-only version cannot bulk preview/add and stored keywords unchanged.",
+      "actual": "Opened v1 through sidebar; read-only notice and no bulk button. Preview and bulk both 409 status:error. GET keywords before/after identical.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-NEG-002.md"
+    },
+    {
+      "id": "QA-NEG-003",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Network failure preserves input and retry succeeds after API restart.",
+      "actual": "Stopped API; preview returned to input with 요청에 실패했습니다 and all three lines retained. Restarted normal API; retry produced 3-row preview.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-NEG-003.md"
+    },
+    {
+      "id": "QA-NEG-004",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Invalid and empty CSV rejected; blank input disables preview.",
+      "actual": "PNG renamed .csv shows 파일을 읽지 못했습니다 without table; empty file shows 키워드를 찾지 못했습니다; whitespace preview disabled.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-NEG-004.md"
+    },
+    {
+      "id": "QA-NEG-005",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Reimport skips existing four; only excluded keyword can be added, then zero when unchecked.",
+      "actual": "All four prior additions and original 저소음 show already existing; repeated 층간소음 is also already existing (6 existing rows total). Only 퇴근후휴식 was addable; unchecking it made 0개 추가하기 disabled.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-NEG-005.md"
+    },
+    {
+      "id": "QA-EDGE-001",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "520 lines cap to first 500 with 20 excluded and 5 chunks ×2 auto classifications.",
+      "actual": "Input capped at 500 rows, banner excludes remaining 20, final row 단어500, 10 addable and 490 unclassified.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-EDGE-001.md"
+    },
+    {
+      "id": "QA-EDGE-002",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Over-100-char row excluded, one valid keyword remains.",
+      "actual": "101-character row excluded with 100자 warning; one recognized row 소음 remains (existing fixture keyword).",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-EDGE-002.md"
+    },
+    {
+      "id": "QA-EDGE-003",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Excel TSV with quoted comma parses as one row with explicit category.",
+      "actual": "BOM header and trailing tabs recognized; only 창문,문틈, physical/space. No header keyword.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-EDGE-003.md"
+    },
+    {
+      "id": "QA-EDGE-004",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Stale preview duplicate skipped and only one persisted record.",
+      "actual": "Tab B manually added 곰팡이냄새 physical/sense after A preview; A reports 0 added, 1 skipped, already exists; GET count=1.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-EDGE-004.md"
+    },
+    {
+      "id": "QA-EDGE-005",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "375×812 stacked rows, hidden table header, no horizontal overflow and accessible add button.",
+      "actual": "{\"width\":375,\"scrollWidth\":375,\"head\":[{\"display\":\"none\",\"visible\":0}],\"rows\":[{\"display\":\"block\",\"rect\":{\"x\":114,\"y\":361,\"width\":204,\"height\":173,\"top\":361,\"right\":318,\"bottom\":534,\"left\":114}},{\"display\":\"block\",\"rect\":{\"x\":114,\"y\":534,\"width\":204,\"height\":173,\"top\":534,\"right\":318,\"bottom\":707,\"left\":114}}]}; 5개 추가하기 scrolls into view and passes click actionability.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-EDGE-005.md"
+    },
+    {
+      "id": "QA-EDGE-006",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Double click guarded to one network request and two unique additions.",
+      "actual": "Rapid double click sent exactly one bulk POST; one success banner and one stored record per keyword.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-EDGE-006.md"
+    },
+    {
+      "id": "QA-EDGE-007",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Bulk add card hidden while generation in progress and visible afterward.",
+      "actual": "After R1 save and Next Round, bulk card disappeared during R3 generation and returned when R3 completed; mutation timeline plus in-generation screenshot captured.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-EDGE-007.md"
+    },
+    {
+      "id": "QA-EDGE-008",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Custom category accepted and axis/sub mismatch falls back to classifier.",
+      "actual": "Created physical 설치환경 and manually added 창문. Preview resolves 창틀 to physical/custom:설치환경 with 입력값; mismatch 벽지 auto-suggested; custom option listed.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-EDGE-008.md"
+    },
+    {
+      "id": "QA-EDGE-009",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Late response must not replace newly opened input state.",
+      "actual": "Preview A delayed 5s; closed and reopened with 환기; after old response input remains 환기 and no table appears.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-EDGE-009.md"
+    },
+    {
+      "id": "QA-EDGE-010",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Other edit and generation buttons disabled while bulk request pending.",
+      "actual": "Bulk POST held 4 seconds by route interceptor; all manual add, 생성하기 and 다음 라운드 생성 buttons disabled until response.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-EDGE-010.md"
+    },
+    {
+      "id": "QA-REG-001",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Single manual add succeeds; duplicate displays banner and reveal action.",
+      "actual": "Single manual add 단건회귀확인 succeeded (75→76); repeating it showed 이미 있는 키워드입니다 and 중복 키워드 확인하기.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-REG-001.md"
+    },
+    {
+      "id": "QA-REG-002",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Existing recommendation load/add-all flow works.",
+      "actual": "Ten autocomplete suggestions loaded and all added; chips have 추천 badge; total 76→86.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-REG-002.md"
+    },
+    {
+      "id": "QA-REG-003",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Bulk-added manual keywords survive R1 commit, coverage, and successful R3 generation.",
+      "actual": "Bulk additions persisted; R1 Save completed and coverage displayed 100%; Next Round generated R3 with 59 keywords. API confirms R1 committed and R3 populated.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-REG-003.md"
+    },
+    {
+      "id": "QA-REG-004",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Bulk keyword supports M move, reject and restore.",
+      "actual": "M opened move dialog; moved bulk keyword 층간소음 sense→time. Rejected with irrelevant tag; clicking rejected chip restored it. API snapshots confirm each transition.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-REG-004.md"
+    },
+    {
+      "id": "QA-REG-005",
+      "url": "http://localhost:3488/pipeline/keywords",
+      "result": "PASS",
+      "expected": "Distribution and approval/rejection counters update after bulk add.",
+      "actual": "Total and pending 71→75; physical 71→72, psychological 0→1, behavioral 0→2; rejected remains 0.",
+      "evidence": "docs/development/kw-bulk-input/qa/codex/QA-REG-005.md"
+    }
+  ],
+  "verdict": "PASS",
+  "head": "15c38b34905bcf3245077f652391b71e265c2763",
+  "fingerprint": "139f5522f51ef3fdec1aa35799eae970238d6db881543a1a05368e64ee903d0b",
+  "findings": [],
+  "notes": "26/26 active scenarios passed. API left running in normal mode. See execution-notes.md and integrity.json under qa/codex.",
+  "sessions": [
+    "s1732f9db5edd4b919c40e5c4986375bc",
+    "s55e6ea15b7ed4ee7a25e06fba0d9bc54",
+    "sd7b3453830ef450c8105948d51c4c4a5",
+    "s7ed30bf661aa4b8f923a5cd5757cbec7"
+  ]
+}

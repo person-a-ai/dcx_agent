@@ -1,0 +1,11 @@
+{
+  "sid": "s7ed30bf661aa4b8f923a5cd5757cbec7",
+  "assertions": [
+    "Reveal selected 전체75 tab",
+    "물리 › 감각 and 심리 › 심리적 장벽 expanded after reveal",
+    "Psychological tab contains 불안감 chip",
+    "퇴근후휴식 absent from GET keywords",
+    "층간소음 persisted manual/approved with manual- id and volume.source",
+    "Reload retains 층간 소음 chip"
+  ]
+}
