@@ -360,6 +360,10 @@ def _write_tokens(root, cfg, total, state, stop, check):
             docs = _read_part(root, part)
             if not docs:
                 continue
+            if _tokens_match(root, part, docs):
+                # Same documents, same config (the prep key): reuse a part written earlier.
+                state['tokenized'] += len(docs)
+                continue
             rows = []
             for d, tokens in zip(docs, tokenize_many((token_text(_text(d)) for d in docs), cfg.tokenPos)):
                 if stop.is_set():
@@ -375,6 +379,18 @@ def _write_tokens(root, cfg, total, state, stop, check):
             _jsonl(_part_path(root, 'tokens', part), rows)
     state['tokenized'] = None
     return True
+
+
+def _tokens_match(root, part, docs):
+    path = _part_path(root, 'tokens', part)
+    if not path.exists():
+        return False
+    try:
+        with path.open(encoding='utf-8') as stream:
+            ids = [json.loads(line)['doc_id'] for line in stream if line.strip()]
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+    return ids == [d['doc_id'] for d in docs]
 
 
 def _find_docs(root, total, doc_ids):
