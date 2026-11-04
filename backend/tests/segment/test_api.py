@@ -461,3 +461,42 @@ def test_status_before_new_l1_has_no_preview(api):
     assert 'preview' in ok(api.client.get(api.base + '/status'))
     pipeline.run(Context(api.sid, args={'fresh': True}, stop_after='load'))
     assert 'preview' not in ok(api.client.get(api.base + '/status'))
+
+
+def _record_only(api, monkeypatch):
+    # These tests check run arguments only; the real pipeline is covered in test_target.py.
+    def start(sid, version, kind, args):
+        api.calls.append(args)
+        return dict(runId=f'worker-{len(api.calls)}', version=version, kind=kind, state='queued')
+    monkeypatch.setattr(runner, 'start', start)
+
+
+def _with_cards(api):
+    path = version_dir(api.sid, 'v1') / 'session.json'
+    data = sessions.read_json(path)
+    data.setdefault('projectContext', {})['personaSeeds'] = {'items': [
+        {'text': '잠자리 협상가', 'card': {'pain': '코골이 때문에 각방', 'keywords': ['코골이']}}]}
+    sessions.write_json(path, data)
+
+
+def test_target_mode_requires_cards_and_passes_mode(api, monkeypatch):
+    _record_only(api, monkeypatch)
+    error(api.client.post(api.base + '/run', json={'mode': 'target'}), 409, 'cards_required')
+    _with_cards(api)
+    ok(api.client.post(api.base + '/run', json={'mode': 'target', 'k': 5}))
+    assert api.calls[-1] == {'k': None, 'fresh': False, 'mode': 'target'}
+    assert ok(api.client.get(api.base + '/status'))['mode'] == 'clusters'
+
+
+def test_switching_mode_on_existing_checkpoint_needs_confirm_and_target_report(api, monkeypatch):
+    _record_only(api, monkeypatch)
+    _with_cards(api)
+    root = version_dir(api.sid, 'v1') / 'segment'
+    sessions.write_json(root / 'checkpoint.json', {'done': ['load'], 'mode': 'target'})
+    assert ok(api.client.get(api.base + '/status'))['mode'] == 'target'
+    error(api.client.post(api.base + '/run', json={}), 409, 'confirm_required')
+    ok(api.client.post(api.base + '/run', json={'confirmReset': True}))
+    assert api.calls[-1] == {'k': None, 'fresh': True, 'mode': 'clusters'}
+    error(api.client.get(api.base + '/target'), 404)
+    sessions.write_json(root / 'target.json', {'personas': [], 'total': 1})
+    assert ok(api.client.get(api.base + '/target'))['total'] == 1

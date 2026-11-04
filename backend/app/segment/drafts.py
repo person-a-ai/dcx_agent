@@ -79,7 +79,8 @@ def _draft(sid, task_name, model, one_liner, evidence):
     return None
 
 
-def generate_drafts(sid, store, project_context, *, context_reps=None, cluster_drafts=None, persona_drafts=None):
+def generate_drafts(sid, store, project_context, *, context_reps=None, cluster_drafts=None, persona_drafts=None,
+                    persona_extra=None):
     """Generate one draft per row in layer order, preserving confirmed fields."""
     context = (project_context.model_dump(mode='json')
                if isinstance(project_context, BaseModel) else project_context)
@@ -87,6 +88,8 @@ def generate_drafts(sid, store, project_context, *, context_reps=None, cluster_d
     context_reps = context_reps or {}
     cluster_drafts = cluster_drafts or {}
     persona_drafts = persona_drafts or {}
+    # Target mode: per-cluster card and research context for Persona and Context drafts.
+    persona_extra = persona_extra or {}
     flags = {}
     clusters = {}
     personas = {}
@@ -103,7 +106,8 @@ def generate_drafts(sid, store, project_context, *, context_reps=None, cluster_d
                 return {'targetScope': context.get('targetScope'),
                         'centrality': (row['centrality'] or [])[:params.CENTRALITY_TOP],
                         'reps': (row['reps'] or [])[:params.REPS],
-                        'cluster_name': clusters.get(row['cluster_id'], '')}
+                        'cluster_name': clusters.get(row['cluster_id'], ''),
+                        **persona_extra.get(row['cluster_id'], {})}
             return {'keywords': (row['keywords'] or [])[:params.CTFIDF_TOP],
                     'reps': context_reps.get(row[key], [])[:params.REPS],
                     'dominant_constraint': row['dominant_constraint'],

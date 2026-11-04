@@ -160,3 +160,23 @@ describe("persona seeds", () => {
     expect(missingDimensions((["social", "taste", "movement", "bio"] as const).map(dimension => ({ text: dimension, dimension })))).toEqual([]);
   });
 });
+
+describe("persona cards", () => {
+  it("parses keyword and quote lists with limits", async () => {
+    const { parseCardList } = await import("./startForm");
+    expect(parseCardList(" 코골이, 각방,,\n수면 ", "keywords")).toEqual(["코골이", "각방", "수면"]);
+    expect(parseCardList(Array.from({ length: 12 }, (_, i) => `k${i}`).join(","), "keywords")).toHaveLength(10);
+    expect(parseCardList("첫 줄\n\n둘째 줄\n3\n4\n5\n6", "quotes")).toEqual(["첫 줄", "둘째 줄", "3", "4", "5"]);
+  });
+
+  it("updates one seed card and renders backend-identical lines", async () => {
+    const { updateSeedCard, cardFilled, cardLines } = await import("./startForm");
+    const items = [{ text: "잠자리 협상가", dimension: null }, { text: "보호자", dimension: null }];
+    const next = updateSeedCard(items, 0, { pain: "코골이 때문에 각방" });
+    expect(next[1]).toBe(items[1]);
+    expect(cardFilled(next[0].card)).toBe(true);
+    expect(cardFilled(updateSeedCard(items, 1, { keywords: [] })[1].card)).toBe(false);
+    expect(cardLines(next[0].card)).toEqual(["  - Pain Point: 코골이 때문에 각방"]);
+    expect(cardLines(null)).toEqual([]);
+  });
+});

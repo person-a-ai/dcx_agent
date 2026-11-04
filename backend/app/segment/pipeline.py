@@ -31,10 +31,13 @@ from app.context.stale import clear_stale
 from app.context.versions import version_dir
 from app.llm import registry
 from app.llm.base import validate
-from app.segment import ctfidf, dims, drafts, inputs, l1, l2, l3, params, quality, signals, stopwords
+from app.segment import ctfidf, dims, drafts, inputs, l1, l2, l3, params, quality, signals, stopwords, target
 from app.segment.store import SegmentStore
+from app.vectors.embedder import get_embedder
 
 STEPS = ('load', 'L1', 'L2', 'L3', 'quality', 'dims', 'drafts')
+# Target-persona mode anchors documents to stage-0 persona cards instead of k-means.
+TARGET_STEPS = ('load', 'anchor', 'calibrate', 'assign', 'L2', 'L3', 'needs', 'discover', 'quality', 'dims', 'drafts')
 
 
 LLM_REASON = 'LLM이 연결되지 않았거나 한도를 넘었습니다. 연결을 확인한 뒤 이어서 진행하세요.'
@@ -135,7 +138,7 @@ class _Calls:
             result = validate(task, cached['raw'])
             return result
         with self.lock:
-            self.counts[name] += 1
+            self.counts[name] = self.counts.get(name, 0) + 1
             _write(self.path, self.counts)
         try:
             result = registry.run_task(task)
@@ -221,6 +224,10 @@ def _l1_summary(source, state, sid, version):
     grouped = defaultdict(list)
     for doc_id, label in zip(source.ids, state['labels']):
         grouped[f'CL{label}'].append(doc_id)
+    return _summary(source, state, sid, version, grouped)
+
+
+def _summary(source, state, sid, version, grouped):
     session = sessions.read_json(version_dir(sid, version) / 'session.json')
     state['bk'] = session.get('projectContext', {}).get('bk', '')
     keywords = ctfidf.ctfidf({key: [source.nouns[i] for i in ids] for key, ids in grouped.items()},
@@ -248,12 +255,15 @@ def _preview_personas(root, sid, version, state, draft, source):
     session = sessions.read_json(version_dir(sid, version) / 'session.json')
     context = session.get('projectContext', {})
 
+    extra = _target_evidence(state, context)
+
     def persona_draft(persona):
         # Same task and evidence as the drafts step, so its result can be reused there.
         return draft(sid, 'persona_draft', drafts.PersonaDraftOut, context.get('oneLiner', ''),
                      {'targetScope': context.get('targetScope'),
                       'centrality': persona['centrality'][:params.CENTRALITY_TOP],
-                      'reps': persona['reps'][:params.REPS], 'cluster_name': names.get(persona['cluster_id'], '')})
+                      'reps': persona['reps'][:params.REPS], 'cluster_name': names.get(persona['cluster_id'], ''),
+                      **extra.get(persona['cluster_id'], {})})
     with ThreadPoolExecutor(max_workers=max(1, settings.segment_concurrency)) as pool:
         results = list(pool.map(persona_draft, state['personas']))
     state['persona_drafts'] = {}
@@ -264,6 +274,16 @@ def _preview_personas(root, sid, version, state, draft, source):
         row['draftFailed'] = result is None
     preview['personaDrafting'] = 'done'
     _write(root / 'preview.json', preview)
+
+
+def _target_evidence(state, context):
+    """Per target cluster: the persona card plus the full stage-0 research context."""
+    personas = (state.get('target') or {}).get('personas') or []
+    if not personas:
+        return {}
+    shared = {'researchQuestion': (context.get('researchQuestion') or {}).get('text', ''),
+              'knownInsights': context.get('knownInsights') or []}
+    return {p['id']: {**shared, 'targetPersona': target.card_text(p)} for p in personas}
 
 
 def _backfill_preview(root, sid, version, state, source, draft):
@@ -330,8 +350,10 @@ def run(context):
     with sessions.locked(sid):
         sessions.assert_writable(sid, version)
     checkpoint = sessions.read_json(root / 'checkpoint.json') or {}
+    mode = context.args.get('mode') or checkpoint.get('mode') or 'clusters'
     resume = bool(checkpoint and context.args.get('k') is None
-                  and not context.args.get('fresh', False))
+                  and not context.args.get('fresh', False)
+                  and checkpoint.get('mode', 'clusters') == mode)
     run_id = str(uuid.uuid4())
     store = SegmentStore.open(sid, version)
     if not resume:
@@ -346,7 +368,7 @@ def run(context):
         store.write_support([])
         with store._db(write=True) as db:
             db.execute('DELETE FROM meta')
-        checkpoint = {'done': [], 'k': context.args.get('k'),
+        checkpoint = {'done': [], 'k': context.args.get('k'), 'mode': mode,
                       'structureSources': context.args.get('structureSources') or None,
                       'stopwords': stopwords.stopwords_signature()}
     if resume and 'drafts' in checkpoint.get('done', []):
@@ -354,6 +376,7 @@ def run(context):
             row = db.execute("SELECT value FROM meta WHERE key='draft_flags'").fetchone()
         if row and any('draft_failed' in flags for flags in json.loads(row[0]).values()):
             checkpoint['done'].remove('drafts')
+    steps = TARGET_STEPS if mode == 'target' else STEPS
     store.set_run(run_id)
     checkpoint['run'] = run_id
     _write(root / 'checkpoint.json', checkpoint)
@@ -388,7 +411,7 @@ def run(context):
         detail = dict(active_detail)
         if completed is not None:
             detail['completed'] = completed
-        progress = len(checkpoint['done']) / len(STEPS)
+        progress = len(checkpoint['done']) / len(steps)
         context.heartbeat(progress, detail)
         _session(sid, version, dict(step=step, progress=progress, detail=detail))
         if context.should_stop():
@@ -396,7 +419,7 @@ def run(context):
 
     calls = _Calls(root, pulse)
     try:
-        for step in STEPS:
+        for step in steps:
             pulse()
             if step == 'load':
                 if step not in checkpoint['done']:
@@ -459,8 +482,13 @@ def run(context):
             elif step == 'L2':
                 state['clusters'], state['personas'], state['docs'], state['l2'] = [], [], [], {}
                 grouped = defaultdict(list)
-                for doc_id, label in zip(source.ids, state['labels']):
-                    grouped[f'CL{label}'].append(doc_id)
+                if mode == 'target':
+                    for doc_id, label in zip(source.ids, state['target']['assign']):
+                        if label >= 0:
+                            grouped[state['target']['personas'][label]['id']].append(doc_id)
+                else:
+                    for doc_id, label in zip(source.ids, state['labels']):
+                        grouped[f'CL{label}'].append(doc_id)
                 if 'l1_summary' not in state:
                     state['l1_summary'] = _l1_summary(source, state, sid, version)
                 summary = {row['id']: row for row in state['l1_summary']}
@@ -493,8 +521,9 @@ def run(context):
                     if pid in state['l3']:
                         continue
                     ids = grouped[pid]
+                    sampled = {'fit_sample': params.L3_FIT_SAMPLE} if mode == 'target' else {}
                     result = l3.contexts(ids, source.tokens, vectors,
-                        sentiment_by_id={i: sig[i]['sentiment'] for i in ids}, bk=state['bk'])
+                        sentiment_by_id={i: sig[i]['sentiment'] for i in ids}, bk=state['bk'], **sampled)
                     state['l3'][pid] = dict(scan=result.scan, topic_ids=result.topic_ids)
                     if 'granularity_exceeded' in result.flags:
                         persona['flags'] = list(dict.fromkeys(persona['flags'] + ['granularity_exceeded']))
@@ -510,9 +539,39 @@ def run(context):
                             **{k: doc.get(k) for k in ('source', 'author_hash', 'date')})
                     _write(root / 'state.json', state)
                 store.write_layers(clusters=state['clusters'], personas=state['personas'], contexts=state['contexts'], docs=state['docs'])
+            elif step == 'anchor':
+                session = sessions.read_json(version_dir(sid, version) / 'session.json')
+                personas = target.cards(session.get('projectContext', {}))
+                if not personas:
+                    raise sessions.StoreError('0단계 페르소나 카드를 1개 이상 채운 뒤 실행하세요.', 409)
+                scores = target.score(source.vectors, personas, get_embedder().embed)
+                np.save(root / 'target_scores.npy', scores, allow_pickle=False)
+                state['target'] = {'personas': personas}
+            elif step == 'calibrate':
+                scores = np.load(root / 'target_scores.npy', allow_pickle=False)
+                state['target']['calibration'] = target.calibrate(
+                    sid, scores, source.ids, source.docs, state['target']['personas'], calls.run_task)
+            elif step == 'assign':
+                _target_assign(root, sid, version, run_id, source, state)
+            elif step == 'needs':
+                members = _groups(state['docs'], 'cluster_id')
+                state['target']['needs'] = {}
+                for persona in state['target']['personas']:
+                    pulse()
+                    ids = members.get(persona['id'], [])
+                    state['target']['needs'][persona['id']] = (
+                        target.needs(sid, persona, ids, source.docs, calls.run_task) if ids else None)
+            elif step == 'discover':
+                other = [i for i, label in zip(source.ids, state['target']['assign']) if label < 0]
+                vectors = source.vectors[[source.index[i] for i in other]] if other else source.vectors[:0]
+                state['target']['discovered'] = target.discover(
+                    sid, other, vectors, source.nouns, source.docs, state['bk'], calls.run_task, pulse=pulse)
             elif step == 'quality':
                 _assign_support(source, store)
-                _quality(source, state, store, pulse)
+                if mode == 'target':
+                    _target_quality(source, state, store, pulse)
+                else:
+                    _quality(source, state, store, pulse)
             elif step == 'dims':
                 extract = _bind(dims.extract_sample, _extract=_bind(dims._extract, registry=calls))
                 state['dims'] = extract(sid, version, store)
@@ -523,11 +582,12 @@ def run(context):
                 result = generate(sid, _DraftStore(store, pulse), session.get('projectContext', {}), context_reps=reps,
                     cluster_drafts={row['id']: {'name': row.get('name', '')}
                                     for row in state.get('l1_summary', [])},
-                    persona_drafts=state.get('persona_drafts', {}))
+                    persona_drafts=state.get('persona_drafts', {}),
+                    persona_extra=_target_evidence(state, session.get('projectContext', {})))
                 for persona in store.personas():
                     persona['flags'] = list(dict.fromkeys([flag for flag in (persona['flags'] or []) if flag != 'draft_failed'] + result['flags'].get(persona['persona_id'], [])))
                     _save_row(store, 'personas', 'persona_id', persona)
-            if step in ('dims', 'drafts') and calls.results and all(
+            if step in ('calibrate', 'needs', 'discover', 'dims', 'drafts') and calls.results and all(
                     kind in ('backend', 'timeout') for kind in calls.results):
                 _session(sid, version, {'status': 'interrupted', 'reason': LLM_REASON})
                 raise _LLMUnavailable()
@@ -537,6 +597,8 @@ def run(context):
             pulse(completed=step)
         result = _report(state, store, calls.counts, run_id, all_params)
         _write(root / 'stage_6.json', result)
+        if mode == 'target':
+            _write(root / 'target.json', _target_report(state, source))
         _session(sid, version, dict(status='review', step='drafts', progress=1,
             k={'L1': state['L1']['k'], 'suggested': state['L1']['suggested']},
             confirm=_confirm_counts(store), savedAt=result['at']))
@@ -592,6 +654,89 @@ def _quality(source, state, store, pulse):
         row['quality'] = dict(cohesion=quality.cohesion(source.vectors[[source.index[i] for i in ids]], row['centroid']),
             npmi=quality.npmi(row['keywords'], (source.tokens[i] for i in by_persona[row['persona_id']])))
         _save_row(store, 'contexts', 'context_id', row)
+
+
+def _target_assign(root, sid, version, run_id, source, state):
+    """Assign documents to persona cards; near-duplicate (viral) and ad posts become 'other'."""
+    scores = np.load(root / 'target_scores.npy', allow_pickle=False)
+    personas, calibration = state['target']['personas'], state['target']['calibration']
+    best, top = scores.argmax(1), scores.max(1)
+    excluded = np.zeros(len(source.ids), dtype=bool)
+    pools, viral, ads = {}, {}, {}
+    for j, persona in enumerate(personas):
+        threshold = calibration[persona['id']]['threshold']
+        rows = np.flatnonzero((best == j) & (top >= threshold)) if threshold is not None else np.empty(0, dtype=int)
+        duplicate = target.near_duplicates(source.vectors[rows]) if len(rows) else np.zeros(0, dtype=bool)
+        ad = np.array([target.is_ad(source.docs[source.ids[r]]) for r in rows], dtype=bool)
+        excluded[rows[duplicate | ad]] = True
+        pools[persona['id']], viral[persona['id']] = int(len(rows)), int(duplicate.sum())
+        ads[persona['id']] = int((ad & ~duplicate).sum())
+    assigned = target.assign(scores, calibration, personas, excluded)
+    if not (assigned >= 0).any():
+        raise sessions.StoreError('목표 페르소나 카드에 맞는 문서가 없습니다. 카드 내용을 구체적으로 고친 뒤 다시 실행하세요.', 409)
+    # Closest-to-card documents first, for the report's quotes.
+    top_ids = {}
+    for j, persona in enumerate(personas):
+        rows = np.flatnonzero(assigned == j)
+        rows = rows[np.argsort(-scores[rows, j], kind='stable')][:300]
+        top_ids[persona['id']] = [source.ids[r] for r in rows]
+    state['target'].update(assign=assigned.tolist(), pool=pools, viral=viral, ads=ads, top=top_ids)
+    grouped = defaultdict(list)
+    for doc_id, label in zip(source.ids, assigned):
+        if label >= 0:
+            grouped[personas[label]['id']].append(doc_id)
+    state['L1'] = dict(k=len(grouped), suggested=None, mode='target', silhouette={}, inertia={}, sample=0)
+    names = {p['id']: p['name'] for p in personas}
+    state['l1_summary'] = [dict(row, name=names[row['id']]) for row in _summary(source, state, sid, version, grouped)]
+    _write(root / 'preview.json', dict(run=run_id, mode='target', k=len(grouped), suggested=None, silhouette={},
+                                       sample=0, clusters=state['l1_summary'], naming='done',
+                                       other=int((assigned < 0).sum())))
+
+
+def _target_quality(source, state, store, pulse):
+    """Target mode has no k-means labels: cohesion, channels and Context npmi only."""
+    by_cluster = _groups(state['docs'], 'cluster_id')
+    by_persona = _groups(state['docs'], 'persona_id')
+    by_context = _groups(state['docs'], 'context_id')
+    for cluster in state['clusters']:
+        pulse()
+        ids = by_cluster[cluster['cluster_id']]
+        cluster['quality'] = dict(cohesion=quality.cohesion(source.vectors[[source.index[i] for i in ids]]))
+        cluster['quality']['flags'] = quality.flags(cohesion=cluster['quality']['cohesion'])
+        distribution = quality.channel_distribution(source.docs[i] for i in ids)
+        cluster['channels'] = distribution['channels']
+        cluster['metrics'] = dict(docs=len(ids), channel_skew=distribution['channel_skew'])
+        _save_row(store, 'clusters', 'cluster_id', cluster)
+    for persona in state['personas']:
+        members = by_persona[persona['persona_id']]
+        persona['quality'] = dict(cohesion=quality.cohesion(source.vectors[[source.index[i] for i in members]]))
+        _save_row(store, 'personas', 'persona_id', persona)
+    for row in state['contexts']:
+        ids = by_context[row['context_id']]
+        row['quality'] = dict(cohesion=quality.cohesion(source.vectors[[source.index[i] for i in ids]], row['centroid']),
+            npmi=quality.npmi(row['keywords'], (source.tokens[i] for i in by_persona[row['persona_id']])))
+        _save_row(store, 'contexts', 'context_id', row)
+
+
+def _target_report(state, source):
+    """Everything the target-persona report tab shows; source quotes are capped at 300 characters."""
+    data = state['target']
+    assigned = np.asarray(data['assign'])
+    members = _groups(state['docs'], 'cluster_id')
+    personas = []
+    for persona in data['personas']:
+        pid = persona['id']
+        ids = members.get(pid, [])
+        calibration = data['calibration'][pid]
+        needs = data.get('needs', {}).get(pid)
+        estimate = round(len(ids) * needs['share']) if needs and needs.get('share') is not None else None
+        personas.append(dict(id=pid, name=persona['name'], card=persona['card'], threshold=calibration['threshold'],
+            bands=calibration['bands'], pool=data['pool'].get(pid, 0), viral=data['viral'].get(pid, 0),
+            ads=data['ads'].get(pid, 0), docs=len(ids), firstPerson=estimate, needs=needs,
+            quotes=target.quotes(data.get('top', {}).get(pid, []), source.docs),
+            flags=['no_match'] if calibration['threshold'] is None else []))
+    return dict(total=len(assigned), assigned=int((assigned >= 0).sum()), other=int((assigned < 0).sum()),
+                personas=personas, discovered=data.get('discovered', []), at=sessions.now())
 
 
 def _report(state, store, counts, run_id, all_params):
