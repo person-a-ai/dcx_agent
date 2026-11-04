@@ -51,6 +51,8 @@ class Settings(BaseSettings):
     voyage_api_key: str = "x"
     # Keys from other Voyage accounts; each account has its own rate limit.
     voyage_extra_api_keys: Annotated[list[str], NoDecode] = Field(default_factory=list)
+    # In-flight prep requests per key; 4 x ~140k tokens/request stays under 8M TPM.
+    voyage_requests_per_key: int = 4
 
     embed_backend: Literal["voyage", "fake"] = "voyage"
     embed_model: str = "voyage-4"

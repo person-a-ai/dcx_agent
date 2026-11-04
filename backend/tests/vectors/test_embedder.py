@@ -78,7 +78,9 @@ def test_voyage_rotates_extra_keys(monkeypatch):
     client.embed.side_effect = lambda texts, **kwargs: SimpleNamespace(embeddings=[[1.] * 1024 for _ in texts])
     monkeypatch.setattr(voyage.voyageai, 'Client', Mock(side_effect=lambda **kwargs: used.append(kwargs) or client))
     embedder = VoyageEmbedder()
-    assert embedder.concurrency == 3 * VoyageEmbedder.REQUESTS_PER_KEY
+    assert embedder.concurrency == 3 * settings.voyage_requests_per_key
+    monkeypatch.setattr(settings, 'voyage_requests_per_key', 0)
+    assert VoyageEmbedder().concurrency == 3
     for _ in range(4):
         embedder.embed(['text'])
     assert [kwargs['api_key'] for kwargs in used] == ['key-1', 'key-2', 'key-3', 'key-1']
