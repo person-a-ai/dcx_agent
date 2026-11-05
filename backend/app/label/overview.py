@@ -1,4 +1,5 @@
 """Version-local labeling overview, source indexing, and progress aggregation."""
+from contextlib import closing
 from datetime import datetime
 from functools import lru_cache
 import sqlite3
@@ -78,7 +79,12 @@ def index_documents(sid, data, labels):
 
 
 class _IndexedDocuments:
-    """Sized, streaming view of the documents table: never holds the corpus in memory."""
+    """Sized, streaming view of the documents table: never holds the corpus in memory.
+
+    Rows are read in rowid-ordered chunks on short-lived connections, so a long
+    estimate never keeps a read lock that would block label writes.
+    """
+    chunk = 5000
 
     def __init__(self, path):
         self.path = path
@@ -88,16 +94,24 @@ class _IndexedDocuments:
             return db.execute('SELECT count(*) FROM documents').fetchone()[0]
 
     def __iter__(self):
-        with sqlite3.connect(self.path) as db:
-            for (payload,) in db.execute('SELECT payload FROM documents'):
+        last = 0
+        while True:
+            with closing(sqlite3.connect(self.path)) as db:
+                rows = db.execute('SELECT rowid, payload FROM documents WHERE rowid > ? ORDER BY rowid LIMIT ?',
+                                  (last, self.chunk)).fetchall()
+            if not rows:
+                return
+            last = rows[-1][0]
+            for _, payload in rows:
                 yield json.loads(payload)
 
 
 @lru_cache(maxsize=128)
 def _estimate(path, labeler, counts, context, stamp):
-    # Nothing left to judge (e.g. imported labels): skip reading a corpus that can
-    # be hundreds of thousands of documents.
-    if not counts[0]:
+    # Judging finished with nothing left (e.g. imported labels): skip reading a corpus
+    # that can be hundreds of thousands of documents. Before judging starts every
+    # count is zero and the full-corpus estimate is still shown.
+    if sum(counts) and not counts[0]:
         return dict(seconds=0, jevTokens=0)
     result = judge.estimate(_IndexedDocuments(path), context, labeler)
     total = sum(counts)
