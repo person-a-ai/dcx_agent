@@ -550,7 +550,8 @@ def run(context):
             elif step == 'calibrate':
                 scores = np.load(root / 'target_scores.npy', allow_pickle=False)
                 state['target']['calibration'] = target.calibrate(
-                    sid, scores, source.ids, source.docs, state['target']['personas'], calls.run_task)
+                    sid, scores, source.ids, source.docs, state['target']['personas'], calls.run_task,
+                    fetch=lambda wanted: inputs.full_texts(sid, version, wanted, params.TARGET_JUDGE_CHARS))
             elif step == 'assign':
                 _target_assign(root, sid, version, run_id, source, state)
             elif step == 'needs':

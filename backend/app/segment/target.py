@@ -142,12 +142,14 @@ def _map(fn, items):
         return list(pool.map(fn, items))
 
 
-def calibrate(sid, scores, ids, docs, personas, run_task, rng=None):
+def calibrate(sid, scores, ids, docs, personas, run_task, rng=None, fetch=None):
     """Per-persona threshold from LLM-judged samples in fixed score bands.
 
     The threshold is the lowest band from which every higher judged band keeps
     mean precision (yes=1, partial=.5) at or above TARGET_PASS; None when the
     top band already fails. Returns {persona_id: {threshold, bands}}.
+    `fetch(doc_ids) -> {doc_id: text}` supplies longer originals for the sampled
+    documents; anything it misses falls back to the stored preview.
     """
     rng = rng or random.Random(params.SEED)
     best, top = scores.argmax(1), scores.max(1)
@@ -158,12 +160,13 @@ def calibrate(sid, scores, ids, docs, personas, run_task, rng=None):
             rows = np.flatnonzero((best == j) & (top >= edges[b]) & (top < edges[b + 1])).tolist()
             for row in rng.sample(rows, min(params.TARGET_PER_BAND, len(rows))):
                 jobs.append((j, b, row))
+    full = fetch({ids[row] for _, _, row in jobs}) if fetch else {}
 
     def judge(job):
         j, _, row = job
         out = _run(run_task, _task(sid, 'target_judge', '', [
             Attachment(title='페르소나', body=card_text(personas[j])),
-            Attachment(title='원문', body=doc_text(docs[ids[row]]))], JudgeOut, 200))
+            Attachment(title='원문', body=full.get(ids[row]) or doc_text(docs[ids[row]]))], JudgeOut, 200))
         return None if out is None else {'yes': 1., 'partial': .5, 'no': 0.}[out.match]
 
     values = _map(judge, jobs)

@@ -90,6 +90,35 @@ def test_calibrate_stops_at_a_failing_band_even_if_lower_bands_pass():
     assert result['T1']['threshold'] == .70
 
 
+def test_calibrate_judges_fetched_originals_over_short_previews():
+    top = np.array([.71] * 4, dtype=np.float32)
+    ids = [f'd{i}' for i in range(4)]
+    docs = {i: {'body': 'preview'} for i in ids}
+    seen, asked = [], []
+    def fetch(wanted):
+        asked.append(set(wanted))
+        return {i: 'long original ' * 50 for i in wanted if i != 'd3'}
+    def run_task(task):
+        seen.append(task.attachments[1].body)
+        return _Result(target.JudgeOut(match='yes'))
+    target.calibrate('sid', top[:, None], ids, docs, [persona()], run_task, fetch=fetch)
+    assert asked == [set(ids)]
+    assert sorted(seen) == ['long original ' * 50] * 3 + ['preview']
+
+
+def test_full_texts_reads_title_and_body_from_preparation(tmp_path, monkeypatch):
+    from app.segment import inputs
+    (tmp_path / 'docs').mkdir()
+    rows = [dict(doc_id='a', title='T', body='x' * 3000, comments=[{'text': 'c'}]),
+            dict(doc_id='b', title='', body='short'), dict(doc_id='c', title='skip', body='me')]
+    (tmp_path / 'docs' / 'part-0.jsonl').write_text('\n'.join(json.dumps(r) for r in rows), encoding='utf-8')
+    monkeypatch.setattr(inputs.store, 'read_json', lambda path: {})
+    monkeypatch.setattr(inputs, 'prepared_root', lambda sid, data: tmp_path)
+    got = inputs.full_texts('sid', 'v1', ['a', 'b'], 1500)
+    assert got == {'a': ('T\n' + 'x' * 3000)[:1500], 'b': 'short'}
+    assert inputs.full_texts('sid', 'v1', [], 1500) == {}
+
+
 def test_near_duplicates_flags_copy_paste_groups():
     rng = np.random.default_rng(0)
     base = rng.normal(size=8)

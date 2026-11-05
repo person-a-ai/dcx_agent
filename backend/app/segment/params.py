@@ -46,3 +46,4 @@ DISCOVER_QUOTES = 8
 TARGET_QUOTES = 10
 L3_FIT_SAMPLE = 4000
 TARGET_CONCURRENCY = 16
+TARGET_JUDGE_CHARS = 1500  # judge reads title+body from preparation, not the 300-char previews
