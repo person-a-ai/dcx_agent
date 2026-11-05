@@ -185,6 +185,8 @@ def calibrate(sid, scores, ids, docs, personas, run_task, rng=None, fetch=None):
                 if band['docs']:
                     break
                 continue
+            if band['judged'] < params.TARGET_MIN_JUDGED:
+                continue
             if band['precision'] < params.TARGET_PASS:
                 break
             threshold = band['start']

@@ -80,7 +80,7 @@ def test_calibrate_picks_lowest_band_with_passing_bands_above():
 
 
 def test_calibrate_stops_at_a_failing_band_even_if_lower_bands_pass():
-    top = np.array([.46] * 5 + [.52] * 5 + [.71] * 5, dtype=np.float32)
+    top = np.array([.46] * 10 + [.52] * 10 + [.71] * 10, dtype=np.float32)
     scores = top[:, None]
     ids = [str(i) for i in range(len(top))]
     docs = {i: {'body': str(s)} for i, s in zip(ids, top)}
@@ -88,6 +88,26 @@ def test_calibrate_stops_at_a_failing_band_even_if_lower_bands_pass():
         return _Result(target.JudgeOut(match='no' if task.attachments[1].body.startswith('0.52') else 'yes'))
     result = target.calibrate('sid', scores, ids, docs, [persona()], run_task)
     assert result['T1']['threshold'] == .70
+
+
+def test_calibrate_skips_thinly_judged_top_bands():
+    top = np.array([.66] * 20 + [.72] * 20 + [.85] * 3, dtype=np.float32)
+    ids = [str(i) for i in range(len(top))]
+    docs = {i: {'body': f'{s:.2f}'} for i, s in zip(ids, top)}
+    def run_task(task):
+        return _Result(target.JudgeOut(match='no' if task.attachments[1].body in ('0.66', '0.85') else 'yes'))
+    result = target.calibrate('sid', top[:, None], ids, docs, [persona()], run_task)
+    assert result['T1']['threshold'] == .70
+    assert [b['judged'] for b in result['T1']['bands'] if b['docs']] == [20, 20, 3]
+
+
+def test_calibrate_finds_a_narrow_core_above_seventy():
+    top = np.array([.71] * 20 + [.76] * 20 + [.82] * 20, dtype=np.float32)
+    ids = [str(i) for i in range(len(top))]
+    docs = {i: {'body': f'{s:.2f}'} for i, s in zip(ids, top)}
+    def run_task(task):
+        return _Result(target.JudgeOut(match='no' if task.attachments[1].body == '0.71' else 'yes'))
+    assert target.calibrate('sid', top[:, None], ids, docs, [persona()], run_task)['T1']['threshold'] == .75
 
 
 def test_calibrate_judges_fetched_originals_over_short_previews():
@@ -229,7 +249,8 @@ def test_target_mode_end_to_end(target_session):
     report = sessions.read_json(root / 'target.json')
     assert report['assigned'] == len(docs) and report['assigned'] + report['other'] == report['total']
     first = report['personas'][0]
-    assert first['threshold'] == .70 and first['docs'] > 0 and first['needs']['mine'] > 0
+    # The 0.70-0.75 band holds too few docs to judge on its own, so it neither passes nor stops.
+    assert first['threshold'] == .75 and first['docs'] > 0 and first['needs']['mine'] > 0
     assert first['needs']['tried'][0]['tried'] == '제품·기기'
     assert report['discovered'] and report['discovered'][0]['label']['name'] == '새 후보'
     assert 'segment.cluster_name' not in tasks

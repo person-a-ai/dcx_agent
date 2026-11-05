@@ -34,9 +34,10 @@ CODE_COS = 0.85
 DESIRE_SIMILAR = 0.85
 MIN_DOCS_WARN = 300
 # Target-persona mode (anchor to stage-0 persona cards).
-TARGET_BANDS = (0.45, 0.50, 0.55, 0.60, 0.65, 0.70)
+TARGET_BANDS = (0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80)
 TARGET_PER_BAND = 20
 TARGET_PASS = 0.5
+TARGET_MIN_JUDGED = 10  # a band judged on fewer docs neither passes nor stops the search
 VIRAL_COS = 0.92
 VIRAL_NEIGHBOURS = 3
 NEEDS_SAMPLE = 100
