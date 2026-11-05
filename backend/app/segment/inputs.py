@@ -213,6 +213,26 @@ class _SelectedVectors(VectorStore):
         return [r['doc_id'] for r in selected], values
 
 
+def full_texts(sid: str, version: str, ids, limit: int) -> dict[str, str]:
+    """Title + body of a few documents from preparation, cut at `limit` characters.
+
+    Stage-six inputs keep only 300-character previews; LLM judging needs more of
+    the original. Streams the shards and keeps only the requested IDs.
+    """
+    wanted = set(ids)
+    data = store.read_json(version_dir(sid, version) / 'session.json')
+    if not wanted or data is None:
+        return {}
+    found = {}
+    for path in sorted((prepared_root(sid, data) / 'docs').glob('*.jsonl')):
+        for row in _rows(path):
+            if row['doc_id'] in wanted:
+                found[row['doc_id']] = '\n'.join(filter(None, [row.get('title') or '', row.get('body') or '']))[:limit]
+        if len(found) == len(wanted):
+            break
+    return found
+
+
 def load_input(sid: str, version: str, *, pulse=None, structure_sources=None) -> SegmentInput:
     data = store.read_json(version_dir(sid, version) / 'session.json')
     if data is None:

@@ -122,3 +122,29 @@ export function missingDimensions(items: PersonaSeed[]): PersonaDimension[] {
   const dimensions: PersonaDimension[] = ["social", "taste", "movement", "bio"];
   return dimensions.filter(dimension => !items.some(item => item.dimension === dimension));
 }
+
+type PersonaCard = NonNullable<PersonaSeed["card"]>;
+export const emptyPersonaCard: PersonaCard = { desire: "", context: "", pain: "", unmet: "", keywords: [], quotes: [] };
+
+/** True when any card field is filled; only filled cards anchor stage 6 target mode. */
+export function cardFilled(card?: PersonaCard | null): boolean {
+  return !!card && [card.desire, card.context, card.pain, card.unmet].some(value => value.trim()) || !!card?.keywords.length || !!card?.quotes.length;
+}
+
+/** Comma-separated keywords (max 10) and one quote per line (max 5), blanks dropped. */
+export function parseCardList(text: string, kind: "keywords" | "quotes"): string[] {
+  const parts = kind === "keywords" ? text.split(/[,\n]/) : text.split("\n");
+  return parts.map(part => part.trim()).filter(Boolean).slice(0, kind === "keywords" ? 10 : 5);
+}
+
+export function updateSeedCard(items: PersonaSeed[], index: number, patch: Partial<PersonaCard>): PersonaSeed[] {
+  return items.map((item, i) => i === index ? { ...item, card: { ...emptyPersonaCard, ...item.card, ...patch } } : item);
+}
+
+/** Markdown lines matching the backend's project_context.md card rendering. */
+export function cardLines(card?: PersonaCard | null): string[] {
+  if (!cardFilled(card)) return [];
+  const fields: [string, string][] = [["Desire", card!.desire], ["Context", card!.context], ["Pain Point", card!.pain],
+    ["Unmet Needs", card!.unmet], ["키워드", card!.keywords.join(", ")], ["대표 원문", card!.quotes.join(" / ")]];
+  return fields.filter(([, value]) => value).map(([label, value]) => `  - ${label}: ${value}`);
+}

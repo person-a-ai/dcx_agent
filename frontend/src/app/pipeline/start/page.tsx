@@ -14,7 +14,8 @@ import { restoreSessionToStore } from "@/lib/sessionPersist";
 import { createContext, patchSession, putContext, suggestCategory } from "@/lib/api/context";
 import { contextLabels as labels } from "@/lib/contextLabels";
 import { INTERNAL_TOOLS } from "@/lib/internalTools";
-import { emptyStartForm as empty, mergeStartForm, nextStepOnStart, isPreTaskModeContext, validateStartForm, researchTemplates, choosePositionPreset, setPositionText, positioningOpen, addPersonaSeed, missingDimensions, toggleChoice } from "@/lib/logic/startForm";
+import { emptyStartForm as empty, mergeStartForm, nextStepOnStart, isPreTaskModeContext, validateStartForm, researchTemplates, choosePositionPreset, setPositionText, positioningOpen, addPersonaSeed, missingDimensions, toggleChoice, cardLines, updateSeedCard } from "@/lib/logic/startForm";
+import { PersonaCardEditor } from "@/components/start/PersonaCardEditor";
 import { isDirty } from "@/lib/logic/isDirty";
 import type { ProjectContext, SessionInfo } from "@/lib/types";
 
@@ -58,7 +59,7 @@ function preview(saved: ProjectContext) {
   lines.push(`- 수집 채널: ${items(context.channels.map(code => label(labels.channels, code)))}`, `- 제품 분류: ${[context.productCategory.l1, context.productCategory.l2, context.productCategory.l3].filter(Boolean).join(" > ")}`, `- 제품 분류 출처: ${labels.source[context.productCategory.source]}`, "");
   if (context.personaSeeds) {
     const seeds = context.personaSeeds;
-    lines.push("## 생각하는 페르소나 · 디멘션", "", ...seeds.items.map(seed => `- ${note(seed.text, seed.dimension ? labels.personaDimensions[seed.dimension] : "")}`));
+    lines.push("## 생각하는 페르소나 · 디멘션", "", ...seeds.items.flatMap(seed => [`- ${note(seed.text, seed.dimension ? labels.personaDimensions[seed.dimension] : "")}`, ...cardLines(seed.card)]));
     if (!seeds.items.length) lines.push("- 없음");
     else {
       const missing = missingDimensions(seeds.items);
@@ -279,6 +280,7 @@ function StartScreen() {
               <span className="ds-t-body break-words">{seed.text}</span>
               <ChoiceChips className="col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-start-1 [&_button]:min-h-9" label={`${seed.text} 디멘션`} options={dimensionOptions} value={seed.dimension || ""} onChange={value => update("personaSeeds", {...seeds, items: seeds.items.map((entry, i) => i === index ? {...entry, dimension: (toggleChoice(entry.dimension, value) || null) as typeof entry.dimension} : entry)})} />
               <Button className="col-start-2 row-start-1 md:col-start-3" size="sm" variant="quiet" onClick={() => { update("personaSeeds", {...seeds, items: seeds.items.filter((_, i) => i !== index)}); setPersonaNotice(""); }}>삭제하기</Button>
+              <PersonaCardEditor name={seed.text} card={seed.card} onChange={patch => update("personaSeeds", {...seeds, items: updateSeedCard(seeds.items, index, patch)})} />
             </div>)}
             {seeds.items.length > 0 && <p className="ds-t-caption" role="status">{missing.length ? `아직 안 적은 관점: ${missing.map(code => labels.personaDimensions[code]).join(" · ")}` : "네 관점이 모두 있습니다."}</p>}
             <Checkbox label="예시와 다른 페르소나를 우선 발굴" checked={seeds.exploreBeyond} onChange={event => update("personaSeeds", {...seeds, exploreBeyond: event.target.checked})} />

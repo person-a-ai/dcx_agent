@@ -121,7 +121,7 @@ export interface ProjectContext {
   constraints: string[];
   positioning: { price: string | null; market: string | null; priceText: string; marketText: string };
   personaSeeds?: {
-    items: { text: string; dimension: "social" | "taste" | "movement" | "bio" | null }[];
+    items: { text: string; dimension: "social" | "taste" | "movement" | "bio" | null; card?: SeedPersonaCard | null }[];
     exploreBeyond: boolean;
   } | null;
   channels: string[];
@@ -209,12 +209,16 @@ export type SegmentPreviewPersona = {
 };
 export type SegmentPreview = Pick<SegmentKSuggest, 'k' | 'suggested' | 'silhouette' | 'sample'> & {
   naming: 'pending' | 'done';
+  mode?: SegmentMode; other?: number;
   clusters: (Pick<SegmentCluster, 'id' | 'docs' | 'keywords' | 'reps'> & { edges?: SegmentRepresentative[]; name: string; nameFailed: boolean })[];
   personas?: SegmentPreviewPersona[];
   personaDrafting?: 'pending' | 'done';
 };
+/** Stage-0 target-persona card (distinct from the stage-7 PersonaCard). */
+export type SeedPersonaCard = { desire: string; context: string; pain: string; unmet: string; keywords: string[]; quotes: string[] };
+export type SegmentMode = 'clusters' | 'target';
 export type SegmentStatus = {
-  preview?: SegmentPreview;
+  preview?: SegmentPreview; mode?: SegmentMode;
     detail?: { step?: string; persona?: number; personas?: number; docs?: number; total?: number };
   run: string | null; status: WorkerState | 'review'; step: 'load' | 'L1' | 'L2' | 'L3' | 'quality' | 'dims' | 'drafts';
   progress: number; confirm: Record<SegmentLayer, string>; stage6?: Record<string, unknown>; reason?: string;
@@ -222,7 +226,23 @@ export type SegmentStatus = {
 export type SegmentClustersResponse = { run: string | null; clusters: SegmentCluster[]; kSuggest: SegmentKSuggest | null };
 export type SegmentPersonasResponse = { run: string | null; personas: SegmentPersona[] };
 export type SegmentContextsResponse = { run: string | null; contexts: SegmentContext[]; emptyGoalConstraintRatio: number };
-export type SegmentRunRequest = { k?: number; confirmReset?: boolean; structureSources?: ('naver_blog' | 'naver_cafe' | 'youtube')[] };
+export type SegmentRunRequest = { k?: number; confirmReset?: boolean; structureSources?: ('naver_blog' | 'naver_cafe' | 'youtube')[]; mode?: SegmentMode };
+export type TargetQuote = { docId: string; title: string; source: string; sentences: string[]; cause?: string; tried?: string; result?: string };
+export type TargetBand = { start: number; docs: number; judged: number; precision: number | null; yes: number };
+export type TargetNeeds = {
+  sampled: number; judged: number; mine: number; share: number | null;
+  causes: { label: string; count: number }[];
+  tried: { tried: string; total: number; '효과 있음': number; '일시적': number; '효과 없음': number }[];
+  examples: TargetQuote[];
+};
+export type TargetPersonaReport = {
+  id: string; name: string; card: SeedPersonaCard; threshold: number | null; bands: TargetBand[];
+  pool: number; viral: number; ads: number; docs: number; firstPerson: number | null;
+  needs: TargetNeeds | null; quotes: TargetQuote[]; flags: string[];
+};
+export type TargetCandidate = { id: string; docs: number; keywords: string[]; quotes: TargetQuote[];
+  label: { name: string; who: string; pain: string; consumer_voice: boolean } | null };
+export type SegmentTargetReport = { total: number; assigned: number; other: number; personas: TargetPersonaReport[]; discovered: TargetCandidate[]; at: string };
 export type SegmentSupportCounts = { cluster: Record<string, number>; persona: Record<string, number>; context: Record<string, number> };
 export type SegmentConfirmation = { run: string; name: string; confirm: true };
 export type SegmentPersonaConfirmation = SegmentConfirmation & { desire: string; goals: [string] | [string, string] | [string, string, string] };
