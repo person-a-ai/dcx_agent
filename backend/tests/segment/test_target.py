@@ -110,6 +110,38 @@ def test_calibrate_finds_a_narrow_core_above_seventy():
     assert target.calibrate('sid', top[:, None], ids, docs, [persona()], run_task)['T1']['threshold'] == .75
 
 
+def test_calibrate_judges_borderline_bands_again_on_more_documents():
+    # .70 band: 21 of 40 documents fit, so twenty samples land near .5 either way.
+    top = np.array([.71] * 40 + [.76] * 60, dtype=np.float32)
+    ids = [str(i) for i in range(len(top))]
+    docs = {i: {'body': 'yes' if int(i) < 21 or int(i) >= 40 else 'no'} for i in ids}
+    calls = []
+    def run_task(task):
+        calls.append(task.attachments[1].body)
+        return _Result(target.JudgeOut(match=task.attachments[1].body))
+    result = target.calibrate('sid', top[:, None], ids, docs, [persona()], run_task, random.Random(0))
+    bands = {b['start']: b for b in result['T1']['bands']}
+    assert bands[.70]['judged'] == 40 and bands[.70]['precision'] == .525
+    assert bands[.75]['judged'] == 20  # a clear pass is not judged again
+    assert result['T1']['threshold'] == .70
+    assert len(calls) == 60
+
+
+def test_calibrate_rechecks_a_lower_band_reached_only_after_a_recheck():
+    # .65 band fits 19 of 40 (fails on the full count); .70 band fits 22 of 40 (passes).
+    top = np.array([.66] * 40 + [.71] * 40 + [.81] * 20, dtype=np.float32)
+    ids = [str(i) for i in range(len(top))]
+    fits = set(range(19)) | set(range(40, 62)) | set(range(80, 100))
+    docs = {i: {'body': 'yes' if int(i) in fits else 'no'} for i in ids}
+    def run_task(task):
+        return _Result(target.JudgeOut(match=task.attachments[1].body))
+    result = target.calibrate('sid', top[:, None], ids, docs, [persona()], run_task, random.Random(3))
+    bands = {b['start']: b for b in result['T1']['bands']}
+    assert bands[.70]['judged'] == 40 and bands[.70]['precision'] == .55
+    assert bands[.65]['judged'] == 40 and bands[.65]['precision'] == .475
+    assert result['T1']['threshold'] == .70
+
+
 def test_calibrate_judges_fetched_originals_over_short_previews():
     top = np.array([.71] * 4, dtype=np.float32)
     ids = [f'd{i}' for i in range(4)]

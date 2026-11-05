@@ -147,51 +147,78 @@ def calibrate(sid, scores, ids, docs, personas, run_task, rng=None, fetch=None):
 
     The threshold is the lowest band from which every higher judged band keeps
     mean precision (yes=1, partial=.5) at or above TARGET_PASS; None when the
-    top band already fails. Returns {persona_id: {threshold, bands}}.
+    top band already fails. A band the search reaches whose precision lies within
+    TARGET_BORDER of TARGET_PASS is judged again on up to TARGET_RECHECK documents
+    before it decides anything, so twenty samples cannot flip the threshold alone.
+    Returns {persona_id: {threshold, bands}}.
     `fetch(doc_ids) -> {doc_id: text}` supplies longer originals for the sampled
     documents; anything it misses falls back to the stored preview.
     """
     rng = rng or random.Random(params.SEED)
     best, top = scores.argmax(1), scores.max(1)
     edges = list(params.TARGET_BANDS) + [1.01]
-    jobs = []
-    for j, persona in enumerate(personas):
-        for b in range(len(edges) - 1):
-            rows = np.flatnonzero((best == j) & (top >= edges[b]) & (top < edges[b + 1])).tolist()
-            for row in rng.sample(rows, min(params.TARGET_PER_BAND, len(rows))):
-                jobs.append((j, b, row))
-    full = fetch({ids[row] for _, _, row in jobs}) if fetch else {}
+    pools = {(j, b): np.flatnonzero((best == j) & (top >= edges[b]) & (top < edges[b + 1])).tolist()
+             for j in range(len(personas)) for b in range(len(edges) - 1)}
+    picked = {key: rng.sample(rows, min(params.TARGET_PER_BAND, len(rows))) for key, rows in pools.items()}
+    votes = {key: [] for key in pools}
 
     def judge(job):
-        j, _, row = job
+        j, _, row, text = job
         out = _run(run_task, _task(sid, 'target_judge', '', [
             Attachment(title='페르소나', body=card_text(personas[j])),
-            Attachment(title='원문', body=full.get(ids[row]) or doc_text(docs[ids[row]]))], JudgeOut, 200))
+            Attachment(title='원문', body=text or doc_text(docs[ids[row]]))], JudgeOut, 200))
         return None if out is None else {'yes': 1., 'partial': .5, 'no': 0.}[out.match]
 
-    values = _map(judge, jobs)
+    pending = [(j, b, row) for (j, b), rows in picked.items() for row in rows]
+    while pending:
+        full = fetch({ids[row] for _, _, row in pending}) if fetch else {}
+        for (j, b, _), value in zip(pending, _map(judge, [(j, b, row, full.get(ids[row])) for j, b, row in pending])):
+            if value is not None:
+                votes[(j, b)].append(value)
+        pending = []
+        for j in range(len(personas)):
+            for b in _threshold(_bands(j, edges, pools, votes))[1]:
+                key = (j, b)
+                if len(picked[key]) >= min(params.TARGET_RECHECK, len(pools[key])):
+                    continue
+                rest = sorted(set(pools[key]) - set(picked[key]))
+                extra = rng.sample(rest, min(params.TARGET_RECHECK - len(picked[key]), len(rest)))
+                picked[key] += extra
+                pending += [(j, b, row) for row in extra]
     result = {}
     for j, persona in enumerate(personas):
-        bands = []
-        for b in range(len(edges) - 1):
-            got = [v for (jj, bb, _), v in zip(jobs, values) if jj == j and bb == b and v is not None]
-            size = int(((best == j) & (top >= edges[b]) & (top < edges[b + 1])).sum())
-            bands.append(dict(start=edges[b], docs=size, judged=len(got),
-                              precision=round(sum(got) / len(got), 3) if got else None,
-                              yes=sum(1 for v in got if v == 1.)))
-        threshold = None
-        for band in reversed(bands):
-            if band['precision'] is None:
-                if band['docs']:
-                    break
-                continue
-            if band['judged'] < params.TARGET_MIN_JUDGED:
-                continue
-            if band['precision'] < params.TARGET_PASS:
-                break
-            threshold = band['start']
-        result[persona['id']] = dict(threshold=threshold, bands=bands)
+        bands = _bands(j, edges, pools, votes)
+        result[persona['id']] = dict(threshold=_threshold(bands)[0], bands=bands)
     return result
+
+
+def _bands(j, edges, pools, votes):
+    bands = []
+    for b in range(len(edges) - 1):
+        got = votes[(j, b)]
+        bands.append(dict(start=edges[b], docs=len(pools[(j, b)]), judged=len(got),
+                          precision=round(sum(got) / len(got), 3) if got else None,
+                          yes=sum(1 for v in got if v == 1.)))
+    return bands
+
+
+def _threshold(bands):
+    """(threshold, indices of borderline bands the search reached) from the top band down."""
+    threshold, border = None, []
+    for b in reversed(range(len(bands))):
+        band = bands[b]
+        if band['precision'] is None:
+            if band['docs']:
+                break
+            continue
+        if band['judged'] < params.TARGET_MIN_JUDGED:
+            continue
+        if params.TARGET_PASS - params.TARGET_BORDER <= band['precision'] < params.TARGET_PASS + params.TARGET_BORDER:
+            border.append(b)
+        if band['precision'] < params.TARGET_PASS:
+            break
+        threshold = band['start']
+    return threshold, border
 
 
 def near_duplicates(vectors, cos=params.VIRAL_COS, neighbours=params.VIRAL_NEIGHBOURS, chunk=1000):
