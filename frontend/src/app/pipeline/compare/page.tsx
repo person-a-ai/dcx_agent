@@ -20,7 +20,7 @@ function isFileDiff(data: unknown): data is FileDiff {
     && 'before' in data && typeof data.before === 'object' && data.before !== null
     && 'after' in data && typeof data.after === 'object' && data.after !== null;
 }
-const tabs = ['0단계 입력 보기','1단계 키워드 보기','2단계 수집 보기','3단계 이후 보기'];
+const tabs = ['1단계 입력 보기','2단계 키워드 보기','3단계 수집 보기','4단계 이후 보기'];
 const fieldNames: Record<string,string> = {taskMode:'과제 유형',personaSeeds:'생각하는 페르소나',bk:'제품명',oneLiner:'한줄 정의',researchQuestion:'리서치 질문',projectType:'프로젝트 성격',analysisGoal:'분석 목적',keyMetrics:'핵심 지표',constraints:'사내 제약',positioning:'브랜드 포지셔닝',channels:'수집 채널',knownInsights:'이미 아는 것',productCategory:'제품군',targetScope:'분석 대상',futureCustomer:'미래 고객'};
 export default function ComparePage() { return <Suspense fallback={<p role="status">처리 중…</p>}><CompareScreen /></Suspense>; }
 function CompareScreen() {

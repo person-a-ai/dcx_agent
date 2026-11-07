@@ -52,7 +52,7 @@ function CandidateSources({ sid, version, contextId }: { sid?: string; version?:
         <summary className="cursor-pointer"><Badge tone="warning">새 Context 후보 — 원문 3건</Badge></summary>
         {loading && <p role="status">원문을 불러오는 중…</p>}
         {error && <Banner tone="danger" actions={<Button onClick={() => void load()}>다시 불러오기</Button>}>{error}</Banner>}
-        {sources && <ul className="space-y-3">{sources.map((source, index) => <li key={`${source.id}:${index}`} className="whitespace-pre-wrap break-words">{source.text}</li>)}</ul>}
+        {sources && <ul className="space-y-3">{sources.map((source, index) => <li key={`${source.id}:${index}`} className="ds-read">{source.text}</li>)}</ul>}
         {sources?.length === 0 && <p>후보 원문이 없습니다.</p>}
     </details>;
 }

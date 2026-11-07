@@ -39,7 +39,7 @@ export default function SessionList({ onSelect }: {onSelect: (sid: string, sessi
       </div>
       <div className="flex gap-2">{session.legacy && <Badge>구버전</Badge>}<Badge tone={["interrupted", "paused_blocked", "blocked", "failed"].includes(session.activity?.status ?? "") ? "warning" : "neutral"}>{activityLabel(session.activity)}</Badge></div>
     </div>)}
-    <p className="ds-t-caption mt-3">주의가 필요한 세션이 위에 옵니다. 구버전 세션은 0~2단계를 편집할 수 없습니다.</p>
+    <p className="ds-t-caption mt-3">주의가 필요한 세션이 위에 옵니다. 구버전 세션은 1~3단계를 편집할 수 없습니다.</p>
   </Card>;
 }
 

@@ -1,4 +1,5 @@
 "use client";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import Image from "next/image";
 import { BookOpen, MessageCircle, PanelLeftClose, PanelLeftOpen, Plug, X } from "lucide-react";
@@ -13,7 +14,7 @@ import { VersionPicker } from "@/components/versions/VersionPicker";
 import { DirtyProvider } from "@/components/DirtyProvider";
 import { SidebarActivity } from "@/components/SessionList";
 import { SidebarAutoProvider, sidebarCollapsed } from "@/components/sidebarAuto";
-import StepBar, { STEP_NAMES, stepIndex } from "@/components/StepBar";
+import StepBar, { PIPELINE_PATHS, STEP_NAMES, stepIndex } from "@/components/StepBar";
 import { KnownInsightsDrawer } from "@/components/known/KnownInsightsDrawer";
 import { getKnownInsights } from "@/lib/api/known";
 import type { KnownInsight } from "@/lib/types";
@@ -54,6 +55,11 @@ function PipelineShell({ children }: { children: React.ReactNode }) {
   const connectedCount = integrations.entries?.filter(entry => entry.connected).length;
   const store = useSessionStore();
   const { sid, bk, kw, step } = store;
+  const pathname = usePathname();
+  // Distinct tab titles so several sessions open side by side can be told apart.
+  // Rendered as a React <title> so streamed route metadata cannot overwrite it after hydration.
+  const viewedStep = PIPELINE_PATHS.indexOf(pathname ?? "");
+  const tabTitle = [viewedStep >= 0 ? STEP_NAMES[viewedStep] : pathname === "/pipeline/compare" ? "버전 비교" : null, bk || null, "DCX"].filter(Boolean).join(" · ");
 
   const [restoring, setRestoring] = useState(true);
   const knownReadonly = view.readonly || view.loading || !!view.error;
@@ -93,6 +99,8 @@ function PipelineShell({ children }: { children: React.ReactNode }) {
     <SidebarAutoProvider onChange={setSideAutoCollapsed}>
     <InternalToolsProvider value={{ drawerOpen, setDrawerOpen }}>
       <div className="pipeline-shell" data-side={collapsed ? "collapsed" : "expanded"}>
+        <title>{tabTitle}</title>
+        <a className="skip-link" href="#pipeline-main">본문으로 건너뛰기</a>
         <aside id="pipeline-side" className="pipeline-side" aria-label="파이프라인">
           <div className="pipeline-side-header">
             <Image className="pipeline-logo" src="/person-a-logo.png" alt="Person A" width={104} height={32} priority />
@@ -108,10 +116,10 @@ function PipelineShell({ children }: { children: React.ReactNode }) {
           </div>
         </aside>
         <div className="pipeline-content">
-          <main className="pipeline-main">
+          <main id="pipeline-main" tabIndex={-1} className="pipeline-main">
             {restoring ? <div className="pipeline-loading" role="status">처리 중…</div> : <div className="pipeline-wrap"><VersionContent><VersionRouteBoundary>{children}</VersionRouteBoundary></VersionContent></div>}
           </main>
-          {!chatOpen && <Button variant="quiet" className="pipeline-chat-open ds-btn-icon" onClick={() => setChatOpen(true)} aria-label="챗봇 열기" title="챗봇 열기"><Icon icon={MessageCircle} /></Button>}
+          {!chatOpen && <Button variant="secondary" className="pipeline-chat-open" onClick={() => setChatOpen(true)} title="챗봇 열기"><Icon icon={MessageCircle} />챗봇</Button>}
         </div>
         {chatOpen && <aside className="pipeline-chat" aria-label="파이프라인 챗봇">
           <div className="pipeline-chat-header ds-t-label">

@@ -174,7 +174,7 @@ def load_input(sid: str, version: str, *, pulse=None, structure_sources=None) ->
     prepared = _selected(root, 'docs', selected)
     paths = sorted((root / 'tokens').glob('*.jsonl'))
     if not paths:
-        raise store.StoreError('형태소 토큰이 없습니다. 3단계 전처리를 다시 실행하세요.')
+        raise store.StoreError('형태소 토큰이 없습니다. 4단계 전처리를 다시 실행하세요.')
     tokens = _selected(root, 'tokens', selected, 'tokens')
     nouns = _nouns(root, selected, pulse)
     ids, joined, selected_tokens, selected_nouns = [], {}, {}, {}

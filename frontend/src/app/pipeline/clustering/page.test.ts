@@ -61,7 +61,7 @@ it('routes derived sessions to SegmentScreen and others to a gate banner without
  page=Page();expect(page.type).toBe(LaterStageBanner);expect(page.props).toEqual({gate:'legacy',stage:'클러스터링'});
 });
 it('shows one primary run action before results and disables evidence',()=>{state.poll={...status,status:'idle',run:null};const tree=render(()=>SegmentScreen({sid:'s'}));expect(nodes(tree).filter(n=>n.props?.variant==='primary')).toHaveLength(1);expect(textOf(tree)).toContain('클러스터링 실행');expect(nodes(tree).find(n=>n.props?.title==='6-C Context를 모두 확정한 뒤 근거 탐색을 실행하세요.')?.props.disabled).toBe(true);});
-it('shows live running steps without enabled run or rerun actions',()=>{state.poll={...status,status:'running',step:'L3',progress:.58};const tree=render(()=>SegmentScreen({sid:'s'}));expect(textOf(tree)).toContain('6단계 · 실행 중');expect(nodes(tree).some(n=>n.props?.['aria-live']==='polite')).toBe(true);expect(nodes(tree).filter(n=>['다시 나누기','클러스터링 실행'].includes(textOf(n))).every(n=>n.props.disabled)).toBe(true);});
+it('shows live running steps without enabled run or rerun actions',()=>{state.poll={...status,status:'running',step:'L3',progress:.58};const tree=render(()=>SegmentScreen({sid:'s'}));expect(textOf(tree)).toContain('7단계 · 실행 중');expect(nodes(tree).some(n=>n.props?.['aria-live']==='polite')).toBe(true);expect(nodes(tree).filter(n=>['다시 나누기','클러스터링 실행'].includes(textOf(n))).every(n=>n.props.disabled)).toBe(true);});
 it('locks Persona until every Cluster is confirmed and displays 4/5',()=>{const tree=LayerTabs({value:'6-A',onChange:vi.fn(),confirm:{...status.confirm,clusters:'4/5'}});expect(textOf(tree)).toContain('4/5 확정');expect(nodes(tree).filter(n=>n.type==='button')[1].props['aria-disabled']).toBe(true);});
 it('keeps blank Desire unconfirmable and explains similar desires',()=>{const tree=PersonaLayer({...base,personas:[persona],selected:'P1',onSelect:vi.fn(),edits:{P1:{name:'이름',desire:'',goals:['목적']}}} as any);expect(nodes(tree).find(n=>n.props?.variant==='primary')?.props.disabled).toBe(true);expect(textOf(tree)).toContain('클러스터가 달라 합치지 않고 기록만 남깁니다.');});
 it('shows Persona bulk confirmation, counter warning, and six Context warning',()=>{const tree=ContextLayer({...base,contexts:Array.from({length:6},(_,i)=>({...context,id:`C${i}`})),onBulk:vi.fn(),emptyRatio:.18} as any);expect(textOf(tree)).toContain('이 Persona의 Context 모두 확정');expect(textOf(tree)).toContain('반례 6개 포함');expect(textOf(tree)).toContain('Context가 6개입니다(권장 2~4)');});
@@ -89,7 +89,7 @@ it('asks before resetting k and sends confirmReset true',async()=>{
  expect(textOf(tree)).toContain('이름 · Desire · Context 확정이 모두 지워집니다.');expect(api.startSegment).not.toHaveBeenCalled();
  vi.mocked(api.startSegment).mockResolvedValue({runId:'r2'});
  await nodes(tree).find(n=>n.props?.children==='확인하고 다시 나누기').props.onClick();await tick();expect(api.startSegment).toHaveBeenCalledWith('s',{k:7,confirmReset:true},'v1');
- expect(textOf(screen())).toContain('6단계 · 실행 중');
+ expect(textOf(screen())).toContain('7단계 · 실행 중');
 });
 it('preserves typed input after save failure and offers refresh on stale_run',async()=>{
  let tree=await ready();nodes(tree).find(n=>n.type===ClusterLayer).props.onEdit('CL0',{name:'내 이름'});tree=screen();
@@ -208,7 +208,7 @@ it.each(['interrupted','failed'])('resumes %s without confirmReset and discards 
  vi.mocked(getVersionSession).mockResolvedValue({data:{drafts:{segment:{run:'r1',edits:{CL0:{name:'중단 전 수정'}}}}}} as any);
  let tree=await ready({...status,status:runStatus});vi.mocked(api.startSegment).mockResolvedValue({runId:'worker2'});
  const button=nodes(tree).find(n=>n.props?.children==='이어서 진행');expect(button).toBeDefined();button.props.onClick();await tick();tree=screen();
- expect(api.startSegment).toHaveBeenCalledWith('s',{},'v1');expect(textOf(tree)).toContain('6단계 · 실행 중');expect(state.pollOptions.enabled).toBe(true);
+ expect(api.startSegment).toHaveBeenCalledWith('s',{},'v1');expect(textOf(tree)).toContain('7단계 · 실행 중');expect(state.pollOptions.enabled).toBe(true);
  state.poll={...status,run:'r2'};vi.mocked(api.getSegmentClusters).mockResolvedValue({run:'r2',clusters:[row],kSuggest:null} as any);
  screen();screen();await tick();tree=screen();expect(nodes(tree).find(n=>n.type===ClusterLayer).props.edits).toEqual({});
 });
@@ -217,7 +217,7 @@ it.each(['running','paused'])('handles a running conflict by observing the exist
  vi.mocked(api.startSegment).mockRejectedValueOnce(new Error('클러스터링이 이미 진행 중입니다.'));
  vi.mocked(api.getSegmentStatus).mockResolvedValue({...status,status:runStatus,run:'r2'} as any);
  nodes(tree).find(n=>n.props?.children==='이어서 진행').props.onClick();await tick();tree=screen();
- expect(textOf(tree)).toContain('클러스터링이 이미 진행 중입니다.');expect(textOf(tree)).toContain('6단계 · 실행 중');expect(state.pollOptions.enabled).toBe(true);
+ expect(textOf(tree)).toContain('클러스터링이 이미 진행 중입니다.');expect(textOf(tree)).toContain('7단계 · 실행 중');expect(state.pollOptions.enabled).toBe(true);
 });
 
 it('initializes k again only after the run generation changes',async()=>{
@@ -267,13 +267,13 @@ it('announces numbered Persona progress',async()=>{
  expect(textOf(nodes(tree).find(n=>n.props?.['aria-live']==='polite'))).toContain('L3 · Context 3/12 Persona');
 });
 it('renders the target declaration hint on the Persona',()=>{
- const tree=PersonaLayer({...base,personas:[{...persona,hint:'초안 힌트: 0단계 대상 선언 · 가정 사용자'}],selected:'P1',onSelect:vi.fn()} as any);
- expect(textOf(tree)).toContain('초안 힌트: 0단계 대상 선언 · 가정 사용자');
+ const tree=PersonaLayer({...base,personas:[{...persona,hint:'초안 힌트: 1단계 대상 선언 · 가정 사용자'}],selected:'P1',onSelect:vi.fn()} as any);
+ expect(textOf(tree)).toContain('초안 힌트: 1단계 대상 선언 · 가정 사용자');
  expect(textOf(tree).match(/초안 힌트:/g)).toHaveLength(1);
 });
 it('shows the Korean failure reason and load document counts',async()=>{
- let tree=await ready({...status,status:'failed',reason:'형태소 토큰이 없습니다. 3단계 전처리를 다시 실행하세요.'});
- expect(textOf(tree)).toContain('형태소 토큰이 없습니다. 3단계 전처리를 다시 실행하세요.');
+ let tree=await ready({...status,status:'failed',reason:'형태소 토큰이 없습니다. 4단계 전처리를 다시 실행하세요.'});
+ expect(textOf(tree)).toContain('형태소 토큰이 없습니다. 4단계 전처리를 다시 실행하세요.');
  state.poll={...status,status:'running',step:'load',detail:{step:'load',docs:20,total:100}};
  screen();tree=screen();
  expect(textOf(nodes(tree).find(n=>n.props?.['aria-live']==='polite'))).toContain('20/100 문서');

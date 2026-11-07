@@ -57,15 +57,15 @@ function LabelingScreen({sid}: {sid: string}) {
   }, [sid, version, revision]);
   // Start overview independently; seen records visits without changing displayed server counts.
   useLabelSeen(sid, version, readonly, setSeenError);
-  return <main className="space-y-6">
-    <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="ds-eyebrow">4단계 · 라벨링</p><h1 className="ds-t-screen">엇갈린 문서를 한 건씩 정합니다</h1><p>채택 라벨은 감사로 확인하고, 제출한 판정은 바로 저장합니다.</p></div><div className="flex flex-wrap items-center gap-3">{overview && !('legacy' in overview) && overview.started && <Badge>{overview.mode === 'llm' ? 'LLM 라벨' : '분류 모델'} · 방식 잠금</Badge>}<RestartVersion stage="stage4" label="4단계부터 다시" disabled={readonly}/></div></header>
-    {irrelevant > 0 && <Banner tone="info">7단계에서 무관 판정 {irrelevant}건 — 4단계 재점검 참고</Banner>}
-    {seenError && <p role="alert">방문 시각을 기록하지 못했습니다. {seenError}</p>}
-    {error && <div role="alert"><p>{error}</p><Button onClick={refresh}>다시 불러오기</Button></div>}
-    {!overview ? <p role="status">라벨링 현황을 불러오는 중…</p> : 'legacy' in overview ? <p>{overview.message}</p> : <Tabs label="라벨링" value={tab} onChange={setTab} items={[
+  return <div className="space-y-6">
+    <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="ds-eyebrow">5단계 · 라벨링</p><h1 className="ds-t-screen">엇갈린 문서를 한 건씩 정합니다</h1><p>채택 라벨은 감사로 확인하고, 제출한 판정은 바로 저장합니다.</p></div><div className="flex flex-wrap items-center gap-3">{overview && !('legacy' in overview) && overview.started && <Badge>{overview.mode === 'llm' ? 'LLM 라벨' : '분류 모델'} · 방식 잠금</Badge>}<RestartVersion stage="stage4" label="5단계부터 다시" disabled={readonly}/></div></header>
+    {irrelevant > 0 && <Banner tone="info">8단계에서 무관 판정 {irrelevant}건 — 5단계 재점검 참고</Banner>}
+    {seenError && !(overview && 'legacy' in overview) && <p className="ds-t-caption">방문 기록을 저장하지 못했습니다. 라벨링은 그대로 진행할 수 있습니다.</p>}
+    {error && <Banner tone="danger" actions={<Button onClick={refresh}>다시 불러오기</Button>}>{error}</Banner>}
+    {!overview ? <p role="status">라벨링 현황을 불러오는 중…</p> : 'legacy' in overview ? <p className="ds-note">{overview.message}</p> : <Tabs label="라벨링" value={tab} onChange={setTab} items={[
       {value:'overview', label:'개요', content:tab === 'overview' && <Overview sid={sid} version={version} readonly={readonly} overview={overview} onRefresh={refresh} onNavigate={target => {if(target === 'training') router.push('/pipeline/training'); else setTab(target === 'definitions' ? 'audit' : target);}}/>},
       {value:'queue', label:'검수 큐', count:overview.queue.total, content:tab === 'queue' && <Queue sid={sid} version={version} readonly={readonly} overview={overview} onSubmitted={refresh}/>},
       {value:'audit', label:'감사', content:tab === 'audit' && <Audit sid={sid} version={version} readonly={readonly} overview={overview} oneLiner={session?.projectContext?.oneLiner} onRefresh={refresh}/>},
     ]}/>}
-  </main>;
+  </div>;
 }

@@ -346,7 +346,7 @@ it('uses token-only responsive CSS with clamped names, mobile pain priority and 
   expect(css).toMatch(/-webkit-line-clamp:\s*2/);
   expect(css).toMatch(/@media\s*\(max-width:\s*767px\)/);
   expect(css).toMatch(/min-height:\s*44px/);
-  expect(css).toContain('--type-section'); expect(css).toContain('--type-screen');
+  expect(css).toContain('--type-read'); expect(css).toContain('--type-screen');
   expect(css).toMatch(/\.persona-mobile-select\{display:none/);
   expect(css).toMatch(/\.persona-desktop-list\{display:none/);
   expect(css).toMatch(/\.persona-pain-points\{order:1/);
@@ -487,7 +487,8 @@ it('F3 stacks the card comparison table above a width-capped map',()=>{
 it('F7 reduces mobile pain typography and indentation while hiding the duplicate card heading accessibly',()=>{
  const css=readFileSync(new URL('./persona.css',import.meta.url),'utf8');
  expect(css).toMatch(/@media\(max-width:767px\)\{[^}]*\}[^]*?\.persona-pain-points ol\{padding-left:20px\}/);
- expect(css).toContain('.persona-pain-text,.persona-pain-item::marker{font:var(--type-card)}');
+ expect(css).toContain('.persona-pain-text{font-size:15px;line-height:26px}');
+ expect(css).toContain('.persona-pain-item::marker{font:var(--type-label)}');
  expect(css).toContain('.persona-summary-header h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}');
 });
 

@@ -22,6 +22,7 @@ const STEPS = [
 ];
 
 export const STEP_NAMES = STEPS.map(step => step.name);
+export const PIPELINE_PATHS = STEPS.map(step => step.path);
 
 export const STEP_MAP: Record<string, number> = {
   start: 0,
@@ -58,14 +59,16 @@ export default function StepBar({ currentStep, session }: { currentStep: unknown
     <div className="pipeline-group">파이프라인</div>
     <nav className="pipeline-nav" aria-label="파이프라인 단계">{STEPS.map((step, i) => {
     const props = {
-      className: i === viewed ? "on" : i < index ? "done" : "",
+      className: [i === viewed ? "on" : i < index ? "done" : "", i === index ? "working" : ""].filter(Boolean).join(" "),
       "aria-current": i === viewed ? "step" as const : undefined,
-      "aria-label": `${i + 1}. ${step.name}${i < index ? " 완료" : ""}`,
+      "aria-label": `${i + 1}. ${step.name}${i < index ? " 완료" : i === index ? " · 진행 중" : ""}`,
+      title: step.name,
     };
+    // "진행 중" marks the session's working step, not the page being viewed (aria-current covers that).
     const content = <>
       <i className="n" aria-hidden="true">{i < index ? <Check size={14} /> : i + 1}</i>
       <span>{step.name}</span>
-      {i === viewed && <small>진행 중</small>}
+      {i === index && <small>진행 중</small>}
     </>;
     const path = i >= 6 && !laterStagesOpen(session) ? null : step.path;
     return path === null

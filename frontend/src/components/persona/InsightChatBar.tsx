@@ -17,7 +17,7 @@ export function InsightChatBar({target,onTarget,conceptAvailable,focusLabel,focu
   const id = focusId ?? (target === 'insights' ? '' : target.slice(target.indexOf(':') + 1));
   const label = target === 'insights' ? '인사이트 목록 전체 수정' : target.startsWith('concept:') ? '선택 컨셉 수정' : `${focusLabel}에 대해 수정 요청`;
   return <section className="insight-chat" aria-label="인사이트 수정">
-    <h2>insight-chat</h2>
+    <h2>인사이트 수정 요청</h2>
     <label>채팅 대상 <select className="ds-inp" value={target} disabled={disabled} onChange={event => onTarget(event.target.value as InsightTarget)}>
       <option value={`insight:${id}`} disabled={!id}>현재 인사이트</option><option value="insights">인사이트 목록</option><option value={`concept:${id}`} disabled={!conceptAvailable || !id}>선택 컨셉</option>
     </select></label>

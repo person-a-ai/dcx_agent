@@ -6,9 +6,10 @@
 .ds-t-body{font:var(--type-body);letter-spacing:-.01em}
 .ds-t-label{font:var(--type-label);letter-spacing:-.005em}
 .ds-t-caption{font:var(--type-caption);color:var(--sub)}
+.ds-t-group{font:700 15px/22px var(--font);letter-spacing:-.01em;color:var(--ink-strong);margin:0}
 .ds-eyebrow{font:var(--type-eyebrow);letter-spacing:.06em;color:var(--ink)}
 .ds-num{font-variant-numeric:tabular-nums}
-.ds-mono{font:400 12px/18px var(--mono)}
+.ds-mono{font:400 13px/20px var(--mono)}
 
 /* 카드 */
 .ds-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-card);padding:24px;min-width:0}
@@ -20,13 +21,14 @@
 
 /* 버튼 */
 .ds-btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:var(--r-button);font:var(--type-label);cursor:pointer;border:1px solid var(--line-strong);background:var(--paper);color:var(--ink-strong);transition:background 150ms ease-out;white-space:nowrap}
-.ds-btn:hover{background:var(--action-soft)}
+.ds-btn:not([disabled]):hover{background:var(--action-soft)}
 .ds-btn.ds-primary{background:var(--action);color:var(--paper);border-color:transparent}
-.ds-btn.ds-primary:hover{background:var(--action-hover)}
+.ds-btn.ds-primary:not([disabled]):hover{background:var(--action-hover)}
 .ds-btn.ds-quiet{border-color:transparent;background:transparent;color:var(--action)}
-.ds-btn.ds-quiet:hover{background:var(--action-soft)}
+.ds-btn.ds-quiet:not([disabled]):hover{background:var(--action-soft)}
 .ds-btn.ds-sm{height:28px;padding:0 10px}
-.ds-btn[disabled]{opacity:.5;cursor:not-allowed}
+.ds-btn[disabled]{cursor:not-allowed;background:var(--sunken);border-color:var(--line);color:var(--sub)}
+.ds-btn.ds-quiet[disabled]{background:transparent;border-color:transparent}
 .ds-btn svg,.ds-ic svg{width:16px;height:16px;stroke-width:1.5}
 
 /* 폼 */
@@ -35,7 +37,8 @@
 .ds-field label,.ds-field .ds-lab{font:var(--type-label);color:var(--ink-strong)}
 .ds-field .ds-req{color:var(--danger);margin-left:2px}
 .ds-field .ds-hint{font:var(--type-caption);color:var(--sub)}
-.ds-field .ds-err{font:var(--type-caption);color:var(--danger);display:flex;gap:4px;align-items:center}
+.ds-err{font:var(--type-caption);color:var(--danger);display:flex;gap:4px;align-items:center;margin-top:6px}
+.ds-field .ds-err{margin-top:0}
 .ds-inp,textarea.ds-inp{width:100%;min-height:36px;padding:7px 12px;border:1px solid var(--line-strong);border-radius:var(--r-input);font:var(--type-input);color:var(--ink-strong);background:var(--paper)}
 textarea.ds-inp{resize:vertical}
 .ds-inp.ds-error{border-color:var(--danger)}
@@ -53,8 +56,8 @@ textarea.ds-inp{resize:vertical}
 
 /* 선택 칩 (button + aria-pressed) */
 .ds-chips{display:flex;flex-wrap:wrap;gap:8px}
-.ds-chip{height:32px;padding:0 12px;border-radius:var(--r-button);border:1px solid var(--line);background:var(--paper);color:var(--ink);font:var(--type-label);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-.ds-chip[aria-pressed=true]{border-color:var(--blue);background:var(--blue-soft);color:var(--blue-deep)}
+.ds-chip{height:32px;padding:0 12px;border-radius:var(--r-button);border:1px solid var(--line);background:var(--paper);color:var(--ink);font:400 14px/20px var(--font);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.ds-chip[aria-pressed=true]{border-color:var(--blue-deep);background:var(--blue-soft);color:var(--blue-deep);font-weight:600}
 .ds-chip .ds-x{opacity:.7}
 
 /* 배지 (분류는 Neutral) */
@@ -90,7 +93,7 @@ textarea.ds-inp{resize:vertical}
 
 /* 탭 */
 .ds-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px}
-.ds-tab{border:0;background:transparent;padding:10px 12px;font:var(--type-label);color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.ds-tab{border:0;background:transparent;padding:10px 12px;font:var(--type-label);color:var(--ink);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
 .ds-tab[aria-selected=true]{color:var(--ink-strong);border-bottom-color:var(--action)}
 .ds-tab .ds-num{margin-left:4px;color:var(--sub);font-weight:400}
 
@@ -98,20 +101,20 @@ textarea.ds-inp{resize:vertical}
 .ds-pop{position:absolute;z-index:10;width:300px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-overlay);box-shadow:var(--shadow-md);padding:16px}
 .ds-pop h4{margin:0 0 4px;font:700 14px/20px var(--font);color:var(--ink-strong)}
 .ds-pop .ds-chips{margin:12px 0}
-.ds-pop .ds-kbd{font:400 11px/16px var(--mono);border:1px solid var(--line);border-radius:var(--r-input);padding:0 4px;color:var(--sub)}
+.ds-pop .ds-kbd{font:400 12px/18px var(--mono);border:1px solid var(--line);border-radius:var(--r-input);padding:0 4px;color:var(--sub)}
 
 /* 막대 */
 .ds-bars{display:grid;gap:12px}
 .ds-bar{display:grid;grid-template-columns:48px 1fr 44px;align-items:center;gap:10px}
 .ds-bar .ds-track{height:8px;background:var(--sunken);border-radius:var(--r-full);overflow:hidden}
 .ds-bar .ds-fill{height:100%;background:var(--ink);border-radius:var(--r-full)}
-.ds-bar .ds-fill.ds-hi{background:var(--blue)}
+.ds-bar .ds-fill.ds-hi{background:var(--blue-deep)}
 .ds-bar .ds-t-label{color:var(--ink)}
 .ds-bar .ds-v{text-align:right}
 
 /* 표 */
 .ds-tbl{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:var(--r-button);overflow:hidden;background:var(--paper)}
-.ds-tbl th{background:var(--sunken);text-align:left;font:var(--type-badge);color:var(--ink);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+.ds-tbl th{background:var(--sunken);text-align:left;font:600 13px/20px var(--font);color:var(--ink);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
 .ds-tbl td{padding:10px 12px;border-bottom:1px solid var(--line);font:var(--type-input);color:var(--ink-strong);vertical-align:middle;white-space:nowrap}
 .ds-tbl tr:last-child td{border-bottom:0}
 .ds-tbl tbody tr:hover td{background:var(--soft)}
@@ -132,7 +135,7 @@ textarea.ds-inp{resize:vertical}
 .ds-stat .ds-v{font:var(--type-section);letter-spacing:-.03em;color:var(--ink-strong)}
 .ds-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .ds-progress{height:10px;background:var(--sunken);border-radius:var(--r-full);overflow:hidden}
-.ds-progress>div{height:100%;background:var(--blue)}
+.ds-progress>div{height:100%;background:var(--blue-deep)}
 
 /* 알림 */
 .ds-note{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:var(--r-button);background:var(--sunken);font:var(--type-input);color:var(--ink-strong)}
@@ -142,14 +145,13 @@ textarea.ds-inp{resize:vertical}
 .ds-note .ds-actions{margin-left:auto}
 
 
-.ds-tab { color:var(--ink); }
-.ds-inp:disabled { background:var(--sunken); cursor:not-allowed; opacity:.5; }
+.ds-inp:disabled { background:var(--sunken); color:var(--sub); cursor:not-allowed; }
 .ds-select { position:relative; }
 .ds-select select { appearance:none; padding-right:32px; height:36px; }
 .ds-select svg { position:absolute; right:10px; top:10px; pointer-events:none; }
 .ds-check { display:inline-flex; align-items:center; gap:8px; font:var(--type-label); color:var(--ink-strong); }
 .ds-check input { width:16px; height:16px; accent-color:var(--action); }
-.ds-chip[aria-checked=true],.ds-seg button[aria-checked=true] { border-color:var(--blue); background:var(--blue-soft); color:var(--blue-deep); }
+.ds-chip[aria-checked=true],.ds-seg button[aria-checked=true] { border-color:var(--blue-deep); background:var(--blue-soft); color:var(--blue-deep); font-weight:600; }
 .ds-seg { overflow:visible; gap:0; flex-wrap:nowrap; }
 .ds-seg button { border-radius:0; }
 .ds-seg button:first-child { border-radius:var(--r-button) 0 0 var(--r-button); }
@@ -175,7 +177,9 @@ textarea.ds-inp{resize:vertical}
 
 .ds-actions { display:flex; gap:8px; justify-content:flex-end; align-items:center; }
 .ds-stat dd { margin:0; }
-.ds-chip:disabled,.ds-sw:disabled,.ds-tab:disabled { opacity:.5; cursor:not-allowed; }
+.ds-sw:disabled { opacity:.5; cursor:not-allowed; }
+.ds-chip:disabled { background:var(--sunken); border-color:var(--line); color:var(--sub); cursor:not-allowed; }
+.ds-tab:disabled { color:var(--sub); cursor:not-allowed; }
 .ds-tabs { flex-wrap:wrap; }
 
 /* Drawer restart forms stay in the scrollable drawer layout. */

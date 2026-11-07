@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "DCX Pipeline",
+  // Pipeline pages set a per-step <title> (app/pipeline/layout.tsx); a static title here would override it.
   description: "Digital Customer Experience Pipeline",
 };
 

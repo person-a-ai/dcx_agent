@@ -113,7 +113,7 @@ export function InsightScreen({sid,version,readonly = false,initialConfirmed = [
   {data && !insightItems.length && !pending && !running && !stopped && <p role="status">페르소나를 바탕으로 인사이트를 도출하세요.</p>}
   {preview !== null && <p role="status">판 {preview} 보기 <Button onClick={() => setPreview(null)}>현재 판으로</Button></p>}
   {item && view && <>
-   <main className="ds-card insight-panel">
+   <section className="ds-card insight-panel" aria-label="인사이트">
     <InsightHeader key={item.id} view={view} index={index} knownBadge={<span className="ds-badge">{item.known_ki_id ? `Known Insight #${item.known_ki_id}와 같은 내용` : '새 발견'}</span>} onRederive={() => derive(true)} rederiveDisabled={controlsDisabled || !data || !!pending}/>
     <div className="insight-charts">
      <Radar values={radarValues(record(item).radar ?? (historicalInsights ? null : data?.radar?.[item.id]))} mean={mean} label={`Insight ${index+1}`}/>
@@ -139,7 +139,7 @@ export function InsightScreen({sid,version,readonly = false,initialConfirmed = [
       },
       onRevert:revision => void mutate(() => actions.revert(chatTarget,revision)),
      }}/>
-   </main>
+   </section>
    <InsightConcept concept={concept} disabled={controlsDisabled} onCreate={() => void mutate(async () => {
     const run = await api.createInsightConcept(sid,selectedId,version);setPending({runId:run.runId,mode:'concept',target:selectedId});
    })}/>

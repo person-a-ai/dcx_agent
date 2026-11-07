@@ -75,7 +75,7 @@ it('shows the stage7 irrelevant count as information only', async () => {
  const banner=render().find(n=>n.type==='Banner');
  expect(banner).toBeDefined();
  expect(banner.props.tone).toBe('info');
- expect(banner.props.children.join('')).toBe('7단계에서 무관 판정 7건 — 4단계 재점검 참고');
+ expect(banner.props.children.join('')).toBe('8단계에서 무관 판정 7건 — 5단계 재점검 참고');
  expect(getEvidenceStatus).toHaveBeenCalledWith('s','v1');
  expect(banner.props.actions).toBeUndefined();
 });

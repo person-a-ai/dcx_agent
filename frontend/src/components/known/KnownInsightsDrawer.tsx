@@ -16,7 +16,7 @@ export function KnownInsightCard({item, disabled, onDelete}: {item: KnownInsight
  return <li className={`ds-card ds-sm ${styles.card}`}>
   <div className={styles.badges}><Badge>{item.type === 'statement' ? '문장' : '원문'}</Badge><Badge>{origins[item.from]}</Badge></div>
   <div>
-   <p id={bodyId} className={`${styles.body} ${item.type === 'doc' && !expanded ? styles.clamped : ''}`}>{item.text || '근거 원문'}</p>
+   <p id={bodyId} className={`ds-read ${styles.body} ${item.type === 'doc' && !expanded ? styles.clamped : ''}`}>{item.text || '근거 원문'}</p>
    {item.type === 'doc' && <Button variant="quiet" size="sm" aria-expanded={expanded} aria-controls={bodyId} onClick={() => setExpanded(value => !value)}>{expanded ? '접기' : '펼치기'}</Button>}
   </div>
   {item.warning && <p className={`ds-t-caption ${styles.warning}`} role="status">유사도 제외는 임베딩 연결 후 적용됩니다</p>}

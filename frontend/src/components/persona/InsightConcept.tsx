@@ -19,8 +19,8 @@ function channelLabel(value: unknown): string {
 }
 export function ConceptDetail({concept}: {concept: Concept}) {
  return <section aria-label="경험 디자인 컨셉" className="ds-card space-y-5">
-  <h2 className="ds-t-card">01 PERSONA <span style={{color:'var(--danger)'}}>🔴 합성값</span></h2><p>{text(record(concept.persona_profile).text ?? concept.persona_profile)}</p><p>{concept.basis}</p>
-  <h2 className="ds-t-card">02 Pain Points</h2>{concept.pain_points.map((point,index) => <blockquote key={index}><p>{text(point.quote)}</p><footer>{channelLabel(point.channel)} · {sourceLocation(point.location)} · Context {text(point.context_id)}</footer></blockquote>)}
+  <h2 className="ds-t-card">01 PERSONA <span className="ds-badge ds-danger" style={{marginLeft:8,verticalAlign:'middle'}}>합성값</span></h2><p>{text(record(concept.persona_profile).text ?? concept.persona_profile)}</p><p>{concept.basis}</p>
+  <h2 className="ds-t-card">02 Pain Points</h2>{concept.pain_points.map((point,index) => <blockquote key={index} className="ds-quote my-3"><p className="ds-read">{text(point.quote)}</p><footer className="ds-t-caption">{channelLabel(point.channel)} · {sourceLocation(point.location)} · Context {text(point.context_id)}</footer></blockquote>)}
   <h2 className="ds-t-card">03 JOURNEY</h2><JourneyTable rows={concept.journey}/>
   <h3>제약 검사</h3><ul>{(concept.constraint_check ?? []).map((check,index) => <li key={index}>{check.verdict === 'ok' ? '✓ 충족' : check.verdict === 'violates' ? '✕ 위반' : '⚠ 검토'} · {check.constraint} · {check.reason}</li>)}</ul>
  </section>;

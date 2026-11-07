@@ -27,7 +27,7 @@ export function InsightTopBar({count,index,onPrev,onNext,confirmed,onToggleConfi
     focusedRef.current = null;
   }, [index, count]);
   return <header className="insight-topbar">
-    <h1>8-E 인사이트 도출 <span>›</span> 인사이트별 Pain Point</h1>
+    <h1><span className="ds-eyebrow">10단계 · 인사이트 도출</span>인사이트별 Pain Point</h1>
     <span className="insight-count">인사이트 {count}개 · 대화형</span>
     {count > 0 ? <>
       <button type="button" className="ds-btn insight-hit" aria-pressed={confirmed} disabled={confirmDisabled} onClick={onToggleConfirm}>{confirmed ? '확정됨' : '확정하기'}</button>

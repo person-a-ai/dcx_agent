@@ -1,3 +1,6 @@
+.queue-card-reason { color: var(--ink-strong); }
+.queue-card-title { margin-bottom: 8px; }
+
 .queue-card-controls {
   display: grid;
   gap: 16px;

@@ -1,6 +1,6 @@
 export type LaterStageGate = 'no-session' | 'legacy' | 'needs-prep' | 'open';
 
-export const LATER_STAGE_LOCK_TITLE = '전처리(3단계)를 먼저 완료하세요';
+export const LATER_STAGE_LOCK_TITLE = '전처리(4단계)를 먼저 완료하세요';
 
 /** Stages 6–9 need a finished preparation: prep.derivedRef plus prep.status 'done' (same as backend prepDone). */
 export function laterStagesOpen(session: Record<string, unknown> | null | undefined): boolean {

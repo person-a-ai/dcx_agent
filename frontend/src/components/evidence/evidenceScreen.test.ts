@@ -63,7 +63,7 @@ it('renders the three exact empty states and stale copy', () => {
  const html = renderToStaticMarkup(createElement(EvidenceScreenView,{...p,ready:false,status:{...status,status:'none',contexts:[]}}));
  expect(html).toContain('6-C Context를 모두 확정한 뒤 근거 탐색을 실행하세요.');
  expect(button(EvidenceScreenView({...p,ready:false,status:{...status,status:'none',contexts:[]}}),'근거 탐색 실행').props.disabled).toBe(true);
- expect(renderToStaticMarkup(createElement(EvidenceScreenView,{...p,status:{...status,status:'stale'}}))).toContain('6단계가 다시 나뉘어 이 근거는 이전 결과 기준입니다. 다시 실행하세요.');
+ expect(renderToStaticMarkup(createElement(EvidenceScreenView,{...p,status:{...status,status:'stale'}}))).toContain('7단계가 다시 나뉘어 이 근거는 이전 결과 기준입니다. 다시 실행하세요.');
 });
 it('uses a shrinkable 1024px layout and one primary, locks writes in history', () => {
  const p = props(); const html = renderToStaticMarkup(createElement(EvidenceScreenView,p));
@@ -109,7 +109,7 @@ it('renders Context completion progress without assuming API percentage units', 
  const html=renderToStaticMarkup(createElement(EvidenceCard,{item,readonly:false,onAdd:vi.fn()}));
  expect(html).toContain('<mark>인용</mark>');
  if(field === 'body') expect(html).not.toContain('별개의 본문 미리보기');
- else expect(html).toContain('<p class="whitespace-pre-wrap">별개의 본문 미리보기</p>');
+ else expect(html).toContain('<p class="ds-read">별개의 본문 미리보기</p>');
  expect(html).toContain(field==='title'?'제목':field==='body'?'본문':'댓글 3');
  });
  it.each(['none','low','high','very_high'])('obeys noveltyShown rather than novelty value %s', novelty => {
@@ -135,7 +135,7 @@ it('highlights an original body quote beyond the 600-character preview',()=>{
 it('keeps unverified quotes visible without highlighting any source text',()=>{
  const item={...evidenceItemFixture,quote:{...evidenceItemFixture.quote!,verified:false}};
  const html=renderToStaticMarkup(createElement(EvidenceCard,{item,readonly:false,onAdd:vi.fn()}));
- expect(html).not.toContain('<mark>');expect(html).toContain('<blockquote>인용</blockquote>');expect(html).toContain('인용 미확인 · 추론');
+ expect(html).not.toContain('<mark>');expect(html).toContain('<blockquote class="ds-read m-0">인용</blockquote>');expect(html).toContain('인용 미확인 · 추론');
 });
 
 it('renders live status tagCalls before a stage7 report exists and ignores stale reports', () => {

@@ -108,6 +108,8 @@ function StartScreen() {
   const [message, setMessage] = useState("");
   const [categoryError, setCategoryError] = useState("");
   const [saveWarnings, setSaveWarnings] = useState<string[]>([]);
+  // Errors stay hidden on a pristine form and appear after the first save attempt.
+  const [showErrors, setShowErrors] = useState(false);
   const [metric, setMetric] = useState({name: "", source: "", item: ""});
   const [personaText, setPersonaText] = useState("");
   const [personaNotice, setPersonaNotice] = useState("");
@@ -119,7 +121,7 @@ function StartScreen() {
   useEffect(() => {
     let active = true;
     createdSid.current = store.sid;
-    setLoadError(false); setReturned(null); setSaveWarnings([]);
+    setLoadError(false); setReturned(null); setSaveWarnings([]); setShowErrors(false);
     setMetric({name: "", source: "", item: ""}); setPersonaText(""); setPersonaNotice("");
     if (!store.sid) {
       let draft = mergeStartForm(null);
@@ -138,7 +140,8 @@ function StartScreen() {
     }).catch((e) => { if(active) { setLoadError(true); setMessage(displayError(e, "입력값을 불러오지 못했습니다. 세션을 다시 여세요.")); } }).finally(() => {if(active) setLoading(false);});
     return () => { active = false; };
   }, [store.sid, legacy, reload, version]);
-  const {valid, errors} = validateStartForm(form);
+  const {valid, errors: allErrors} = validateStartForm(form);
+  const errors: Partial<typeof allErrors> = showErrors ? allErrors : {};
   const seeds = form.personaSeeds || empty.personaSeeds!;
   const missing = missingDimensions(seeds.items);
   const addMetric = () => {
@@ -155,8 +158,13 @@ function StartScreen() {
   const persist = async (draft: boolean, navigate = false) => {
     if (operation.current) return;
     if (!draft && !valid) {
-      const target = formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
-      target?.scrollIntoView({block: "center"}); target?.focus({preventScroll: true}); return;
+      setShowErrors(true);
+      // Wait one frame so the newly shown errors mark their fields aria-invalid.
+      requestAnimationFrame(() => {
+        const target = formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
+        target?.scrollIntoView({block: "center"}); target?.focus({preventScroll: true});
+      });
+      return;
     }
     operation.current = true; setBusy(true); setMessage("");
     const snapshot = structuredClone(form);
@@ -208,7 +216,7 @@ function StartScreen() {
     finally { setSuggesting(false); }
   };
   const single = (key: "projectType", title: string) => <fieldset className="min-w-0 space-y-2" aria-labelledby={`${key}-heading`} aria-describedby={errors[key] ? `${key}-error` : undefined} tabIndex={-1} aria-invalid={!!errors[key] || undefined}>
-    <h3 id={`${key}-heading`} className="ds-t-label">{title} *</h3><ChoiceChips label={title} options={options(labels[key])} value={form[key].choice} onChange={choice => update(key, {...form[key], choice})} />
+    <h3 id={`${key}-heading`} className="ds-t-group">{title} *</h3><ChoiceChips label={title} options={options(labels[key])} value={form[key].choice} onChange={choice => update(key, {...form[key], choice})} />
     {errors[key] && <p id={`${key}-error`} className="ds-err">{errors[key]}</p>}<Input label={`${title} 보충 설명`} value={form[key].note} onChange={event => update(key, {...form[key], note: event.target.value})} />
   </fieldset>;
   const positioning = <div className="space-y-3">
@@ -217,14 +225,14 @@ function StartScreen() {
   </div>;
   const target = form.targetScope || empty.targetScope!;
   return <div className="space-y-6">
-    <SessionList onSelect={open} />
+    {store.sid ? <details className="start-sessions"><summary className="ds-btn ds-quiet">다른 세션 열기</summary><div className="mt-3"><SessionList onSelect={open} /></div></details> : <SessionList onSelect={open} />}
     {store.sid && !legacy && <Button onClick={() => { if (!isDirty(saved, form) || window.confirm("저장되지 않은 변경이 있습니다. 새 프로젝트를 만드시겠습니까?")) store.reset(); }}>새 프로젝트 만들기</Button>}
     {message && <Banner tone={message.includes("못") || message.includes("실패") ? "danger" : "info"}>{message}</Banner>}
     {store.persistError && <Banner tone="danger">{store.persistError}</Banner>}
-    {legacy ? <Banner tone="warning" actions={<><Button onClick={() => router.push("/pipeline/preprocess")}>전처리 화면으로</Button><Button onClick={() => store.reset()}>새 프로젝트 만들기</Button></>}>구버전 세션은 0~2단계를 편집할 수 없습니다. 3단계 이후 화면에서 결과를 확인하세요.</Banner> : <VersionStage stage="stage0">
-      <header><StageVersionAction stage="stage0" /><p className="ds-eyebrow">0단계 · 입력</p><h1 className="ds-t-screen">새 프로젝트를 설정합니다</h1><p className="ds-t-body">0-A는 이후 모든 단계가 참고하는 프로젝트 개요입니다. 0-B는 분석 결과와 대조할 초기 기준선이며 전부 선택 입력입니다.</p></header>
+    {legacy ? <><h1 className="ds-t-screen">프로젝트 입력</h1><Banner tone="warning" actions={<><Button onClick={() => router.push("/pipeline/preprocess")}>전처리 화면으로</Button><Button onClick={() => store.reset()}>새 프로젝트 만들기</Button></>}>구버전 세션은 1~3단계를 편집할 수 없습니다. 4단계 이후 화면에서 결과를 확인하세요.</Banner></> : <VersionStage stage="stage0">
+      <header><StageVersionAction stage="stage0" /><p className="ds-eyebrow">1단계 · 입력</p><h1 className="ds-t-screen">새 프로젝트를 설정합니다</h1><p className="ds-t-body">0-A는 이후 모든 단계가 참고하는 프로젝트 개요입니다. 0-B는 분석 결과와 대조할 초기 기준선이며 전부 선택 입력입니다.</p></header>
       {!loading && isPreTaskModeContext(returned) && <Banner tone="info">이 세션은 과제 유형이 생기기 전에 저장되었습니다. 지금은 {labels.taskMode[form.taskMode || "explore"]}으로 표시됩니다. 저장하면 이 유형으로 저장되고, project_context.md에 과제 유형과 생각하는 페르소나 섹션이 추가됩니다.</Banner>}
-      {saveWarnings.length > 0 && <Banner tone="info">R1 키워드는 바뀌기 전 입력으로 만들었습니다. 새 입력을 반영하려면 새 버전을 만들어 0단계부터 다시 시작하세요.</Banner>}
+      {saveWarnings.length > 0 && <Banner tone="info">R1 키워드는 바뀌기 전 입력으로 만들었습니다. 새 입력을 반영하려면 새 버전을 만들어 1단계부터 다시 시작하세요.</Banner>}
       {loadError ? <Button onClick={() => setReload(value => value + 1)}>입력값 다시 불러오기</Button> : loading ? <div role="status">처리 중…<Skeleton /><Skeleton /><Skeleton /></div> : <div className={INTERNAL_TOOLS ? "grid gap-6 lg:grid-cols-3" : "grid gap-6"}>
         <div className={INTERNAL_TOOLS ? "lg:col-span-2 space-y-6" : "space-y-6"} ref={formRef}>
           <fieldset disabled={busy} className="space-y-6">
@@ -248,7 +256,7 @@ function StartScreen() {
               <Input label="리서치 질문" required value={form.researchQuestion.text} onChange={event => update("researchQuestion", {...form.researchQuestion, text: event.target.value})} error={errors.researchQuestion} hint="템플릿을 고르면 채워지고, 자유롭게 고칠 수 있습니다." />
             </div>
             <fieldset className="min-w-0 space-y-2" aria-labelledby="metrics-heading" aria-describedby={`metrics-hint${errors.keyMetrics ? " metrics-error" : ""}`} tabIndex={-1} aria-invalid={!!errors.keyMetrics || undefined}>
-              <h3 id="metrics-heading" className="ds-t-label">핵심 지표 {form.taskMode === "metric" ? "*" : "(선택)"}</h3>
+              <h3 id="metrics-heading" className="ds-t-group">핵심 지표 {form.taskMode === "metric" ? "*" : "(선택)"}</h3>
               <p id="metrics-hint" className="ds-t-caption">{form.taskMode === "metric" ? "지표명은 필수입니다. 출처와 관련 설문 문항을 함께 적으면 키워드가 지표가 떨어지는 순간을 겨냥합니다." : "선택 입력입니다. 방향을 잡는 지표가 있으면 적으세요."}</p>
               <div className="grid gap-3 md:grid-cols-3">
                 <Input label="지표명" value={metric.name} onChange={event => setMetric({...metric, name: event.target.value})} onKeyDown={event => submitOnEnter(event, addMetric)} />
@@ -261,10 +269,10 @@ function StartScreen() {
             </fieldset>
             <div className="grid gap-6 md:grid-cols-2">
               <ListInput label="사내 제약" value={form.constraints} onChange={value => update("constraints", value)} />
-              {form.taskMode === "metric" ? <details open={isPositioningOpen} onToggle={event => setIsPositioningOpen(event.currentTarget.open)} className="space-y-3"><summary className="ds-t-label">브랜드 포지셔닝 (선택)</summary>{positioning}</details> : <div className="space-y-3"><h3 className="ds-t-label">브랜드 포지셔닝 (선택)</h3>{positioning}</div>}
+              {form.taskMode === "metric" ? <details open={isPositioningOpen} onToggle={event => setIsPositioningOpen(event.currentTarget.open)} className="space-y-3"><summary className="ds-t-label">브랜드 포지셔닝 (선택)</summary>{positioning}</details> : <div className="space-y-3"><h3 className="ds-t-group">브랜드 포지셔닝 (선택)</h3>{positioning}</div>}
             </div>
             <div className="grid gap-6 md:grid-cols-2">
-              <fieldset className="min-w-0" aria-labelledby="channels-heading" aria-describedby={errors.channels ? "channels-error" : undefined} tabIndex={-1} aria-invalid={!!errors.channels || undefined}><h3 id="channels-heading" className="ds-t-label">수집 채널 *</h3><ChoiceChips multiple label="수집 채널" options={stageZeroChannelOptions(form.channels, INTERNAL_TOOLS)} value={form.channels} onChange={value => update("channels", value)} />{errors.channels && <p id="channels-error" className="ds-err">{errors.channels}</p>}</fieldset>
+              <fieldset className="min-w-0" aria-labelledby="channels-heading" aria-describedby={errors.channels ? "channels-error" : undefined} tabIndex={-1} aria-invalid={!!errors.channels || undefined}><h3 id="channels-heading" className="ds-t-group">수집 채널 *</h3><ChoiceChips multiple label="수집 채널" options={stageZeroChannelOptions(form.channels, INTERNAL_TOOLS)} value={form.channels} onChange={value => update("channels", value)} />{errors.channels && <p id="channels-error" className="ds-err">{errors.channels}</p>}</fieldset>
               <ListInput label="이미 아는 것" value={form.knownInsights} onChange={value => update("knownInsights", value)} />
             </div>
           </Card>
@@ -281,18 +289,18 @@ function StartScreen() {
             <Checkbox label="예시와 다른 페르소나를 우선 발굴" checked={seeds.exploreBeyond} onChange={event => update("personaSeeds", {...seeds, exploreBeyond: event.target.checked})} />
           </Card>
           <Card className="space-y-6"><div className="flex justify-between gap-3"><div><h2 className="ds-t-card">0-B 분석 대상 · 초기 기준선</h2><p className="ds-t-caption">선택 · 대조되는 값. 우선 탐색하되 범위 밖 발견도 배제하지 않습니다.</p></div><Badge>기준선</Badge></div>
-            <div className="flex items-center gap-3"><h3 className="ds-t-label">제품군 대 › 중 › 소</h3>{form.productCategory.source !== "user" && <Badge>{form.productCategory.source === "shopping" ? "쇼핑" : "추정"}</Badge>}<Button loading={suggesting} disabled={!form.bk.trim()} onClick={suggest}>자동 제안하기</Button></div>
+            <div className="flex items-center gap-3"><h3 className="ds-t-group">제품군 대 › 중 › 소</h3>{form.productCategory.source !== "user" && <Badge>{form.productCategory.source === "shopping" ? "쇼핑" : "추정"}</Badge>}<Button loading={suggesting} disabled={!form.bk.trim()} onClick={suggest}>자동 제안하기</Button></div>
             {categoryError && <Banner tone="warning">{categoryError}</Banner>}{suggesting && <Skeleton />}
             <div className="grid gap-3 md:grid-cols-3">{(["l1", "l2", "l3"] as const).map((key,i) => <Input key={key} id={`category-${key}`} label={["대분류","중분류","소분류"][i]} disabled={suggesting} value={form.productCategory[key] || ""} onChange={e => update("productCategory", {...form.productCategory, [key]:e.target.value, source:"user"})} />)}</div>
-            <div className="grid gap-6 md:grid-cols-2">{(["ageRanges", "genders", "households", "lifeStages"] as const).map((key,i) => <div key={key}><h3 className="ds-t-label">{["연령대", "성별", "가구 형태", "생애주기"][i]}</h3><ChoiceChips multiple label={["연령대", "성별", "가구 형태", "생애주기"][i]} options={key === "ageRanges" ? options({"20대":"20대", "30대":"30대", "40대":"40대", "50대+":"50대+"}) : key === "genders" ? options({"남성":"남성", "여성":"여성"}) : options(labels[key])} value={target[key]} onChange={v => update("targetScope", {...target,[key]:v})} /><p className="ds-t-caption">미선택은 전체입니다.</p></div>)}</div>
+            <div className="grid gap-6 md:grid-cols-2">{(["ageRanges", "genders", "households", "lifeStages"] as const).map((key,i) => <div key={key}><h3 className="ds-t-group">{["연령대", "성별", "가구 형태", "생애주기"][i]}</h3><ChoiceChips multiple label={["연령대", "성별", "가구 형태", "생애주기"][i]} options={key === "ageRanges" ? options({"20대":"20대", "30대":"30대", "40대":"40대", "50대+":"50대+"}) : key === "genders" ? options({"남성":"남성", "여성":"여성"}) : options(labels[key])} value={target[key]} onChange={v => update("targetScope", {...target,[key]:v})} /><p className="ds-t-caption">미선택은 전체입니다.</p></div>)}</div>
             <Input label="분석 대상 보충 설명" value={target.note} onChange={e => update("targetScope", {...target,note:e.target.value})} />
-            <div className="space-y-2"><h3 className="ds-t-label">미래 고객 정의</h3><ChoiceChips multiple label="미래 고객 정의" options={options(labels.futureCustomer)} value={form.futureCustomer?.choices || []} onChange={choices => update("futureCustomer", {choices,note:form.futureCustomer?.note || ""})} /><Input label="미래 고객 보충 설명" value={form.futureCustomer?.note || ""} onChange={e => update("futureCustomer", {choices:form.futureCustomer?.choices || [],note:e.target.value})} /></div>
+            <div className="space-y-2"><h3 className="ds-t-group">미래 고객 정의</h3><ChoiceChips multiple label="미래 고객 정의" options={options(labels.futureCustomer)} value={form.futureCustomer?.choices || []} onChange={choices => update("futureCustomer", {choices,note:form.futureCustomer?.note || ""})} /><Input label="미래 고객 보충 설명" value={form.futureCustomer?.note || ""} onChange={e => update("futureCustomer", {choices:form.futureCustomer?.choices || [],note:e.target.value})} /></div>
           </Card>
           </fieldset>
           {/* Keep Save enabled so persist can reveal and focus validation errors. */}
           <SaveBar dirty={isDirty(saved,form)} valid={true} saving={busy} onDraft={() => void persist(true)} onSave={() => void persist(false)} primary={<Button variant="primary" loading={busy} onClick={() => void persist(false,true)}>키워드 생성 시작하기</Button>} />
         </div>
-        {INTERNAL_TOOLS && <aside><Card className="lg:sticky lg:top-6"><details open><summary className="ds-t-label">project_context.md 미리보기</summary><p className="ds-t-caption">서버 저장 맥락을 바탕으로 만든 미리보기입니다.</p><pre style={{color:"var(--ink)"}} className="ds-t-caption whitespace-pre-wrap break-words">{preview(returned || form)}</pre></details></Card></aside>}
+        {INTERNAL_TOOLS && <aside><Card className="lg:sticky lg:top-6"><details><summary className="ds-t-label cursor-pointer">project_context.md 미리보기</summary><p className="ds-t-caption">서버 저장 맥락을 바탕으로 만든 미리보기입니다.</p><pre style={{color:"var(--ink)"}} className="ds-t-caption whitespace-pre-wrap break-words">{preview(returned || form)}</pre></details></Card></aside>}
       </div>}
     </VersionStage>}
   </div>;

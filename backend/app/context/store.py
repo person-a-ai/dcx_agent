@@ -100,7 +100,7 @@ def assert_writable(sid, version=None):
     if data is None:
         raise StoreError('Session not found', 404, 'not_found')
     if is_legacy(data):
-        raise StoreError('구버전 세션은 0~2단계를 편집할 수 없습니다')
+        raise StoreError('구버전 세션은 1~3단계를 편집할 수 없습니다')
     meta = read_json(root_dir(sid) / 'meta.json')
     if meta:
         if version is not None and version != meta['activeVersion']:

@@ -25,7 +25,7 @@ def _session(sid, version=None, writable=False):
     if data is None:
         raise store.StoreError('Session not found', 404, 'not_found')
     if store.is_legacy(data):
-        raise store.StoreError('구버전 세션은 3단계를 실행할 수 없습니다.', 409, 'legacy_session')
+        raise store.StoreError('구버전 세션은 4단계를 실행할 수 없습니다.', 409, 'legacy_session')
     if writable:
         store.assert_writable(sid, version)
     return data

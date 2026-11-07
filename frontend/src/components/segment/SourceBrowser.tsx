@@ -4,6 +4,7 @@ import { getSegmentDocs } from '@/lib/api/segment';
 import { displayError } from '@/lib/api/errors';
 import { Badge, Banner, Button } from '../ds';
 import type { SegmentDocument } from '@/lib/types';
+import { tidyText } from '@/lib/tidyText';
 
 const PAGE = 20;
 const bandLabel: Record<string, string> = { core: '핵심', fringe: '주변', edge: '가장자리' };
@@ -53,7 +54,7 @@ export function SourceBrowser({ sid, version, filter, total, support = false }: 
             const text = doc.body || doc.title || '';
             return <li key={doc.docId} className="border-l-2 pl-3 break-words">
                 {doc.title && doc.body && <p className="ds-t-label">{doc.title}</p>}
-                <p className="whitespace-pre-wrap">{previewText(doc, full)}</p>
+                <p className="ds-read">{tidyText(previewText(doc, full))}</p>
                 <p className="ds-t-caption flex flex-wrap items-center gap-2">{doc.band && <Badge>{bandLabel[doc.band] ?? doc.band}</Badge>}<span>{doc.docId}</span>
                     {text.length > 300 && <button className="underline" onClick={() => setOpen({ ...open, [doc.docId]: !full })}>{full ? '접기' : '펼치기'}</button>}
                     {doc.url && <a className="underline" href={doc.url} target="_blank" rel="noreferrer">원문 링크</a>}</p>

@@ -22,7 +22,7 @@ ORDER = ('session', 'crawl', 'prep', 'labels', 'export')
 STEP_FUNCTIONS = {'session': 'create_session', 'crawl': 'register_collection', 'prep': 'run_prep_step',
                   'labels': 'insert_labels', 'export': 'export_step'}
 DOT = '.'
-WARNING = "주의: 0단계 값이 모두 '.'입니다. 6~8단계 결과는 주제 정보 없이 만들어집니다."
+WARNING = "주의: 1단계 값이 모두 '.'입니다. 7~9단계 결과는 주제 정보 없이 만들어집니다."
 _BATCH = 5000
 
 
@@ -329,6 +329,6 @@ def _run_locked(sid, sources, result, log, poll_s, sleep):
         if step not in ('labels', 'export'):  # These stages checkpoint their claimed version.
             _mark(sid, step)
     data = store.load_session(sid)
-    log(f'완료. 웹 프로젝트 목록에서 {sid}를 열고 6단계(세그먼트)부터 진행하세요.')
+    log(f'완료. 웹 프로젝트 목록에서 {sid}를 열고 7단계(세그먼트)부터 진행하세요.')
     log(WARNING)
     return dict(sid=sid, counts=data['imported'].get('counts', {}), exportRef=data.get('training', {}).get('exportRef'))

@@ -25,13 +25,13 @@ class SearchResult:
 def read_export(sid, data):
     ref = data.get('training', {}).get('exportRef')
     if not isinstance(ref, str) or not ref:
-        raise sessions.StoreError('5단계 결과가 없습니다')
+        raise sessions.StoreError('6단계 결과가 없습니다')
     base = (Path(settings.local_data_dir) / 'classified' / sid).resolve()
     path = (Path(settings.local_data_dir) / ref).resolve()
     # A version snapshot may deliberately inherit an earlier exportRef.
     # Read precisely that reference, bounded to this session's export tree.
     if not path.is_relative_to(base) or path.name != 'relevant.jsonl' or not path.is_file():
-        raise sessions.StoreError('5단계 결과가 없습니다')
+        raise sessions.StoreError('6단계 결과가 없습니다')
     return [doc for doc in read_jsonl(path) if doc.get('evidence_level_pred') in {'core', 'supporting'}]
 
 

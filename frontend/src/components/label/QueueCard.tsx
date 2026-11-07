@@ -5,6 +5,7 @@ import { Card } from '../ds/Card';
 import { Table } from '../ds/Table';
 import { Select } from '../ds/Select';
 import './queueCard.css';
+import { tidyText } from '@/lib/tidyText';
 import { queueReasonLabel, voteValue } from './queueView';
 import { TagToggle } from './TagToggle';
 import { LevelBadge, levelNames } from './LevelBadge';
@@ -49,13 +50,15 @@ function JudgingCard({sid, version, item, mode = 'escalate', labeler, focusZone 
   event.preventDefault();
   if(action === 'submit') void submit(); else if(action === 'skip') { if(item.cursor) onNext(item.cursor); } else if(action === 'toggleAnchor') change({...tags,anchor:!tags.anchor}); else if(action === 'toggleSituation') change({...tags,situation:!tags.situation}); else toggleSem(action.index);
  }}>
-  <p className="ds-t-label">{queueReasonLabel(item.reason, mode)}</p>
+  <p className="ds-read-src"><span className="ds-t-label queue-card-reason">{queueReasonLabel(item.reason, mode)}</span>{item.document?.channel && <span>· {item.document.channel}</span>}</p>
   <div ref={source} tabIndex={-1}>
-   {item.document?.title && <h3 className="ds-t-card">{item.document.title}</h3>}
-   {body ? <p>{body}</p> : !item.document?.title && <p>원문을 찾지 못했습니다. 다음 문서를 확인하세요.</p>}
+   {item.document?.title && <h3 className="ds-t-card queue-card-title">{item.document.title}</h3>}
+   {body ? <p className="ds-read">{tidyText(body)}</p> : !item.document?.title && <p>원문을 찾지 못했습니다. 다음 문서를 확인하세요.</p>}
   </div>
-  {item.document?.comments?.map((comment,index) => <p key={index}>{comment.text}</p>)}
-  <p className="ds-t-caption">{item.document?.channel}</p>
+  {!!item.document?.comments?.length && <section className="ds-read-comments" aria-label="댓글">
+   <h4>댓글 {item.document.comments.length}</h4>
+   <ul>{item.document.comments.map((comment,index) => <li key={index} className="ds-read">{tidyText(comment.text)}</li>)}</ul>
+  </section>}
   <div className="queue-card-controls">
    <div className="queue-card-row" role="group" aria-label="대상 경험">
     <span className="queue-card-row-label">대상 경험</span>

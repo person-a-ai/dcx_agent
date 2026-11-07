@@ -44,14 +44,14 @@ it('fetches the selected version report and renders readonly results above saved
  await vi.waitFor(()=>expect(hooks.slots.some(s=>s?.report || s?.data?.report)).toBe(true));
  expect(getCrawlReport).toHaveBeenCalledWith('s','v1');
  const html=renderToStaticMarkup(history());
- expect(html).toContain('P5 수집 요약');
+ expect(html).toContain('수집 요약');
  expect(html).toContain('수집 문서');
  expect(html).toContain('채널별 건너뛴 사유');
  expect(html).toContain('class="crawl-channel-scroll" role="region" aria-label="채널별 건너뛴 사유 스크롤" tabindex="0"');
  expect(html).toContain('한국어 자막 없음');
  expect(html).toContain('3개 영상');
  expect(html).toContain('영상 8개 → 구간 47');
- expect(html.indexOf('P5 수집 요약')).toBeLessThan(html.indexOf('크롤링 수집본'));
+ expect(html.indexOf('수집 요약')).toBeLessThan(html.indexOf('크롤링 수집본'));
  expect(html).toContain('과거 버전의 실시간 수집 상태는 제공되지 않습니다');
  expect(html).not.toMatch(/일시 정지하기|다시 수집|상세 수집 시작|남은 URL/);
 });
@@ -62,7 +62,7 @@ it('keeps saved settings when there is no report',async()=>{
  const html=renderToStaticMarkup(history());
  expect(html).toContain('크롤링 수집본');
  expect(html).toContain('수집 설정');
- expect(html).not.toContain('P5 수집 요약');
+ expect(html).not.toContain('수집 요약');
 });
 it('does not leak a late report after selecting another version',async()=>{
  let resolve!:(value:typeof savedReport)=>void;
@@ -70,5 +70,5 @@ it('does not leak a late report after selecting another version',async()=>{
  history(); const cleanup=hooks.effects.pop()!();
  state.version='v2'; cleanup?.();
  resolve(savedReport); await Promise.resolve(); await Promise.resolve();
- expect(renderToStaticMarkup(history())).not.toContain('P5 수집 요약');
+ expect(renderToStaticMarkup(history())).not.toContain('수집 요약');
 });

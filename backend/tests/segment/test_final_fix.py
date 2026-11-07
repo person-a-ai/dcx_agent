@@ -82,7 +82,7 @@ def test_store_wal_and_no_repeated_ddl(tmp_path, monkeypatch):
     assert not any(s.lstrip().upper().startswith(('CREATE', 'ALTER')) for s in statements)
 
 
-@pytest.mark.parametrize('message', ['클러스터링할 문서가 없습니다.', '형태소 토큰이 없습니다. 3단계 전처리를 다시 실행하세요.', None])
+@pytest.mark.parametrize('message', ['클러스터링할 문서가 없습니다.', '형태소 토큰이 없습니다. 4단계 전처리를 다시 실행하세요.', None])
 def test_failure_reason(setup, monkeypatch, message):
     fixture, _ = setup(docs_per_context=4)
     exc = sessions.StoreError(message) if message else ValueError('sensitive')

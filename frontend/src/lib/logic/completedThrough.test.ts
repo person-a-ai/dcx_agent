@@ -159,7 +159,7 @@ it('locks clustering, evidence, personas and insights until preprocessing is der
     const tag = lockedTag(html, name);
     expect(tag).not.toBeNull();
     expect(tag![2]).toContain('aria-disabled="true"');
-    expect(tag![2]).toContain('title="전처리(3단계)를 먼저 완료하세요"');
+    expect(tag![2]).toContain('title="전처리(4단계)를 먼저 완료하세요"');
     expect(tag![2]).not.toMatch(/\bhref=/);
     expect(tag![2]).not.toMatch(/\btabindex=/);
   }

@@ -40,7 +40,7 @@ ERROR_CODES = {
     'Unknown resume channel': 'unknown_resume_channel',
     'Gate is editable only after list completion': 'gate_not_editable',
     'Unknown gate keyword': 'unknown_gate_keyword',
-    '구버전 세션은 0~2단계를 편집할 수 없습니다': 'legacy_session',
+    '구버전 세션은 1~3단계를 편집할 수 없습니다': 'legacy_session',
     '다른 버전이 활성화되었습니다': 'version_conflict',
     '읽기 전용 버전입니다': 'readonly_version',
 }

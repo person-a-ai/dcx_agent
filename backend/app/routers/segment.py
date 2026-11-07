@@ -239,7 +239,7 @@ def personas(sid: str, cluster: str | None = None, version: str | None = None):
         summary = summarize(scope)[:300]
         if summary:
             for row in rows:
-                row['hint'] = '초안 힌트: 0단계 대상 선언 · ' + summary
+                row['hint'] = '초안 힌트: 1단계 대상 선언 · ' + summary
         return dict(run=run, personas=rows)
 
 

@@ -364,7 +364,7 @@ def test_target_scope_hint(api, scope):
     rows = ok(api.client.get(api.base + '/personas'))['personas']
     for row in rows:
         if scope:
-            assert row['hint'] == '초안 힌트: 0단계 대상 선언 · 가정에서 에어컨을 쓰는 사람'
+            assert row['hint'] == '초안 힌트: 1단계 대상 선언 · 가정에서 에어컨을 쓰는 사람'
         else:
             assert not row.get('hint')
 

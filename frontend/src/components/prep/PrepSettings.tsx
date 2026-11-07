@@ -16,7 +16,7 @@ export function PrepSettings({ config, disabled, onChange, replacements }: {
   const [sourcesText, setSourcesText] = useState(config.excludeSources.join('\n'));
   return <fieldset disabled={disabled} className="min-w-0 space-y-6">
     <Card>
-      <div className="ds-card-h"><div><h2 className="ds-t-card">규칙 필터</h2><p className="ds-t-caption">본문 + 댓글 기준 · 0~2단계 설정을 그대로 가져왔습니다</p></div></div>
+      <div className="ds-card-h"><div><h2 className="ds-t-card">규칙 필터</h2><p className="ds-t-caption">본문 + 댓글 기준 · 1~3단계 설정을 그대로 가져왔습니다</p></div></div>
       <fieldset className="ds-field"><legend className="ds-lab">분석 채널</legend><div className="flex flex-wrap gap-4">{CHANNELS.map(([key, label]) => <Checkbox key={key} label={label} checked={!config.excludeChannels.includes(key)} onChange={event => onChange({ ...config, excludeChannels: event.target.checked ? config.excludeChannels.filter(c => c !== key) : [...config.excludeChannels, key] })} />)}</div><span className="ds-hint">체크를 끈 채널은 수집본에 있어도 전처리 · 라벨링에서 통째로 뺍니다.</span></fieldset>
       <label className="ds-field"><span className="ds-lab">광고어</span><textarea className="ds-inp" rows={3} value={adText} onChange={event => { setAdText(event.target.value); onChange({ ...config, adFilter: splitLines(event.target.value) }); }} /><span className="ds-hint">한 줄에 하나씩 입력하세요.</span></label>
       <label className="ds-field"><span className="ds-lab">제외 출처</span><textarea className="ds-inp" rows={2} value={sourcesText} onChange={event => { setSourcesText(event.target.value); onChange({ ...config, excludeSources: splitLines(event.target.value) }); }} /><span className="ds-hint">출처 이름을 한 줄에 하나씩 입력하세요.</span></label>

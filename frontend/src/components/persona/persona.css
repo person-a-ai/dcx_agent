@@ -3,7 +3,7 @@
 .persona-navigation button,.persona-navigation select,.persona-summary button,.persona-summary a,.persona-list-empty a{min-height:44px}
 .persona-navigation a,.persona-summary a,.persona-list-empty a{display:inline-flex;align-items:center;color:var(--action)}
 .persona-desktop-list ul{list-style:none;margin:0;padding:0}
-.persona-cluster-title{font:var(--type-label);margin:24px 0 8px;color:var(--sub)}
+.persona-cluster-title{font:var(--type-label);margin:24px 0 8px;color:var(--ink)}
 .persona-list-item{display:flex;align-items:flex-start;gap:8px;width:100%;padding:12px;text-align:left;border:0;border-radius:var(--r-button);background:var(--paper);color:var(--ink-strong);font:var(--type-body);cursor:pointer}
 .persona-list-item[aria-current="true"]{background:var(--blue-soft)}
 .persona-list-name{min-width:0}
@@ -27,9 +27,9 @@
 .persona-pain-points h3{font:var(--type-card);color:var(--ink-strong);margin:0 0 12px}
 .persona-pain-points ol{margin:0;padding-left:32px;display:grid;gap:12px}
 .persona-pain-item{padding:0;box-shadow:none}
-.persona-pain-item::marker{font:var(--type-section);color:var(--ink-strong)}
+.persona-pain-item::marker{font:var(--type-label);color:var(--sub)}
 .persona-pain-button{display:flex;flex-direction:column;gap:12px;width:100%;padding:20px;text-align:left;border:0;background:transparent;border-radius:var(--r-card);color:var(--ink-strong);cursor:pointer}
-.persona-pain-text{font:var(--type-section);overflow-wrap:anywhere}
+.persona-pain-text{font:var(--type-read);color:var(--ink-read);overflow-wrap:anywhere;word-break:keep-all}
 .persona-pain-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font:var(--type-caption);color:var(--ink)}
 .persona-navigation button:focus-visible,.persona-navigation select:focus-visible,.persona-summary button:focus-visible,.persona-summary a:focus-visible{outline:2px solid var(--action);outline-offset:2px}
 @media (max-width: 767px){
@@ -117,5 +117,6 @@
 @media(max-width:767px){
  .persona-summary-header h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
  .persona-pain-points ol{padding-left:20px}
- .persona-pain-text,.persona-pain-item::marker{font:var(--type-card)}
+ .persona-pain-text{font-size:15px;line-height:26px}
+ .persona-pain-item::marker{font:var(--type-label)}
 }

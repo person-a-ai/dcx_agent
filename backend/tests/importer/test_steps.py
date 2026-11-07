@@ -71,7 +71,7 @@ def test_full_import_reaches_stage6(env, data_dir):
     from app.routers.sessions import _completion
     done = _completion(sid, data)
     assert done['crawlDone'] and done['prepDone'] and done['labelingDone'] and done['exportDone']
-    assert any('0단계' in line for line in env.logs)
+    assert any('1단계' in line for line in env.logs)
 
 
 def test_rerun_is_noop(env):

@@ -19,7 +19,7 @@ export type EditorProps = {
 export function Representatives({ reps }: {
     reps: SegmentRepresentative[];
 }) {
-    return <details><summary className="cursor-pointer ds-t-caption">대표 원문 {reps.length}건</summary>{reps.map((rep, i) => <blockquote key={`${rep.docId}:${i}`} className="my-3 border-l-2 pl-3 break-words"><p>{rep.text}</p><cite className="ds-t-caption">{rep.source} · {rep.field}{rep.idx !== null ? ` ${rep.idx}` : ''}</cite></blockquote>)}</details>;
+    return <details><summary className="cursor-pointer ds-t-caption">대표 원문 {reps.length}건</summary>{reps.map((rep, i) => <blockquote key={`${rep.docId}:${i}`} className="ds-quote my-3"><p className="ds-read">{rep.text}</p><cite className="ds-t-caption not-italic">{rep.source} · {rep.field}{rep.idx !== null ? ` ${rep.idx}` : ''}</cite></blockquote>)}</details>;
 }
 export function ClusterLayer({ sid, version, support, clusters, disabled, edits, onEdit, onConfirm, onRequest }: EditorProps & {
     sid?: string;

@@ -7,7 +7,7 @@ export function LaterStageBanner({ gate, stage }: { gate: Exclude<LaterStageGate
   const router = useRouter();
   if (gate === "needs-prep") {
     return <div className="later-stage-banner"><Banner tone="warning" actions={<Button variant="primary" onClick={() => router.push("/pipeline/preprocess")}>전처리 화면으로</Button>}>
-      3단계(전처리)를 먼저 완료하세요. 전처리가 끝나야 {stage} 화면을 열 수 있습니다.
+      4단계(전처리)를 먼저 완료하세요. 전처리가 끝나야 {stage} 화면을 열 수 있습니다.
     </Banner></div>;
   }
   if (gate === "legacy") {

@@ -16,7 +16,7 @@ import { ContextList } from './ContextList';
 import { QueryPanel } from './QueryPanel';
 
 const prerequisites = '6-C Context를 모두 확정한 뒤 근거 탐색을 실행하세요.';
-const staleCopy = '6단계가 다시 나뉘어 이 근거는 이전 결과 기준입니다. 다시 실행하세요.';
+const staleCopy = '7단계가 다시 나뉘어 이 근거는 이전 결과 기준입니다. 다시 실행하세요.';
 export function evidenceActions(sid:string, version:string | undefined, run:string, transport: Pick<typeof api, 'refreshEvidenceNew' | 'startEvidence' | 'skipEvidenceContext'> & {addKnownInsight:typeof addKnownInsight} = {...api,addKnownInsight}) {
   return {
     add:(docId:string) => transport.addKnownInsight(sid,{type:'doc',doc_id:docId},version),
@@ -48,7 +48,7 @@ export function EvidenceScreenView(p:ViewProps) {
     {detail.items.length ? cards(detail.items) : <p>{p.tab === 'new' && (selected?.counts.all ?? 0) > 0 ? 'Known Insight를 빼니 남는 원문이 없습니다. 전체 탭에서 보세요.' : '이 Context에서 근거로 쓸 원문을 찾지 못했습니다.'}</p>}
   </div> : <div role="status" aria-label="근거 불러오는 중"><Skeleton height={120}/></div>;
   return <div className="min-w-0 space-y-5 break-words">
-    <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="ds-eyebrow">7단계 · 근거 탐색</p><h1 className="ds-t-screen">아직 모르는 근거를 찾습니다</h1><p className="ds-t-body">Context마다 소비자 말투의 가설 문장 8개로 그 Context 안에서만 찾고, 10건을 고릅니다.</p></div>
+    <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="ds-eyebrow">8단계 · 근거 탐색</p><h1 className="ds-t-screen">아직 모르는 근거를 찾습니다</h1><p className="ds-t-body">Context마다 소비자 말투의 가설 문장 8개로 그 Context 안에서만 찾고, 10건을 고릅니다.</p></div>
       {before ? <Button variant="primary" disabled={!status || !p.ready || p.readonly || p.busy} onClick={p.onStart}>근거 탐색 실행</Button> : <Button variant="primary" disabled={!done || p.readonly || p.busy} title={!done ? '모든 Context가 끝나야 합니다' : undefined} onClick={p.onNext}>페르소나 만들기</Button>}
     </header>
     {!p.ready && <Banner>{prerequisites}</Banner>}
