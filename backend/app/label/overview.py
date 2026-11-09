@@ -107,12 +107,16 @@ class _IndexedDocuments:
 
 
 @lru_cache(maxsize=128)
-def _estimate(path, labeler, counts, context, stamp):
+def _estimate(path, labeler, counts, context, stamp, backend=None):
+    # backend keys the cache so a JEV_BACKEND switch never serves a stale estimate.
     # Judging finished with nothing left (e.g. imported labels): skip reading a corpus
     # that can be hundreds of thousands of documents. Before judging starts every
     # count is zero and the full-corpus estimate is still shown.
     if sum(counts) and not counts[0]:
-        return dict(seconds=0, jevTokens=0)
+        if backend is None:
+            return dict(seconds=0, jevTokens=0)
+        # Same shape as judge.estimate: a cost only for the Decisions Jev slot.
+        return dict(seconds=0, jevTokens=0, jevCostUsd=0.0 if labeler == 'jev' and backend == 'decisions' else None)
     result = judge.estimate(_IndexedDocuments(path), context, labeler)
     total = sum(counts)
     if total and result['seconds'] is not None:
@@ -200,7 +204,7 @@ def overview(sid, version=None, *, sync=True) -> dict:
         estimate = detail.get('estimate')
         if estimate is None:
             estimate = dict(_estimate(str(labels.path), name, tuple(counts[k] for k in ('pending', 'done', 'bad')),
-                                      data.get('projectContext', {}).get('oneLiner', ''), stamp))
+                                      data.get('projectContext', {}).get('oneLiner', ''), stamp, settings.jev_backend))
         count = sum(counts.values())
         progress[name] = dict(**counts, state=run.get('state', 'done' if count and not counts['pending'] else 'none'),
                               progress=run.get('progress', (counts['done']+counts['bad'])/count if count else 0),
@@ -208,7 +212,8 @@ def overview(sid, version=None, *, sync=True) -> dict:
     queue_count = sum(reasons.values())
     pending = next_item(labels, 'audit') is not None or next_item(labels, 'reissue') is not None
     from app.model.dataset import trainable_count
-    result = dict(labelerMode=mode, trainable=trainable_count(sid, data, labels), mode=labeling.get('mode', 'llm'), modelId=labeling.get('modelId'), started=labeling.get('started', False),
+    result = dict(labelerMode=mode, crossLabeler='Decisions' if settings.jev_backend == 'decisions' else 'Jev',
+                  trainable=trainable_count(sid, data, labels), mode=labeling.get('mode', 'llm'), modelId=labeling.get('modelId'), started=labeling.get('started', False),
                   merged=merged, total=total, accepted=accepted, escalated=queue_count,
                   mismatchRate=None if mode == 'gpt_only' else (mismatches / merged if merged else 0),
                   levelDistribution=distribution, queue=dict(total=queue_count, byReason=reasons, estimatedSeconds=queue_count * average),

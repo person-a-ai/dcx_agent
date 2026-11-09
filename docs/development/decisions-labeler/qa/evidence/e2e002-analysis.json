@@ -1,0 +1,60 @@
+{
+ "requests": 131,
+ "paths": {
+  "/v1/decisions": 131
+ },
+ "status": {
+  "200": 131
+ },
+ "order_ok": 131,
+ "idempotency_key_present": 0,
+ "key_slots": {
+  "1": 66,
+  "2": 65
+ },
+ "key_alternates": true,
+ "first_slots": [
+  1,
+  2,
+  1,
+  2,
+  1,
+  2,
+  1,
+  2
+ ],
+ "header_names_sample": [
+  "Accept",
+  "Accept-Encoding",
+  "Authorization",
+  "Connection",
+  "Content-Length",
+  "Content-Type",
+  "Host",
+  "User-Agent"
+ ],
+ "unique_inputs": 131,
+ "max_requests_per_input": 1,
+ "marker_requests": [
+  {
+   "doc_tag": "300",
+   "sha": "2d8640dabb56",
+   "status": 200
+  },
+  {
+   "doc_tag": "301",
+   "sha": "377649fb70cb",
+   "status": 200
+  }
+ ],
+ "max_input_len_json": 8000,
+ "doc302": [
+  {
+   "input_len_json": 8000,
+   "status": 200
+  }
+ ],
+ "models_sent": {
+  "qa-model-e2e002": 131
+ }
+}

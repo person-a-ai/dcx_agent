@@ -22,6 +22,8 @@ def jev_available() -> bool:
         return bool(settings.jev_api_keys)
     if settings.jev_backend == 'fake':
         return settings.label_fake_jev_cross
+    if settings.jev_backend == 'decisions':
+        return bool(settings.decisions_api_keys or settings.openai_api_key)
     return False
 
 
@@ -259,6 +261,10 @@ class FakeJevClient:
 
 
 def get_jev_client(keys=None, model=None, transport=None):
+    if settings.jev_backend == 'decisions':
+        from app.label.decisions import DecisionsClient  # avoids a circular import
+        return DecisionsClient(settings.decisions_api_keys if keys is None else keys,
+                               model or settings.decisions_model, transport)
     model = model or settings.jev_model
     if settings.jev_backend == 'fake':
         return FakeJevClient(model)

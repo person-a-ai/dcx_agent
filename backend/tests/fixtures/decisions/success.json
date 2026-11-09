@@ -1,0 +1,26 @@
+{
+  "id": "dec_123",
+  "model": "gpt-6-luna-2026-10-01",
+  "answers": [
+    {"name": "anchor", "type": "predicate", "probability": 0.96},
+    {"name": "sense", "type": "predicate", "probability": 0.12},
+    {"name": "feel", "type": "predicate", "probability": 0.8},
+    {"name": "think", "type": "predicate", "probability": 0.3},
+    {"name": "act", "type": "predicate", "probability": 0},
+    {"name": "situation", "type": "predicate", "probability": 1},
+    {"name": "relate_outcome", "type": "choice", "probabilities": [
+      {"value": "none", "probability": 0.1},
+      {"value": "relate", "probability": 0.2},
+      {"value": "outcome", "probability": 0.6},
+      {"value": "both", "probability": 0.1}
+    ]},
+    {"name": "reason_code", "type": "choice", "probabilities": [
+      {"value": "ad", "probability": 0.01},
+      {"value": "no_needs", "probability": 0.01},
+      {"value": "pure_criticism", "probability": 0.01},
+      {"value": "other", "probability": 0.02},
+      {"value": "not_non", "probability": 0.75}
+    ]}
+  ],
+  "usage": {"input_tokens": 100, "output_tokens": 20}
+}

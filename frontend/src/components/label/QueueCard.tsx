@@ -14,10 +14,10 @@ import { keyAction, type FocusZone } from '@/lib/logic/labelKeys';
 import type { EvidenceLevel, LabelResult, LabelTags, QueueItem, ReviewMode, SemanticTag } from '@/lib/types';
 const semantics: [SemanticTag,string][] = [['sense','감각'],['feel','감정'],['think','판단'],['act','행동'],['relate','관계'],['outcome','결과']];
 const initialTags = (): LabelTags => ({anchor:false,sem:{sense:0,feel:0,think:0,act:0,relate:0,outcome:0},situation:false,reason_code:null,signal:null});
-export type QueueCardProps = {sid: string; version?: string; item: QueueItem; mode?: ReviewMode; labeler: string; focusZone?: FocusZone; readonly?: boolean; onNext: (after?: string) => void; onSubmitted?: (result: LabelResult) => void};
+export type QueueCardProps = {sid: string; version?: string; item: QueueItem; mode?: ReviewMode; labeler: string; crossName?: string; focusZone?: FocusZone; readonly?: boolean; onNext: (after?: string) => void; onSubmitted?: (result: LabelResult) => void};
 // Remount local drafts when navigating to a different document, round, or version.
 export function QueueCard(props: QueueCardProps) { return <JudgingCard key={`${props.sid}:${props.version}:${props.mode}:${props.item.round}:${props.item.doc_id}`} {...props}/>; }
-function JudgingCard({sid, version, item, mode = 'escalate', labeler, focusZone = 'card', readonly = false, onNext, onSubmitted}: QueueCardProps) {
+function JudgingCard({sid, version, item, mode = 'escalate', labeler, crossName = 'Jev', focusZone = 'card', readonly = false, onNext, onSubmitted}: QueueCardProps) {
  const [tags,setTags] = useState<LabelTags>(initialTags);
  const [preview,setPreview] = useState<{tags: LabelTags; level: EvidenceLevel} | null>(null);
  const [previewError,setPreviewError] = useState(''); const [retry,setRetry] = useState(0);
@@ -80,6 +80,6 @@ function JudgingCard({sid, version, item, mode = 'escalate', labeler, focusZone 
   <div aria-live="polite">{level ? <><LevelBadge level={level}/> 등급 {levelNames[level]}으로 바뀜</> : previewError || '처리 중…'}</div>
   {previewError && <Button onClick={() => {setPreviewError('');setRetry(n => n+1);}}>등급 다시 계산</Button>}
   {error && <p role="alert">{error}</p>}
-  {result ? <><h3>제출 후 · 라벨러와 비교</h3><LevelBadge level={result.level}/><Table><thead><tr><th>칸</th><th>내 판정</th><th>Jev 확률</th><th>GPT</th></tr></thead><tbody>{fields.map(([field,name]) => <tr key={field}><th scope="row">{name}</th><td>{voteValue(tags,field)}</td><td>{voteValue(result.votes.jev,field)}</td><td>{voteValue(result.votes.gpt,field)}</td></tr>)}</tbody></Table><div className="ds-actions"><Button variant="primary" onClick={() => onNext()}>다음 문서 보기</Button></div></> : <div className="ds-actions"><Button disabled={busy || !item.cursor} onClick={() => onNext(item.cursor)}>건너뛰기</Button><Button variant="primary" disabled={disabled || !level || !item.document} loading={busy} onClick={() => void submit()}>제출</Button></div>}
+  {result ? <><h3>제출 후 · 라벨러와 비교</h3><LevelBadge level={result.level}/><Table><thead><tr><th>칸</th><th>내 판정</th><th>{crossName} 확률</th><th>GPT</th></tr></thead><tbody>{fields.map(([field,name]) => <tr key={field}><th scope="row">{name}</th><td>{voteValue(tags,field)}</td><td>{voteValue(result.votes.jev,field)}</td><td>{voteValue(result.votes.gpt,field)}</td></tr>)}</tbody></Table><div className="ds-actions"><Button variant="primary" onClick={() => onNext()}>다음 문서 보기</Button></div></> : <div className="ds-actions"><Button disabled={busy || !item.cursor} onClick={() => onNext(item.cursor)}>건너뛰기</Button><Button variant="primary" disabled={disabled || !level || !item.document} loading={busy} onClick={() => void submit()}>제출</Button></div>}
  </Card>;
 }

@@ -1,0 +1,36 @@
+{
+ "requests": 1,
+ "paths": {
+  "/v1/decisions": 1
+ },
+ "status": {
+  "401": 1
+ },
+ "order_ok": 1,
+ "idempotency_key_present": 0,
+ "key_slots": {
+  "1": 1
+ },
+ "key_alternates": null,
+ "first_slots": [
+  1
+ ],
+ "header_names_sample": [
+  "Accept",
+  "Accept-Encoding",
+  "Authorization",
+  "Connection",
+  "Content-Length",
+  "Content-Type",
+  "Host",
+  "User-Agent"
+ ],
+ "unique_inputs": 1,
+ "max_requests_per_input": 1,
+ "marker_requests": [],
+ "max_input_len_json": 168,
+ "doc302": [],
+ "models_sent": {
+  "qa-model-neg002": 1
+ }
+}

@@ -1,0 +1,126 @@
+{
+ "requests": 131,
+ "paths": {
+  "/v1/decisions": 131
+ },
+ "status": {
+  "200": 131
+ },
+ "order_ok": 131,
+ "idempotency_key_present": 0,
+ "key_slots": {
+  "1": 66,
+  "2": 65
+ },
+ "key_alternates": true,
+ "first_slots": [
+  1,
+  2,
+  1,
+  2,
+  1,
+  2,
+  1,
+  2
+ ],
+ "header_names_sample": [
+  "Accept",
+  "Accept-Encoding",
+  "Authorization",
+  "Connection",
+  "Content-Length",
+  "Content-Type",
+  "Host",
+  "User-Agent"
+ ],
+ "unique_inputs": 131,
+ "max_requests_per_input": 1,
+ "marker_requests": [
+  {
+   "doc_tag": "300",
+   "sha": "2d8640dabb56",
+   "status": 200
+  },
+  {
+   "doc_tag": "301",
+   "sha": "377649fb70cb",
+   "status": 200
+  }
+ ],
+ "max_input_len_json": 8000,
+ "doc302": [
+  {
+   "input_len_json": 8000,
+   "status": 200
+  }
+ ],
+ "models_sent": {
+  "qa-model-neg001": 131
+ },
+ "vote_status": {
+  "done": 129,
+  "bad": 2
+ },
+ "done_with_8_probs": 129,
+ "done_with_reason_probs": 129,
+ "done_models": {
+  "mock-decisions-1": 129
+ },
+ "truncated_doc_ids": [
+  "fx_89683abd9a6e4f03"
+ ],
+ "bad": [
+  {
+   "doc_id": "fx_efafd0eb775cd6bb",
+   "last_error": "refused",
+   "attempts": 0,
+   "payload": null
+  },
+  {
+   "doc_id": "fx_14620a0dfbe7a0f6",
+   "last_error": "refused",
+   "attempts": 0,
+   "payload": null
+  }
+ ],
+ "sample_vote": {
+  "probs": {
+   "anchor": 0.1169,
+   "sense": 0.0375,
+   "feel": 0.0413,
+   "think": 0.0541,
+   "act": 0.8183,
+   "situation": 0.0104,
+   "relate": 0.8624,
+   "outcome": 0.3105
+  },
+  "reason_probs": {
+   "ad": 0.3230676932306769,
+   "no_needs": 0.30366963303669636,
+   "pure_criticism": 0.07759224077592242,
+   "other": 0.16398360163983602,
+   "not_non": 0.1316868313168683
+  },
+  "model": "mock-decisions-1",
+  "truncated": false
+ },
+ "truncated_doc_tags": [
+  "302"
+ ],
+ "bad_doc_tags": [
+  "301",
+  "300"
+ ],
+ "bad_doc_markers": [
+  true,
+  true
+ ],
+ "long_body_docs": [
+  {
+   "doc_id": "fx_89683abd9a6e4f03",
+   "tag": "302",
+   "body_len": 14439
+  }
+ ],
+ "documents": 131
+}

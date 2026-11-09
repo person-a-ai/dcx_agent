@@ -100,7 +100,9 @@ def env(content, fail):
     if settings is None:
         fail("env", "README.md", "Settings class not found")
         return
-    allowed = {name.upper() for name in re.findall(r"^    ([a-zA-Z_]\w*):\s*[^\n=]+=[^\n]*", settings.group(1), re.MULTILINE)} | {"JEVMODEL_API_KEY"}
+    allowed = {name.upper() for name in re.findall(r"^    ([a-zA-Z_]\w*):\s*[^\n=]+=[^\n]*", settings.group(1), re.MULTILINE)}
+    # Fields read from a different variable name declare it as validation_alias.
+    allowed |= set(re.findall(r'validation_alias="([A-Za-z_]\w*)"', settings.group(1)))
     for name in sorted(names - allowed):
         fail("env", "README.md", f"unknown variable {name}")
     example = set(re.findall(r"^([A-Za-z_]\w*)=", (ROOT / ".env.example").read_text(), re.MULTILINE))

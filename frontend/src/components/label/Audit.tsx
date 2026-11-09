@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { Button, Card, Table } from '@/components/ds';
 import { Queue } from './Queue';
 import { KappaTable } from './KappaTable';
+import { crossLabelerName } from './labelerMode';
 import { createAudit } from '@/lib/api/label';
 import { displayError } from '@/lib/api/errors';
 import type { Overview } from '@/lib/types';
@@ -34,7 +35,7 @@ export function Audit({sid, version, overview: o, readonly = false, oneLiner, on
     <div className="flex flex-wrap gap-3"><Button aria-pressed={mode === 'audit'} onClick={() => setMode('audit')}>감사 판정</Button><Button aria-pressed={mode === 'reissue'} onClick={() => setMode('reissue')}>이전 감사 다시 판정</Button><Button onClick={() => setRound(undefined)}>전체 대기 라운드</Button></div>
     <p>감사에서는 AI 판정을 숨긴 채 독립적으로 판정합니다. 제출한 판정은 즉시 저장됩니다.{round != null && ` · 라운드 ${round}`}</p>
     <div className="grid items-start gap-6 lg:grid-cols-3"><div className="lg:col-span-2"><Queue key={`${mode}:${round}`} sid={sid} version={version} overview={o} mode={mode} round={round} readonly={readonly} onSubmitted={onRefresh}/></div><Card data-focus-zone="panel" className="space-y-3"><h2 className="ds-t-card">태그 정의</h2>{oneLiner && <p>{oneLiner}</p>}<dl className="space-y-3">{definitions.map(([name, definition]) => <div key={name}><dt className="ds-t-label">{name}</dt><dd>{definition}</dd></div>)}</dl></Card></div>
-    <Card><KappaTable audit={(o.audit.find(r => r.round === round) ?? o.audit.at(-1))?.kappaAI} jev={o.labelerAccuracy.jev} gpt={o.labelerAccuracy.gpt}/></Card>
+    <Card><KappaTable audit={(o.audit.find(r => r.round === round) ?? o.audit.at(-1))?.kappaAI} jev={o.labelerAccuracy.jev} gpt={o.labelerAccuracy.gpt} crossName={crossLabelerName(o)}/></Card>
   </div>;
 }
 

@@ -133,8 +133,11 @@ APP_ROOT="$HOME/srv/dcx-agent" "$HOME/srv/dcx-agent/ops/dcxctl" rollback
 | `EMBED_MODEL` / `EMBED_DIM` | 임베딩 설정 | 기본 `voyage-4` / `1024` |
 | `KIWI_WORKERS` | 3단계 처리량 조정 | 전처리 토큰화(kiwi) 스레드 수; 기본 `8`, API·웹용 코어는 남겨 두세요 |
 | `JEVMODEL_API_KEY` | Jev HTTP 사용 시 | Jev API 키; 여러 키는 쉼표로 구분, 기본 빈 목록 |
-| `JEV_BACKEND` / `JEV_MODEL` | Jev 설정 | 기본 `http` / `jev-latest`, 오프라인 `fake` |
+| `JEV_BACKEND` / `JEV_MODEL` | Jev 설정 | 기본 `http` / `jev-latest`; Jev 자리에 Decisions를 쓰려면 `decisions`, 오프라인 `fake` |
 | `JEV_RATE_PER_MIN` | Jev 사용 시 | 키당 분당 요청 수; 기본 `120` |
+| `DECISIONS_API_KEY` | `JEV_BACKEND=decisions`일 때 | Decisions API 키; 여러 키는 쉼표로 구분, 비우면 `OPENAI_API_KEY` 사용 |
+| `DECISIONS_MODEL` / `DECISIONS_RATE_PER_MIN` | `JEV_BACKEND=decisions`일 때 | 기본 `gpt-6-luna` / 키당 분당 요청 수 `120` |
+| `DECISIONS_BASE_URL` | Decisions 주소를 바꿀 때 | 기본 `https://api.openai.com/v1`; 로컬 QA용 가짜 서버 주소 등 |
 | `LABEL_FAKE_JEV_CROSS` | 테스트·오프라인 QA | fake Jev를 교차 판정 라벨러로 취급; 기본 `false` |
 | `LABEL_GPT_BACKEND` | GPT 라벨링 | 기본 `codex_exec`; `openai_api`, `fake` 선택 가능 |
 | `LABEL_BATCH_SIZE` / `LABEL_CONCURRENCY` | 라벨링 처리량 조정 | 묶음 문서 수 `20` / 동시 묶음 수 `4` |
@@ -154,6 +157,7 @@ APP_ROOT="$HOME/srv/dcx-agent" "$HOME/srv/dcx-agent/ops/dcxctl" rollback
 그 밖의 값은 `.env.example`·`backend/app/config.py` 참고.
 
 Jev 키가 없거나 `JEV_BACKEND=fake`이면 라벨링은 GPT 단독 판정으로 시작합니다(D-340). Jev 실행 없이 GPT 판정을 그대로 채택하고 confidence는 비웁니다. Jev를 연결한 뒤 새 버전에서 라벨링을 시작하면 교차 판정합니다.
+Jev 대신 Decisions로 교차 판정하려면 `JEV_BACKEND=decisions`로 두고 `DECISIONS_API_KEY`(비우면 `OPENAI_API_KEY`)를 설정하세요.
 
 3단계에서 만든 로컬 벡터로 Core · Supporting 문서를 검색하며, Known Insight 필터를 적용합니다.
 별도의 벡터 DB 업로드나 API 키가 필요하지 않습니다.

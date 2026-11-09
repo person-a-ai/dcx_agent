@@ -1,0 +1,7 @@
+{
+  "kind": "plan",
+  "surface": "web",
+  "implementation": "docs/development/decisions-labeler/03-plan.md",
+  "qaPlan": "docs/development/decisions-labeler/QA_PLAN-decisions-labeler.md",
+  "designNeeded": false
+}
