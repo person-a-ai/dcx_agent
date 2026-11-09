@@ -32,9 +32,42 @@ class KeyMetric(BaseModel):
         return value
 
 
+class PersonaCard(BaseModel):
+    """Target-persona card; stage 6 anchors documents to it in target mode."""
+    desire: str = Field(default="", max_length=200)
+    context: str = Field(default="", max_length=200)
+    pain: str = Field(default="", max_length=200)
+    unmet: str = Field(default="", max_length=200)
+    keywords: list[str] = Field(default_factory=list, max_length=10)
+    quotes: list[str] = Field(default_factory=list, max_length=5)
+
+    @field_validator("desire", "context", "pain", "unmet", mode="before")
+    @classmethod
+    def strip_field(cls, value):
+        return value.strip() if isinstance(value, str) else value
+
+    @field_validator("keywords", "quotes", mode="before")
+    @classmethod
+    def drop_blank(cls, values):
+        if not isinstance(values, list):
+            return values
+        return [value.strip() for value in values if isinstance(value, str) and value.strip()]
+
+    @field_validator("quotes")
+    @classmethod
+    def short_quotes(cls, values):
+        if any(len(value) > 300 for value in values):
+            raise ValueError("대표 원문은 300자 이내로 입력하세요")
+        return values
+
+    def filled(self) -> bool:
+        return any((self.desire, self.context, self.pain, self.unmet, self.keywords, self.quotes))
+
+
 class PersonaSeed(BaseModel):
     text: str = Field(min_length=1, max_length=40)
     dimension: PersonaDimension | None = None
+    card: PersonaCard | None = None
 
     @field_validator("text", mode="before")
     @classmethod
