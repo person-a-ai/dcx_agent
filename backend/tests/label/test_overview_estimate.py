@@ -31,3 +31,24 @@ def test_estimate_streams_documents_with_the_same_result(tmp_path):
     streamed = overview._IndexedDocuments(path)
     assert len(streamed) == 25 and not isinstance(streamed, list)
     assert overview._estimate(path, 'jev', (10, 15, 0), 'ctx', ('s',)) == expected
+
+
+def test_estimate_before_judging_starts_reads_the_corpus(tmp_path):
+    path = _db(tmp_path, 4)
+    overview._estimate.cache_clear()
+    with sqlite3.connect(path) as db:
+        docs = [json.loads(row[0]) for row in db.execute('SELECT payload FROM documents')]
+    assert overview._estimate(path, 'jev', (0, 0, 0), 'ctx', ('s',)) == judge.estimate(docs, 'ctx', 'jev')
+
+
+def test_streamed_documents_are_read_in_chunks_without_holding_a_lock(tmp_path, monkeypatch):
+    path = _db(tmp_path, 7)
+    monkeypatch.setattr(overview._IndexedDocuments, 'chunk', 3)
+    seen = []
+    for doc in overview._IndexedDocuments(path):
+        seen.append(doc['doc_id'])
+        # A writer must not wait on the reader between rows.
+        with sqlite3.connect(path, timeout=0) as db:
+            db.execute('BEGIN IMMEDIATE')
+            db.execute('UPDATE documents SET payload=payload WHERE doc_id=?', (doc['doc_id'],))
+    assert seen == [f'd{i}' for i in range(7)]
