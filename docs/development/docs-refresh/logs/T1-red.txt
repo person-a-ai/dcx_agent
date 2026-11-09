@@ -1,0 +1,141 @@
+FAIL exists CLAUDE.md: missing
+FAIL paths README.md: missing backend/data/
+FAIL paths frontend/PIPELINE.md: missing frontend/src/components/KeywordTag.tsx
+FAIL paths frontend/PIPELINE.md: missing backend/app/routers/crawling.py
+FAIL paths frontend/PIPELINE.md: missing backend/app/services/crawling.py
+FAIL paths frontend/README.md: missing app/page.tsx
+FAIL api backend/BACKEND.md: missing DELETE /known/{sid}/{item_id}
+FAIL api backend/BACKEND.md: missing GET /context/{sid}
+FAIL api backend/BACKEND.md: missing GET /crawl/{sid}/report
+FAIL api backend/BACKEND.md: missing GET /crawl/{sid}/status
+FAIL api backend/BACKEND.md: missing GET /evidence/{sid}/contexts/{context_id}
+FAIL api backend/BACKEND.md: missing GET /evidence/{sid}/package
+FAIL api backend/BACKEND.md: missing GET /evidence/{sid}/personas/{persona_id}
+FAIL api backend/BACKEND.md: missing GET /evidence/{sid}/status
+FAIL api backend/BACKEND.md: missing GET /insight/{sid}
+FAIL api backend/BACKEND.md: missing GET /integrations
+FAIL api backend/BACKEND.md: missing GET /keywords/{sid}
+FAIL api backend/BACKEND.md: missing GET /keywords/{sid}/rounds/{n}
+FAIL api backend/BACKEND.md: missing GET /known/{sid}
+FAIL api backend/BACKEND.md: missing GET /known/{sid}/suggestions
+FAIL api backend/BACKEND.md: missing GET /label/{sid}/next
+FAIL api backend/BACKEND.md: missing GET /label/{sid}/overview
+FAIL api backend/BACKEND.md: missing GET /models
+FAIL api backend/BACKEND.md: missing GET /models/{model_id}
+FAIL api backend/BACKEND.md: missing GET /persona/{sid}/cards
+FAIL api backend/BACKEND.md: missing GET /persona/{sid}/cards/{item_id}
+FAIL api backend/BACKEND.md: missing GET /persona/{sid}/map
+FAIL api backend/BACKEND.md: missing GET /persona/{sid}/status
+FAIL api backend/BACKEND.md: missing GET /persona/{sid}/tree
+FAIL api backend/BACKEND.md: missing GET /prep/{sid}/status
+FAIL api backend/BACKEND.md: missing GET /segment/{sid}/clusters
+FAIL api backend/BACKEND.md: missing GET /segment/{sid}/contexts
+FAIL api backend/BACKEND.md: missing GET /segment/{sid}/docs
+FAIL api backend/BACKEND.md: missing GET /segment/{sid}/personas
+FAIL api backend/BACKEND.md: missing GET /segment/{sid}/status
+FAIL api backend/BACKEND.md: missing GET /segment/{sid}/support-counts
+FAIL api backend/BACKEND.md: missing GET /sessions/{sid}/compare
+FAIL api backend/BACKEND.md: missing GET /sessions/{sid}/versions
+FAIL api backend/BACKEND.md: missing GET /train/{sid}/status
+FAIL api backend/BACKEND.md: missing PATCH /context/{sid}
+FAIL api backend/BACKEND.md: missing PATCH /known/{sid}/{item_id}
+FAIL api backend/BACKEND.md: missing PATCH /session/{sid}
+FAIL api backend/BACKEND.md: missing POST /context
+FAIL api backend/BACKEND.md: missing POST /context/category-suggest
+FAIL api backend/BACKEND.md: missing POST /crawl/{sid}/detail
+FAIL api backend/BACKEND.md: missing POST /crawl/{sid}/finish-partial
+FAIL api backend/BACKEND.md: missing POST /crawl/{sid}/list
+FAIL api backend/BACKEND.md: missing POST /crawl/{sid}/resume
+FAIL api backend/BACKEND.md: missing POST /crawl/{sid}/stop
+FAIL api backend/BACKEND.md: missing POST /evidence/{sid}/contexts/{context_id}/refresh-new
+FAIL api backend/BACKEND.md: missing POST /evidence/{sid}/contexts/{context_id}/skip
+FAIL api backend/BACKEND.md: missing POST /evidence/{sid}/run
+FAIL api backend/BACKEND.md: missing POST /insight/{sid}/chat
+FAIL api backend/BACKEND.md: missing POST /insight/{sid}/concept/{item_id}
+FAIL api backend/BACKEND.md: missing POST /insight/{sid}/revert
+FAIL api backend/BACKEND.md: missing POST /insight/{sid}/run
+FAIL api backend/BACKEND.md: missing POST /keywords/{sid}/coverage
+FAIL api backend/BACKEND.md: missing POST /keywords/{sid}/events
+FAIL api backend/BACKEND.md: missing POST /keywords/{sid}/manual
+FAIL api backend/BACKEND.md: missing POST /keywords/{sid}/rounds/{n}/commit
+FAIL api backend/BACKEND.md: missing POST /keywords/{sid}/suggest-words
+FAIL api backend/BACKEND.md: missing POST /known/{sid}
+FAIL api backend/BACKEND.md: missing POST /label/rule/preview
+FAIL api backend/BACKEND.md: missing POST /label/{sid}/audit
+FAIL api backend/BACKEND.md: missing POST /label/{sid}/judge
+FAIL api backend/BACKEND.md: missing POST /label/{sid}/judge/{labeler}/{action}
+FAIL api backend/BACKEND.md: missing POST /label/{sid}/mode
+FAIL api backend/BACKEND.md: missing POST /label/{sid}/seen
+FAIL api backend/BACKEND.md: missing POST /label/{sid}/start
+FAIL api backend/BACKEND.md: missing POST /label/{sid}/submit
+FAIL api backend/BACKEND.md: missing POST /persona/{sid}/cards/{item_id}/retry
+FAIL api backend/BACKEND.md: missing POST /persona/{sid}/run
+FAIL api backend/BACKEND.md: missing POST /prep/{sid}/run
+FAIL api backend/BACKEND.md: missing POST /segment/{sid}/personas/{item_id}/confirm-contexts
+FAIL api backend/BACKEND.md: missing POST /segment/{sid}/requests
+FAIL api backend/BACKEND.md: missing POST /segment/{sid}/run
+FAIL api backend/BACKEND.md: missing POST /sessions/{sid}/versions
+FAIL api backend/BACKEND.md: missing POST /train/{sid}
+FAIL api backend/BACKEND.md: missing POST /train/{sid}/export
+FAIL api backend/BACKEND.md: missing PUT /context/{sid}
+FAIL api backend/BACKEND.md: missing PUT /crawl/{sid}/auto-chain
+FAIL api backend/BACKEND.md: missing PUT /crawl/{sid}/config
+FAIL api backend/BACKEND.md: missing PUT /crawl/{sid}/gate
+FAIL api backend/BACKEND.md: missing PUT /insight/{sid}/confirm
+FAIL api backend/BACKEND.md: missing PUT /prep/{sid}/config
+FAIL api backend/BACKEND.md: missing PUT /segment/{sid}/clusters/{item_id}
+FAIL api backend/BACKEND.md: missing PUT /segment/{sid}/contexts/{item_id}
+FAIL api backend/BACKEND.md: missing PUT /segment/{sid}/personas/{item_id}
+FAIL api backend/BACKEND.md: missing PUT /sessions/{sid}/active-version
+FAIL api backend/BACKEND.md: not in code GET /status/{sid}
+FAIL api backend/BACKEND.md: not in code POST /crawl
+FAIL stages README.md: missing /pipeline/clustering
+FAIL stages README.md: missing /pipeline/compare
+FAIL stages README.md: missing /pipeline/crawling
+FAIL stages README.md: missing /pipeline/evidence
+FAIL stages README.md: missing /pipeline/insights
+FAIL stages README.md: missing /pipeline/keywords
+FAIL stages README.md: missing /pipeline/labeling
+FAIL stages README.md: missing /pipeline/personas
+FAIL stages README.md: missing /pipeline/preprocess
+FAIL stages README.md: missing /pipeline/start
+FAIL stages README.md: missing /pipeline/training
+FAIL stages frontend/PIPELINE.md: missing /pipeline/compare
+FAIL banned README.md:13: | 인프라 | AWS S3 · Naver Cafe API · Nginx · systemd |
+FAIL banned README.md:38: ├── nginx/                    # Nginx 리버스 프록시 설정
+FAIL banned README.md:40: │   ├── deploy.sh             # EC2 원클릭 배포
+FAIL banned README.md:43: │   └── systemd/              # 서비스 파일
+FAIL banned README.md:140: # AWS EC2 배포 가이드
+FAIL banned README.md:149: | 보안 그룹 | 인바운드 80, 443, 22 | Nginx가 내부 포트 프록시 |
+FAIL banned README.md:151: ## 1. EC2 인스턴스 생성
+FAIL banned README.md:153: 1. AWS 콘솔 → EC2 → **인스턴스 시작**
+FAIL banned README.md:165: > 3000, 8000 포트는 열지 않습니다. Nginx가 80번 포트에서 내부로 프록시합니다.
+FAIL banned README.md:167: ## 2. EC2 접속 및 초기 설정
+FAIL banned README.md:170: ssh -i your-key.pem ubuntu@<EC2-퍼블릭-IP>
+FAIL banned README.md:197: | 4 | Nginx 설치 및 설정 | 리버스 프록시 구성 |
+FAIL banned README.md:201: | - | systemd 등록 | 백엔드/프론트 자동 시작 + 자동 재시작 |
+FAIL banned README.md:211: # CORS_ORIGINS 추가 (본인 도메인 또는 EC2 IP)
+FAIL banned README.md:212: echo "CORS_ORIGINS=http://<EC2-퍼블릭-IP>" >> ~/dcx_agent/.env
+FAIL banned README.md:226: # http://<EC2-퍼블릭-IP>
+FAIL banned README.md:235: [ Nginx :80 ]
+FAIL banned README.md:271: # Nginx 로그
+FAIL banned README.md:272: sudo tail -f /var/log/nginx/access.log
+FAIL banned README.md:273: sudo tail -f /var/log/nginx/error.log
+FAIL banned backend/BACKEND.md:36: │   ├── pinecone_svc.py      # Pinecone 벡터 검색
+FAIL banned backend/BACKEND.md:69: | `pinecone_api_key` | Pinecone API 키 |
+FAIL banned backend/BACKEND.md:130: - Pinecone RAG로 유사 문서 검색 후 컨텍스트 주입
+FAIL banned backend/BACKEND.md:142: | `search_docs(req)` | `POST /search` | Pinecone RAG로 유사 문서 검색 |
+FAIL banned backend/BACKEND.md:194: ### services/pinecone_svc.py — Pinecone 검색
+FAIL banned backend/BACKEND.md:198: | `search_similar(sid, query, top_k)` | `sid: str`, `query: str`, `top_k: int = 5` | `list[dict]` | 쿼리 임베딩 → Pinecone 검색 → 메타데이터 포함 결과 반환 |
+FAIL banned frontend/PIPELINE.md:9: - **외부 서비스**: AWS S3, Naver Cafe API, Claude API, Voyage AI, Pinecone
+FAIL banned ops/macmini/README.md:51: LaunchDaemon 아래에서는 `codex exec`가 `Failed to synchronize managed preferences` 오류로 실패하고, 사용자 로그인 세션에서는 정상 동작합니다(D-342). Codex 판정을 사용하는 운영 서비스는 `--agent`로 설치합니다. 사용자 `persona1`의 자동 로그인을 계속 켜 두어야 하며, 로그아웃하면 서비스가 중단됩니다.
+FAIL banned ops/macmini/README.md:59: 전환은 `persona1`의 로그인 세션 터미널에서 다음 세 단계로 진행합니다.
+FAIL env README.md: missing AUTHOR_SALT_PATH
+FAIL env README.md: missing CLAUDE_MODEL
+FAIL env README.md: missing LLM_BACKEND
+FAIL env README.md: missing LLM_BACKEND_OVERRIDES
+FAIL env README.md: missing SEARCHAD_API_KEY
+FAIL env README.md: missing SEARCHAD_CUSTOMER_ID
+FAIL env README.md: missing SEARCHAD_SECRET
+FAIL env README.md: missing YOUTUBE_API_KEY
+FAILED 140

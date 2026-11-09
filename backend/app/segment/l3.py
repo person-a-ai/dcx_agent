@@ -1,5 +1,6 @@
 """Per-Persona LDA Contexts and geometry in the supplied Voyage space."""
 from dataclasses import dataclass, field
+import random
 
 import numpy as np
 from gensim.corpora import Dictionary
@@ -32,15 +33,24 @@ class ContextResult:
     topic_ids: list[str | None] = field(default_factory=list)
 
 
-def contexts(doc_ids, tokens, vectors_by_id, sentiment_by_id=None, *, bk: str | None = None) -> ContextResult:
-    """Select maximum C_v over 2..10; ties favor the smaller topic count."""
+def contexts(doc_ids, tokens, vectors_by_id, sentiment_by_id=None, *, bk: str | None = None,
+             fit_sample: int | None = None) -> ContextResult:
+    """Select maximum C_v over 2..10; ties favor the smaller topic count.
+
+    With ``fit_sample``, topic-count selection and fitting use a fixed random
+    sample of that size; every document is then assigned by the fitted model.
+    """
     doc_ids = list(doc_ids)
     result = ContextResult()
     if not doc_ids:
         result.flags.append('few_docs')
         return result
     texts = [tokens[doc] for doc in doc_ids]
-    dictionary = Dictionary(texts)
+    fit_texts = texts
+    if fit_sample and len(doc_ids) > fit_sample:
+        picked = sorted(random.Random(params.SEED).sample(range(len(doc_ids)), fit_sample))
+        fit_texts = [texts[i] for i in picked]
+    dictionary = Dictionary(fit_texts)
     dictionary.filter_extremes(no_below=params.DICT_NO_BELOW,
                                no_above=params.DICT_NO_ABOVE, keep_n=None)
     if len(doc_ids) < params.L3_MIN_DOCS or not dictionary:
@@ -53,13 +63,14 @@ def contexts(doc_ids, tokens, vectors_by_id, sentiment_by_id=None, *, bk: str | 
             result.theta_all[doc] = [1.]
     else:
         corpus = [dictionary.doc2bow(words) for words in texts]
+        fit_corpus = corpus if fit_texts is texts else [dictionary.doc2bow(words) for words in fit_texts]
         best, best_cv = None, -np.inf
         for k in range(params.L3_TOPICS[0], params.L3_TOPICS[1] + 1):
-            model = LdaModel(corpus=corpus, id2word=dictionary, num_topics=k,
+            model = LdaModel(corpus=fit_corpus, id2word=dictionary, num_topics=k,
                              passes=params.LDA_PASSES, random_state=params.SEED)
-            cv = float(CoherenceModel(model=model, texts=texts, dictionary=dictionary,
+            cv = float(CoherenceModel(model=model, texts=fit_texts, dictionary=dictionary,
                                       coherence='c_v', processes=1).get_coherence())
-            result.scan[k] = dict(cv=cv, perplexity=float(2. ** -model.log_perplexity(corpus)))
+            result.scan[k] = dict(cv=cv, perplexity=float(2. ** -model.log_perplexity(fit_corpus)))
             # Undefined coherence cannot beat a finite score. Keep the first
             # model if all candidates are undefined, giving a stable fallback.
             if best is None or (np.isfinite(cv) and cv > best_cv):

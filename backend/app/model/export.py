@@ -141,21 +141,22 @@ def _write_rows(generation, parts, labels, model_id, has_predictions, partial):
         for name in ('all.jsonl', 'relevant.jsonl'):
             fd, names[name] = tempfile.mkstemp(prefix='.tmp-', dir=generation)
             streams[name] = os.fdopen(fd, 'w', encoding='utf-8')
-        with labels._db() as db:
-            for docs in parts:
-                ids = [doc['doc_id'] for doc in docs]
+        for docs in parts:
+            ids = [doc['doc_id'] for doc in docs]
+            # One short transaction per part: labeling may continue while a partial export runs.
+            with labels._db() as db:
                 final = _lookup(db, 'final', ids)
                 predictions = _lookup(db, 'model_predictions', ids, ' AND model_id=?', (model_id,)) if has_predictions else {}
-                for doc in docs:
-                    row = _row(doc, final.get(doc['doc_id']), predictions.get(doc['doc_id']), model_id, partial)
-                    if row is None:
-                        continue
-                    line = json.dumps(row, ensure_ascii=False) + '\n'
-                    streams['all.jsonl'].write(line)
-                    total += 1
-                    if row['evidence_level_pred'] in ('core', 'supporting'):
-                        streams['relevant.jsonl'].write(line)
-                        relevant += 1
+            for doc in docs:
+                row = _row(doc, final.get(doc['doc_id']), predictions.get(doc['doc_id']), model_id, partial)
+                if row is None:
+                    continue
+                line = json.dumps(row, ensure_ascii=False) + '\n'
+                streams['all.jsonl'].write(line)
+                total += 1
+                if row['evidence_level_pred'] in ('core', 'supporting'):
+                    streams['relevant.jsonl'].write(line)
+                    relevant += 1
         for name, stream in streams.items():
             stream.flush()
             os.fsync(stream.fileno())

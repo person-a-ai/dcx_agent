@@ -38,10 +38,10 @@ export function ClusterPreview({ preview }: { preview: SegmentPreview }) {
     const personas = preview.personas ?? [];
     return <section aria-label="미리보기 · Persona·관계망·토픽 분석 진행 중" className="min-w-0 space-y-4 [overflow-wrap:anywhere]">
         <h2 className="ds-t-card">미리보기 · Persona·관계망·토픽 분석 진행 중</h2>
-        <p className="ds-t-caption">k = {preview.k}{personas.length ? ` · Persona ${personas.length}개` : ''}</p>
+        <p className="ds-t-caption">{preview.mode === 'target' ? `목표 페르소나 ${preview.k}개 · 기타 ${(preview.other ?? 0).toLocaleString()}건` : `k = ${preview.k}`}{personas.length ? ` · Persona ${personas.length}개` : ''}</p>
         {preview.naming === 'pending' && <p role="status">군집 이름 만드는 중</p>}
         {preview.personaDrafting === 'pending' && <p role="status">Persona Desire·Goal 만드는 중</p>}
-        <div className="min-w-0 max-w-sm"><KSuggestChart k={preview.suggested} silhouette={preview.silhouette} sample={preview.sample}/></div>
+        {preview.mode !== 'target' && <div className="min-w-0 max-w-sm"><KSuggestChart k={preview.suggested} silhouette={preview.silhouette} sample={preview.sample}/></div>}
         <div className="min-w-0 divide-y rounded-xl border border-[var(--line)] px-5">
             {preview.clusters.map(cluster => {
                 const members = personas.filter(persona => persona.cluster === cluster.id);

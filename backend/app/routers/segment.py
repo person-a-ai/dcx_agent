@@ -14,6 +14,7 @@ from app.label.overview import session
 from app.model.infer import prepared_root
 from app.routers.labeling_v2 import LabelRoute
 from app.segment import pipeline
+from app.segment import target as segment_target
 from app.segment.store import SegmentStore
 from app.work import runner
 
@@ -32,6 +33,8 @@ class Run(Body):
     confirmReset: bool = False
     # Channels that build the structure; other channels become auxiliary evidence.
     structureSources: list[Literal['naver_blog', 'naver_cafe', 'youtube']] | None = None
+    # 'target' anchors documents to stage-0 persona cards instead of k-means (k is ignored).
+    mode: Literal['clusters', 'target'] = 'clusters'
 
 
 class Confirmation(Body):
@@ -176,13 +179,20 @@ def start(sid: str, body: Run = Run(), version: str | None = None):
                      if r['kind'] == 'segment' and r['version'] == data['version']), None)
         if work and work['state'] in ('running', 'paused'):
             raise sessions.StoreError('클러스터링이 이미 진행 중입니다.', 409, 'running')
+        if body.mode == 'target' and not segment_target.cards(data.get('projectContext', {})):
+            raise sessions.StoreError('0단계에서 페르소나 카드를 1개 이상 채운 뒤 실행하세요.', 409, 'cards_required')
         completed = data.get('segment', {}).get('status') in ('review', 'done')
         if work and work['state'] in ('interrupted', 'failed', 'stopped'):
             completed = False
-        if (body.k is not None or completed) and not body.confirmReset:
+        checkpoint = sessions.read_json(version_dir(sid, data['version']) / 'segment/checkpoint.json') or {}
+        switching = bool(checkpoint) and checkpoint.get('mode', 'clusters') != body.mode
+        k = body.k if body.mode == 'clusters' else None
+        if (k is not None or completed or switching) and not body.confirmReset:
             raise sessions.StoreError('다시 나누면 확정값이 지워집니다. 다시 나누기를 확인하세요.', 409, 'confirm_required')
         selected = data['version']
-    args = {'k': body.k, 'fresh': body.confirmReset}
+    args = {'k': k, 'fresh': body.confirmReset}
+    if body.mode == 'target' or switching:
+        args['mode'] = body.mode
     if body.structureSources:
         args['structureSources'] = body.structureSources
     work = runner.start(sid, selected, 'segment', args)
@@ -195,7 +205,8 @@ def status(sid: str, version: str | None = None):
     segment = data.get('segment', {})
     work = next((r for r in reversed(runner.status(sid))
                  if r['kind'] == 'segment' and r['version'] == data['version']), None)
-    result = dict(run=store.get_run(), status=segment.get('status', 'none'),
+    checkpoint = sessions.read_json(version_dir(sid, data['version']) / 'segment/checkpoint.json') or {}
+    result = dict(run=store.get_run(), status=segment.get('status', 'none'), mode=checkpoint.get('mode', 'clusters'),
                   step=segment.get('step', 'load'), progress=segment.get('progress', 0), confirm=_counts(store),
                   detail=segment.get('detail') or {})
     if segment.get('reason'):
@@ -223,6 +234,15 @@ def status(sid: str, version: str | None = None):
     if report:
         result['stage6'] = report
     return result
+
+
+@router.get('/target')
+def target_report(sid: str, version: str | None = None):
+    data, _ = _open(sid, version)
+    report = sessions.read_json(version_dir(sid, data['version']) / 'segment/target.json')
+    if not report:
+        raise sessions.StoreError('목표 페르소나 결과가 없습니다.', 404, 'not_found')
+    return report
 
 
 @router.get('/clusters')

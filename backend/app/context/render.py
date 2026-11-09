@@ -3,7 +3,7 @@
 from enum import Enum
 
 from .labels import LABELS
-from .models import KeyMetric, PersonaSeeds, ProjectContext, TargetScope
+from .models import KeyMetric, PersonaCard, PersonaSeeds, ProjectContext, TargetScope
 
 
 def _label(group: str, choice: Enum) -> str:
@@ -33,13 +33,20 @@ def _metric(metric: KeyMetric) -> str:
     return _with_note(metric.name, " · ".join(details))
 
 
+def _card(card: PersonaCard | None) -> list[str]:
+    if card is None or not card.filled():
+        return []
+    fields = [("Desire", card.desire), ("Context", card.context), ("Pain Point", card.pain), ("Unmet Needs", card.unmet),
+              ("키워드", ", ".join(card.keywords)), ("대표 원문", " / ".join(card.quotes))]
+    return [f"  - {label}: {value}" for label, value in fields if value]
+
+
 def _personas(seeds: PersonaSeeds) -> list[str]:
     dimensions = LABELS["personaDimensions"]
     lines = ["## 생각하는 페르소나 · 디멘션", ""]
-    lines.extend(
-        "- " + _with_note(seed.text, _label("personaDimensions", seed.dimension) if seed.dimension else "")
-        for seed in seeds.items
-    )
+    for seed in seeds.items:
+        lines.append("- " + _with_note(seed.text, _label("personaDimensions", seed.dimension) if seed.dimension else ""))
+        lines.extend(_card(seed.card))
     if not seeds.items:
         lines.append("- 없음")
     else:

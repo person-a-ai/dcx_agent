@@ -4,11 +4,12 @@ import type {
   SegmentStatus, SegmentRunRequest, SegmentClustersResponse, SegmentPersonasResponse, SegmentContextsResponse,
   SegmentCluster, SegmentPersona, SegmentContext, SegmentConfirmation, SegmentPersonaConfirmation,
   SegmentContextConfirmation, SegmentBulkConfirmation, SegmentBulkResponse, SegmentRequest, SegmentRequestMemo,
-  SegmentDocsOptions, SegmentDocsResponse, SegmentSupportCounts,
+  SegmentDocsOptions, SegmentDocsResponse, SegmentSupportCounts, SegmentTargetReport,
 } from '../types';
 
 const path = (sid: string, suffix: string, version?: string) => versionQuery(`/segment/${encodeURIComponent(sid)}${suffix}`, version);
 export const startSegment = (sid: string, body: SegmentRunRequest = {}, version?: string) => contextRequest<{runId: string}>(path(sid, '/run', version), 'POST', body);
+export const getSegmentTarget = (sid: string, version?: string) => contextRequest<SegmentTargetReport>(path(sid, '/target', version));
 export const getSegmentStatus = (sid: string, version?: string) => contextRequest<SegmentStatus>(path(sid, '/status', version));
 export const getSegmentClusters = (sid: string, version?: string) => contextRequest<SegmentClustersResponse>(path(sid, '/clusters', version));
 const filterQuery = (key: string, value?: string) => value === undefined ? '' : `?${key}=${encodeURIComponent(value)}`;
